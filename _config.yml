@@ -4,15 +4,15 @@ description: Technical documents about the Managed Developer Platform
 color-scheme: auto
 navigation:
   - name: Technical Overview Document
-    link: ./book/index.html
+    link: /book/index.html
   - name: API References
-    link: ./ref/index.html
+    link: /ref/index.html
     sublist: 
     - name: Application Service (HAS)
-      link: ./ref/application-service.html
+      link: /ref/application-service.html
     - name: Service Provider (SPI)
-      link: ./ref/service-provider.md
+      link: /ref/service-provider.html
     - name: GitOps Service
-      link: ./ref/gitops-service.md
+      link: /ref/gitops-service.html
     - name: Control Plane (KCP)
-      limk: ./ref/kcp.md
+      limk: /ref/kcp.html
