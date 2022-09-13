@@ -1,0 +1,18 @@
+remote_theme: vaibhavvikas/jekyll-theme-minimalistic
+title: Book Of AppStudio
+description: Technical documents about the Managed Developer Platform
+color-scheme: auto
+navigation:
+  - name: Technical Overview Document
+    link: ./book/index.html
+  - name: API References
+    link: ./ref/index.html
+    sublist: 
+    - name: Application Service (HAS)
+      link: ./ref/application-service.html
+    - name: Service Provider (SPI)
+      link: ./ref/service-provider.md
+    - name: GitOps Service
+      link: ./ref/gitops-service.md
+    - name: Control Plane (KCP)
+      limk: ./ref/kcp.md
