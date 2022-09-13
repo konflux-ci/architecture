@@ -1,0 +1,70 @@
+# This is a basic workflow to help you get started with Actions
+
+name: generate-api-docs
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+  workflow_call:
+    
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  generate-docs:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout docs repo 
+        uses: actions/checkout@v3
+      
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Application Service
+        uses: actions/checkout@v3
+        with:
+          path: crd-temp/application-service
+          repository: redhat-appstudio/application-service
+
+      - name: Checkout SPI
+        uses: actions/checkout@v3
+        with:
+          repository: redhat-appstudio/service-provider-integration-operator
+          path: crd-temp/service-provider
+      
+      - name: Checkout GitOps
+        uses: actions/checkout@v3
+        with:
+          repository: redhat-appstudio/managed-gitops
+          path: crd-temp/managed-gitops
+      
+      - name: Checkout KCP
+        uses: actions/checkout@v3
+        with:
+          repository: kcp-dev/kcp
+          path: crd-temp/kcp
+      
+      - name: Install crd-ref-docs
+        uses: supplypike/setup-bin@v1
+        with:
+          uri: 'https://github.com/elastic/crd-ref-docs/releases/download/v0.0.8/crd-ref-docs'
+          name: 'crd-ref-docs'
+          version: '0.0.8'
+      
+      - name: Generate service provider API docs
+        run: crd-ref-docs --log-level=ERROR --config=scripts/config.yaml --output-path=ref/service-provider.md --renderer=markdown --source-path=crd-temp/service-provider/api/v1beta1
+
+      - name: Generate application service API docs
+        run: crd-ref-docs --log-level=ERROR --config=scripts/config.yaml --output-path=ref/application-service.md --renderer=markdown --source-path=crd-temp/application-service/api/v1alpha1
+
+      - name: Generate GitOps service API docs
+        run: crd-ref-docs --log-level=ERROR --config=scripts/config.yaml --output-path=ref/gitops.md --renderer=markdown --source-path=crd-temp/managed-gitops/backend-shared/apis/managed-gitops/v1alpha1
+
+      - name: Generate kcp API docs
+        run: crd-ref-docs --log-level=ERROR --config=scripts/config.yaml --output-path=ref/kcp.md --renderer=markdown --source-path=crd-temp/kcp/pkg/apis
+
+      - name: Upload generated docs 
+        uses: actions/upload-artifact@v3
+        with:
+          name: api-docs
+          path: ref/
