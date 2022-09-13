@@ -1,8 +1,8 @@
-# AppStudio and HACBS
+# Managed Developer Services
 
 
 ## Overview
-The services provided by AppStudio streamline, consolidate, and secure the application lifecycle. AppStudio is a fully managed experience to develop full-stack applications, create portable connections with leading cloud services, and deploy to any cloud platform.
+Red Hat developer services provide the platform for building integrated experiences that streamline, consolidate, and secure the application lifecycle.
 
 
 ### Goals
@@ -51,3 +51,15 @@ Each service is that makes up AppStudio and HACBS are further decomposed on thei
 - [Java Rebuilds Service](./java-rebuilds-service.md)
 - [Release Service](./release-service.md)
 - Integration Service
+
+## API References
+
+### Developer Services
+
+- [Application Service](../ref/application-service.md)
+- [Service Provider](../ref/service-provider.md)
+- [GitOps Service](../ref/gitops.md):
+
+### Control Plane
+
+- [KCP](../ref/kcp.md)
