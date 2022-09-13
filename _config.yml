@@ -6,13 +6,13 @@ navigation:
   - name: Technical Overview Document
     link: /book/index.html
   - name: API References
-    link: /ref/index.html
+    link: /book/ref/index.html
     sublist: 
     - name: Application Service (HAS)
-      link: /ref/application-service.html
+      link: /book/ref/application-service.html
     - name: Service Provider (SPI)
-      link: /ref/service-provider.html
+      link: /book/ref/service-provider.html
     - name: GitOps Service
-      link: /ref/gitops-service.html
+      link: /book/ref/gitops-service.html
     - name: Control Plane (KCP)
-      limk: /ref/kcp.html
+      limk: /book/ref/kcp.html
