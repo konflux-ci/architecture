@@ -4,7 +4,7 @@ description: Technical documents about the Managed Developer Platform
 color-scheme: auto
 navigation:
   - name: Technical Overview Document
-    link: /book/index.html
+    link: /book/book/index.html
   - name: API References
     link: /book/ref/index.html
     sublist: 
