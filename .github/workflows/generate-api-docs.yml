@@ -61,7 +61,7 @@ jobs:
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/gitops.md --renderer=markdown --source-path=crd-temp/managed-gitops/backend-shared/apis/managed-gitops/v1alpha1
       
       - name: Generate Environment  API docs
-        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/envrionment.md --renderer=markdown --source-path=crd-temp/managed-gitops/appstudio-shared/apis/appstudio.redhat.com/v1alpha1
+        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/environment.md --renderer=markdown --source-path=crd-temp/managed-gitops/appstudio-shared/apis/appstudio.redhat.com/v1alpha1
        
       - name: Generate kcp API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/kcp.md --renderer=markdown --source-path=crd-temp/kcp/pkg/apis
