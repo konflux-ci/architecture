@@ -13,8 +13,8 @@ navigation:
     - name: Service Provider (SPI)
       link: /book/ref/service-provider.html
     - name: GitOps Service
-      link: /book/ref/gitops-service.html
+      link: /book/ref/gitops.html
     - name: Environment API
       link: /book/ref/environment.html
     - name: Control Plane (KCP)
-      limk: /book/ref/kcp.html
+      link: /book/ref/kcp.html
