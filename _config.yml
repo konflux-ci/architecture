@@ -14,5 +14,7 @@ navigation:
       link: /book/ref/service-provider.html
     - name: GitOps Service
       link: /book/ref/gitops-service.html
+    - name: Environment API
+      link: /book/ref/environment.html
     - name: Control Plane (KCP)
       limk: /book/ref/kcp.html
