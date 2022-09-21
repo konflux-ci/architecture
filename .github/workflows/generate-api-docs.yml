@@ -54,8 +54,8 @@ jobs:
       - name: Generate service provider API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/service-provider.md --renderer=markdown --source-path=crd-temp/service-provider/api/v1beta1
 
-      - name: Generate application service API docs
-        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/application-service.md --renderer=markdown --source-path=crd-temp/application-api/api/v1alpha1
+      - name: Generate application API docs
+        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/application-api.md --renderer=markdown --source-path=crd-temp/application-api/api/v1alpha1
 
       - name: Generate GitOps service API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/gitops.md --renderer=markdown --source-path=crd-temp/managed-gitops/backend-shared/apis/managed-gitops/v1alpha1
