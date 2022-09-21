@@ -56,7 +56,7 @@ Each service is that makes up AppStudio and HACBS are further decomposed on thei
 
 ### Developer Services
 
-- [Application Service](../ref/application-service.md)
+- [Application API](../ref/application-api.md)
 - [Service Provider](../ref/service-provider.md)
 - [GitOps Service](../ref/gitops.md):
 

@@ -9,7 +9,7 @@ navigation:
     link: /book/ref/index.html
     sublist: 
     - name: Application Service (HAS)
-      link: /book/ref/application-service.html
+      link: /book/ref/application-api.html
     - name: Service Provider (SPI)
       link: /book/ref/service-provider.html
     - name: GitOps Service
