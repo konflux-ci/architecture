@@ -24,9 +24,16 @@ jobs:
   generate-api-docs:
     uses: ./.github/workflows/generate-api-docs.yml
     secrets: inherit
+
+  generate-adr-index:
+    uses: ./.github/workflows/generate-adr-index.yml
+    secrets: inherit
+
   # Build job
   build:
-    needs: generate-api-docs
+    needs:
+      - generate-api-docs
+      - generate-adr-index
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,6 +43,11 @@ jobs:
         with:
           name: api-docs
           path: ref/
+      - name: Download generated ADR index
+        uses: actions/download-artifact@v3
+        with:
+          name: adr-index
+          path: ADR/
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Build with Jekyll

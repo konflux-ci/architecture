@@ -5,6 +5,8 @@ color-scheme: auto
 navigation:
   - name: Technical Overview Document
     link: /book/book/index.html
+  - name: Architecture Decision Records
+    link: /book/ADR/index.html
   - name: API References
     link: /book/ref/index.html
     sublist: 
