@@ -43,6 +43,7 @@ The diagram below shows the interaction of the AppStudio and HACBS with other sy
 Each service is that makes up AppStudio and HACBS are further decomposed on their own documents.
 
 - [GitOps Service](./gitops-service.md)
+- [Pipeline Service](./pipeline-service.md)
 - [Build Service](./build-service.md)
 - [Workspace and Terminal Service](./workspace-and-terminal-service.md)
 - [Service Provider Integration](./service-provider-integration.md)
