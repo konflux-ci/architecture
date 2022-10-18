@@ -9,12 +9,20 @@ navigation:
     link: /book/ADR/index.html
   - name: API References
     link: /book/ref/index.html
-    sublist: 
+    sublist:
+    - name: Control Plane (KCP)
+      link: /book/ref/kcp.html
     - name: Application and Environment API
       link: /book/ref/application-environment-api.html
     - name: Service Provider (SPI)
       link: /book/ref/service-provider.html
     - name: GitOps Service
       link: /book/ref/gitops.html
-    - name: Control Plane (KCP)
-      link: /book/ref/kcp.html
+    - name: JVM Build Service
+      link: /book/ref/jvm-build-service.html
+    - name: Integration Service
+      link: /book/ref/integration-service.html
+    - name: Release Service
+      link: /book/ref/release-service.html
+    - name: Enterprise Contract
+      link: /book/ref/enterprise-contract.html

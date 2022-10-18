@@ -43,7 +43,31 @@ jobs:
         with:
           repository: kcp-dev/kcp
           path: crd-temp/kcp
-      
+
+      - name: Checkout Integration Service API
+        uses: actions/checkout@v3
+        with:
+          path: crd-temp/integration-service
+          repository: redhat-appstudio/integration-service
+
+      - name: Checkout Release Service API
+        uses: actions/checkout@v3
+        with:
+          path: crd-temp/release-service
+          repository: redhat-appstudio/release-service
+
+      - name: Checkout JVM Build Service API
+        uses: actions/checkout@v3
+        with:
+          path: crd-temp/jvm-build-service
+          repository: redhat-appstudio/jvm-build-service
+
+      - name: Checkout Enterprise Contract API
+        uses: actions/checkout@v3
+        with:
+          path: crd-temp/enterprise-contract-controller
+          repository: hacbs-contract/enterprise-contract-controller
+
       - name: Install crd-ref-docs
         uses: supplypike/setup-bin@v1
         with:
@@ -63,7 +87,19 @@ jobs:
       - name: Generate kcp API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/kcp.md --renderer=markdown --source-path=crd-temp/kcp/pkg/apis
 
-      - name: Upload generated docs 
+      - name: Generate Integration Service API docs
+        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/integration-service.md --renderer=markdown --source-path=crd-temp/integration-service/api/v1alpha1/
+
+      - name: Generate Release Service API docs
+        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/release-service.md --renderer=markdown --source-path=crd-temp/release-service/api/v1alpha1/
+
+      - name: Generate JVM Build Service API docs
+        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/jvm-build-service.md --renderer=markdown --source-path=crd-temp/jvm-build-service/pkg/apis/jvmbuildservice/v1alpha1/
+
+      - name: Generate Enterprise Contract API docs
+        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/enterprise-contract.md --renderer=markdown --source-path=crd-temp/enterprise-contract-controller/api/v1alpha1/
+
+      - name: Upload generated docs
         uses: actions/upload-artifact@v3
         with:
           name: api-docs
