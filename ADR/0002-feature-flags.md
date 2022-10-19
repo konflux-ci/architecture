@@ -135,6 +135,6 @@ Originally drafted in a [google document](https://docs.google.com/document/d/1Kc
 [Component]: ../ref/application-environment-api.md#component
 [ApplicationSnapshot]: ../ref/application-environment-api.md#applicationsnapshot
 [ApplicationSnapshots]: ref/application-environment-api.md#applicationsnapshot
-[ReleasePlan]: ../ref/release-service-api.md#releaseplan
-[ReleasePlans]: ../ref/release-service-api.md#releaseplan
-[IntegrationTestScenario]: ../ref/integration-service-api.md#integrationtestscenario
+[ReleasePlan]: ../ref/release-service.md#releaseplan
+[ReleasePlans]: ../ref/release-service.md#releaseplan
+[IntegrationTestScenario]: ../ref/integration-service.md#integrationtestscenario
