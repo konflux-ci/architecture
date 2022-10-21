@@ -31,7 +31,7 @@ The Release service is dependent on the following services:
 
 The diagram below shows the interaction of the release service and other services.
 
-![](../diagrams/hacbs-data-flow.png)
+![](../diagrams/hacbs-data-flow.jpg)
 
 ## Application Context
 
