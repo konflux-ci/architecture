@@ -47,10 +47,10 @@ Each service is that makes up AppStudio and HACBS are further decomposed on thei
 - [Workspace and Terminal Service](./workspace-and-terminal-service.md)
 - [Service Provider Integration](./service-provider-integration.md)
 - [Hybrid Application Service](./hybrid-application-service.md)
-- [Enterprise Contract](./enterprise-contract-service.md)
+- [Enterprise Contract](./enterprise-contract.md)
 - [Java Rebuilds Service](./java-rebuilds-service.md)
 - [Release Service](./release-service.md)
-- Integration Service
+- [Integration Service](./integration-service.md)
 
 ## API References
 
