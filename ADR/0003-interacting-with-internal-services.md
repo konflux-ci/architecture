@@ -32,12 +32,8 @@ one or more workspaces. This will be referred to as the **Internal Service Contr
 such as **ServiceABCRequest**.
 
 This strategy will make use of [KCP]'s VirtualWorkspace model allowing an internal service controller to watch a group of
-workspace via a single KUBECONFIG.
-
-This internal service controller is expected to trigger a specific job that encapsulates the Internal Service's unit of work
-that HACBS wants to initiate.
-
-It is expected that the internal service controller should update the **status** of the **Request** CR to denote the progress of the
+workspace via a single _KUBECONFIG_. This internal service controller is expected to trigger a specific job that encapsulates the Internal Service's unit of work
+that HACBS wants to initiate. It is expected that the internal service controller should update the **status** of the **Request** CR to denote the progress of the
 triggered unit of work.
 
 The internal service controller should also be able to update the **Request** CR to provide a **result** back to the process that
