@@ -15,7 +15,7 @@ New
 Many organizations, including Red Hat, possess numerous internal services that help productize their software.
 In many cases, these internal services will continue to play a role in the release workflows used in AppStudio/HACBS.
 
-It is extremely important to design the interaction with internal services in such as way as to avoid any potential
+We originally thought that we should expose access to an organization's internal services by encouraging the use of "[bastion](https://en.wikipedia.org/wiki/Bastion_host)" interfaces that are publicly addressable but which also have some degree of internal network access. On review, we see now that internal network ingress like this opens up unwanted
 attack vectors towards an organization's internal networks.
 
 **Problem**: AppStudio/Release pipelines need to **initiate** processes with an organization's internal services which
@@ -31,16 +31,16 @@ one or more workspaces. This will be referred to as the **Internal Service Contr
 **Request** is used here as a general type meaning that real use cases might involve custom resources
 such as **ServiceABCRequest**.
 
-This strategy will make use of [KCP]'s VirtualWorkspace model allowing a controller to watch a group of
+This strategy will make use of [KCP]'s VirtualWorkspace model allowing an internal service controller to watch a group of
 workspace via a single KUBECONFIG.
 
 This internal service controller is expected to trigger a specific job that encapsulates the Internal Service's unit of work
 that HACBS wants to initiate.
 
-It is expected that the controller should update the **status** of the **Request** CR to denote the progress of the
+It is expected that the internal service controller should update the **status** of the **Request** CR to denote the progress of the
 triggered unit of work.
 
-The controller should also be able to update the **Request** CR to provide a **result** back to the process that
+The internal service controller should also be able to update the **Request** CR to provide a **result** back to the process that
 originally created the custom resource.
 
 **Example:**
@@ -48,7 +48,9 @@ originally created the custom resource.
 During the course of an attempt to release content, artifacts may need to be signed. The service that
 performs the signing process is an internal service within an organization with no publicly addressable API.
 The [release-service] may execute a release strategy that has a step that wants to access that signing service's
-API and obtain a result payload to be used in downstream steps in the release strategy.
+API and obtain a signature to be used in downstream steps in the release strategy.
+
+Using the pattern here, the user organization (called MyOrg) would create an signing controller hosted in a cluster inside their network, but which uses a KUBECONFIG pointed at the kcp VirtualWorkspace for a `MyOrgSigningRequest`. They would construct a release pipeline which creates those `MyOrgSigningRequest` CRs in their managed workspace, and which watches for `status` updates on those request CRs to determine when the internally hosted signing process has completed.
 
 ## Architecture Overview
 
