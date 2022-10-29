@@ -1,10 +1,10 @@
-# 5. Service Account configuration for image builds in AppStudio 
+# 5. Service Account configuration for image builds in the Pipeline Service 
 
 Date: Oct 5, 2022
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
