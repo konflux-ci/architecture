@@ -20,6 +20,8 @@ Use of any other service accounts will not lead to a successful assembling of th
 
 * The AppStudio Build controller would tap into this platform contract to create relevant PipelineRuns for building container images.
 
+* The Pipeline Service Platform would configure the "pipeline-service-image-builder" service account in the execution environment ( ie, the workload cluster ) out-of-the-box.
+
 ## Consequences
 
 
@@ -45,6 +47,6 @@ the linked credentials, the container image should be successfully pushed as wel
 
 ### Security considerations
 
-* Users should not be able to alter role bindings in their `workspaces`/`namespaces` in a way that they are synced into the workload clusters. This will help prevent SCC escalations by the users/services whose workloads would be scheduled on the PipelineService workload cluster.
+* Users should not be able to alter role bindings in their `workspaces`/`namespaces` in a way that they impact the execution environment in the workload clusters. This will help prevent SCC escalations by the users/services whose workloads would be scheduled on the PipelineService workload cluster.
 * Build Controller would have to be granted permissions to create/edit service accounts in the workspace to be to create/update the `pipeline-service-image-builder` service account for linking secrets/credentials. 
 * The Pipeline Service platform should be able to disallow usage of this elevated privilege by certain consumers of the service. The design for the same should be addressed in a future ADR.
