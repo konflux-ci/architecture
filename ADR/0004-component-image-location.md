@@ -1,4 +1,4 @@
-# 2. Out-of-the-box image repository for AppStudio users 
+# 4. Out-of-the-box image repository for AppStudio users 
 
 Date: Oct 29, 2022 
 
