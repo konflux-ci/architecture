@@ -49,7 +49,7 @@ to be pushed to.
 
 ### What
 
-* Per workspace, setup a new org “quay.io/unique-org-david/…”
+* Per workspace called "david", setup a new org “quay.io/unique-org-david/…”
 * Per component, setup a new new repo “quay.io/unique-org-david/unique-component-repo”
 * Use User’s Quay.io API token to manage the org/repo. Short-term, we'll use a pre-configured Quay.io API token associated with AppStudio to create the org/repo till we 
  figure out how to determinstically map a user in AppStudio to a user in Quay.io.
