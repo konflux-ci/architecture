@@ -69,7 +69,7 @@ to be pushed to.
 #### Short-term
 
 ##### Setup
-* Configure the a pre-configured Quay.io API token for repo/org management, also known as the OAuth Access token. From a security perspective, this would be treated as a typical service account token
+* Configure a pre-configured Quay.io API token for repo/org management, also known as the OAuth Access token. From a security perspective, this would be treated as a typical service account token
   belonging to AppStudio. This token would be shortlived and rotated *as frequently as practically possible*  .
 
 ##### When a user creates a Component
