@@ -62,7 +62,6 @@ to be pushed to.
 * (One-time) Use an OAuth flow to get David’s Quay.io API token if not previously pulled
 * Create a new Quay.io org owned by David using David’s API token “quay.io/unique-org-david”
 * Create a new image repo for “foo” using David’s API token “quay.io/unique-org-david/appname-foo”
-* Optionally, if needed, make the image repo public using the David’s API token for easy image pulls.
 * Configure the robot account “appstudio” in “quay.io/unique-org-david” to be able to push to “quay.io/unique-org-david/appname-foo” Invalidate/Delete/Prune David’s API token. 
 
 
@@ -75,8 +74,7 @@ to be pushed to.
 ##### When a user creates a Component
 1. Create a new Quay.io org owned by David using the pre-configured AppStudio-wide API token `quay.io/unique-org-david`
 2. Create a new image repo for Component “foo” using the the pre-configured David’s API token `quay.io/unique-org-david/unique-component-foo`
-3. Optionally, if needed, make the image repo public using the API token for easy image pulls.
-4. Configure a robot account  `quay.io/unique-org-david` to be able to push to `quay.io/unique-org-david/unique-component-foo`
+3. Configure a robot account  `quay.io/unique-org-david` to be able to push to `quay.io/unique-org-david/unique-component-foo`
 
 
 ##### Long-term
