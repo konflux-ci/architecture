@@ -4,7 +4,14 @@ Date: 2022-November-11
 
 ## Status
 
-Draft
+Accepted
+
+## Approvers
+
+* Ann Marie Fred
+* Gorkem Ercan
+
+## Reviewers
 
 ## Context
 
