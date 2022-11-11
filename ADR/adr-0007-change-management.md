@@ -19,6 +19,8 @@ Red Hat's ESS requirment SEC-CHG-REQ-1 (Change Management) states that "All appl
 
 Because App Studio is using a continuous delivery model, we need to ensure that we use lightweight change management processes when it's appropriate, and follow a more intensive change management process when needed.
 
+This change management process will go into effect when App Studio goes into a 24x7 support mode; this will likely correspond to its GA date.
+
 ## Decision
 
 Incremental code changes that are fully tested by automated tests, which will not cause an outage or a significant change to functionality, will follow the normal code review process in their respective code repositories. To deploy such a change to staging and production, there will be a pull request opened against the infra-deployments repo or the App Interface repo with the requested change.  Then the change must follow our normal code review process.
