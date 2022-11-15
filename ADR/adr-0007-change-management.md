@@ -29,11 +29,11 @@ To deploy an infrastructure change or a new version of software to staging and p
 
 ### Normal code review process
 
-While a ticket (Jira ticket or Github issue) is In Progress, a developer will make their code and test changes, and then raise a Github Pull Request (PR) when they need other team members to review their work. This review could be for work in progress or when the developer feels the work is completed. For a PR that reflects completed work, the ticket should be put into the Review stage to indicate that active development is complete.
+While a ticket (Jira ticket or Github issue) is In Progress, a developer will make their code changes and write automated tests in a Git feature branch.  The developer will raise a Github Pull Request (PR) when they need other team members to review their work. This review could be for work in progress or when the developer feels the work is completed. For a PR that reflects completed work, the ticket should be put into the Review stage to indicate that active development is complete.
 
 In Github, if the developer wants a code review but feels that their work is not ready to be deployed yet, they will add the "do-not-merge/work-in-progress" label to the PR. We also recommend adding "WIP" to the pull request title.
 
-The developer should choose one or two reviewers for their PR and add them to the PR directly. A PR without any reviewers assigned might never be picked up. Reviewers should be chosen based on their background and familiarity with the code under review. It is also sometimes worthwhile to use a PR review to help another developer get up to speed with some code.
+The developer should choose one or two reviewers for their PR and add them to the PR directly. A PR without any reviewers assigned might never be reviewed. Reviewers should be chosen based on their background and familiarity with the code under review. It is also sometimes worthwhile to use a PR review to help another developer get up to speed with some code.
 
 If you have been asked to review another developer’s PR, it’s good practice to decide if you can fit that review into your current workload. Timely PR review helps keep our velocity high, and if it might take more than a couple of days for you to review the code, contact the PR author and let them know they might need to depend on another person.
 
