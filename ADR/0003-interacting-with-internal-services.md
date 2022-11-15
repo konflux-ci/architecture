@@ -69,6 +69,12 @@ Using the pattern here, the user organization (called MyOrg) would create a sign
 * Skill gap. Not all engineers are experienced with writing controllers. Nonetheless, this pattern will enable
 developers to gain the experience.
 
+## Proof of Concept
+
+---
+
+A proof of concept for the **Internal Services Controller** can be found [here](https://github.com/scoheb/internal-services-controller-poc)
+
 ## References
 
 ---
