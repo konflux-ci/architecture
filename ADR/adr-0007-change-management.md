@@ -65,4 +65,6 @@ To avoid duplication of evolving documents, refer to the internal document on [C
 
 ## Consequences
 
-TBD
+Our normal code review process will ensure that all changes are properly tested, reviewed and recorded.
+
+When it's needed, the formal change request process will add additional paperwork burden and delay the code release to production.  Conversely, failure to invoke the formal process when it's necessary could lead to poor outcomes including outages during peak usage times, developers called in to fix outages on company holidays, failure to meet Service Level Agreements, demo failures, angry customers, or lost revenue.
