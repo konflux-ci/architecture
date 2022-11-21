@@ -10,8 +10,6 @@ navigation:
   - name: API References
     link: /book/ref/index.html
     sublist:
-    - name: Control Plane (KCP)
-      link: /book/ref/kcp.html
     - name: Application and Environment API
       link: /book/ref/application-environment-api.html
     - name: Service Provider (SPI)

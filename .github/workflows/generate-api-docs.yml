@@ -84,9 +84,6 @@ jobs:
       - name: Generate GitOps service API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/gitops.md --renderer=markdown --source-path=crd-temp/managed-gitops/backend-shared/apis/managed-gitops/v1alpha1
              
-      - name: Generate kcp API docs
-        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/kcp.md --renderer=markdown --source-path=crd-temp/kcp/pkg/apis
-
       - name: Generate Integration Service API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/integration-service.md --renderer=markdown --source-path=crd-temp/integration-service/api/v1alpha1/
 
