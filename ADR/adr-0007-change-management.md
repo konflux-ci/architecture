@@ -1,6 +1,6 @@
-# 1. Record architecture decisions
+# ADR-0007 Change Management Process
 
-Date: 2016-02-12
+Date: 2022-11-22
 
 ## Status
 
@@ -17,9 +17,7 @@ Accepted
 
 Red Hat's ESS requirement SEC-CHG-REQ-1 (Change Management) states that "All applications/systems/platforms/services must follow Change Management process and procedures, as applicable / appropriate." Change management is important in order to ensure no unauthorized changes are made to systems or applications, in order to help prevent the purposeful or accidental introduction of security vulnerabilities and an increase in threat attack surface.
 
-Because App Studio is using a continuous delivery model, we need to ensure that we use lightweight change management processes when it's appropriate, and follow a more intensive change management process when needed.
-
-This change management process will go into effect when App Studio goes into a 24x7 support mode; this will likely correspond to its GA date.
+Because App Studio is using a continuous delivery model, we need to ensure that we use a lightweight change management process when it's appropriate, and follow a more intensive change management process when needed. The normal code review process is in effect already. The full change request process will be used once App Studio goes into a 24x7 support mode; this will likely correspond to its GA date.
 
 ## Decision
 
@@ -61,7 +59,7 @@ This is not meant to be a complete list.  Most activities that impact production
 A good rule of thumb: consider whether external stakeholders (customers, other service owners, our business owners) would expect advance notice of the change or planned outage. If so, this is the process to notify them.
 
 ### Change Sensitivity or EOQ Sensitivity
-Change Sensitivity is a period of time where specific applications or services need to remain stable. Sometimes this could be to major public events (such as Red Hat Summit), and other times it's related to financial close and reporting, such as End of Quarter Sensitivity (EOQ Sensitivity). 
+Change Sensitivity is a period of time where specific applications or services need to remain stable. Sometimes this could be due to major public events (such as Red Hat Summit), and other times it's related to financial close and reporting, such as End of Quarter Sensitivity (EOQ Sensitivity). 
 
 During these periods, which are tracked in the Pipeline Temperature status in the App Studio Program Calls, if a change will impact production infrastructure, sales, financial close, analysis, and financial reporting, the change will need to be approved by additional reviewers as described in the Change Enablement docs. 
 
@@ -71,4 +69,4 @@ To avoid duplication of evolving documents, refer to the internal document on [C
 
 Our normal code review process will ensure that all changes are properly tested, reviewed and recorded.
 
-When it's needed, the formal change request process will add additional paperwork burden and delay the code release to production.  Conversely, failure to invoke the formal process when it's necessary could lead to poor outcomes including outages during peak usage times, developers called in to fix outages on company holidays, failure to meet Service Level Agreements, demo failures, angry customers, or lost revenue.
+When it's needed, the formal change request process will add an additional paperwork burden and delay the code release to production.  Conversely, failure to invoke the formal process when it's necessary could lead to poor outcomes including outages during peak usage times, developers called in to fix outages on company holidays, failure to meet Service Level Agreements, demo failures, angry customers, or lost revenue.
