@@ -29,31 +29,25 @@ To deploy an infrastructure change or a new version of software to staging and p
 
 ### Normal code review process
 
-While a ticket (Jira ticket or Github issue) is In Progress, a developer will make their code changes and write automated tests in a Git feature branch.  The developer will raise a Github Pull Request (PR) when they need other team members to review their work. This review could be for work in progress or when the developer feels the work is completed. For a PR that reflects completed work, the ticket should be put into the Review stage to indicate that active development is complete.
+A developer will make their code changes and write automated tests in a Git feature branch.  The developer will raise a Github Pull Request (PR) when they need other team members to review their work. This review could be for work in progress or when the developer feels the work is completed. If the developer wants a code review but feels that their work is not ready to be deployed yet, they will add the "do-not-merge/work-in-progress" label to the PR. We also recommend adding "WIP" to the pull request title.
 
-In Github, if the developer wants a code review but feels that their work is not ready to be deployed yet, they will add the "do-not-merge/work-in-progress" label to the PR. We also recommend adding "WIP" to the pull request title.
+At least one developer who is not the PR author must review and approve the code change. The reviewers will provide comments in Github for suggested changes. The reviewer has a responsibility to verify that the code follows our established best practices and "definition of done". From a change management perspective, the reviewer ensures that:
+* We continue to meet our security and privacy requirements. 
+* Code is fully exercised by passing unit tests.
+* Proper error and audit logging is in place.
+* There are no obvious implementation holes or incorrect logic.
+* Code is free of excessive "TODO" items.
+* Build/deployment/configuration changes are automated where possible, and they have proper operational documentation.
 
-The developer should choose one or two reviewers for their PR and add them to the PR directly. A PR without any reviewers assigned might never be reviewed. Reviewers should be chosen based on their background and familiarity with the code under review. It is also sometimes worthwhile to use a PR review to help another developer get up to speed with some code.
+We also require that all of our repositories be instrumented with CI test automation that runs when a PR is raised, and after each new commit. The CI checks will install the software and run a suite of End-to-End (E2E) tests.  The CI checks will also run security scans.  All CI checks must pass before performing a Merge to the main branch as this updates the staging environment and makes the code available for deployment into production.
 
-If you have been asked to review another developer’s PR, it’s good practice to decide if you can fit that review into your current workload. Timely PR review helps keep our velocity high, and if it might take more than a couple of days for you to review the code, contact the PR author and let them know they might need to depend on another person.
-
-As a reviewer, you should move the review along by testing the PR yourself, and providing comments in Github for suggested changes. The reviewer has a responsibility to verify that the code follows our established best practices and "definition of done". In the context of a code review:
-* Ensure that we continue to meet our security and privacy requirements. New features dealing with security, data collection, and data processing are likely to need additional controls and documentation, so get your Security Champion involved in the review.
-* Code should be fully exercised by passing unit tests. Unit test coverage should not decrease.
-* Error and audit logging is in place. Error messages help users take action to recover from the error, without exposing personal data or sensitive information.
-* No obvious implementation holes or incorrect logic.
-* Free of excessive "TODO" items.
-* Build/deployment/configuration changes have proper operational documentation, usually in the README.
-
-Stylistic or preference-based changes should not be a focus of the review. To enforce code conventions, use an automated linter instead.
-
-We also require that all of our repositories be instrumented with CI test automation that runs when a PR is raised, and after each new commit. The CI checks will install the software and run a suite of End-to-End (E2E) tests. All CI checks must pass before performing a Merge to the main branch as this updates the staging environment and makes the code available for deployment into production.
-
-When the review is completed and tests have passed, the approver should Approve the PR in GitHub and the PR author will then Merge the code. 
+When the review is completed and CI checks have passed, the approver should Approve the PR in GitHub and the PR author will then Merge the code. 
 
 For changes to the infra-deployments repo, the PR author should add the "lgtm" (looks good to me) label to the PR rather than clicking on the Merge button. This will trigger the Prow/Tide deployment automation to create a batch of approved changes and test and deploy them together, usually within an hour. Batching changes avoids merge race conditions.
 
-The ticket should be set to Closed after the code is released downstream or deployed to production, and the rest of our "definition of done" is met. See the Engineering Standards and Expections document for further details.
+In the rare case that we must deploy a change that doesn't meet these requirements, we will document the reason for the exception in the PR itself, and Github will keep a record of who approved the change.
+
+See the Engineering Standards and Expections document for further details.
 
 ### When is a formal change request required?
 There are a few cases where we need to use Red Hat's formal Change Enablement process:
