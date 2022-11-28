@@ -37,12 +37,6 @@ jobs:
         with:
           repository: redhat-appstudio/managed-gitops
           path: crd-temp/managed-gitops
-      
-      - name: Checkout KCP
-        uses: actions/checkout@v3
-        with:
-          repository: kcp-dev/kcp
-          path: crd-temp/kcp
 
       - name: Checkout Integration Service API
         uses: actions/checkout@v3
