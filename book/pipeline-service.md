@@ -1,29 +1,37 @@
 # Pipeline Service
 
-Pipeline Service provides Tekton APIs and services to kcp workspaces.
-When a workspace binds to the Pipeline Service APIExport, it has access to the following Tekton APIs:
+Pipeline Service provides Tekton APIs and services to StoneSoup.
+In the initial phase of StoneSoup, Pipeline Service will be provided by a stock
+installation of the OpenShift Pipelines operator.
+This deployed version will be the a candidate build of the OpenShift Pipelines
+operator from a Red Hat build system.
 
-- `Task`
-- `Pipeline`
-- `PipelineRun`
-- `Repository` (for [Pipelines as Code](https://pipelinesascode.com))
+![Pipelines operator deployment](../diagrams/pipeline-service.drawio.svg)
 
-The following features are also provided:
+## APIs and Services
 
-- Signing and attestation of `TaskRuns` with [Tekton Chains](https://tekton.dev/docs/chains/)
-- Archiving of `PipelineRuns` and `TaskRuns` with [Tekton Results](https://tekton.dev/docs/results/)
-- Integrations with GitHub, Gitlab, and Bitbucket with [Pipelines as Code](https://pipelinesascode.com) (PaC).
+Pipeline Service provides the following:
 
-## Architecture
+- Tekton APIs directly through its custom resource definitions.
+- Container image signing and provenance attestations through Tekton Chains.
+- Archiving of `PipelineRuns`, `TaskRuns`, and associated logs through Tekton
+  Results.
 
-Tekton controllers are deployed directly on the workload cluster.
-The kcp syncer for the workload cluster is configured to sync `Pipeline`, `Task`, and `PipelineRun` objects.
-When a `PipelineRun` is created on kcp, it is synced to the workload cluster whose controllers then create `TaskRun` objects and resulting `Pods`.
-The Chains and Results controllers then work with the synced `PipelineRun` and generated `TaskRun` objects to perform their respective actions.
+Pipeline Service also exposes the following ingress points:
 
-Like upstream Tekton, Pipelines as Code (PaC) also runs controllers directly on workload clusters.
-Unlike other Tekton components, PaC also exposes a `Route`/`Ingress` that allows it to receive webhook events from source control repositories.
-To sent traffic from kcp to the workload cluster, Pipeline Service will deploy a "gateway" service that acts as a proxy to PaC on the workload cluster.
+- Pipelines as Code Webhook: this is a `Route` that receives webhook events
+  from source code repositories.
+- Tekton Results REST: this is an `Ingress` that serves Tekton Results data
+  over a RESTful API. Clients authenticate with the same `Bearer` token used to
+  authenticate Kubernetes requests.
 
-Tekton Results will likewise use the gateway to forward requests to its service.
-The apiserver will be patched to translate kcp workspaces/namespaces to the respective synced namespace on the workload cluster.
+## Deployment Configuration
+
+The deployment of the OpenShift Pipelines operator will have the following
+notable configurations:
+
+- Tekton Triggers will be disabled entirely.
+- The pruner (provided by the Pipelines operator) will be disabled in favor of
+  pruning via Tekton Results.
+- Pipelines as Code will link the results of pipeline tasks to an appropriate
+  [Hybrid Application Console (HAC)](./hybrid-application-console.md) URL.
