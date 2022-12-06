@@ -17,6 +17,7 @@ Accepted
 * Gorkem Ercan
 * Parag Dave
 * Ralph Bean
+* Ann Marie Fred
 
 ## Context
 
