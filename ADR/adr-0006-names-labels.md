@@ -15,7 +15,7 @@ Accepted
 
 ## Context
 
-We need log conventions to make App Studio easier to operate and maintain. These will also make it possible for us to create queries that cross components in our logs.
+We need log conventions to make our offering easier to operate and maintain. These will also make it possible for us to create queries that cross components in our logs.
 
 ## Decision: Log conventions
 
@@ -40,7 +40,7 @@ Use the key `action` with possible values `VIEW, ADD, UPDATE, DELETE`.
 
 ### 3. Where did it happen?
 
-Use the key `appstudio-component` with possible values `HAS, SPI, GITOPS`, etc. Here is [sample code](https://github.com/redhat-appstudio/application-service/blob/9f25d1f6832568598c718423b1e2f7d9161ad790/controllers/component_controller.go#L549) from the HAS component.
+Use the key `stonesoup-component` with possible values `HAS, SPI, GITOPS`, etc. Here is [sample code](https://github.com/redhat-appstudio/application-service/blob/9f25d1f6832568598c718423b1e2f7d9161ad790/controllers/component_controller.go#L549) from the HAS component.
 
 - GitOps Service: `GITOPS`
 - Pipeline Service: `PLNSRVCE`
