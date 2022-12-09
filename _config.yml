@@ -24,3 +24,5 @@ navigation:
       link: /book/ref/release-service.html
     - name: Enterprise Contract
       link: /book/ref/enterprise-contract.html
+  - name: Tools
+    link: /book/tools/index.html
