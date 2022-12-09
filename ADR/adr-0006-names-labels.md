@@ -60,7 +60,7 @@ Use the key `appstudio-component` with possible values `HAS, SPI, GITOPS`, etc. 
 - Enterprise Contract: EC
 - Java Rebuilds Service: JAVA
 - Release Service: TBD
-- Integration Service: TBD
+- Integration Service: INTEGRATION
 
 ### 4. Who was involved?
 
