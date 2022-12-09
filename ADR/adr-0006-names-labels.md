@@ -58,7 +58,7 @@ Use the key `appstudio-component` with possible values `HAS, SPI, GITOPS`, etc. 
 - Service Provider Integration: `SPI`
 - Hybrid Application Service: `HAS`
 - Enterprise Contract: TBD
-- Java Rebuilds Service: TBD
+- Java Rebuilds Service: JAVA
 - Release Service: TBD
 - Integration Service: TBD
 
