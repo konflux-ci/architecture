@@ -1,0 +1,39 @@
+# 1. Record architecture decisions
+
+Date: 2022-November-11
+
+## Status
+
+Accepted
+
+## Approvers
+
+* Ann Marie Fred
+* Gorkem Ercan
+
+## Reviewers
+
+## Context
+
+We need metadata on our namespaces to make Stone Soup easier to operate and maintain. Standardizing namespace metadata will make it easier for us to search our logs and metrics across clusters. It will also allow us to enable logging for outgoing network traffic, one of our security requirements.
+
+## Namespace labels
+
+We will apply the following labels to Stone Soup namespaces, to make them easier to find.
+
+- `stonesoup.redhat.com/namespacetype: "controller"` for namespaces containing Stone Soup controllers
+- `stonesoup.redhat.com/namespacetype: "user-workspace-data"` for User workspaces where Applications, Components, and so on are defined
+- `stonesoup.redhat.com/namespacetype: "user-deployments"` for the namespaces where GitOps deploys applications for users
+- `stonesoup.redhat.com/namespacetype: "user-builds"` for the namespaces where the Pipeline Service has PipelineRuns
+
+## Namespace annotations
+
+We will apply the following annotation to Stone Soup namespaces, which will enable OVN network logging to log outgoing network traffic:
+
+metadata:
+  annotations:
+    k8s.ovn.org/acl-logging: '{"deny": "info", "allow": "info"}'
+
+## Consequences
+
+TBD
