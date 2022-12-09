@@ -1,5 +1,11 @@
 # Architecture Decision Records
 
+To create a new ADR, copy the ADR Template below, choose the next ADR number from the list (be sure to check active PRs as well), and put up your own PR for review. Be sure to add the ADR to this index file too.
+
+## ADR Template
+
+![](../ADR/adr-template.md)
+
 ## ADR-0001 Pipeline Service Phase 1
 
 ![](../ADR/adr-0001-pipeline-service-phase-1.md)
@@ -40,7 +46,3 @@
 ## ADR-0010 Namespace Metadata
 
 ![](../ADR/adr-0010-namespace-metadata)
-
-## ADR Template
-
-![](../ADR/adr-template.md)
