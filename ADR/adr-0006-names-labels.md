@@ -15,18 +15,9 @@ Accepted
 
 ## Context
 
-We need naming standards in various contexts, to make App Studio easier to operate and maintain.
+We need log conventions to make App Studio easier to operate and maintain. These will also make it possible for us to create queries that cross components in our logs.
 
-## Decision 1: Namespace labels
-
-We will apply the following labels to App Studio namespaces, to make them easier to find.
-
-- `appstudio.redhat.com/namespacetype: "controller"` for namespaces containing App Studio controllers
-- `appstudio.redhat.com/namespacetype: "user-workspace-data"` for User workspaces where Applications, Components, and so on are defined
-- `appstudio.redhat.com/namespacetype: "user-deployments"` for the namespaces where GitOps deploys applications for users
-- `appstudio.redhat.com/namespacetype: "user-builds"` for the namespaces where the Pipeline Service has PipelineRuns
-
-## Decision 2: Log conventions
+## Decision: Log conventions
 
 In our controller logs, we will use structured, JSON-formatted audit log messages with key-value pairs as described below.
 
@@ -45,22 +36,22 @@ Timestamps will be in UTC/ISO-8601 format.
 
 ### 2. What happened?
 
-Use the key `action` with possible values `ADD, UPDATE, DELETE`.
+Use the key `action` with possible values `VIEW, ADD, UPDATE, DELETE`.
 
 ### 3. Where did it happen?
 
 Use the key `appstudio-component` with possible values `HAS, SPI, GITOPS`, etc. Here is [sample code](https://github.com/redhat-appstudio/application-service/blob/9f25d1f6832568598c718423b1e2f7d9161ad790/controllers/component_controller.go#L549) from the HAS component.
 
 - GitOps Service: `GITOPS`
-- Pipeline Service: PLNSRVCE
-- Build Service: BUILD
+- Pipeline Service: `PLNSRVCE`
+- Build Service: `BUILD`
 - Workspace and Terminal Service: TBD
 - Service Provider Integration: `SPI`
 - Hybrid Application Service: `HAS`
-- Enterprise Contract: EC
-- Java Rebuilds Service: JAVA
-- Release Service: RELEASE
-- Integration Service: INTEGRATION
+- Enterprise Contract: `EC`
+- Java Rebuilds Service: `JAVA`
+- Release Service: `RELEASE`
+- Integration Service: `INTEGRATION`
 
 ### 4. Who was involved?
 
@@ -74,7 +65,7 @@ Use the key `resource` with the name of the resource being acted upon.
 
 Optionally, use the key `source` to direct developers to the source code where the action occurred. 
 
-### Application audit logs
+### Controller audit logs
 
 For the specific types of audit logs required by SSML.PW.5.1.4 Perform Event Logging, one of the key-value pairs in the log entry should be `audit: true`. This makes it easier to query aggregated logs to find these special log entries.
 
