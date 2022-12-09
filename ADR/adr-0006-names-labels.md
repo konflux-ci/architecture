@@ -1,4 +1,4 @@
-# 1. Record architecture decisions
+# ADR-0006 Log Conventions
 
 Date: 2022-November-11
 
