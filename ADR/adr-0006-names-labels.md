@@ -68,7 +68,9 @@ Use the key `namespace` when logging the namespace of the targeted resource that
 
 ### 5. Where it came from? 
 
-Use the key `resource` with possible resource name values determined by the component team.  For example, for HAS this can be `CDQ, Application, Component`, etc. 
+Use the key `kind` with possible resource kind values determined by the component team.  For example, for HAS this can be `CDQ, Application, Component`, etc. 
+
+Use the key `resource` with the name of the resource being acted upon.
 
 Optionally, use the key `source` to direct developers to the source code where the action occurred. 
 
