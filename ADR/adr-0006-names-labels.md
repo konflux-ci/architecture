@@ -37,7 +37,7 @@ Fluentd and Fluent Bit annotate log messages with the following information auto
 
 For more details on Fluentd vs. Fluent Bit logs, see [Set up Fluent Bit as a DaemonSet to send logs to CloudWatch Logs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html).
 
-It is best to avoid using the same key as the log collectors in our application logs, to avoid confusion.
+It is best to avoid using the same key as the log collectors in our controller logs, to avoid confusion.
 
 ### 1. When did it happen? 
 
