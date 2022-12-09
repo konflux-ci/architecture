@@ -53,7 +53,7 @@ Use the key `appstudio-component` with possible values `HAS, SPI, GITOPS`, etc. 
 
 - GitOps Service: `GITOPS`
 - Pipeline Service: PLNSRVCE
-- Build Service: TBD
+- Build Service: BUILD
 - Workspace and Terminal Service: TBD
 - Service Provider Integration: `SPI`
 - Hybrid Application Service: `HAS`
