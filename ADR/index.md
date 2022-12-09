@@ -13,17 +13,17 @@
 
 ![](../ADR/0003-interacting-with-internal-services.md)
 
-## ADR-0004 WIP
+## ADR-0004 Out-of-the-box image repository for AppStudio users 
 
-![](../ADR/0003-interacting-with-internal-services.md)
+![](../ADR/0004-component-image-location.md)
 
-## ADR-0005 WIP
+## ADR-0005 Service Account configuration for image builds in the Pipeline Service 
 
-![](../ADR/0003-interacting-with-internal-services.md)
+![](../ADR/adr-0005-image-builder-sa.md)
 
-## ADR-0006 WIP
+## ADR-0006 Log Conventions
 
-![](../ADR/0003-interacting-with-internal-services.md)
+![](../ADR/adr-0006-names-labels.md)
 
 ## ADR-0007 Change Management Process
 
