@@ -28,7 +28,7 @@ We will apply the following labels to App Studio namespaces, to make them easier
 
 ## Decision 2: Log conventions
 
-In our application logs, we will use structured, JSON-formatted audit log messages with key-value pairs as described below.
+In our controller logs, we will use structured, JSON-formatted audit log messages with key-value pairs as described below.
 
 Fluentd and Fluent Bit annotate log messages with the following information automatically: `namespace_name`, `container_name`, `pod_name`, `container_image`, `pod_ip`, `host`, `hostname`, `namespace_labels`, `message`, `level`, `time`, and more. The cluster, node, pod and container names are also part of the log stream name.  For example:
   Under /aws/containerinsights/`Cluster_Name`/application
