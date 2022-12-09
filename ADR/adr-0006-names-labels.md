@@ -59,7 +59,7 @@ Use the key `appstudio-component` with possible values `HAS, SPI, GITOPS`, etc. 
 - Hybrid Application Service: `HAS`
 - Enterprise Contract: EC
 - Java Rebuilds Service: JAVA
-- Release Service: TBD
+- Release Service: RELEASE
 - Integration Service: INTEGRATION
 
 ### 4. Who was involved?
