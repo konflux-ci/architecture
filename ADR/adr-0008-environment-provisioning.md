@@ -43,17 +43,16 @@ Some use cases to consider for [Environments]:
 2.  The user will want to manually create **additional** [Environments] (for example, a prod environment). The user may want to use our compute resources provided in the form of a new **namespace on a devsandbox member cluster** for this ([STONE-183](https://issues.redhat.com/browse/STONE-183)) or they may want to **bring their own cluster** as a target ([STONE-162](https://issues.redhat.com/browse/STONE-162)).
 3.  The integration-service expects to be able to create **ephemeral** [Environments] for automated testing purposes ([STONE-114](https://issues.redhat.com/browse/STONE-114)). For our short-term goals, the automated testing use case requires the same kind of compute as for the dev and stage [Environments] (devsandbox member cluster namespaces), but will expand to include other kinds of deployment targets in the future - like hypershift clusters ([STONE-185](https://issues.redhat.com/browse/STONE-185)).
 
-# Decision
+## Decision
 
 We are going to emulate storage management APIs (see [persistent-volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) and [design.md](https://github.com/kubernetes-csi/external-provisioner/blob/master/doc/design.md) for reference).
 
 # TODO - break up the miro and embed it.
 Miro board describing some aspects of this proposal
 ([link](https://miro.com/app/board/uXjVP77ztI4=)).
+### CRDs
 
-## CRDs
-
-### DeploymentTarget (DT)
+#### DeploymentTarget (DT)
 
 A deployment target, usually a K8s api endpoint. The credentials for connecting to the target will
 be stored in a secret which will be referenced in the clusterCredentialsSecret field. A [DT] Can be
@@ -78,7 +77,7 @@ spec:
         name: prod-dtc
 ```
 
-### DeploymentTargetClaim (DTC)
+#### DeploymentTargetClaim (DTC)
 
 Represents a request for a [DeploymentTarget]. The phase field indicates if there is a [DT] that
 fulfills the requests of the [DTC] and whether it has been bound to it.
@@ -98,7 +97,7 @@ status:
     phase: Bound
 ```
 
-### DeploymentTargetClass (DTCLS)
+#### DeploymentTargetClass (DTCLS)
 
 Referred from a [DeploymentTarget] and [DeploymentTargetClaim]. Defines [DeploymentTarget] properties that
 should be abstracted from the controller/user that creates a [DTC] and wants a [DT] to be provisioned
@@ -125,7 +124,7 @@ spec:
     reclaimPolicy: Delete
 ```
 
-### Environment
+#### Environment
 
 [Environment] objects refer to a [DTC] using the `deploymentTargetClaim`
 field. The environment controller will wait for the [DTC] to get to the
@@ -153,9 +152,9 @@ spec:
                 claimName: prod-dtc
 ```
 
-## Controllers
+### Controllers
 
-### DeploymentTargetBinder
+#### DeploymentTargetBinder
 
 Binds [DeploymentTargetClaim] to a [DeploymentTarget] that satisfies its requirements.
 
@@ -165,11 +164,11 @@ A [DT] that we created dynamically for a specific [DTC] will always be attached 
 
 [DT] and [DTC] have one to one bindings.
 
-#### Binding Loop (DTC Reconciliation)
+##### Binding Loop (DTC Reconciliation)
 
 ![](../diagrams/ADR-0008/binding-controller.jpg)
 
-### DeploymentTargetProvisioner
+#### DeploymentTargetProvisioner
 
 Watch for the creation of a new [DTC]. If the [DTCLS] of the [DTC] matches a [DTCLS] the provisioner was
 configured for, it reads the parameters from that class, provisions the target and creates a [DT]
@@ -178,23 +177,23 @@ object which references the [DTC] that started the process.
 When a [DTC] is deleted, if it was bound to a [DT] created by the provisioner, it reclaims the [DT] and
 the actual cluster that was created for it based on the reclaimPolicy configuration.
 
-#### Provision Loop (DTC Reconciliation)
+##### Provision Loop (DTC Reconciliation)
 
 ![](../diagrams/ADR-0008/provision-loop.jpg)
 
-#### Deprovision Loop (DT Reconciliation)
+##### Deprovision Loop (DT Reconciliation)
 
 ![](../diagrams/ADR-0008/deprovision-loop.jpg)
 
-### EnvironmentController
+#### EnvironmentController
 
 TODO - anything to write about the Environment controller?
 
-## DeploymentTarget(DT) and DeploymentTargetClaim(DTC) Lifecycle
+### DeploymentTarget(DT) and DeploymentTargetClaim(DTC) Lifecycle
 
 ![](../diagrams/ADR-0008/dt-dtc-lifecycle.jpg)
 
-## Access Matrix
+### Access Matrix
 
 | *User,Controller/CRD* | **DT**                | **DTC**               | **DTCLS** | **Environment**      |
 |-----------------------|-----------------------|-----------------------|-----------|----------------------|
@@ -204,7 +203,7 @@ TODO - anything to write about the Environment controller?
 | **Integration**       |                       | create                |           | create/delete        |
 | **User**              | create/delete         | create/delete         |           | create/delete/update |
 
-## Annotation details
+### Annotation details
 
 | *Const Name in code*      | *Key*                                          | *Values*                | *Applied by*       | *Applied on* | *Purpose*                                                                                                                                                |
 |---------------------------|------------------------------------------------|-------------------------|--------------------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -213,34 +212,34 @@ TODO - anything to write about the Environment controller?
 | AnnBoundByController      | dt.appstudio.redhat.com/bound-by-controller    | "yes"                   | Binding controller | DTC          | Indicates that the binding controller bind the DTC to a DT. In practice it means that the controller set the DTC.spec.VolumeName to the value of DT.Name |
 | AnnDynamicallyProvisioned | provionser.appstudio.redhat.com/provisioned-by | A name of a provisioner | Provisioner        | DT           | Indicates that the provisioner whose name appears in the value provisioned the DT.                                                                       |
 
-## Finalizer details
+### Finalizer details
 
 | Const Name in code | Key                                       | Applied by  | Applied on | Purpose                                                                       |
 |--------------------|-------------------------------------------|-------------|------------|-------------------------------------------------------------------------------|
 | finalizerDT        | provionser.appstudio.redhat.com/finalizer | Provisioner | DT         | Delays the deletion of a DT so the provisioner can free up external resources |
 
-## Use Case Descriptions
+### Use Case Descriptions
 
 - **During onboarding** - when a user requests a new appstudio tier namespace, the tier template includes two [Environments], and two [DTCs]. The [Environments] reference the [DTCs]. The [DTCs] bear a request for the “devsandbox” [DTCLS]. The devsandbox provisioner responds to that request and generates a SpaceRequest, ultimately resulting in a new namespace for each environment. The SpaceRequest is marked ready by the spacerequest controller. The devsandbox deployment target provisioner controller sees that and marks the devsandbox [DT] as ready. The deployment target binder sees that, and attaches the new [DTs] to the [DTCs]. The environment controller sees this and marks the [Environments] as ready.
 - **For manual creation of new Environments** - a user submits a form in HAC which creates a new Environment CR and a new [DTC] CR. The Environment CR references the [DTC] CR, which is reconciled as in the previous bullet.
 - **For automated testing in ephemeral environments** - a user specifies an IntegrationTestScenario CR with an existing Environment to clone. After a build completes, but before it executes tests, the integration-service creates a new Environment CR and a new [DTC] CR with the devsandbox [DTCLS] as above, and references the [DTC] from the Environment. The integration-service should delete the [DTC] once the environment isn’t needed anymore for the test.
 - **BYO cluster** - A user creates a [DT] and a [DTC] and Secret. The [DT] has the details and a reference to the secret used to connect to his/hers cluster. In addition, it contains the name of the [DTC] it should be bounded to. The user then refer to the [DTC] from the Environment that should use it.
 
-### Manual Environment Creation Examples
+#### Manual Environment Creation Examples
 
-#### Manual Environment Creation - BYOC
+##### Manual Environment Creation - BYOC
 
 ![](../diagrams/ADR-0008/flow-byoc-manual-creation.jpg)
 
-#### Manual Environment Creation - Sandbox
+##### Manual Environment Creation - Sandbox
 
 ![](../diagrams/ADR-0008/flow-sandbox-manual-creation.jpg)
 
-#### Manual Environment Creation - Cluster
+##### Manual Environment Creation - Cluster
 
 ![](../diagrams/ADR-0008/flow-cluster-manual-creation.jpg)
 
-## Mutating DeploymentTargets and Claims
+### Mutating DeploymentTargets and Claims
 
 Users may mutate existing [DeploymentTargets] and [DeploymentTargetClaims] in order to, for instance,
 request that their provisioned cluster is scaled up to include more resources. However,
@@ -264,9 +263,9 @@ the resources in the spec of the [DeploymentTarget] to reflect the external chan
 
 ## Phases of implementation
 
-### Phase 0 (Path to MVP)
+A addendum about what features can be left out until later iterations.
 
-A note about what features can be left out until later iterations.
+### Phase 0 (Path to MVP)
 
 - At minimum, create the CRDs and make them available, with no binder or provisioner controllers behind them.
 - Next, modify the Environment CRD and teach the gitops service how to navigate from the linked [DTC] to the [DT] in order to find the Secret that it needs for Argo.
