@@ -182,6 +182,10 @@ TODO - anything to write about the Environment controller?
 
 ![](../diagrams/ADR-0008/dt-dtc-lifecycle.jpg)
 
+## Provision Loop (DTC Reconciliation)
+
+![](../diagrams/ADR-0008/provision-loop.jpg)
+
 ## Access Matrix
 
 | *User,Controller/CRD* | **DT**                | **DTC**               | **DTCLS** | **Environment**      |
