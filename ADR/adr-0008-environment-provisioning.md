@@ -1,7 +1,3 @@
-## References
-
-- [Discussion recording, 2022-12-07](https://drive.google.com/file/d/1UWIefLzFb2rYnz8mvvWkNKJyuWy-_nhm/view)
-
 ## Context
 
 In our old KCP architecture, we had [a
@@ -25,10 +21,7 @@ Some use cases to consider for Environments:
 
 # Decision
 
-We are going to emulate storage management APIs (see
-[persistent-volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
-and
-[design.md](https://github.com/kubernetes-csi/external-provisioner/blob/master/doc/design.md)).
+We are going to emulate storage management APIs (see [persistent-volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) and [design.md](https://github.com/kubernetes-csi/external-provisioner/blob/master/doc/design.md)).
 
 # TODO - break up the miro and embed it.
 Miro board describing some aspects of this proposal
@@ -344,3 +337,10 @@ spec:
     reclaimPolicy: Delete
     allowTargetResourceExpansion: false
 ```
+
+## References
+
+- [Discussion recording, 2022-12-07](https://drive.google.com/file/d/1UWIefLzFb2rYnz8mvvWkNKJyuWy-_nhm/view)
+- [Original drafting in googledoc](https://docs.google.com/document/d/1vFD5lDbxek_Q2RZyKdFuZ8z0xYubOA1i8cu2K7KNxaQ/edit#heading=h.k2fng7c0dm7k)
+- [Original miro](https://miro.com/app/board/uXjVP77ztI4=)
+- [Issue tracking creation of this ADR (STONE-174)](https://issues.redhat.com/browse/STONE-174)
