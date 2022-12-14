@@ -178,6 +178,10 @@ the actual cluster that was created for it based on the reclaimPolicy configurat
 
 TODO - anything to write about the Environment controller?
 
+## DeploymentTarget(DT) and DeploymentTargetClaim(DTC) Lifecycle
+
+![](../diagrams/ADR-0008/dt-dtc-lifecycle.jpg)
+
 ## Access Matrix
 
 | *User,Controller/CRD* | **DT**                | **DTC**               | **DTCLS** | **Environment**      |
