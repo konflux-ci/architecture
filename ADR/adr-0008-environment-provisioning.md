@@ -226,6 +226,20 @@ TODO - anything to write about the Environment controller?
 - **For automated testing in ephemeral environments** - a user specifies an IntegrationTestScenario CR with an existing Environment to clone. After a build completes, but before it executes tests, the integration-service creates a new Environment CR and a new DTC CR with the devsandbox DTCLS as above, and references the DTC from the Environment. The integration-service should delete the DTC once the environment isn’t needed anymore for the test.
 - **BYO cluster** - A user creates a DT and a DTC and Secret. The DT has the details and a reference to the secret used to connect to his/hers cluster. In addition, it contains the name of the DTC it should be bounded to. The user then refer to the DTC from the Environment that should use it.
 
+### Manual Environment Creation Examples
+
+#### Manual Environment Creation - BYOC
+
+![](../diagrams/ADR-0008/flow-byoc-manual-creation.jpg)
+
+#### Manual Environment Creation - Sandbox
+
+![](../diagrams/ADR-0008/flow-sandbox-manual-creation.jpg)
+
+#### Manual Environment Creation - Cluster
+
+![](../diagrams/ADR-0008/flow-cluster-manual-creation.jpg)
+
 ## Mutating DeploymentTargets and Claims
 
 Users may mutate existing DeploymentTargets and DeploymentTargetClaims in order to, for instance,
