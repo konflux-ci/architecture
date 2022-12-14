@@ -1,3 +1,27 @@
+# ADR-0008 Environment Provisioning
+
+Date: 2022-12-14
+
+## Status
+
+Accepted
+
+## Approvers
+
+* Alexey Kazakhov
+* Ann Marie Fred
+* Elson Yuen
+* Gorkem Ercan
+* Jonathan West
+* Krunoslav Pavic
+* Scott Hebert
+* Shoubhik Bose
+
+## Authors
+
+* Gal Ben Haim
+* Ralph Bean
+
 ## Context
 
 In our old KCP architecture, we had [a
