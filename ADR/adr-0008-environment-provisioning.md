@@ -176,6 +176,10 @@ the actual cluster that was created for it based on the reclaimPolicy configurat
 
 ### EnvironmentController
 
+TODO - anything to write about the Environment controller?
+
+## Access Matrix
+
 | *User,Controller/CRD* | **DT**                | **DTC**               | **DTCLS** | **Environment**      |
 |-----------------------|-----------------------|-----------------------|-----------|----------------------|
 | **Binder**            | watch/list/get/update | watch/list/get/update |           |                      |
