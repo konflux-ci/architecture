@@ -188,6 +188,15 @@ TODO - anything to write about the Environment controller?
 | **Integration**       |                       | create                |           | create/delete        |
 | **User**              | create/delete         | create/delete         |           | create/delete/update |
 
+## Annotation details
+
+| *Const Name in code*      | *Key*                                          | *Values*                | *Applied by*       | *Applied on* | *Purpose*                                                                                                                                                |
+|---------------------------|------------------------------------------------|-------------------------|--------------------|--------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| AnnTargetProvisioner      | provionser.appstudio.redhat.com/dt-provisioner | A name of a provisioner | Binding controller | DTC          | Indicates that a DT should be dynamically provisioned for the DTC by the provisioner whose name appear in the value                                      |
+| AnnBindCompleted          | dt.appstudio.redhat.com/bind-complete          | "yes"                   | Binding controller | DTC          | Indicates that the binding controller completed the binding process                                                                                      |
+| AnnBoundByController      | dt.appstudio.redhat.com/bound-by-controller    | "yes"                   | Binding controller | DTC          | Indicates that the binding controller bind the DTC to a DT. In practice it means that the controller set the DTC.spec.VolumeName to the value of DT.Name |
+| AnnDynamicallyProvisioned | provionser.appstudio.redhat.com/provisioned-by | A name of a provisioner | Provisioner        | DT           | Indicates that the provisioner whose name appears in the value provisioned the DT.                                                                       |
+
 ## Use Case Descriptions
 
 - **During onboarding** - when a user requests a new appstudio tier namespace, the tier template includes two Environments, and two DTCs. The Environments reference the DTCs. The DTCs bear a request for the “devsandbox” DTCLS. The devsandbox provisioner responds to that request and generates a SpaceRequest, ultimately resulting in a new namespace for each environment. The SpaceRequest is marked ready by the spacerequest controller. The devsandbox deployment target provisioner controller sees that and marks the devsandbox DT as ready. The deployment target binder sees that, and attaches the new DTs to the DTCs. The environment controller sees this and marks the Environments as ready.
