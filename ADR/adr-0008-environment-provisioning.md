@@ -45,7 +45,7 @@ Some use cases to consider for Environments:
 
 # Decision
 
-We are going to emulate storage management APIs (see [persistent-volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) and [design.md](https://github.com/kubernetes-csi/external-provisioner/blob/master/doc/design.md)).
+We are going to emulate storage management APIs (see [persistent-volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) and [design.md](https://github.com/kubernetes-csi/external-provisioner/blob/master/doc/design.md) for reference).
 
 # TODO - break up the miro and embed it.
 Miro board describing some aspects of this proposal
