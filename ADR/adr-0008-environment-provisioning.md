@@ -165,6 +165,10 @@ A DT that we created dynamically for a specific DTC will always be attached to i
 
 DT and DTC have one to one bindings.
 
+#### Binding Loop (DTC Reconciliation)
+
+![](../diagrams/ADR-0008/binding-controller.jpg)
+
 ### DeploymentTargetProvisioner
 
 Watch for the creation of a new DTC. If the DTCLS of the DTC matches a DTCLS the provisioner was
@@ -174,6 +178,14 @@ object which references the DTC that started the process.
 When a DTC is deleted, if it was bound to a DT created by the provisioner, it reclaims the DT and
 the actual cluster that was created for it based on the reclaimPolicy configuration.
 
+#### Provision Loop (DTC Reconciliation)
+
+![](../diagrams/ADR-0008/provision-loop.jpg)
+
+#### Deprovision Loop (DT Reconciliation)
+
+![](../diagrams/ADR-0008/deprovision-loop.jpg)
+
 ### EnvironmentController
 
 TODO - anything to write about the Environment controller?
@@ -181,14 +193,6 @@ TODO - anything to write about the Environment controller?
 ## DeploymentTarget(DT) and DeploymentTargetClaim(DTC) Lifecycle
 
 ![](../diagrams/ADR-0008/dt-dtc-lifecycle.jpg)
-
-## Provision Loop (DTC Reconciliation)
-
-![](../diagrams/ADR-0008/provision-loop.jpg)
-
-## Deprovision Loop (DT Reconciliation)
-
-![](../diagrams/ADR-0008/deprovision-loop.jpg)
 
 ## Access Matrix
 
