@@ -186,6 +186,10 @@ TODO - anything to write about the Environment controller?
 
 ![](../diagrams/ADR-0008/provision-loop.jpg)
 
+## Deprovision Loop (DT Reconciliation)
+
+![](../diagrams/ADR-0008/deprovision-loop.jpg)
+
 ## Access Matrix
 
 | *User,Controller/CRD* | **DT**                | **DTC**               | **DTCLS** | **Environment**      |
