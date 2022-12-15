@@ -195,7 +195,7 @@ TODO - anything to write about the Environment controller?
 | *User,Controller/CRD* | **DT**                | **DTC**               | **DTCLS** | **Environment**      |
 |-----------------------|-----------------------|-----------------------|-----------|----------------------|
 | **Binder**            | watch/list/get/update | watch/list/get/update |           |                      |
-| **Provionser**        | create/delete         | watch                 | get       |                      |
+| **Provisioner**       | create/delete         | watch                 | get       |                      |
 | **Environment**       | get                   | get                   |           | watch                |
 | **Integration**       |                       | create                |           | create/delete        |
 | **User**              | create/delete         | create/delete         |           | create/delete/update |
