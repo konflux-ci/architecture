@@ -53,7 +53,7 @@ We are going to emulate storage management APIs (see [persistent-volumes](https:
 
 A deployment target, usually a K8s api endpoint. The credentials for connecting to the target will
 be stored in a secret which will be referenced in the clusterCredentialsSecret field. A [DT] Can be
-created manually by a user, or dynamically using a provisioner.
+created manually by a user, or dynamically using a provisioner. The `phase` section shows the lifecycle phase of the [DT].
 
 **Immutable object**: no
 
@@ -72,12 +72,27 @@ spec:
         clusterCredentialsSecret: team-a--prod-dtc--secret
     claimRef:
         name: prod-dtc
+status:
+    phase: Bound
+
 ```
+
+Phases:
+
+**Pending:** DT is not yet available for binding.
+
+**Available:** DT waits for a Claim to be bound to.
+
+**Bound:** The DT was bounded to a DTC.
+
+**Released:** The DT was previously bound to a DTC which got deleted. external resources were not freed.
+
+**Failed:** DT was released from its claim, but there was a failure during the release of external resources.
+
 
 #### DeploymentTargetClaim (DTC)
 
-Represents a request for a [DeploymentTarget]. The phase field indicates if there is a [DT] that
-fulfills the requests of the [DTC] and whether it has been bound to it.
+Represents a request for a [DeploymentTarget]. The `phase` section shows the lifecycle phase of the [DTC].
 
 **Immutable object**: no
 
@@ -93,6 +108,14 @@ spec:
 status:
     phase: Bound
 ```
+
+Phases:
+
+**Pending:** DTC wait for the binding controller or user to bind it with a DT that satifies it.
+
+**Bound:** The DTC was bounded to a DT that satisfies it by the binding controller.
+
+**Lost:** The DTC lost its bounded DT. The DT doesn't exist anymore because it got deleted.
 
 #### DeploymentTargetClass (DTCLS)
 
@@ -125,7 +148,7 @@ spec:
 
 [Environment] objects refer to a [DTC] using the `deploymentTargetClaim`
 field. The environment controller will wait for the [DTC] to get to the
-“bound” phase, once it is bound, it will reach the [DT] and read the
+`bound` phase, once it is bound, it will reach the [DT] and read the
 target's connection details from the kubernetesCredentials field and
 configure Argo/Gitops services to use them.
 
@@ -155,9 +178,9 @@ spec:
 
 Binds [DeploymentTargetClaim] to a [DeploymentTarget] that satisfies its requirements.
 
-It watches for the creation of new [DTC] and tries to find a matching [DT] for each one of them.
+It watches for [DTC] and objects and tries to find a matching [DT] for each one of them. In addition, it's responsible for updating the `Status` sections of the [DT] and [DTC] (it also watches [DTC] objects). It marks [DTC] objects that requires dynamic provisioning.
 
-A [DT] that we created dynamically for a specific [DTC] will always be attached to it.
+A [DT] that was created dynamically for a specific [DTC] will always be attached to it.
 
 [DT] and [DTC] have one to one bindings.
 
@@ -167,8 +190,7 @@ A [DT] that we created dynamically for a specific [DTC] will always be attached 
 
 #### DeploymentTargetProvisioner
 
-Watch for the creation of a new [DTC]. If the [DTCLS] of the [DTC] matches a [DTCLS] the provisioner was
-configured for, it reads the parameters from that class, provisions the target and creates a [DT]
+Watch for [DTC] objects. If the [DTC] was marked for a dynamic provisioning by the provisioner, it reads the parameters from the [DTCLS] mentioned in the [DTC], provisions the target and creates a [DT]
 object which references the [DTC] that started the process.
 
 When a [DTC] is deleted, if it was bound to a [DT] created by the provisioner, it reclaims the [DT] and
@@ -197,7 +219,7 @@ TODO - anything to write about the Environment controller?
 | **Binder**            | watch/list/get/update | watch/list/get/update |           |                      |
 | **Provisioner**       | create/delete         | watch                 | get       |                      |
 | **Environment**       | get                   | get                   |           | watch                |
-| **Integration**       |                       | create                |           | create/delete        |
+| **Integration**       |                       | create/delete         |           | create/delete        |
 | **User**              | create/delete         | create/delete         |           | create/delete/update |
 
 ### Annotation details
@@ -217,7 +239,7 @@ TODO - anything to write about the Environment controller?
 
 ### Use Case Descriptions
 
-- **During onboarding** - when a user requests a new appstudio tier namespace, the tier template includes two [Environments], and two [DTCs]. The [Environments] reference the [DTCs]. The [DTCs] bear a request for the “devsandbox” [DTCLS]. The devsandbox provisioner responds to that request and generates a SpaceRequest, ultimately resulting in a new namespace for each environment. The SpaceRequest is marked ready by the spacerequest controller. The devsandbox deployment target provisioner controller sees that and marks the devsandbox [DT] as ready. The deployment target binder sees that, and attaches the new [DTs] to the [DTCs]. The environment controller sees this and marks the [Environments] as ready.
+- **During onboarding** - when a user requests a new appstudio tier namespace, the tier template includes two [Environments], and two [DTCs]. The [Environments] reference the [DTCs]. The [DTCs] bear a request for the `devsandbox` [DTCLS]. The devsandbox provisioner responds to that request and generates a `SpaceRequest`, ultimately resulting in a new namespace for each environment. The `SpaceRequest` is marked ready by the `SpaceRequest` controller. The devsandbox deployment target provisioner controller sees that and create and marks the devsandbox [DT] as ready. The deployment target binder sees that, and attaches the new [DTs] to the [DTCs]. The environment controller sees this and marks the [Environments] as ready.
 - **For manual creation of new Environments** - a user submits a form in HAC which creates a new Environment CR and a new [DTC] CR. The Environment CR references the [DTC] CR, which is reconciled as in the previous bullet.
 - **For automated testing in ephemeral environments** - a user specifies an IntegrationTestScenario CR with an existing Environment to clone. After a build completes, but before it executes tests, the integration-service creates a new Environment CR and a new [DTC] CR with the devsandbox [DTCLS] as above, and references the [DTC] from the Environment. The integration-service should delete the [DTC] once the environment isn’t needed anymore for the test.
 - **BYO cluster** - A user creates a [DT] and a [DTC] and Secret. The [DT] has the details and a reference to the secret used to connect to his/hers cluster. In addition, it contains the name of the [DTC] it should be bounded to. The user then refer to the [DTC] from the Environment that should use it.
@@ -368,8 +390,8 @@ spec:
 
 ### Phase 3
 
-The result of this phase is to automatically provisioning of Hypershift cluster using Stonesoup
-credentials. We call it “provided compute” (compute that we provide, not the user) and it’s included
+The result of this phase is to automatically provisioning of Hypershift cluster using Stonesoup's
+credentials. We call it `provided compute` (compute that we provide, not the user) and it’s included
 as part of the offering. This compute can be used for both long lived clusters and for ephemeral
 clusters used by the integration service.
 
