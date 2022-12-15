@@ -206,7 +206,10 @@ the actual cluster that was created for it based on the reclaimPolicy configurat
 
 #### EnvironmentController
 
-TODO - anything to write about the Environment controller?
+Watch for [Environment] objects. If the [Environment] references a [DTC] that is `Bound` and that
+[DTC] references a [DT] that contains a `spec.kubernetesCredentials.clusterCredentialsSecret` field,
+then ensure that there exists a [GitOpsDeploymentManagedEnvironment] resource that also references
+that secret.
 
 ### DeploymentTarget(DT) and DeploymentTargetClaim(DTC) Lifecycle
 
@@ -239,10 +242,10 @@ TODO - anything to write about the Environment controller?
 
 ### Use Case Descriptions
 
-- **During onboarding** - when a user requests a new appstudio tier namespace, the tier template includes two [Environments], and two [DTCs]. The [Environments] reference the [DTCs]. The [DTCs] bear a request for the `devsandbox` [DTCLS]. The devsandbox provisioner responds to that request and generates a `SpaceRequest`, ultimately resulting in a new namespace for each environment. The `SpaceRequest` is marked ready by the `SpaceRequest` controller. The devsandbox deployment target provisioner controller sees that and create and marks the devsandbox [DT] as ready. The deployment target binder sees that, and attaches the new [DTs] to the [DTCs]. The environment controller sees this and marks the [Environments] as ready.
+- **During onboarding** - when a user requests a new appstudio tier namespace, the tier template includes two [Environments], and two [DTCs]. The [Environments] reference the [DTCs]. The [DTCs] bear a request for the `devsandbox` [DTCLS]. The devsandbox provisioner responds to that request and generates a `SpaceRequest`, ultimately resulting in a new namespace for each environment. The spacerequest controller provisions a serviceaccount in the new namespace and places a kubeconfig including the token for this serviceaccount in the origin namespace. The `SpaceRequest` in the origin namespace is updated to reference that `Secret` and is marked ready by the `SpaceRequest` controller. The devsandbox deployment target provisioner controller sees that and creates the devsandbox [DT] referencing the `Secret` and marks the devsandbox [DT] as ready. The deployment target binder sees that, and attaches the new [DTs] to the [DTCs]. The environment controller sees this and creates a [GitOpsDeploymentManagedEnvironment] that references the `Secret` found from traversing from the [Environment] to the [DTC] to the [DT].
 - **For manual creation of new Environments** - a user submits a form in HAC which creates a new Environment CR and a new [DTC] CR. The Environment CR references the [DTC] CR, which is reconciled as in the previous bullet.
 - **For automated testing in ephemeral environments** - a user specifies an IntegrationTestScenario CR with an existing Environment to clone. After a build completes, but before it executes tests, the integration-service creates a new Environment CR and a new [DTC] CR with the devsandbox [DTCLS] as above, and references the [DTC] from the Environment. The integration-service should delete the [DTC] once the environment isn’t needed anymore for the test.
-- **BYO cluster** - A user creates a [DT] and a [DTC] and Secret. The [DT] has the details and a reference to the secret used to connect to his/hers cluster. In addition, it contains the name of the [DTC] it should be bounded to. The user then refer to the [DTC] from the Environment that should use it.
+- **BYO cluster** - A user creates a [DT] and a [DTC] and `Secret`. The [DT] has the details and a reference to the secret used to connect to his/hers cluster. In addition, it contains the name of the [DTC] it should be bounded to. The user then refer to the [DTC] from the Environment that should use it.
 
 #### Manual Environment Creation Examples
 
