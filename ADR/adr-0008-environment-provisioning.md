@@ -301,7 +301,7 @@ Minimal functionality looks like the BYOC case: No provisioners
 necessary - and even the binder can be omitted in this first pass.
 
 - On workspace initialization, have the NsTemplateTier:
-  - Create Spaces with fixed -dev and -stage suffixes manually as a part of the appstudio tier
+  - Create Namespaces with fixed -dev and -stage suffixes manually as a part of the appstudio tier. So every provisioned workspace/space has three namespaces. The main user namespace and two -dev and -stage for environments.
   - Create serviceaccounts with rolebindings to administer the namespaces
   - Create [DeploymentTargets] to match and reference Secrets that will be created to contains tokens for the serviceaccounts in the previous steps.
   - Create [DeploymentTargetClaims] to match.
