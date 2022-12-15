@@ -45,7 +45,12 @@ Some use cases to consider for [Environments]:
 
 ## Decision
 
-We are going to emulate storage management APIs (see [persistent-volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) and [design.md](https://github.com/kubernetes-csi/external-provisioner/blob/master/doc/design.md) for reference).
+We are going split the two original purposes of the [Environment] CR into different APIs.
+
+- The [Environment] will still represent the first purpose of requesting that HAS and the GitOps service **recognize a new deployment destination**.
+- For the second purpose of **provisioning a new deployment target** we are going to introduce a new [DeploymentTarget] and [DeploymentTargetClaim] API, which will be referenced from an [Environment].
+
+The new [DeploymentTarget] API is designed to emulate storage management APIs (see [persistent-volumes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) and [storage provisioner design](https://github.com/kubernetes-csi/external-provisioner/blob/master/doc/design.md) for reference).
 
 ### CRDs
 
