@@ -313,8 +313,8 @@ creates a [DT].
   API](https://docs.google.com/document/d/1uqgghk1lN9dyoBLsvn5YD443TwKrsKHU6fvfUuo84Hs/edit#).
 - On workspace initialization,
   - The NsTemplateTier will:
-    - Create the Environments for Dev and Stage in the user's main namespace.
-    - Create the DeploymentTargetClaims for Dev and Stage in the user's main namespace.
+    - Create the [Environments] for Dev and Stage in the user's main namespace.
+    - Create the [DeploymentTargetClaims] for Dev and Stage in the user's main namespace.
   - The Sandbox provisioner will generate SpaceRequests.
   - The SpaceRequest controller should ultimately create namespaces, serviceaccount, and a Secret.
   - The Sandbox provisioner in response will generate the [DT], linking the Secret.
