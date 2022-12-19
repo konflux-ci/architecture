@@ -116,7 +116,7 @@ status:
 
 Phases:
 
-**Pending:** DTC wait for the binding controller or user to bind it with a DT that satifies it.
+**Pending:** DTC wait for the binding controller or user to bind it with a DT that satisfies it.
 
 **Bound:** The DTC was bounded to a DT that satisfies it by the binding controller.
 
@@ -290,7 +290,7 @@ the resources in the spec of the [DeploymentTarget] to reflect the external chan
 
 ## Phases of implementation
 
-A addendum about what features can be left out until later iterations.
+An addendum about what features can be left out until later iterations.
 
 ### Phase 0 (Path to MVP)
 
@@ -323,8 +323,8 @@ The following controllers should be implemented:
 
 ### Phase 2 (need more grooming and clear requirement from the PM)
 
-The result of this phase is the ability to specify parametes that are
-needed from the deployment target, such has memory, CPU, CPU
+The result of this phase is the ability to specify parameters that are
+needed from the deployment target, such as memory, CPU, CPU
 architecture and the number of nodes.
 
 - The [DT], [DTC] an [DTCLS] would need to extended to support the new parameters.
