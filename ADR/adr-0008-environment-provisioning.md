@@ -183,7 +183,7 @@ spec:
 
 Binds [DeploymentTargetClaim] to a [DeploymentTarget] that satisfies its requirements.
 
-It watches for [DTC] and objects and tries to find a matching [DT] for each one of them. In addition, it's responsible for updating the `Status` sections of the [DT] and [DTC] (it also watches [DTC] objects). It marks [DTC] objects that requires dynamic provisioning.
+It watches for [DTC] resources and tries to find a matching [DT] for each one of them. In addition, it's responsible for updating the `Status` sections of the [DT] and [DTC] (it also watches [DTC] objects). It marks [DTC] objects that requires dynamic provisioning.
 
 A [DT] that was created dynamically for a specific [DTC] will always be attached to it.
 
@@ -305,7 +305,7 @@ an environment on the Sandbox cluster (using the
 API](https://docs.google.com/document/d/1uqgghk1lN9dyoBLsvn5YD443TwKrsKHU6fvfUuo84Hs/edit#)) and
 creates a [DT].
 
-- Ceate the [DT], [DTC], and [StorageClass] CRDs and make them available.
+- Create the [DT], [DTC], and [DeploymentTargetClass] CRDs and make them available.
 - Modify the Environment CRD and teach the gitops service how to navigate from the linked [DTC] to
   the [DT] in order to find the Secret that it needs for Argo.
 - Implement the binding controller.
