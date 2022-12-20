@@ -133,7 +133,7 @@ Additional Resources
 
 - [Enterprise Contract Documentation](https://hacbs-contract.github.io/)
 - [HACBS Documentation](https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation/)
-- [Book of AppStudio](https://redhat-appstudio.github.io/book/)
+- [Book of StoneSoup](https://redhat-appstudio.github.io/book/)
 
 
 

@@ -1,6 +1,6 @@
-# Book of AppStudio
+# Book of StoneSoup
 
-This repository contains the technical and architecture documents for AppStudio.
+This repository contains the technical and architecture documents for StoneSoup.
 User documentation is out of scope.
 
 ## Guide to Sections
