@@ -8,14 +8,18 @@ Accepted
 
 ## Approvers
 
-* Alexey Kazakhov
-* Ann Marie Fred
 * Elson Yuen
 * Gorkem Ercan
 * Jonathan West
+* Shoubhik Bose
+
+## Reviewers
+
+* Alexey Kazakhov
+* Ann Marie Fred
+* John Duimovich
 * Krunoslav Pavic
 * Scott Hebert
-* Shoubhik Bose
 
 ## Authors
 
