@@ -30,12 +30,12 @@ Red Hat developer services provide the platform for building integrated experien
 
 The diagram below shows the interaction of the StoneSoup with other systems and environments.
 
-![](../diagrams/appstudio-hacbs-l1.drawio.svg)
+![](../diagrams/stonesoup-l1.drawio.svg)
 
 
 ## Application Context
 
-![](../diagrams/appstudio-hacbs-l2.drawio.svg)
+![](../diagrams/stonesoup-l2.drawio.svg)
 
 
 ## Service (Component) Context

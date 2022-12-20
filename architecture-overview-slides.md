@@ -18,10 +18,10 @@ A set of services that streamline, consolidate, connect, and secure the enterpri
 
 #### StoneSoup System Context
 
-![System Context](./diagrams/appstudio-hacbs-l1.drawio.svg)
+![System Context](./diagrams/stonesoup-l1.drawio.svg)
 
 ---
 
 #### StoneSoup Services
 
-![Data Plane](./diagrams/appstudio-hacbs-l2.drawio.svg)
+![Data Plane](./diagrams/stonesoup-l2.drawio.svg)
