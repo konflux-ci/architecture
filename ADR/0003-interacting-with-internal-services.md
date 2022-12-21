@@ -52,7 +52,7 @@ Using the pattern here, the user organization (called MyOrg) would create a sign
 
 ---
 
-![Interacting with Internal Services](../diagrams/interacting-with-internal-services.jpg)
+![Interacting with Internal Services](../diagrams/ADR-0003/interacting-with-internal-services.jpg)
 
 ## Open Questions
 
