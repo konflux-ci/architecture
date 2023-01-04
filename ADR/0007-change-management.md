@@ -1,4 +1,4 @@
-# ADR-0007 Change Management Process
+# 7. Change Management Process
 
 Date: 2022-11-22
 
