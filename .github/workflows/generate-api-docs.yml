@@ -38,6 +38,12 @@ jobs:
           repository: redhat-appstudio/managed-gitops
           path: crd-temp/managed-gitops
 
+      - name: Checkout Build Service API
+        uses: actions/checkout@v3
+        with:
+          path: crd-temp/build-service
+          repository: redhat-appstudio/build-service
+
       - name: Checkout Integration Service API
         uses: actions/checkout@v3
         with:
@@ -83,6 +89,9 @@ jobs:
 
       - name: Generate GitOps service API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/gitops.md --renderer=markdown --source-path=crd-temp/managed-gitops/backend-shared/apis/managed-gitops/v1alpha1
+
+      - name: Generate Build Service API docs
+        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/build-service.md --renderer=markdown --source-path=crd-temp/build-service/api/v1alpha1/
 
       - name: Generate Integration Service API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/integration-service.md --renderer=markdown --source-path=crd-temp/integration-service/api/v1alpha1/

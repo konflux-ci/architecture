@@ -16,6 +16,8 @@ navigation:
       link: /book/ref/service-provider.html
     - name: GitOps Service
       link: /book/ref/gitops.html
+    - name: Build Service
+      link: /book/ref/build-service.html
     - name: JVM Build Service
       link: /book/ref/jvm-build-service.html
     - name: Integration Service
