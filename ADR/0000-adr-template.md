@@ -1,6 +1,6 @@
-# 1. Record architecture decisions
+# 0. Record architecture decisions
 
-Date: 2016-02-12
+Date: 2022-06-17
 
 ## Status
 

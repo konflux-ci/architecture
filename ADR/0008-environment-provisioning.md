@@ -1,4 +1,4 @@
-# ADR-0008 Environment Provisioning
+# 8. Environment Provisioning
 
 Date: 2022-12-14
 

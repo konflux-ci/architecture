@@ -1,4 +1,4 @@
-# 2. Interacting with Internal Services
+# 3. Interacting with Internal Services
 
 Date: 2022-10-20
 
