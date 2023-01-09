@@ -1,6 +1,6 @@
-# 8. HACBS Test Stream - API contracts
+# 8. StoneSoup Test Stream - API contracts
 
-Date: 2022-11-28
+Date: 2023-01-[]
 
 ## Status
 
@@ -10,7 +10,7 @@ Accepted
 
 The Hybrid Application Cloud Build Service being developed aims to serve Red Hat teams but also partners and customers. This requires a level of adaptability to avoid recreating custom flows and Tasks for each stakeholder.
 
-In this respect Tasks developed by HACBS test stream should allow swapping external systems to accommodate different environments. This swap should not induce the complete recreation of pipelines.
+In this respect Tasks developed by StoneSoup test stream should allow swapping external systems to accommodate different environments. This swap should not induce the complete recreation of pipelines.
 
 This and the idea of providing a homogeneous experience, which is easier to comprehend and navigate complex systems, leads to the definition of `API contracts`. These contracts need to be understood as guidance that may evolve with time and experience while keeping the aim of building a flexible homogeneous system.
 
@@ -38,7 +38,7 @@ The output of each Tekton task will be provided in two forms:
 
 The maximum size of a [Task's Results](https://tekton.dev/vault/pipelines-v0.17.3/tasks/#emitting-results) is limited by the container [termination message](https://kubernetes.io/docs/tasks/debug/debug-application/determine-reason-pod-failure/#customizing-the-termination-message) feature of Kubernetes.
 
-App Studio builds are structured as [a shared Persistent Volume per App Studio Workspace](https://docs.google.com/document/d/1IPlihVjkJ4Kb9tdhsk7iz3bn5rkT_SvJCNQhyXzK3aI/edit#bookmark=id.gefgys3vno2). This allows teams to share builds, implement caching and other shared volumes. A single persistent volume is mapped to each default build pipeline. Builds are passed a directory specific to their builds.
+App Studio builds are structured as [a shared Persistent Volume per StoneSoup Workspace](https://docs.google.com/document/d/1IPlihVjkJ4Kb9tdhsk7iz3bn5rkT_SvJCNQhyXzK3aI/edit#bookmark=id.gefgys3vno2). This allows teams to share builds, implement caching and other shared volumes. A single persistent volume is mapped to each default build pipeline. Builds are passed a directory specific to their builds.
 
 #### Tekton Result Format
 
@@ -246,7 +246,7 @@ Information, which relates to an environment like connection details and credent
 ## Appendix
 
 - **Task recommendations**: This document focuses (it was at least the original intention) on API contracts but there are more recommendations regarding Task developments. The following ones have been collected by the Tekton project: https://github.com/tektoncd/catalog/blob/main/recommendations.md
-- **Programming language**: Tekton supports “choosing the right language for the right task”. That said, from an operational point of view it is beneficial to limit the number of programming languages needed to support HACBS. Defining “default” languages helps with limiting the skills required to support the platform. This also helps with avoiding knowledge islands where only a few people are able to maintain some Tasks.
+- **Programming language**: Tekton supports “choosing the right language for the right task”. That said, from an operational point of view it is beneficial to limit the number of programming languages needed to support StoneSoup. Defining “default” languages helps with limiting the skills required to support the platform. This also helps with avoiding knowledge islands where only a few people are able to maintain some Tasks.
 - **Failure behavior**: A retry mechanism with configurable timeout and exponential backoff needs to be implemented for technical or functional recoverable failures. A scenario example: An image may not have been completely indexed when the result of the security scan is interrogated. In such a case the Task should have a retry mechanism that may wait till completion of the indexing or time out.
 - **Repositories**: Whenever there is no sensitive information we aim to have the PoC sources in a public repository. Is there a public GitHub organization for that? Can we use [this](https://github.com/redhat-appstudio)? When a Task is specifically for Red Hat’s infrastructure it should be kept in a private repository.  Is there a private GitLab group for that?
 
