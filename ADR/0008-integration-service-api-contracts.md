@@ -1,4 +1,4 @@
-# 8. StoneSoup Test Stream - API contracts
+# 8. Stonesoup Test Stream - API contracts
 
 Date: 2023-01-[]
 
@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-The Hybrid Application Cloud Build Service being developed aims to serve Red Hat teams but also partners and customers. This requires a level of adaptability to avoid recreating custom flows and Tasks for each stakeholder.
+The Stonesoup project being developed aims to serve Red Hat teams but also partners and customers. This requires a level of adaptability to avoid recreating custom flows and Tasks for each stakeholder.
 
 In this respect Tasks developed by StoneSoup test stream should allow swapping external systems to accommodate different environments. This swap should not induce the complete recreation of pipelines.
 
@@ -28,13 +28,11 @@ Related to [PLNSRVCE-41](https://issues.redhat.com/browse/PLNSRVCE-41) investiga
 
 ## Decision
 
-### Results and Records
+Related to [PLNSRVCE-41](https://issues.redhat.com/browse/PLNSRVCE-41) investigations in regards to [Tekton results](https://github.com/tektoncd/results). The investigations are documented [here](https://docs.google.com/document/d/1WGWx6MllVs-BwRLd0PP5QTQHgGp0fW2dOYRKRAKWiwo/edit#heading=h.bpyxfhyud4dv). The output of each Tekton task will be provided in two forms: **Tekton Task Results** and **Full Test Output JSON**.
 
-The output of each Tekton task will be provided in two forms:
-- As a minimized [Tekton result](https://tekton.dev/docs/pipelines/tasks/#emitting-results) in JSON format listing all test failures
-  - The name of the result will be **HACBS_TEST_OUTPUT**
-- As a Test output JSON file with full test information that’s saved in the Tekton Pipeline Workspace
-  - The name of the file will be in snake case and will be in the form of **test_name_output.json**
+### Tekton Task Results
+
+The output of each Tekton task will be provided in a minimized [Tekton result](https://tekton.dev/docs/pipelines/tasks/#emitting-results) in JSON format listing all test failures. The name of the result will be **HACBS_TEST_OUTPUT**.
 
 The maximum size of a [Task's Results](https://tekton.dev/vault/pipelines-v0.17.3/tasks/#emitting-results) is limited by the container [termination message](https://kubernetes.io/docs/tasks/debug/debug-application/determine-reason-pod-failure/#customizing-the-termination-message) feature of Kubernetes.
 
@@ -49,7 +47,7 @@ The output will provide the following information about the overall test result:
 - **namespace** - Optional, the rego namespace of the test policy
 - **timestamp** - An UNIX epoch timestamp of the test completion time
 - **successes** - The number of successful checks in the form of an integer
-- **note** - Optional, a short note providing additional information about the test
+- **note** - Optional, a short note provided by test workstream to provide additional information about the test
 - **failures** - The number of failed checks in the form of an integer
 - **warnings** - The number of warning checks in the form of an integer
 
@@ -60,8 +58,9 @@ Example contents of the test result output file (**HACBS_TEST_OUTPUT**) for a fa
     "namespace": "image_labels",
     "timestamp": "1649148140",
     "successes": 12, 
-    "note": "",
-    "failures": 2
+    "note": "Please check tekton task log for more detailed failures",
+    "failures": 2,
+    "warnings": 0
 }
 ```
 Example for a successful run:
@@ -71,67 +70,35 @@ Example for a successful run:
     "timestamp": "1649843611",
     "namespace": "required_checks",
     "successes": 16,
-    "note": "",
-    "failures": 0
+    "failures": 0,
+    "warnings": 0
 }
 ```
 Example for a skipped run:
 ```
 {
     "result": "SKIPPED",
-    "note": "<skipped message>",
-    "timestamp": "1649842004"
+    "note": "We found 0 supported files",
+    "timestamp": "1649842004",
+    "successes": 0,
+    "failures": 0,
+    "warnings": 0
 }
 ```
 Example for a run with an error:
 ```
 {
     "result": "ERROR",
-    "timestamp": "1649842004"
+    "timestamp": "1649842004",
+    "successes": 0,
+    "failures": 0,
+    "warnings": 0
 }
 ```
 
-##### Proposed Adapted Tekton Result Format for Xunit Tests Results
+### Detailed Conftest Output JSON
 
-- Existing Mapped:
-
-  - **Namespace** == **name** attribute of all of the **TestSuite** elements 
-
-  - **Failures** == **name** attribute for all the **TestCase** elements that have the attribute **status=Failed**
-
-- New Key:
-
-  - **Skipped** == the number of skipped test in integer format from the **TestSuite** attribute **skipped** or from **TestCase** attribute **skipped**
-
-Some Junit XML files generate a **TestSuites** xml element that contains N number of **TestSuite** elements. In this case it maybe simply best to augment our Task Result Schema to be a JSON List of Task Results 
-
-Example output
-```
-[
-    {
-        "result": "FAILURE",
-        "namespace": "Red Hat App Studio E2E tests",
-        "timestamp": "1649148140",
-        "successes": 75,
-        "skipped": 14,
-        "note": "",
-        "failures": [
-            "[It] [release-suite test-demo] Creation of the 'Happy path' resources Create an ApplicationSnapshot."
-        ]
-    },
-    {
-        "result": "SUCCESS",
-        "timestamp": "1649843611",
-        "namespace": "Demo Tests",
-        "successes": 12,
-        "skipped": 0,
-        "note": "",
-        "failures": []
-    }
-]
-```
-
-#### Full Test Output JSON
+Test output JSON file with detailed test information is saved in the Tekton Pipeline Workspace. The name of the file will be in snake case and will be in the form of **test_name_output.json**
 
 The Test Tekton tasks will use a standardized manner of displaying testing information. This information will be saved in the form of a JSON file. The contents of this file will relay results of validation by the [Open Policy Agent](https://www.openpolicyagent.org/) policies as executed by the [Conftest](https://www.conftest.dev/) tool and saved in its JSON output format.
 
@@ -150,7 +117,7 @@ The **failures** list of objects will provide the following information about ea
 - **description** - The explanation about why the check is significant (Why the label is used, why the vulnerabilities are checked etc.)
 - **url** - link to the further documentation on the individual check (or that type of check)
 
-Example full JSON test output for a Tekton task that tests the container image labels:
+Example detailed JSON test output for a Tekton task that tests the container image labels:
 ```
 [
     {
@@ -173,10 +140,20 @@ Example full JSON test output for a Tekton task that tests the container image l
 ]
 ```
 
+```
+[
+    {
+        "filename": "image_inspect.json",
+        "namespace": "fbc_checks",
+        "successes": 1
+    }
+]
+```
+
 ### Information injection
 
 Whenever possible, resources like ConfigMaps or Secrets will be used to inject configuration into Tasks. This is preferred to templates and patches as it fits well with Kubernetes declarative and GitOps approaches.
-tf
+
 ConfigMaps and Secrets will be mounted into the Task pod to inject file-based information like certificates.
 Environment variables may be injected from ConfigMaps.
 
@@ -193,31 +170,14 @@ Atomic information may be passed as a simple parameter. Non binary encoded compl
 
 #### Image references
 
-Tags are not uniquely identifying an image so that we cannot rely on them. They do not guarantee that the scanning is for the image built as part of the PipelineRun if there is a race with a parallel build. As such, image digests will be used for image references.
-
-#### Logging
-
-In containers, logs are usually written to the standard output and collected by the container engine. Then OpenShift Fluentd, Splunk agent or any other tool can forward them to a central aggregator. Using [structured logging](https://docs.openshift.com/container-platform/4.9/logging/cluster-logging-enabling-json-logging.html) with a common format would provide additional value.
-
-Common fields (draft):
-- Timestamp, for instance: "2022-02-20T00:28:47.125906354Z"
-- Workspace, for instance: "user-1"
-- Pipeline, for instance: "test"
-- PipelineRun, for instance: "test-wc05gl"
-- Task, for instance: "img-scan"
-- TaskRun, for instance: "img-scan-er02es"
-- CompName, for instance: "hco-bundle-registry-container"
-- CompVers, for instance: "v4.10.0"
-- CompRel, for instance: "709"
-
-Today NVR is largely used for tracking, for instance hco-bundle-registry-container-v4.10.0-709.
-
-The idea is that the common fields listed above would be populated for each log entry when the information is available.
-
-It is advisable to limit the number of structured fields as it impacts indexing. Fields that are common to multiple tasks should be preferred. Before a field specific to a task is added it is worth thinking whether it is really needed and whether the same information can be conveyed through a more generic field. Information that does not need to be “searchable” can be recorded in an unstructured way.
+Since tags can be moved from one image to another, they should not be relied on as a reference. In order to guarantee that any scanning is performed on an image built as part of a PipelineRun, the immutable image digest reference will be used instead.
 
 ## Consequences
 
+As a result of the decision here to summarize results in a **HACBS_TEST_OUTPUT** result and store the larger test output as a file named **test_name_output.json**, we should find that:
+* Other components in Stonesoup can leverage information exposed by TaskRuns - notably the UI (HAC), integration-service, and enterprise-contract - enabling features for the larger system that need to depend on some data from inside a variety of TaskRuns.
+* We'll be able to have PipelineRuns that _succeed_ and continue, even if they have tasks whose payloads fail and expose errors. This enables a progressive model where the user can get a build and a functional test and a deployment to their development Environment, even if a linter or scanner in their build pipeline emits an error.
+* By having chosen a convention that has "HACBS" in the name, we're going to have trouble integrating third-party Task providers in the future. In order to have its output respected by our system, a hypothetical vendor of a third-party scanner will need to add a "HACBS_TEST_OUTPUT" result on their Task, which is oddly specific to our system. At some point in the future, we should revise this decision to instead align to a common upstream convention that gains traction in the broader tekton ecosystem. See also [HACBS-1563](https://issues.redhat.com/browse/HACBS-1563).
 
 ## Additional Recommendations
 
