@@ -14,3 +14,7 @@ The diagram below shows the interaction of the StoneSoup with other systems and 
 ## Workspace Layout
 
 ![](../diagrams/stonesoup-workspace-layout.drawio.svg)
+
+## Personal Data
+
+![](../diagrams/personal-data.drawio.svg)
