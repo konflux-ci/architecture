@@ -175,7 +175,7 @@ spec:
 
 ## Consequences
 
-- We will be able to deprecate the use of https://quay.io/repository/redhat-StoneSoup/user-workload for storing users' container images.
+- We will be able to deprecate the use of https://quay.io/repository/redhat-appstudio/user-workload for storing users' container images.
 - Users will not be forced to put in an image repository location when they use StoneSoup to import and deploy source code.
 - The image repository used could conditionally be made available to users outside of StoneSoup.
 - Given that scoped Quay.io robot account tokens would be available in user's workspaces for pushing/pulling images, the principle of minimum privilege
@@ -184,4 +184,4 @@ spec:
 ## References
 
 * Originally drafted in an internal [document](https://docs.google.com/document/d/1KcXWZ8VGUg_iR0RjdGuDYedP8ZW63XCgF26KZUNgpeQ/edit)
-* Implementation: https://github.com/redhat-StoneSoup/image-controller
+* Implementation: https://github.com/redhat-appstudio/image-controller
