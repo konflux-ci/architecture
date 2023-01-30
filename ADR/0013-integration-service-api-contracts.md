@@ -1,6 +1,6 @@
 # 8. Stonesoup Test Stream - API contracts
 
-Date: 2023-01-[]
+Date: 2023-01-30
 
 ## Status
 
