@@ -1,4 +1,4 @@
-# 12. Record architecture decisions
+# 12. Namespace Name Format
 
 Date: 2023-01-23
 
