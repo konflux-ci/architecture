@@ -38,7 +38,7 @@ for users ([STONE-459]).
 ## Consequences
 
 * Users should find that even if their scanners find problems, they can still build, test, and
-  deploy to lower Environments.
+  deploy to lower [Environments].
 * Without special treatment in [STONE-459], users may be misled or confused if their tasks appear to
   succeed but really are reporting errors under the hood.
 
@@ -48,6 +48,6 @@ for users ([STONE-459]).
   unwritten principle. Documenting it here for posterity, visibility.
 
 [STONE-459]: https://issues.redhat.com/browse/STONE-459
-[Environments]: ../ref/application-environment-api.md#environment
+[Environments]: ../ref/application-environment-api.html#environment
 [ADR-0013]: 0013-integration-service-api-contracts.html
 [enterprise contract]: ../book/enterprise-contract.html
