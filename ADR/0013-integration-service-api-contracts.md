@@ -6,6 +6,8 @@ Date: 2023-01-30
 
 Accepted
 
+Relates to [ADR 14. Let Pipelines Proceed](0014-let-pipelines-proceed.html)
+
 ## Context
 
 The Stonesoup project being developed aims to serve Red Hat teams but also partners and customers. This requires a level of adaptability to avoid recreating custom flows and Tasks for each stakeholder.
