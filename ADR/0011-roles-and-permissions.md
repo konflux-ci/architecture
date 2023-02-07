@@ -7,7 +7,7 @@ Date: 2023-01-10
 Accepted
 
 ## Context
-Stonesoup is using Kubernetes as the control plane for managing its resources. We require a system for managing user roles and permissions in this context. We have defined the following roles for our project: "Contributor", "Maintainer", and "Owner". We need to map these roles to specific permissions in the Kubernetes RBAC system, in terms of API groups, verbs, and resources.
+Stonesoup is using Kubernetes as the control plane for managing its resources. We require a system for managing user roles and permissions in this context. We have defined the following roles for our project: "Contributor", "Maintainer", and "Admin". We need to map these roles to specific permissions in the Kubernetes RBAC system, in terms of API groups, verbs, and resources.
 
 ## Decision
 
@@ -16,7 +16,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 ### Roles
 **Contributor:** Members who interact with the workspace mostly through pull requests.
 **Maintainer:** Members who manage the workspace without access to sensitive or destructive actions.
-**Owner:** Members who have full access to the workspace including sensitive and destruction actions.
+**Admin:** Members who have full access to the workspace including sensitive and destruction actions.
 
 ### Roles and Permissions Table
 
@@ -54,7 +54,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 |               | *Secrets*               |                           |                                         | secrets
 |               | Add User                |
 |               | User group (with SSO)   |
-| Owner         | Workspace               | Access to namespaces that backs workspace                           |
+| Admin         | Workspace               | Access to namespaces that backs workspace                           |
 |               | Application & Component | appstudio.redhat.com      | *                                       | applications, components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | *                                       | promotionruns, snapshotenvironmentbindings, snapshots, environments
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments
