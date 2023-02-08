@@ -48,7 +48,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 |               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                        | enterprisecontractpolicies
 |               | Release Strategy        | appstudio.redhat.com      | *                                       | releases, releasestrategies, releaseplans
 |               | Release Admission Plan  | appstudio.redhat.com      | *                                       | releaseplanadmissions
-|               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch                        | jbsconfigs, artifactbuilds
+|               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch, create, update, patch | jbsconfigs, artifactbuilds
 |               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequest
 |               | *Configs*               |                           | get, list, watch                        | configmaps
 |               | *Secrets*               |                           |                                         | secrets
@@ -64,7 +64,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 |               | Enterprise contract     | appstudio.redhat.com      | *                                       | enterprisecontractpolicies
 |               | Release Strategy        | appstudio.redhat.com      | *                                       | releases, releasestrategies, releaseplans
 |               | Release Admission Plan  | appstudio.redhat.com      | *                                       | releaseplanadmissions
-|               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch                        | jbsconfigs, artifactbuilds
+|               | *JVM Build Service*     | jvmbuildservice.io        | *                                       | jbsconfigs, artifactbuilds
 |               | *Service Access*        | appstudio.redhat.com      | *                                       | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens,spifilecontentrequest
 |               | *Configs*               |                           | *                                       | configmaps
 |               | *Secrets*               |                           | *                                       | secrets
