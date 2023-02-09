@@ -25,6 +25,15 @@ We will apply the following labels to Stone Soup namespaces, to make them easier
 - `stonesoup.redhat.com/namespacetype: "user-workspace-data"` for User workspaces where Applications, Components, and so on are defined
 - `stonesoup.redhat.com/namespacetype: "user-deployments"` for the namespaces where GitOps deploys applications for users
 - `stonesoup.redhat.com/namespacetype: "user-builds"` for the namespaces where the Pipeline Service has PipelineRuns
+- `stonesoup.redhat.com/workspace_id: 12345678` a globally unique identifier for the workspace
+- `stonesoup.redhat.com/workspace_name: "test_workspace"` name for the workspace (need not be unique)
+- `stonesoup.redhat.com/external_organization: 11868048` the Red Hat orgId
+- `stonesoup.redhat.com/product_variant: "Stonesoup"` identifier for the type of product (allows tracking multiple variants in the same metric)
+- `stonesoup.redhat.com/sku_account_support: "Standard"` Standard, Premium, or Self-Support. Must match the value from the SKU
+- `stonesoup.redhat.com/sku_env_usage: "Production"` Development/Test, Production, or Disaster Recovery. Must match the value from the SKU
+- `stonesoup.redhat.com/billing_model: "marketplace"` must be set to marketplace to indicate this service instance is billed through marketplace. This allows you to mark some instances as billed via marketplace (and some as not billed through marketplace)
+- `stonesoup.redhat.com/billing_marketplace: "aws"` which marketplace is used for billing
+- `stonesoup.redhat.com/billing_marketplace_account: 123456789012` the customer account identifier (numeric AWS identifier). Necessary because a customer can have more than one AWS account.
 
 ## Namespace annotations
 
