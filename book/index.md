@@ -61,6 +61,10 @@ Each service is that makes up AppStudio and HACBS are further decomposed on thei
 - [Service Provider](../ref/service-provider.md)
 - [GitOps Service](../ref/gitops.md):
 
+### Naming Conventions
+
+- [Namespace Metadata](../ADR/adr-0010-namespace-metadata)
+
 ### Control Plane
 
 - [KCP](../ref/kcp.md)

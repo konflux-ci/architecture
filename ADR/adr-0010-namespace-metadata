@@ -15,21 +15,24 @@ Accepted
 
 ## Context
 
-We need metadata on our namespaces to make Stone Soup easier to operate and maintain. Standardizing namespace metadata will make it easier for us to search our logs and metrics across clusters. It will also allow us to enable logging for outgoing network traffic, one of our security requirements.
+We need metadata on our namespaces to make Stonesoup easier to operate and maintain. Standardizing namespace metadata will make it easier for us to search our logs and metrics across clusters. It will also allow us to enable logging for outgoing network traffic, one of our security requirements.
 
 ## Namespace labels
 
-We will apply the following labels to Stone Soup namespaces, to make them easier to find.
+We will apply the following labels to Stonesoup namespaces, to make them easier to identify programmatically:
 
-- `stonesoup.redhat.com/namespacetype: "controller"` for namespaces containing Stone Soup controllers
-- `stonesoup.redhat.com/namespacetype: "user-workspace-data"` for User workspaces where Applications, Components, and so on are defined
+- `stonesoup.redhat.com/namespacetype: "controller"` for namespaces containing controllers developed for Stonesoup. For example, we would annotate the `gitops-service-argocd` namespace but not the `openshift-gitops` namespace.
+- `stonesoup.redhat.com/namespacetype: "user-workspace-data"` for User workspaces where Applications, Components, and so on are stored
 - `stonesoup.redhat.com/namespacetype: "user-deployments"` for the namespaces where GitOps deploys applications for users
-- `stonesoup.redhat.com/namespacetype: "user-builds"` for the namespaces where the Pipeline Service has PipelineRuns
+- `stonesoup.redhat.com/namespacetype: "user-builds"` for the namespaces where the Pipeline Service manages users' PipelineRun resources
+
+The following labels are used for billing and telemetry. Values can be left blank if they are not defined yet:
+
 - `stonesoup.redhat.com/workspace_id: 12345678` a globally unique identifier for the workspace
-- `stonesoup.redhat.com/workspace_name: "test_workspace"` name for the workspace (need not be unique)
+- `stonesoup.redhat.com/workspace_name: "test_workspace"` a name for the workspace (need not be unique)
 - `stonesoup.redhat.com/external_organization: 11868048` the Red Hat orgId
 - `stonesoup.redhat.com/product_variant: "Stonesoup"` identifier for the type of product (allows tracking multiple variants in the same metric)
-- `stonesoup.redhat.com/sku_account_support: "Standard"` Standard, Premium, or Self-Support. Must match the value from the SKU
+- `stonesoup.redhat.com/sku_account_support: "Standard"` Standard, Premium, or Self-Support. Must match the value from the SKU.
 - `stonesoup.redhat.com/sku_env_usage: "Production"` Development/Test, Production, or Disaster Recovery. Must match the value from the SKU
 - `stonesoup.redhat.com/billing_model: "marketplace"` must be set to marketplace to indicate this service instance is billed through marketplace. This allows you to mark some instances as billed via marketplace (and some as not billed through marketplace)
 - `stonesoup.redhat.com/billing_marketplace: "aws"` which marketplace is used for billing
@@ -37,7 +40,7 @@ We will apply the following labels to Stone Soup namespaces, to make them easier
 
 ## Namespace annotations
 
-We will apply the following annotation to Stone Soup namespaces, which will enable OVN network logging to log outgoing network traffic:
+We will apply the following annotation to namespaces installed and maintained by Stonesoup on the clusters that Red Hat manages.  This will enable OVN network logging to log outgoing network traffic:
 
 metadata:
   annotations:
@@ -45,4 +48,4 @@ metadata:
 
 ## Consequences
 
-TBD
+We might have to migrate `stonesoup.redhat.com` to another product name in the future.
