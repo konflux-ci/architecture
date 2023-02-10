@@ -42,7 +42,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 |               | Application & Component | appstudio.redhat.com      | get, list, watch, create, update, patch | applications, components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | get, list, watch                        | promotionruns, snapshotenvironmentbindings, snapshots, environments
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments
-|               | PipelineRun             | tekton.dev                | create, get, list, watch                | pipelineruns
+|               | PipelineRun             | tekton.dev                | get, list, watch                        | pipelineruns
 |               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records
 |               | IntegrationTestScenario | appstudio.redhat.com      | *                                       | integrationtestscenarios
 |               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                        | enterprisecontractpolicies
