@@ -13,6 +13,9 @@ Accepted
 
 ## Reviewers
 
+* Matous Jobanek
+* Ralph Bean
+
 ## Context
 
 We need metadata on our namespaces to make Stonesoup easier to operate and maintain. Standardizing namespace metadata will make it easier for us to search our logs and metrics across clusters. It will also allow us to enable logging for outgoing network traffic, one of our security requirements.
