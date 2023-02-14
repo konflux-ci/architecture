@@ -22,7 +22,7 @@ We need metadata on our namespaces to make Stonesoup easier to operate and maint
 
 ## Namespace labels
 
-We will apply the following labels to Stonesoup namespaces, to make them easier to identify programmatically:
+We will apply the following labels to Stonesoup namespaces, to make them easier to identify programmatically. One namespace can have multiple types/labels:
 
 - `appstudio.redhat.com/namespacetype: "controller"` for namespaces containing controllers developed for Stonesoup. For example, we would annotate the `gitops-service-argocd` namespace but not the `openshift-gitops` namespace.
 - `appstudio.redhat.com/namespacetype: "user-workspace-data"` for User workspaces where Applications, Components, and so on are stored
