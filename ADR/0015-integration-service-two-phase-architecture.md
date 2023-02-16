@@ -1,10 +1,11 @@
 # 15. The Two-phase Architecture of the Integration Service
 
 Date Documented: 2023-02-09
+Date Accepted: 2023-02-14
 
 ## Status
 
-In review
+Accepted
 
 ## Context
 
