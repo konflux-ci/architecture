@@ -32,8 +32,7 @@ We will apply the following labels to Stonesoup namespaces, to make them easier 
 
 The following labels are used for billing and telemetry. Values can be left blank if they are not defined yet:
 
-- `appstudio.redhat.com/workspace_id: 12345678` a globally unique identifier for the workspace
-- `appstudio.redhat.com/workspace_name: "test_workspace"` a name for the workspace (need not be unique)
+- `appstudio.redhat.com/workspace_name: "test_workspace"` a name for the workspace (unique identifier)
 - `appstudio.redhat.com/external_organization: 11868048` the Red Hat orgId of the user account that created the workspace
 - `appstudio.redhat.com/product_variant: "Stonesoup"` identifier for the type of product (allows tracking multiple variants in the same metric)
 - `appstudio.redhat.com/sku_account_support: "Standard"` Standard, Premium, or Self-Support. Must match the value from the SKU.
