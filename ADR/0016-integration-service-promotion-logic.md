@@ -1,10 +1,11 @@
 # 16. Promotion logic in the Integration Service
 
-Date Documented: 2023-02-08
+* Date Documented: 2023-02-08
+* Date Accepted: 2023-02-27
 
 ## Status
 
-In Review
+Accepted
 
 ## Context
 
