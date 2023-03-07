@@ -62,7 +62,7 @@ It is best to avoid using the same key as the log collectors in our controller l
 
 ### 1. When did it happen?
 
-Timestamps will be in UTC/ISO-8601 format.
+Encode timestamps in UTC/ISO-8601 format.
 
 ### 2. What happened?
 
@@ -93,7 +93,7 @@ Include a `user_id` if one exists and is applicable for the event being logged.
 
 ### 5. Where it came from?
 
-Use the key `kind` with possible resource kind values determined by the component team.  For example, for HAS this can be `CDQ, Application, Component`, etc.
+Use the key `kind` with possible resource kind values determined by the component team.  For example, for HAS this can be `CDQ`, `Application`, `Component`, etc.
 
 Use the key `resource` with the name of the resource being acted upon.
 
