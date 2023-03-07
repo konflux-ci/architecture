@@ -70,7 +70,9 @@ Use the key `stonesoup-component` with possible values `HAS, SPI, GITOPS`, etc. 
 
 ### 4. Who was involved?
 
-Use the key `namespace` when logging the namespace of the targeted resource that is being modified.
+Use the key `namespace` when logging the namespace of the *targeted resource* that is being modified
+or interacted with. (Note that the `namespace_name` key is automatically added by the fluent
+collectors and reflects the namespace in which the controller is running.)
 
 Include a `user_id` if one exists and is applicable for the event being logged.
 
