@@ -22,8 +22,12 @@ AppStudio will provide a default secret management backend (the default backend)
 #### Secret management APIs
 An API is provided to create and update secrets on the default backend. This is a REST-based API similar to [SPI token management API](https://github.com/redhat-appstudio/service-provider-integration-operator/blob/main/docs/USER.md#post-tokennamespacename). The secrets are per component and can be varied per environment. Only workspace owners can create and update secrets.
 
+Secret management also provides APIs and mechanisms to participate in the component and environment deletion to clean up secrets associated with a component or environment.
+
+
 #### The default secret management backend
-**TODO:** Add the default backend and its deployment shape.
+AWS Secret Manager will be used as the backend for the default secret management backend. Secret Management API provides APIs to delete secrets in case of a PII request or when the associated component is deleted.
+
 
 #### Bring Your Own Secret Management
 Applications can use secret management backends other than the default secret management backend. However, this requires the GitOps service to provide single-tenant ArgoCD instances. The supported backends will be limited to those supported by [AVP as documented](https://argocd-vault-plugin.readthedocs.io/en/stable/backends/). Creating and updating secrets through StoneSoup secret management REST APIs is not supported for custom backends.
@@ -55,6 +59,7 @@ For the default backend and the REST API
 In the case of custom secret management backends, the monitoring and auditing will not extend to the actual backend and be limited to REST API and GitOps service logs.
 
 
-
-
 ## Consequences
+
+* A new UI is going to be made available to create/update the secret values for components and provide environment-specific overrides to them.
+
