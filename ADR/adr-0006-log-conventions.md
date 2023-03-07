@@ -34,32 +34,6 @@ For example:
 
 The meaning of **timestamp** and log level should be self evident. The **logger** name helps your team understand which part of your controller is emitting the log (usually `Log.WithName` from `zap`). The **message** is a human readable string describing the event being logged. The **json data** contains additional fields useful for searching.
 
-### Automatically added fields
-
-Additionally, fluentd and Fluent Bit will annotate your log messages with the following information automatically:
-
-* `namespace_name`
-* `container_name`
-* `pod_name`
-* `container_image`
-* `pod_ip`
-* `host`
-* `hostname`
-* `namespace_labels`
-* `message`
-* `level`
-* `time`
-* and more.
-
-The cluster, node, pod and container names are also part of the log stream name.  For example, under `/aws/containerinsights/<Cluster_Name>/application`:
-
-* Fluent Bit optimized configuration sends logs to `<kubernetes-nodeName>-application.var.log.containers.<kubernetes-podName>_<kubernetes-namespace>_<kubernetes-container-name>-<kubernetes-containerID>`
-* Fluentd sends logs to `<kubernetes-podName>_<kubernetes-namespace>_<kubernetes-containerName>_<kubernetes-containerID>`
-
-For more details on Fluentd vs. Fluent Bit logs, see [Set up Fluent Bit as a DaemonSet to send logs to CloudWatch Logs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html).
-
-It is best to avoid using the same key as the log collectors in our controller logs, to avoid confusion.
-
 ### 1. When did it happen?
 
 Encode timestamps in UTC/ISO-8601 format.
@@ -87,7 +61,8 @@ Use the key `stonesoup-component` with possible values `HAS, SPI, GITOPS`, etc. 
 
 Use the key `namespace` when logging the namespace of the *targeted resource* that is being modified
 or interacted with. (Note that the `namespace_name` key is automatically added by the fluent
-collectors and reflects the namespace in which the controller is running.)
+collectors and reflects the namespace in which the controller is running. See section on
+automatically added logs below.)
 
 Include a `user_id` if one exists and is applicable for the event being logged.
 
@@ -104,6 +79,32 @@ Optionally, use the key `source` to direct developers to the source code where t
 For the specific types of audit logs required by SSML.PW.5.1.4 Perform Event Logging, one of the key-value pairs in the log entry should be `audit: true`. This makes it easier to query aggregated logs to find these special log entries.
 
 More details can be found in [SSML-8093](https://issues.redhat.com/browse/SSML-8093), and a good example of a working implementation can be found in the [GitOps code](https://github.com/redhat-appstudio/managed-gitops/blob/c962ae99ec50e273c8cdf90d8f3a07f7a8944dc5/backend-shared/util/log.go#L28) implemented for [this story](https://issues.redhat.com/browse/GITOPSRVCE-186).
+
+### Automatically added fields
+
+Note that fluentd and Fluent Bit will annotate your log messages with the following information automatically:
+
+* `namespace_name`
+* `container_name`
+* `pod_name`
+* `container_image`
+* `pod_ip`
+* `host`
+* `hostname`
+* `namespace_labels`
+* `message`
+* `level`
+* `time`
+* and more.
+
+The cluster, node, pod and container names are also part of the log stream name.  For example, under `/aws/containerinsights/<Cluster_Name>/application`:
+
+* Fluent Bit optimized configuration sends logs to `<kubernetes-nodeName>-application.var.log.containers.<kubernetes-podName>_<kubernetes-namespace>_<kubernetes-container-name>-<kubernetes-containerID>`
+* Fluentd sends logs to `<kubernetes-podName>_<kubernetes-namespace>_<kubernetes-containerName>_<kubernetes-containerID>`
+
+For more details on Fluentd vs. Fluent Bit logs, see [Set up Fluent Bit as a DaemonSet to send logs to CloudWatch Logs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html).
+
+It is best to avoid using the same key as the log collectors in our controller logs, to avoid confusion.
 
 ### TaskRun logs
 
