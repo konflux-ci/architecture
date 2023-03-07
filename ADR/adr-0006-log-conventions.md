@@ -88,4 +88,6 @@ More details can be found in [SSML-8093](https://issues.redhat.com/browse/SSML-8
 
 ## Consequences
 
-TBD
+* It should become easier to create queries that cross components in our logs.
+* Individual teams should still be able to include key value pairs in their controller logs that are
+  not mentioned in this doc, enabling debugging methods unique to that controller.
