@@ -86,6 +86,11 @@ For the specific types of audit logs required by SSML.PW.5.1.4 Perform Event Log
 
 More details can be found in [SSML-8093](https://issues.redhat.com/browse/SSML-8093), and a good example of a working implementation can be found in the [GitOps code](https://github.com/redhat-appstudio/managed-gitops/blob/c962ae99ec50e273c8cdf90d8f3a07f7a8944dc5/backend-shared/util/log.go#L28) implemented for [this story](https://issues.redhat.com/browse/GITOPSRVCE-186).
 
+### TaskRun logs
+
+TaskRun logs are specifically out of scope of this ADR. Those logs are typically meant to be viewed
+and interpreted by users. Use human-readable strings for most logs in that context.
+
 ## Consequences
 
 * It should become easier to create queries that cross components in our logs.
