@@ -44,18 +44,14 @@ Use the key `action` with possible values `VIEW, ADD, UPDATE, DELETE`.
 
 ### 3. Where did it happen?
 
-Use the key `stonesoup-component` with possible values `HAS, SPI, GITOPS`, etc. Here is [sample code](https://github.com/redhat-appstudio/application-service/blob/9f25d1f6832568598c718423b1e2f7d9161ad790/controllers/component_controller.go#L549) from the HAS component.
+There is no need to identify which stonesoup subsystem the log is coming from (i.e., HAS, SPI, or
+GitOps).
 
-- GitOps Service: `GITOPS`
-- Pipeline Service: `PLNSRVCE`
-- Build Service: `BUILD`
-- Workspace and Terminal Service: TBD
-- Service Provider Integration: `SPI`
-- Hybrid Application Service: `HAS`
-- Enterprise Contract: `EC`
-- Java Rebuilds Service: `JAVA`
-- Release Service: `RELEASE`
-- Integration Service: `INTEGRATION`
+Consider: if an engineer is looking at logs directly in the namespace where a controller is
+deployed, then you know which service you are looking at. If an engineer is looking at logs
+centralized in cloudwatch or splunk, then the namespace from which the log came will be included
+automatically as `namespace_name`, which is sufficient to determine what stonesoup subsystem
+produced the log. See section on automatically added logs below.
 
 ### 4. Who was involved?
 
