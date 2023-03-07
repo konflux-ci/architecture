@@ -30,7 +30,7 @@ For more details on Fluentd vs. Fluent Bit logs, see [Set up Fluent Bit as a Dae
 
 It is best to avoid using the same key as the log collectors in our controller logs, to avoid confusion.
 
-### 1. When did it happen? 
+### 1. When did it happen?
 
 Timestamps will be in UTC/ISO-8601 format.
 
@@ -57,13 +57,13 @@ Use the key `stonesoup-component` with possible values `HAS, SPI, GITOPS`, etc. 
 
 Use the key `namespace` when logging the namespace of the targeted resource that is being modified.
 
-### 5. Where it came from? 
+### 5. Where it came from?
 
-Use the key `kind` with possible resource kind values determined by the component team.  For example, for HAS this can be `CDQ, Application, Component`, etc. 
+Use the key `kind` with possible resource kind values determined by the component team.  For example, for HAS this can be `CDQ, Application, Component`, etc.
 
 Use the key `resource` with the name of the resource being acted upon.
 
-Optionally, use the key `source` to direct developers to the source code where the action occurred. 
+Optionally, use the key `source` to direct developers to the source code where the action occurred.
 
 ### Controller audit logs
 
