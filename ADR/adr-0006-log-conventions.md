@@ -19,9 +19,24 @@ We need log conventions to make our offering easier to operate and maintain. The
 
 ## Decision: Log conventions
 
-In our controller logs, we will use structured, JSON-formatted log messages with key-value pairs as described below.
+In our controller logs, we will use structured log messages, partially formatted in JSON with key-value pairs as described below.
 
-Fluentd and Fluent Bit annotate log messages with the following information automatically:
+```
+TIMESTAMP LOG_LEVEL LOGGER MESSAGE ADDITIONAL_JSON_DATA
+```
+
+For example:
+
+```
+2023-03-07T11:32:29.167Z    INFO    controllers.Component   updating devfile component name kubernetes-deploy ...   {"resource": "samburrai-tenant/go-net-http-hello-prqx", "kind": "Component"}
+2023-03-07T11:32:29.020Z    INFO    controllers.Component   API Resource changed: UPDATE {"namespace": "samburrai-tenant", "audit": "true", "resource": "go-net-http-hello-prqx", "kind": "Component", "action": "UPDATE"}
+```
+
+The meaning of **timestamp** and log level should be self evident. The **logger** name helps your team understand which part of your controller is emitting the log (usually `Log.WithName` from `zap`). The **message** is a human readable string describing the event being logged. The **json data** contains additional fields useful for searching.
+
+### Automatically added fields
+
+Additionally, fluentd and Fluent Bit will annotate your log messages with the following information automatically:
 
 * `namespace_name`
 * `container_name`
