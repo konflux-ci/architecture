@@ -19,7 +19,7 @@ We need log conventions to make our offering easier to operate and maintain. The
 
 ## Decision: Log conventions
 
-In our controller logs, we will use structured, JSON-formatted audit log messages with key-value pairs as described below.
+In our controller logs, we will use structured, JSON-formatted log messages with key-value pairs as described below.
 
 Fluentd and Fluent Bit annotate log messages with the following information automatically:
 
