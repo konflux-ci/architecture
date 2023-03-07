@@ -21,10 +21,25 @@ We need log conventions to make our offering easier to operate and maintain. The
 
 In our controller logs, we will use structured, JSON-formatted audit log messages with key-value pairs as described below.
 
-Fluentd and Fluent Bit annotate log messages with the following information automatically: `namespace_name`, `container_name`, `pod_name`, `container_image`, `pod_ip`, `host`, `hostname`, `namespace_labels`, `message`, `level`, `time`, and more. The cluster, node, pod and container names are also part of the log stream name.  For example:
-  Under /aws/containerinsights/`Cluster_Name`/application
-  - Fluent Bit optimized configuration sends logs to `kubernetes-nodeName`-application.var.log.containers.`kubernetes-podName`_`kubernetes-namespace`_`kubernetes-container-name`-`kubernetes-containerID`
-  - Fluentd sends logs to `kubernetes-podName`_`kubernetes-namespace`_`kubernetes-containerName`_`kubernetes-containerID`
+Fluentd and Fluent Bit annotate log messages with the following information automatically:
+
+* `namespace_name`
+* `container_name`
+* `pod_name`
+* `container_image`
+* `pod_ip`
+* `host`
+* `hostname`
+* `namespace_labels`
+* `message`
+* `level`
+* `time`
+* and more.
+
+The cluster, node, pod and container names are also part of the log stream name.  For example, under `/aws/containerinsights/<Cluster_Name>/application`:
+
+* Fluent Bit optimized configuration sends logs to `<kubernetes-nodeName>-application.var.log.containers.<kubernetes-podName>_<kubernetes-namespace>_<kubernetes-container-name>-<kubernetes-containerID>`
+* Fluentd sends logs to `<kubernetes-podName>_<kubernetes-namespace>_<kubernetes-containerName>_<kubernetes-containerID>`
 
 For more details on Fluentd vs. Fluent Bit logs, see [Set up Fluent Bit as a DaemonSet to send logs to CloudWatch Logs](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Container-Insights-setup-logs-FluentBit.html).
 
