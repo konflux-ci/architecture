@@ -55,4 +55,10 @@ spec:
 ## Consequences
 
 * The build-service and the integration service needs to be able to read the contents of all secrets in the namespace.
-* The UI would need to update the list of parameter names expected in the dropdown whenever a new partner is onboarded. The Build team would need to provide a hardcoded list of parameter names to the UI team that we expect users to be able to configure. This has to be done everytime a new partner is onboarded.
+* The UI would need to update the list of parameter names expected in the dropdown whenever a new partner is onboarded. 
+* The Build team would need to provide a hardcoded list of parameter names to the UI team that we expect users to be able to configure. This has to be done everytime a new partner is onboarded.
+
+## Out-of-scope
+
+* Making the senstive tokens available in other namespaces or clusters.
+* Handling a token rotation strategy. At the moment, as suggested, we will support updating/deletion of the token.
