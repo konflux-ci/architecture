@@ -72,6 +72,8 @@ Use the key `stonesoup-component` with possible values `HAS, SPI, GITOPS`, etc. 
 
 Use the key `namespace` when logging the namespace of the targeted resource that is being modified.
 
+Include a `user_id` if one exists and is applicable for the event being logged.
+
 ### 5. Where it came from?
 
 Use the key `kind` with possible resource kind values determined by the component team.  For example, for HAS this can be `CDQ, Application, Component`, etc.
