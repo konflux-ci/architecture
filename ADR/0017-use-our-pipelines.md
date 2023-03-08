@@ -37,6 +37,7 @@ start doing, but haven't made time to do so yet.
 * We won't get to exercise or benefit from the [integration-service] or the Stonesoup UI so long as
   we are only using the Stonesoup build pipelines and not yet onboarding to use of the [Application]
   and [Component] APIs.
+* This ADR supports [STONE-434](https://issues.redhat.com/browse/STONE-434).
 
 [integration-service]: ../ref/integration-service.html
 [Application]: ../ref/application-environment-api.html#application
