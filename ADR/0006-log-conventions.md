@@ -68,8 +68,6 @@ automatically added logs below.)
 This should appear in the `ADDITIONAL_JSON_DATA` at the end of the log line and can optionally
 appear in the human-readable `MESSAGE`.
 
-Include a `user_id` if one exists and is applicable for the event being logged.
-
 ### 5. Where it came from?
 
 **Included in:** `MESSAGE`, `ADDITIONAL_JSON_DATA`
@@ -131,3 +129,13 @@ and interpreted by users. Use human-readable strings for most logs in that conte
   span subsystems in centralized aggregated logs.
 * Individual teams should still be able to include key value pairs in their controller logs that are
   not mentioned in this doc, enabling debugging methods unique to that controller.
+* We decided to omit including a `user_id` for situations where one is relevant. This would be
+  helpful for audit purposes (see "Who was involved? above). But, the user id in our system is the
+  same as the username, which constitutes PII - which we do not want to log and forward to other
+  systems. If we decide that we do need a `user_id` for audit purposes in the future, then we will
+  need to revisit this decision.
+* The `namespace` (the namespace of the targetted resource under reconciliation) today is of the
+  form `<username>-tenant`. Today, it contains PII. As a part of the implementation work to align
+  subsystems with this ADR we should include requests to update the scheme for naming new user
+  workspaces to be something that does not include PII, for instance `<hash(username)>-tenant`. See
+  also [ADR 10](0010-namespace-metadata.html) and [ADR 12](0012-namespace-name-format.html).
