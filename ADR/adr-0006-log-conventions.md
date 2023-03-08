@@ -15,7 +15,7 @@ Accepted
 
 ## Context
 
-We need log conventions to make our offering easier to operate and maintain. These will also make it possible for us to create queries that cross components in our logs.
+We need log conventions to make our offering easier to operate and maintain. These will also make it possible for us to create queries that cross components in our logs, which supports [STONE-201](https://issues.redhat.com/browse/STONE-201).
 
 ## Decision: Log conventions
 
