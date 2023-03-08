@@ -30,10 +30,13 @@ The meaning of **timestamp** and log level should be self evident. The **logger*
 
 ### 1. When did it happen?
 
-Encode timestamps in UTC/ISO-8601 format at the start of the log line. See `TIMESTAMP` in the
-examples above.
+**Included in:** `TIMESTAMP`
+
+Encode timestamps in UTC/ISO-8601 format at the start of the log line.
 
 ### 2. What happened?
+
+**Included in:** `MESSAGE`, `ADDITIONAL_JSON_DATA`
 
 Use the key `action` with possible values `VIEW, ADD, UPDATE, DELETE`, if applicable.
 
@@ -41,6 +44,8 @@ This should appear as a key in the `ADDITIONAL_JSON_DATA` at the end of the log 
 optionally appear in the human-readable `MESSAGE`.
 
 ### 3. Where did it happen?
+
+**Included in:** _none_
 
 There is no need to identify which stonesoup subsystem the log is coming from (i.e., HAS, SPI, or
 GitOps).
@@ -52,6 +57,8 @@ automatically as `namespace_name`, which is sufficient to determine what stoneso
 produced the log. See section on automatically added logs below.
 
 ### 4. Who was involved?
+
+**Included in:** `MESSAGE`, `ADDITIONAL_JSON_DATA`
 
 Use the key `namespace` when logging the namespace of the *targeted resource* that is being modified
 or interacted with. (Note that the `namespace_name` key is automatically added by the fluent
@@ -65,6 +72,8 @@ Include a `user_id` if one exists and is applicable for the event being logged.
 
 ### 5. Where it came from?
 
+**Included in:** `MESSAGE`, `ADDITIONAL_JSON_DATA`
+
 Use the key `kind` with possible resource kind values determined by the component team.  For example, for HAS this can be `CDQ`, `Application`, `Component`, etc.
 
 Use the key `resource` with the name of the resource being acted upon.
@@ -75,6 +84,8 @@ Include these in the `ADDITIONAL_JSON_DATA` at the end of the log line. They can
 in the human-readable `MESSAGE`.
 
 ### Controller audit logs
+
+**Included in:** `ADDITIONAL_JSON_DATA`
 
 For the specific types of audit logs required by SSML.PW.5.1.4 Perform Event Logging, one of the key-value pairs in the log entry should be `audit: true`. This makes it easier to query aggregated logs to find these special log entries.
 
