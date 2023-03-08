@@ -109,6 +109,10 @@ and interpreted by users. Use human-readable strings for most logs in that conte
 
 ## Consequences
 
-* It should become easier to create queries that cross components in our logs.
+* By using structured logs that are only partially formatted as JSON, we should strike a balance
+  between easy readability and support for centralized queries. It should be easy for a human to
+  read pod logs of the controller directly since the first portion of each line contains a human
+  readable string early on, while the JSON formatted suffix supports the creation of queries that
+  span subsystems in centralized aggregated logs.
 * Individual teams should still be able to include key value pairs in their controller logs that are
   not mentioned in this doc, enabling debugging methods unique to that controller.
