@@ -22,19 +22,23 @@ TIMESTAMP LOG_LEVEL LOGGER MESSAGE ADDITIONAL_JSON_DATA
 For example:
 
 ```
-2023-03-07T11:32:29.167Z    INFO    controllers.Component   updating devfile component name kubernetes-deploy ...   {"resource": "samburrai-tenant/go-net-http-hello-prqx", "kind": "Component"}
-2023-03-07T11:32:29.020Z    INFO    controllers.Component   API Resource changed: UPDATE {"namespace": "samburrai-tenant", "audit": "true", "resource": "go-net-http-hello-prqx", "kind": "Component", "action": "UPDATE"}
+2023-03-07T11:32:29.167Z    INFO    controllers.Component   updating devfile component name kubernetes-deploy ...   {"namespace": "samburrai-tenant", "resource": "go-net-http-hello-prqx", "kind": "Component"}
+2023-03-07T11:32:29.020Z    INFO    controllers.Component   API Resource updated {"namespace": "samburrai-tenant", "audit": "true", "resource": "go-net-http-hello-prqx", "kind": "Component", "action": "UPDATE"}
 ```
 
 The meaning of **timestamp** and log level should be self evident. The **logger** name helps your team understand which part of your controller is emitting the log (usually `Log.WithName` from `zap`). The **message** is a human readable string describing the event being logged. The **json data** contains additional fields useful for searching.
 
 ### 1. When did it happen?
 
-Encode timestamps in UTC/ISO-8601 format.
+Encode timestamps in UTC/ISO-8601 format at the start of the log line. See `TIMESTAMP` in the
+examples above.
 
 ### 2. What happened?
 
 Use the key `action` with possible values `VIEW, ADD, UPDATE, DELETE`, if applicable.
+
+This should appear as a key in the `ADDITIONAL_JSON_DATA` at the end of the log line and can
+optionally appear in the human-readable `MESSAGE`.
 
 ### 3. Where did it happen?
 
@@ -54,6 +58,9 @@ or interacted with. (Note that the `namespace_name` key is automatically added b
 collectors and reflects the namespace in which the controller is running. See section on
 automatically added logs below.)
 
+This should appear in the `ADDITIONAL_JSON_DATA` at the end of the log line and can optionally
+appear in the human-readable `MESSAGE`.
+
 Include a `user_id` if one exists and is applicable for the event being logged.
 
 ### 5. Where it came from?
@@ -63,6 +70,9 @@ Use the key `kind` with possible resource kind values determined by the componen
 Use the key `resource` with the name of the resource being acted upon.
 
 Optionally, use the key `source` to direct developers to the source code where the action occurred.
+
+Include these in the `ADDITIONAL_JSON_DATA` at the end of the log line. They can optionally appear
+in the human-readable `MESSAGE`.
 
 ### Controller audit logs
 
