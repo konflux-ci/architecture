@@ -1,6 +1,6 @@
 # ADR-0010 Namespace Metadata
 
-Date: 2022-December-9
+Date: 2022-12-09
 
 ## Status
 
