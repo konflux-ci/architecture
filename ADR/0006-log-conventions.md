@@ -38,7 +38,7 @@ Encode timestamps in UTC/ISO-8601 format at the start of the log line.
 
 **Included in:** `MESSAGE`, `ADDITIONAL_JSON_DATA`
 
-Use the key `action` with possible values `VIEW, ADD, UPDATE, DELETE`, if applicable.
+Use the key `action` with possible values `VIEW`, `ADD`, `UPDATE`, and `DELETE`, if applicable.
 
 This should appear as a key in the `ADDITIONAL_JSON_DATA` at the end of the log line and can
 optionally appear in the human-readable `MESSAGE`.
