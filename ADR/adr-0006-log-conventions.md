@@ -1,4 +1,4 @@
-# ADR-0006 Log Conventions
+# 6. Log Conventions
 
 Date started: 2022-November-11
 Date revised: 2023-March-8
