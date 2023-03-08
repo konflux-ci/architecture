@@ -139,3 +139,58 @@ and interpreted by users. Use human-readable strings for most logs in that conte
   subsystems with this ADR we should include requests to update the scheme for naming new user
   workspaces to be something that does not include PII, for instance `<hash(username)>-tenant`. See
   also [ADR 10](0010-namespace-metadata.html) and [ADR 12](0012-namespace-name-format.html).
+
+## Appendix
+
+### JSONSchema for ADDITIONAL_JSON_DATA
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "action": {
+      "description": "Indicates what action the log event is responding to",
+      "type": "string",
+      "enum": ["VIEW", "ADD", "UPDATE", "DELETE"]
+    },
+    "namespace": {
+      "description": "Indicates the target namespace of the resource being reconciled",
+      "type": "string"
+    },
+    "kind": {
+      "description": "The kind of the resource being reconciled",
+      "type": "string"
+    },
+    "resource": {
+      "description": "The name of the resource being reconciled",
+      "type": "string"
+    },
+    "source": {
+      "description": "A url to the source code that is emitting this log",
+      "type": "string"
+    },
+    "audit": {
+      "description": "Set to true for specific types of audit logs required by SSML.PW.5.1.4",
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": true,
+  "required": [],
+  "not" {
+    "required": [
+      "namespace_name",
+      "container_name",
+      "pod_name",
+      "container_image",
+      "pod_ip",
+      "host",
+      "hostname",
+      "namespace_labels",
+      "message",
+      "level",
+      "time"
+    ]
+  }
+}
+```
