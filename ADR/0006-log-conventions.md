@@ -34,7 +34,7 @@ Encode timestamps in UTC/ISO-8601 format.
 
 ### 2. What happened?
 
-Use the key `action` with possible values `VIEW, ADD, UPDATE, DELETE`.
+Use the key `action` with possible values `VIEW, ADD, UPDATE, DELETE`, if applicable.
 
 ### 3. Where did it happen?
 
