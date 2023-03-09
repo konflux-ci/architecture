@@ -62,6 +62,7 @@ spec:
 * The build-service and the integration service needs to be able to read the contents of all secrets in the namespace.
 * The UI would need to update the list of parameter names expected in the dropdown whenever a new partner is onboarded. 
 * The Build team would need to provide a hardcoded list of parameter names to the UI team that we expect users to be able to configure. This has to be done everytime a new partner is onboarded.
+* If a user wants to configure a secret on multiple workspaces (i.e. for integration tests), they will need to set the secret multiple times, even if the content is the same.
 
 ## Out-of-scope
 
