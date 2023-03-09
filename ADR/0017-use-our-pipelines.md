@@ -22,7 +22,7 @@ a ci/cd platform that is meant to support a secure software development lifecycl
 Use our own pipelines to build and scan Stonesoup components. Almost all of our components already
 do this today. Look for evidence in the `.tekton/` directory of their git repo.
 
-However, we have stopped short of configuring and [Application] and [Components] for Stonesoup.
+However, we have stopped short of configuring an [Application] and [Components] for Stonesoup.
 We're using the pipelines directly, but not via the Stonesoup UI. This is something we intend to
 start doing, but haven't made time to do so yet.
 
