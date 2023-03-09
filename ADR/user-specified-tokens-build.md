@@ -9,7 +9,12 @@ Provisional
 
 ## Context
 
-As a user, I would like to configure sensitive information/tokens/credentials for the build/test pipeline to consume as part of a partner task.
+As a user, I would like to configure sensitive information/tokens/credentials for the build/test pipeline to consume as part of a partner Task.
+
+## What is a Partner Task
+
+A Partner Task is a Tekton Task that is provided and maintained by a Red Hat Partner. However, this initiative also aims to enable Tekton Tasks 
+contributed to the StoneSoup Build/Test Pipeline by different organizations inside Red Hat.
 
 
 ## Decision
