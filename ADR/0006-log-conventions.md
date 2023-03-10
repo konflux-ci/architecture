@@ -28,6 +28,8 @@ For example:
 
 The meaning of **timestamp** and log level should be self evident. The **logger** name helps your team understand which part of your controller is emitting the log (usually `Log.WithName` from `zap`). The **message** is a human readable string describing the event being logged. The **json data** contains additional fields useful for searching.
 
+The opinionated logging mechanism from the controller-runtime framework already conforms to this scheme. Care should be taken to make sure specific key/value pairs are logged.
+
 ### 1. When did it happen?
 
 **Included in:** `TIMESTAMP`
@@ -121,6 +123,25 @@ TaskRun logs are specifically out of scope of this ADR. Those logs are typically
 and interpreted by users. Use human-readable strings for most logs in that context.
 
 ## Consequences
+
+* Since (almost) all of our controllers (operators) are based on the controller-runtime framework
+  (e.g. via operator-sdk), and it has an opinionated logging mechanism (utility function in
+  `sigs.k8s.io/controller-runtime/pkg/log`, log frontend is logr, log backend is zap), and since this
+  logging mechanism already conforms to the prescribed format, and can be used, it should be
+  _easier_ for teams to conform to this ADR than would be otherwise.
+
+  For example, using the standard controller-runtime logging mechanism will produce a text string in
+  the prescribed format:
+
+```go
+logger "sigs.k8s.io/controller-runtime/pkg/log"
+
+func f() {
+    log = logger.FromContext(ctx)
+
+    log.Info("log message", "jsonfield1", "jsonfield1value", etc... )
+}
+```
 
 * By using structured logs that are only partially formatted as JSON, we should strike a balance
   between easy readability and support for centralized queries. It should be easy for a human to
