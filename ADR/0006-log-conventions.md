@@ -117,10 +117,17 @@ For more details on Fluentd vs. Fluent Bit logs, see [Set up Fluent Bit as a Dae
 
 It is best to avoid using the same key as the log collectors in our controller logs, to avoid confusion.
 
-### TaskRun logs
+### Out of Scope
 
-TaskRun logs are specifically out of scope of this ADR. Those logs are typically meant to be viewed
-and interpreted by users. Use human-readable strings for most logs in that context.
+**TaskRun logs** are specifically out of scope of this ADR. Those logs are typically meant to be
+viewed and interpreted by users. Use human-readable strings for most logs in that context.
+
+**Upstream controllers** are also out of scope. Where possible, influence upstream controllers to
+align to this ADR. It would just be nice. But it would be unreasonable to try to bring all of our
+dependencies under the same log scheme.
+
+**User application** logs are out of scope. Obviously, we cannot control their log format, nor do we
+want to for the goals of this ADR.
 
 ## Consequences
 
