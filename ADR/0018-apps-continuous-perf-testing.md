@@ -50,7 +50,7 @@ Let's use this architecture with a single Horreum instance that would be managed
 2. Pipeline gathers configured monitoring metrics and add them to the JSON.
 3. Pipeline uploads the JSON with all the data to Horreum.
 4. Horreum performs result analysis, looking for changes in configured metrics.
-4. Pipeline gets PASS/FAIL decision from Horreum back to the pipeline, so pipeline can return proper result.
+5. Pipeline gets PASS/FAIL decision from Horreum back to the pipeline, so pipeline can return proper result.
 
 ## Consequences
 
