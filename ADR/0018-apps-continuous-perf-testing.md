@@ -66,4 +66,5 @@ Cons:
 
 - Somebody has to manage the Horreum instance. Required development time on it.
 - Although Horreum uses Keycloak as well, some changes in the Horreum authentication mechanism might be required.
+    - To make sure Horreum users from one tenant are not able to access data from different tenant, created <https://github.com/Hyperfoil/Horreum/issues/420>.
 - Maybe also some scaling concerns of Horreum.
