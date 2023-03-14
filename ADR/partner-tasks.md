@@ -18,10 +18,10 @@ https://issues.redhat.com/browse/STONE-549
 
 ### Plumbing
 
-1. Setup a new Git repository for hosting all partner Tasks.
+1. Setup a new Git high-level directory in https://github.com/redhat-appstudio/build-definitions for partners to contribute Tasks to.
 2. Define a directory structure for Task submissions as manifests in the yaml format.
 3. Configure a CI job that validates the Tasks upon opening of a pull request.
-4. Configure a CI job that generates an OCI artifact consumable in a Tekton Pipeline.
+4. Optionally, configure a CI job that generates an OCI artifact consumable in a Tekton Pipeline.
 
 ### Day-to-day operations
 
