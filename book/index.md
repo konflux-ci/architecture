@@ -40,7 +40,7 @@ The diagram below shows the interaction of the StoneSoup with other systems and 
 
 ## Service (Component) Context
 
-Each service is that makes up StoneSoup is further decomposed on their own documents.
+Each service that makes up StoneSoup is further decomposed in its document.
 
 - [GitOps Service](./gitops-service.md)
 - [Pipeline Service](./pipeline-service.md)
@@ -52,6 +52,7 @@ Each service is that makes up StoneSoup is further decomposed on their own docum
 - [Java Rebuilds Service](./java-rebuilds-service.md)
 - [Release Service](./release-service.md)
 - [Integration Service](./integration-service.md)
+- [Image Controller](./image-controller.md)
 
 ## API References
 
