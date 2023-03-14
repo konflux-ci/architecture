@@ -52,6 +52,8 @@ Let's use this architecture with a single Horreum instance that would be managed
 4. Horreum performs result analysis, looking for changes in configured metrics.
 5. Pipeline gets PASS/FAIL decision from Horreum back to the pipeline, so pipeline can return proper result.
 
+Although Horreum provides rich web UI for configuring JSON parsing, change detection and data visualization, it will stay hidden to StoneSoup users. StoneSoup will expose subset of that functionality in it's own web UI and will talk to Horreum via it's API interface.
+
 ## Consequences
 
 Pros:
