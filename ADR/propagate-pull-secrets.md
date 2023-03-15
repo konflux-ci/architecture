@@ -14,7 +14,7 @@ Provisional
 
 ## Decision
 
-#### Overview
+### Overview
 
 This proposal builds on the capabilties of the https://github.com/redhat-appstudio/image-controller which sets up a Quay.io image repository per `Component` and 'downloads' a robot account token into the user's namespace for builds to be able to push to it.
 
