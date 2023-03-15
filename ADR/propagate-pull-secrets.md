@@ -8,7 +8,7 @@ Provisional
 
 ## Context
 
-* As a user, I would expect StoneSoup to generate a private Quay.io if my code repository is also private.
+* As a user, I would expect StoneSoup to generate a private Quay.io image repository if my source code repository is  private.
 * As a user, I would expect StoneSoup to gracefully deploy images that were pushed to private Quay.io repositories in every relevant environment.
 
 
