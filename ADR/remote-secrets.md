@@ -10,7 +10,7 @@ Provisional
 
 
 * As a StoneSoup's component, I would expect to have the ability to securely upload Secret associate it with the component, and propagate it to the target Environment.
-* As an admin user, I would expect StoneSoup to provide a place where I can securely upload sensitive information for later use in components on different Environments.
+* As an admin user, I would expect StoneSoup to provide a place where I can securely upload/update sensitive information for later use in components on different Environments.
 
 ## Decision
 
