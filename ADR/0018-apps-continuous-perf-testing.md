@@ -62,7 +62,9 @@ Pros:
 - Horreum is end-to-end solution that already exists, is already used by multiple teams and has documentation for the whole process.
 - StoneSoup UI can display all the trends because historical data will be available in Horreum.
 - Red Hat team that develops Horreum is willing to help with this effort.
-- Integration scripts that would be running in the pipeline (to gather monitoring data, to upload results to Horreum, to get PASS/FAIL decision from Horreum...) mostly exists.
+- Integration scripts needed to run in the pipeline (to gather monitoring data, to upload results to Horreum, to get PASS/FAIL decision from Horreum...) that already exists:
+    - Monitor performance workloads.
+    - Process the data in Horreum.
 
 Cons:
 
@@ -70,3 +72,7 @@ Cons:
 - Although Horreum uses Keycloak as well, some changes in the Horreum authentication mechanism might be required to cooperate with Stonesoup member cluster RBAC.
     - To make sure Horreum users from one tenant are not able to access data from different tenant, created <https://github.com/Hyperfoil/Horreum/issues/420>.
 - Horreum is used by multiple teams without any capacity issues, but Horreum itself was not perf&scale tested formally, so there might be some scaling issues.
+- We would need to develop StoneSoup UI to get graphs/results from Horreum and to allow users to configure the change detection parameters for their tests.
+- Integration scripts that need to be created:
+    - Gather monitoring data about SUT from Prometheus and bundle it to results that are uploaded to Horreum.
+    - Document / provide a step for integrating the change detection into pipeline.
