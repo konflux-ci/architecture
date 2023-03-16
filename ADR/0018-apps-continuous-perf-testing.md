@@ -69,7 +69,7 @@ Pros:
 Cons:
 
 - Somebody has to manage the Horreum instance. Required development time on it. Service instance needs ownership.
-- Although Horreum uses Keycloak as well, some changes in the Horreum authentication mechanism might be required to cooperate with Stonesoup member cluster RBAC.
+- Although Horreum uses Keycloak as well, some changes in the Horreum authentication mechanism might be required to cooperate with StoneSoup member cluster RBAC.
     - To make sure Horreum users from one tenant are not able to access data from different tenant, created <https://github.com/Hyperfoil/Horreum/issues/420>.
 - Horreum is used by multiple teams without any capacity issues, but Horreum itself was not perf&scale tested formally, so there might be some scaling issues.
 - We would need to develop StoneSoup UI to get graphs/results from Horreum and to allow users to configure the change detection parameters for their tests.
