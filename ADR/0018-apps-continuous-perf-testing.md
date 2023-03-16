@@ -42,7 +42,7 @@ Goal of this ADR is to propose a way for this kind of testing to be implemented 
 
 ## Decision
 
-Let's use this architecture with a single Horreum instance that would be managed by Red Hat and used by all customers.
+Let's use this architecture with a single Horreum instance per cluster (as we are separating Red Hat from other tenants at the cluster level). Horreum instances would be managed by Red Hat and used by tenants on specific cluster.
 
 ![Architecture diagram with Horreum](assets/0018-apps-continuous-perf-testing.svg "Architecture diagram with Horreum")
 
@@ -53,6 +53,8 @@ Let's use this architecture with a single Horreum instance that would be managed
 5. Pipeline gets PASS/FAIL decision from Horreum back to the pipeline, so pipeline can return proper result.
 
 Although Horreum provides rich web UI for configuring JSON parsing, change detection and data visualization, it will stay hidden to StoneSoup users. StoneSoup will expose subset of that functionality in it's own web UI and will talk to Horreum via it's API interface.
+
+We need to make a decision about one instance per cluster or one instance per tenant.
 
 ## Consequences
 
@@ -73,6 +75,7 @@ Cons:
     - To make sure Horreum users from one tenant are not able to access data from different tenant, created <https://github.com/Hyperfoil/Horreum/issues/420>.
 - Horreum is used by multiple teams without any capacity issues, but Horreum itself was not perf&scale tested formally, so there might be some scaling issues.
 - We would need to develop StoneSoup UI to get graphs/results from Horreum and to allow users to configure the change detection parameters for their tests.
+- If we need one Horreum instance per workspace, that would require further development work (i.e. operator for provisioning per worksapce, data backup/restore etc).
 - Integration scripts that need to be created:
     - Gather monitoring data about SUT from Prometheus and bundle it to results that are uploaded to Horreum.
     - Document / provide a step for integrating the change detection into pipeline.
