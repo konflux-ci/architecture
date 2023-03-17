@@ -134,7 +134,7 @@ There are a few parameters that are set in PipelineRun created by the Build Serv
   - for Custom mode, the tag is `{{ revision }}` which is evaluated by Pipelines As Code to commit SHA.
 - docker-file - path to Dockerfile, only used when dockerfile is detected in Component's devfile
 - path-context - context path for docker build, only used when dockerfile is detected in Component's devfile
-- skip-checks - set to 'true' when Component contains annotation `skip-initial-checks: true`
+- skip-checks - set to 'true' when Component contains annotation `skip-initial-checks: true`. This parameter is handled in pipelines so that when it's set to 'true' then testing task are skipped.
 
 ### PaC PipelineRun Pruner Controller
 
