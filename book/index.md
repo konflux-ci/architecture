@@ -40,7 +40,7 @@ The diagram below shows the interaction of the StoneSoup with other systems and 
 
 ## Service (Component) Context
 
-Each service that makes up StoneSoup is further decomposed in its document.
+Each service that makes up StoneSoup is further explained in its own document.
 
 - [GitOps Service](./gitops-service.md)
 - [Pipeline Service](./pipeline-service.md)
