@@ -27,7 +27,7 @@ Provisional
 2. The image-controller labels the `Secret` with the name `Application`/`Component` the `Secret` is associated with. 
 
 
-#### When an expression of intent to deploy an `Application` to an `Environment`
+#### When an expression of intent to deploy an `Application` to an `Environment` is made.
 
 
 1. Watch for creation of new `SnapshotEnvironmentBindings`.
