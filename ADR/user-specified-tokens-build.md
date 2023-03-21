@@ -56,6 +56,11 @@ spec:
      "appstudio.redhat.com/codecov-github-token":"true"
 ```
 
+### How would these tokens/secrets be rotated ?
+
+1. The user revokes the secret outside of Stonesoup.
+2. The user generates a new credential outside of Stonesoup.
+3. The user overwrites the secret in Stonesoup with a new one using our UI.
 
 ## Consequences
 
