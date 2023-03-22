@@ -20,7 +20,7 @@ This proposal builds on the StoneSoup capabilities to provide different [Environ
 
 #### 1. Scenario: When a new Environment is defined and StoneSoup's component knows the secret content
 
-1. The StoneSoup's component generates secrets with special labels `spi.appstudio.redhat.com/upload-secret: secret` and  `spi.appstudio.redhat.com/target-environment: prod`.   This feature is similar to [token upload feature](https://github.com/redhat-appstudio/service-provider-integration-operator/blob/main/docs/USER.md#uploading-access-token-to-spi-using-kubernetes-secret)
+1. The StoneSoup's component generates `Secrets` with special labels `spi.appstudio.redhat.com/upload-secret: secret` and  `spi.appstudio.redhat.com/target-environment: prod`.   This feature is similar to [token upload feature](https://github.com/redhat-appstudio/service-provider-integration-operator/blob/main/docs/USER.md#uploading-access-token-to-spi-using-kubernetes-secret)
 2. The spi-controller copies the `Secret` from the user's namespace into permanent storage (AWS secret manager, Vault). Instead of the original `Secret` spi-controller creating a new CR `RemoteSecret`, it includes the reference to the target `Environment` in the spec.
 3. The spi-controller copies `Secret` to the target `Environment` each time then content is updated.
 
