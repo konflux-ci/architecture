@@ -23,7 +23,9 @@ Provisional
 
 #### When a new `Component` is created
 
-1. A new Quay.io image repository and robot account token is made available in the namespace that would only be able to "pull" the `Component`'s image.
+1. image-controller creates a new Quay.io image repository
+2. image-controller provisions a new robot account token that would only be able to "pull" the `Component`'s image.
+3. image-controller creates a `Secret` in the user's workspace namespace containing the robot account token
 2. The image-controller labels the `Secret` with the name `Application`/`Component` the `Secret` is associated with. 
 
 
