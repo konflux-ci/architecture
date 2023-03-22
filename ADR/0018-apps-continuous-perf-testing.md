@@ -67,6 +67,7 @@ Pros:
 - Integration scripts needed to run in the pipeline (to gather monitoring data, to upload results to Horreum, to get PASS/FAIL decision from Horreum...) that already exists:
     - Monitor performance workloads.
     - Process the data in Horreum.
+    - Gather monitoring data about SUT from Prometheus and bundle it to results that are uploaded to Horreum.
 
 Cons:
 
@@ -77,5 +78,4 @@ Cons:
 - We would need to develop StoneSoup UI to get graphs/results from Horreum and to allow users to configure the change detection parameters for their tests.
 - If we need one Horreum instance per workspace, that would require further development work (i.e. operator for provisioning per worksapce, data backup/restore etc).
 - Integration scripts that need to be created:
-    - Gather monitoring data about SUT from Prometheus and bundle it to results that are uploaded to Horreum.
     - Document / provide a step for integrating the change detection into pipeline.
