@@ -42,7 +42,8 @@ Goal of this ADR is to propose a way for this kind of testing to be implemented 
 
 ## Decision
 
-Let's use this architecture with a single Horreum instance per cluster (as we are separating Red Hat from other tenants at the cluster level). Horreum instances would be managed by Red Hat and used by tenants on specific cluster.
+Let's use this architecture with a single Horreum instance per control plane cluster (as it is similar to what we do for Tekton results).
+Horreum instances would be managed by Red Hat and used by tenants on specific cluster.
 
 ![Architecture diagram with Horreum](assets/0018-apps-continuous-perf-testing.svg "Architecture diagram with Horreum")
 
