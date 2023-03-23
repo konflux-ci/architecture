@@ -137,6 +137,12 @@ Following the [annotation guidelines](https://docs.google.com/document/d/1gyXM3p
 ```
 The Integration service will copy the annotations and labels from the Build PipelineRun and append those to the Test PipelineRuns for traceability across the system per [Labels and Annotations for StoneSoup pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#) and [StoneSoup builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#)
 
+The "test.appstudio.openshift.io/optional" Label provides users an option whether the result of a pipelineRun created according to the IntegrationTestScenario will be taken into account when determining if the Snapshot has passed all required testing. In another word, the label is used to specify if an IntegrationTestScenario is allowed to fail. If the label is not defined in an IntegrationTestScenario, integration service will consider it as "false".
+```
+"test.appstudio.openshift.io/optional":	"false"|"true" 
+```
+The label will be copied to the subsequent Test PipelineRuns.
+
 #### Workspace
 
 The Integration service will provide Tekton workspaces to the individual PipelineRuns to supply additional resources required for testing, such as secure credentials for accessing test Environments.
