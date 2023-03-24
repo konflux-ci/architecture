@@ -78,6 +78,7 @@ Cons:
 - Horreum is used by multiple teams without any capacity issues, but Horreum itself was not perf&scale tested formally, so there might be some scaling issues.
 - We would need to develop StoneSoup UI to get graphs/results from Horreum and to allow users to configure the change detection parameters for their tests.
 - If we need one Horreum instance per workspace, that would require further development work (i.e. operator for provisioning per worksapce, data backup/restore etc).
-- As the performance testing pipelines can be some heavy on resources, attribution of costs to users/workspaces might be tricky. Maybe we could add Horreum to scope of <https://issues.redhat.com/browse/STONE-215>.
+- As the performance testing pipelines can be some heavy on resources, attribution of costs to users/workspaces might be tricky, but can be measured in a same way as we plan to measure functional tests or build pipelines.
+- Attribution of costs to run the Horreum, maybe tracking these can be added to scope of <https://issues.redhat.com/browse/STONE-215>.
 - Integration scripts that need to be created:
     - Document / provide a step for integrating the change detection into pipeline.
