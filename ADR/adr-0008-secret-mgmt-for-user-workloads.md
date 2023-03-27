@@ -23,6 +23,10 @@ Accepted
 - `SecretId`: A unique identifier of SecretData in permanent SecretStorage.
 - `SecretStorage`: A database eligible for storing `SecretData` (such as HashiCorp Vault, AWS Secret Manager).
 
+#### Architecture
+
+![](../diagrams/secret-mgmt.excalidraw.svg)
+
 The idea is to introduce a new CR called `RemoteSecret`, which is a Kubernetes representation of the `K8s Secret` that is stored in permanent storage aka SecretStorage. This CR contains a reference to the destination, either a Kubernetes namespace or an `Environment`. `UploadSecret` is used to perform an upload to the permanent storage and is represented as a regular Kubernetes secret with special labels and annotations recognized by the _SPI controller_. Different implementations of `SecretStorage` can be used, such as AWS Secret Manager or HashiCorp Vault.
 
 #### Example: If the destination is `Environment`
