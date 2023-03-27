@@ -13,20 +13,19 @@ Accepted
 
 ## Decision
 
-### Terminology
-
-- UploadSecret: A short-lived Kubernetes secret used to deliver confidential data to permanent storage and link it to the RemoteSecret CR.
-- SecretData: An object stored in permanent SecretStorage. Valid SecretData is always linked to a RemoteSecret CR.
-- RemoteSecret: A CR object that appears during upload and links SecretData + DeploymentTarget(s) + K8s Secret. RemoteSecret is linked to one (or zero) SecretData and manages its deleting/updating.
-- K8s Secret: What appears at the output and is used by consumers.
-- SecretId: A unique identifier of SecretData in permanent SecretStorage.
-- SecretStorage: A database eligible for storing SecretData (such as HashiCorp Vault, AWS Secret Manager).
-
 ### Architecture Overview
+#### Terminology
 
-The idea is to introduce a new CR called `RemoteSecret`, which is a Kubernetes representation of the `K8s Secret` that is stored in permanent storage aka SecretStorage. This CR contains a reference to the destination, either a Kubernetes namespace or an `Environment`. `UploadSecret` is used to perform an upload to the permanent storage, and is represented as a regular Kubernetes secret with special labels and annotations recognised by the spi-controller. Different implementations of SecretStorage can be used, such as AWS Secret Manager or HashiCorp Vault.
+- `UploadSecret`: A short-lived Kubernetes secret used to deliver confidential data to permanent storage and link it to the RemoteSecret CR.
+- `SecretData`: An object stored in permanent SecretStorage. Valid SecretData is always linked to a RemoteSecret CR.
+- `RemoteSecret`: A CRD that appears during upload and links `SecretData` + `DeploymentTarget(s)` + K8s `Secret`. `RemoteSecret` is linked to one (or zero) SecretData and manages its deleting/updating.
+- K8s `Secret`: What appears at the output and is used by consumers.
+- `SecretId`: A unique identifier of SecretData in permanent SecretStorage.
+- `SecretStorage`: A database eligible for storing `SecretData` (such as HashiCorp Vault, AWS Secret Manager).
 
-#### Example: If destination is `Environment`
+The idea is to introduce a new CR called `RemoteSecret`, which is a Kubernetes representation of the `K8s Secret` that is stored in permanent storage aka SecretStorage. This CR contains a reference to the destination, either a Kubernetes namespace or an `Environment`. `UploadSecret` is used to perform an upload to the permanent storage and is represented as a regular Kubernetes secret with special labels and annotations recognized by the _SPI controller_. Different implementations of `SecretStorage` can be used, such as AWS Secret Manager or HashiCorp Vault.
+
+#### Example: If the destination is `Environment`
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -51,7 +50,7 @@ spec:
  ...
 ```
 
-#### Example: If destination is `Namespace` and secret has to be linked to SA
+#### Example: If the destination is `Namespace` and secret has to be linked to SA
 ```yaml
 apiVersion: v1
 kind: Secret
@@ -81,11 +80,6 @@ spec:
           name: sa-star
 ```
 
-### Integration with Other Services
-
-#### Application Service
-To enable users to securely manage secrets for their workloads, the application service should provide an API that allows users to update secrets. The API should be similar to the one used to update environment variables, but instead of updating environment variables, it should save the secret provided by users to the secret management backend.
-The application service should ensure that only authorized users can access the API and update secrets. Access control for the API should be implemented using a role-based access control (RBAC) mechanism.
 
 ### Security and Access Control
 
@@ -104,4 +98,4 @@ The application service should ensure that only authorized users can access the 
 ## Consequences
 
 * The new secret management system will provide a more secure and scalable way for users to manage secrets for their workloads. It will also require some additional work to integrate with existing systems and processes. A new UI will need to be created to allow users to create and update secret values for their components and provide environment-specific overrides to them.
-* Additionally, some missing parts and todos need to be addressed, such as determining the exact target namespace in case if Environment name is used as a destination for K8s Secret, and determining the trigger when the K8s Secret has to be delivered. The use of Argocd's Resource  Argocd's [Resource Hooks](https://argo-cd.readthedocs.io/en/stable/user-guide/resource_hooks/) may be helpful in this regard.
+* Further work to be addressed, mechanisms for determining the exact target namespace in case if Environment name is used as a destination for K8s Secret, and determining the trigger when the K8s Secret has to be delivered. The use of ArgoCD's Resource  ArgoCD's [Resource Hooks](https://argo-cd.readthedocs.io/en/stable/user-guide/resource_hooks/) may be helpful in this regard.
