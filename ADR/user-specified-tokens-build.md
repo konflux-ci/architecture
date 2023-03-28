@@ -6,16 +6,11 @@ Date: 2023-03-03
 
 Provisional
 
-
 ## Context
 
-As a user, I would like to configure sensitive information/tokens/credentials for the build/test pipeline to consume as part of a partner Task.
+As a user, I would like to configure sensitive information/tokens/credentials for the build/test pipeline to consume as part of a TaskRun.
 
-## What is a Partner Task
-
-A Partner Task is a Tekton Task that is provided and maintained by a Red Hat Partner. However, this initiative also aims to enable Tekton Tasks
-contributed to the StoneSoup Build/Test Pipeline by different organizations inside Red Hat.
-
+This enables partner tasks contributed by Red Hat partners ([STONE-549](https://issues.redhat.com/browse/STONE-549)), but it also enables some tasks in our existing build pipeline like the [sast-snyk task in our build-definitions repo](https://github.com/redhat-appstudio/build-definitions/blob/main/task/sast-snyk-check/0.1/sast-snyk-check.yaml) ([STONE-415](https://issues.redhat.com/browse/STONE-415)).
 
 ## Decision
 
