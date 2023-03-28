@@ -57,8 +57,8 @@ perform the EC policy validation, which it does as follows:
 
 The ec-cli also supports other related functions. For more information on
 ec-cli refer to the
-[documentation](https://hacbs-contract.github.io/ec-cli/main/reference.html)
-and the [code](https://github.com/hacbs-contract/ec-cli).
+[documentation](https://enterprise-contract.github.io/ec-cli/main/reference.html)
+and the [code](https://github.com/enterprise-contract/ec-cli).
 
 ### EC Task Definition
 
@@ -67,7 +67,7 @@ Tekton task. It handles the task inputs and outputs and calls the ec-cli as
 needed to perform the EC validation.
 
 The task is defined
-[here](https://github.com/hacbs-contract/ec-cli/blob/main/task/0.1/verify-enterprise-contract.yaml).
+[here](https://github.com/enterprise-contract/ec-cli/blob/main/task/0.1/verify-enterprise-contract.yaml).
 
 ### EC Policy CRD
 
@@ -77,21 +77,21 @@ includes the public key required to verify signatures, the list of policy
 and data sources, and any other required configuration.
 
 You can view the source code for the ECP CRD
-[here](https://github.com/hacbs-contract/enterprise-contract-controller) and
-see its documentation [here](https://hacbs-contract.github.io/ecc/main/).
+[here](https://github.com/enterprise-contract/enterprise-contract-controller) and
+see its documentation [here](https://enterprise-contract.github.io/ecc/main/).
 See also the related
 [API Reference](https://redhat-appstudio.github.io/book/ref/enterprise-contract.html)
 
 ### EC Policies
 
 The reference set of policy rules for HACBS is defined
-[here](https://github.com/hacbs-contract/ec-policies/) and documented
-[here](https://hacbs-contract.github.io/ec-policies/). It includes rules for a
+[here](https://github.com/enterprise-contract/ec-policies/) and documented
+[here](https://enterprise-contract.github.io/ec-policies/). It includes rules for a
 range of different policies that are considered useful for HACBS.
 
 There are Conftest bundles containing the latest version of these policies
 available in [quay.io
-here](https://quay.io/repository/hacbs-contract/ec-release-policy?tab=tags).
+here](https://quay.io/repository/enterprise-contract/ec-release-policy?tab=tags).
 
 
 Related Components
@@ -131,7 +131,7 @@ service or on-demand.
 Additional Resources
 --------------------
 
-- [Enterprise Contract Documentation](https://hacbs-contract.github.io/)
+- [Enterprise Contract Documentation](https://enterprise-contract.github.io/)
 - [HACBS Documentation](https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation/)
 - [Book of StoneSoup](https://redhat-appstudio.github.io/book/)
 

@@ -66,7 +66,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: crd-temp/enterprise-contract-controller
-          repository: hacbs-contract/enterprise-contract-controller
+          repository: enterprise-contract/enterprise-contract-controller
 
       - name: Checkout DevSandbox API
         uses: actions/checkout@v3
