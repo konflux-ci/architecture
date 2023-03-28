@@ -16,7 +16,7 @@ Accepted
 ### Architecture Overview
 #### Terminology
 
-- `UploadSecret`: A short-lived Kubernetes secret used to deliver confidential data to permanent storage and link it to the RemoteSecret CR.
+- **Upload Secret**: A short-lived Kubernetes `Secret` used to deliver confidential data to permanent storage and link it to the `RemoteSecret` CR. The Upload Secret is not a CRD.
 - `SecretData`: An object stored in permanent SecretStorage. Valid SecretData is always linked to a RemoteSecret CR.
 - `RemoteSecret`: A CRD that appears during upload and links `SecretData` + `DeploymentTarget(s)` + K8s `Secret`. `RemoteSecret` is linked to one (or zero) SecretData and manages its deleting/updating.
 - K8s `Secret`: What appears at the output and is used by consumers.
