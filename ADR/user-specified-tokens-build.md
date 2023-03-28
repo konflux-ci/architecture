@@ -16,7 +16,7 @@ This enables partner tasks contributed by Red Hat partners ([STONE-549](https://
 
 ### How would the sensitive information be persisted and made available to the PipelineRun ?
 
-1. The UI would take in sensitive information as form input and upload it to SPI using the user's authentication token. See https://github.com/redhat-appstudio/service-provider-integration-operator/blob/main/docs/USER.md#uploading-access-token-to-spi-using-kubernetes-secret .
+1. The UI would take in sensitive information as form input and [upload it to SPI](https://github.com/redhat-appstudio/service-provider-integration-operator/blob/main/docs/USER.md#uploading-access-token-to-spi-using-kubernetes-secret) using the user's authentication token.
 
 2. Subsequently, the UI would create an `SPIAccessTokenBinding` CR with the appropriate label in the `.spec.secret.labels` to make the `Secrets` available to the build service or the integration service.
 
