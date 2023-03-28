@@ -47,7 +47,7 @@ data:
 apiVersion: appstudio.redhat.com/v1beta1
 kind: RemoteSecret
 metadata:
-  name: jdbc-connection-parameter
+  name: jdbc-connection-parameter-prod
 spec:
   secret:
     environment: prod
