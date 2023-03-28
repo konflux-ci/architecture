@@ -34,10 +34,11 @@ The idea is to introduce a new CR called `RemoteSecret`, which is a Kubernetes r
 apiVersion: v1
 kind: Secret
 metadata:
-  name: jdbc-connection-parameter
+  name: tmp-jdbc-connection-parameter-upload
   labels:
     spi.appstudio.redhat.com/upload-secret: secret
     spi.appstudio.redhat.com/target-environment: prod
+    spi.appstudio.redhat.com/target-secret-name: jdbc-connection-parameter
 type: Opaque
 data:
  ...
