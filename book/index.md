@@ -65,7 +65,3 @@ Each service that makes up StoneSoup is further explained in its own document.
 ### Naming Conventions
 
 - [Namespace Metadata](../ADR/adr-0010-namespace-metadata)
-
-### Control Plane
-
-- [KCP](../ref/kcp.md)
