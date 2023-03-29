@@ -78,8 +78,8 @@ spec:
 
 ### How should a Task author make her Task easily consumable ?
 
-* The Task author should specify the well-known name of the `Secret` as a `default` value of the relevant `param`. This should be enforced in the CI when accepting `Task` definitions from the partners.
-* The 
+* The `Task`' author should specify the well-known name of the `Secret` as a `default` value of the relevant `param`. This should be enforced in the CI when accepting `Task` definitions from the partners.
+* The `Task`'s author should specify the `Volume` as `optional: true` to ensure the same is mounted if the `Secret` exists, without reporting an error otherwise.
 
 ```
 apiVersion: tekton.dev/v1beta1
