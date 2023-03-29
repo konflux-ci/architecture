@@ -19,13 +19,13 @@ Accepted
 
 ## Context
 
-We need metadata on our namespaces to make Stonesoup easier to operate and maintain. Standardizing namespace metadata will make it easier for us to search our logs and metrics across clusters. It will also allow us to enable logging for outgoing network traffic, one of our security requirements.
+We need metadata on our namespaces to make AppStudio easier to operate and maintain. Standardizing namespace metadata will make it easier for us to search our logs and metrics across clusters. It will also allow us to enable logging for outgoing network traffic, one of our security requirements.
 
 ## Namespace labels
 
-We will apply the following labels to Stonesoup namespaces, to make them easier to identify programmatically. One namespace can have multiple types/labels:
+We will apply the following labels to AppStudio namespaces, to make them easier to identify programmatically. One namespace can have multiple types/labels:
 
-- `appstudio.redhat.com/namespacetype: "controller"` for namespaces containing controllers developed for Stonesoup. For example, we would annotate the `gitops-service-argocd` namespace but not the `openshift-gitops` namespace.
+- `appstudio.redhat.com/namespacetype: "controller"` for namespaces containing controllers developed for AppStudio. For example, we would annotate the `gitops-service-argocd` namespace but not the `openshift-gitops` namespace.
 - `appstudio.redhat.com/namespacetype: "user-workspace-data"` for User workspaces where Applications, Components, and so on are stored
 - `appstudio.redhat.com/namespacetype: "user-deployments"` for the namespaces where GitOps deploys applications for users
 - `appstudio.redhat.com/namespacetype: "user-builds"` for the namespaces where the Pipeline Service manages users' PipelineRun resources
@@ -43,7 +43,7 @@ The following labels are used for billing and telemetry. Values can be left blan
 
 ## Namespace annotations
 
-We will apply the following annotation to namespaces installed and maintained by Stonesoup on the clusters that Red Hat manages.  This will enable OVN network logging to log outgoing network traffic:
+We will apply the following annotation to namespaces installed and maintained by AppStudio on the clusters that Red Hat manages.  This will enable OVN network logging to log outgoing network traffic:
 
 metadata:
   annotations:

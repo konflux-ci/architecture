@@ -3,25 +3,25 @@ theme : "night"
 transition: "slide"
 highlightTheme: "monokai"
 slideNumber: false
-title: "StoneSoup Architecture Overview"
+title: "AppStudio Architecture Overview"
 ---
 
-## StoneSoup Architecture Overview
+## AppStudio Architecture Overview
 
 ---
 
-#### What is StoneSoup?
+#### What is AppStudio?
 
 A set of services that streamline, consolidate, connect, and secure the enterprise application lifecycle
 
 ---
 
-#### StoneSoup System Context
+#### AppStudio System Context
 
-![System Context](./diagrams/stonesoup-l1.drawio.svg)
+![System Context](./diagrams/appstudio-l1.drawio.svg)
 
 ---
 
-#### StoneSoup Services
+#### AppStudio Services
 
-![Data Plane](./diagrams/stonesoup-l2.drawio.svg)
+![Data Plane](./diagrams/appstudio-l2.drawio.svg)

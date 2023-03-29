@@ -1,4 +1,4 @@
-# 11. Roles and Permissions for Stonesoup
+# 11. Roles and Permissions for AppStudio
 
 Date: 2023-01-10
 
@@ -7,11 +7,11 @@ Date: 2023-01-10
 Accepted
 
 ## Context
-Stonesoup is using Kubernetes as the control plane for managing its resources. We require a system for managing user roles and permissions in this context. We have defined the following roles for our project: "Contributor", "Maintainer", and "Admin". We need to map these roles to specific permissions in the Kubernetes RBAC system, in terms of API groups, verbs, and resources.
+AppStudio is using Kubernetes as the control plane for managing its resources. We require a system for managing user roles and permissions in this context. We have defined the following roles for our project: "Contributor", "Maintainer", and "Admin". We need to map these roles to specific permissions in the Kubernetes RBAC system, in terms of API groups, verbs, and resources.
 
 ## Decision
 
-We will use the built-in Kubernetes RBAC system for Stonesoup's role and permissions management, and map the following roles to specific permissions, as described in the table below:
+We will use the built-in Kubernetes RBAC system for AppStudio's role and permissions management, and map the following roles to specific permissions, as described in the table below:
 
 ### Roles
 **Contributor:** Members who interact with the workspace mostly through pull requests.
