@@ -18,7 +18,15 @@ This enables partner tasks contributed by Red Hat partners ([STONE-549](https://
 
 1. The UI would take in sensitive information as form input and [upload it to SPI](https://github.com/redhat-appstudio/service-provider-integration-operator/blob/main/docs/USER.md#uploading-access-token-to-spi-using-kubernetes-secret) using the user's authentication token.
 
-2. Subsequently, the UI would create an `SPIAccessTokenBinding` CR with the appropriate name in the `.spec.secret.name` such that the secret appears under a well known name.
+
+| Name of the Secret   | Token data |
+| ----------- | ----------- |
+| synk-secret      | *user-provided*   |
+| tidelift-token   | *user-provided*   |
+| *user-provided*  | *user-provided*   |
+
+
+2. Subsequently, the UI would create an `SPIAccessTokenBinding` CR with the appropriate name in the `.spec.secret.name` such that the secret appears under a well-known name. The well-known name would be specified in the Task definition by the Task author.
 
 3. The PipelineRun must reference the secret by name.
 
@@ -28,6 +36,8 @@ This enables partner tasks contributed by Red Hat partners ([STONE-549](https://
 They do not.
 
 ### Example
+
+The contents of the `Secret` would be 'uploaded' using a temporary `Secret`. 
 
 ```yaml
 apiVersion: v1
@@ -47,6 +57,8 @@ stringData:
   tokenData: my-token-goes-here
 ```
 
+The token data would be projected into a `Secret` using an `SPIAccessTokenBinding`
+
 ```yaml
 apiVersion: appstudio.redhat.com/v1beta1
 kind: SPIAccessTokenBinding
@@ -63,6 +75,33 @@ spec:
         reference:
             name: pipeline
 ```
+
+### How should a Task author make her Task easily consumable ?
+
+The Task author should specify the well-known name of the `Secret` as a `default` value of the relevant `param`. This should be enforced in the CI when accepting `Task` definitions from the partners.
+
+```
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  labels:
+    app.kubernetes.io/version: "0.1"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/tags: "appstudio, hacbs"
+  name: sast-snyk-check
+spec:
+  description: >-
+    Static application security testing with Snyk.
+  results:
+    - description: Tekton task test output.
+      name: HACBS_TEST_OUTPUT
+  params:
+    - name: SNYK_SECRET
+      description: Name of secret which contains Snyk token.
+      default: synk-secret # Well-known name
+``` 
+
 
 ### How would these tokens/secrets be rotated ?
 
@@ -82,6 +121,7 @@ spec:
   upload their token.
 * The build-service and the integration service do not need to be able to read the contents of all secrets in all namespaces.
 * If a user wants to configure a secret on multiple workspaces (i.e. for integration tests), they will need to set the secret multiple times, even if the content is the same.
+* The user would have CRUD permissions on `Secrets` in her workspace.
 
 ## Out-of-scope
 
