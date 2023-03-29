@@ -16,7 +16,7 @@ Provisional
 
 ### Overview
 
-1. This proposal builds on the capabilties of the https://github.com/redhat-appstudio/image-controller which sets up a Quay.io image repository per `Component` and 'downloads' a robot account token into the user's namespace for builds to be able to push to it.
+1. This proposal builds on the capabilties of the [image-controller](https://redhat-appstudio.github.io/book/book/image-controller.html) which sets up a Quay.io image repository per `Component` and 'downloads' a robot account token into the user's namespace for builds to be able to push to it.
 
 2. This proposal builds on the capabilities of SPI's `RemoteSecret` API. See https://github.com/redhat-appstudio/book/pull/70/files
 
