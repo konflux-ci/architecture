@@ -78,7 +78,8 @@ spec:
 
 ### How should a Task author make her Task easily consumable ?
 
-The Task author should specify the well-known name of the `Secret` as a `default` value of the relevant `param`. This should be enforced in the CI when accepting `Task` definitions from the partners.
+* The Task author should specify the well-known name of the `Secret` as a `default` value of the relevant `param`. This should be enforced in the CI when accepting `Task` definitions from the partners.
+* The 
 
 ```
 apiVersion: tekton.dev/v1beta1
@@ -99,7 +100,16 @@ spec:
   params:
     - name: SNYK_SECRET
       description: Name of secret which contains Snyk token.
-      default: synk-secret # Well-known name
+      default: snyk-secret                                       ### Enforce in the CI
+    - name: ARGS
+      type: string
+      description: Append arguments.
+      default: "--all-projects --exclude=test*,vendor,deps"
+  volumes:
+    - name: snyk-secret
+      secret:
+        secretName: $(params.SNYK_SECRET)
+        optional: true                                           ### Enforce in the CI
 ``` 
 
 
