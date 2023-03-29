@@ -88,10 +88,23 @@ spec:
 
 ### Security and Access Control
 
-* Access to the secret management backend should be restricted to authorized users and components.
+* Access to the secret management backend should be restricted to authorized users and components. See the table for the access levels for different roles.
 * The default backend should use authentication and authorization mechanisms provided by the underlying service, such as Kubernetes or AWS IAM.
 * Workspace maintainers should have the ability to create and update secrets for their workspace on the default secret management backend.
 * Access to the secret management backend should be audited to detect and prevent unauthorized access or misuse.
+
+#### Additions to Roles and Permissions
+
+|     Role      | Permissions             | API Groups                | Verbs                                   | Resources
+|---------------|-------------------------|---------------------------|-----------------------------------------|----------------------------------------------------------------------
+| Contributor   | RemoteSecret            | appstudio.redhat.com      | get, list, watch                        | remotesecret
+| Maintainer    | RemoteSecret            | appstudio.redhat.com      | get, list, watch, create, update, patch | remotesecret
+| Admin         | RemoteSecret            | appstudio.redhat.com      | get, list, watch, create, update, patch | remotesecret
+
+
+Only roles with `create` privileges to `Secret`s can create and update secrets. At the time if this ADR this is limited to Admin role only.
+
+
 
 ### Monitoring and Auditing
 
