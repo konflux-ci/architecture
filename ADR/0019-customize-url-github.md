@@ -32,11 +32,11 @@ The following components in AppStudio send data/results back to GitHub via the C
 
 An AppStudio workspace is associated with a Kubernetes namespace on a AppStudio “member cluster”,
 which is not directly accessible by end users. The namespace name on the member cluster currently
-correlates with the workspace name (a suffix is added). [ADR-0010](./0010-namespace-metadata.md)
+correlates with the workspace name (a suffix is added). [ADR 10](0010-namespace-metadata.html)
 specifies that a namespace label should exist which links the member cluster namespace back to the
 AppStudio workspace.
 
-Artifacts in AppStudio are organized into Applications and Components. A namespace can have more
+Artifacts in AppStudio are organized into `Applications` and `Components`. A namespace can have more
 than one `Application`, and an `Application` can have one or more `Components`. At present, each
 `Component` has an associated PaC `Repository` object, though this may be subject to change in the future.
 
@@ -67,7 +67,7 @@ permission to view the requested `PipelineRun` resource.
 ### Dev Sandbox: Member Cluster Labels
 
 Member cluster namespaces MUST have the `appstudio.redhat.com/workspace_name` label, in accordance
-with [ADR-0010](./0010-namespace-metadata.md).
+with [ADR 10](0010-namespace-metadata.html).
 
 ### Pipelines as Code: Customize URLs per Repository
 
@@ -75,64 +75,21 @@ Pipelines as Code's `Repository` custom resource will be extended to let users/s
 customize the `PipelineRun` URL sent to SCM providers. This will take advantage of the upcoming
 parameters feature in Pipelines as Code (see [SRVKP-2940](https://issues.redhat.com/browse/SRVKP-2940)).
 
-Below is a proposed API, with an implementation for AppStudio:
+The mechanism for how the console URL can be templated using parameters will be documented in
+[SRVKP-2994](https://issues.redhat.com/browse/SRVKP-2944) and related subtasks. AppStudio will
+configure Pipelines as Code to use the following parameters in the console URL templates:
 
-```yaml
-spec:
-  params:
-    - name: workspace
-      type: string
-      value: adkaplan-demo
-    - name: application
-      type: string
-      value: demo-app
-  customConsole:
-    urlPRDetails: “{{rootURL}}/workspaces/{{workspace}}/applications/{{application}}/pipelineruns/{{pr}}”
-    urlPRTaskLog: “{{rootURL}}/workspaces/{{workspace}}/applications/{{application}}/pipelineruns/{{pr}}/logs”
-...
-```
-
-The API Fields are as follows:
-
-- `params` - an array of parameters which can be propagated to PipelineRuns when they are created
-  by Pipelines as Code. See [SRVKP-2940](https://issues.redhat.com/browse/SRVKP-2940) for the
-  actual implementation.
-- `customConsole` - provides a set of templatable URLs that are used when sending data back to an SCM provider.
-  The following URLs can be templated with parameters:
-  - `urlPRDetails` - a link to the PipelineRun details
-  - `urlPRTaskLog` - a link to the log of a particular `TaskRun` within the `PipelineRun`.
-- Documentation should highlight that the following parameters can be used in the console URL template:
-  - `rootURL` - the root URL for the console, set in the PaC install configuration.
-  - `namespace` - namespace of the `PipelineRun`
-  - `pr` - name of the `PipelineRun`
-  - `task` - name of the `TaskRun` within the PipelineRun (TaskLog URL only)
-  - `pod` - name of the pod for the `TaskRun` (TaskLog URL only)
-  - `firstFailedStep` - name of the first failed step (TaskLog URL only)
-
-The proposed behavior is as follows:
-
-- If `customConsole` is not specified, fall back to the current behavior (cluster-wide custom
-  console or OpenShift/Tekton Dashboard defaults)
-- When `customConsole` is specified, set the URL sent back to scm providers as follows:
-  - Use `urlPRDetails` to send the pipeline run details link, applying the parameters in the
-    `Repository` object in addition to the default parameters for the cluster. If not set, fall
-    back to current behavior.
-  - Use `urlPRTaskLog` to send the task log link, applying the parameters in the `Repository`
-    object in addition to the default parameters for the cluster. If not set, fall back to current
-    behavior.
-
-See [SRVKP-2994](https://issues.redhat.com/browse/SRVKP-2944) for further details.
+- `workspace`
+- `application`
 
 ### Build Service: Propagate AppStudio Data to Repository CR
 
 The AppStudio build service should be enhanced as follows:
 
-- When the `Component` CR is created/reconciled, add the following to the respective `Repository`:
-  - `params` - add parameter values for the RHTAP workspace (`appstudio.redhat.com/workspace_name`
-    label on namespace) and the parent `Application`.
-  - `customConsole` - provide the following template URLs:
-    - `urlPRDetails`: `{{rootURL}}/workspaces/{{workspace}}/applications/{{application}}/pipelineruns/{{pr}}`
-    - `urlPRTaskLog`: `{{rootURL}}/workspaces/{{workspace}}/applications/{{application}}/pipelineruns/{{pr}}/logs`
+- When the `Component` CR is created/reconciled, add the following parameters to the respective
+`Repository`:
+  - `workspace` - the AppStudio workspace (`appstudio.redhat.com/workspace_name` label on namespace)
+  - `application` - the AppStudio application name for the `Component`.
 
 ### Integration Test Service: Customize URLs
 
@@ -150,3 +107,6 @@ Workspace names might contain identifying information (ex - usernames). This cou
 concern if these identifiers are distributed publicly via URLs submitted to GitHub or other public
 source control repositories. This potential disclosure of identifying information should be
 presented to end users.
+
+This concern is mitigated if workspace names are changed to be an arbitrary string, or a hash of a
+known identifier (see [ADR 06](0006-log-conventions.html)).
