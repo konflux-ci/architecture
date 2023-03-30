@@ -30,58 +30,57 @@ The diagram below shows the flow of custom resources and the orchestration of pi
 
 ## Terminology
 
-**Snapshot** -  The custom resource that contains the list of all Components of an Application with their Component Image digests. Once created, the list of Components with their images is immutable. The Integration service updates the status of the resource to reflect the testing outcome.
-**Release Pipeline** -  An instance of a Pipeline that is orchestrated by the Release Service.
-**Bundle** - A tekton bundle (image) that contains Tekton resources
-**Development Workspace** - workspace shared by 1 or more team members when code is built and tested.
-**Managed Workspace** - workspace that is managed by an SRE or Release Engineering team that is controlled. This is where Release pipeline execute.
+**Snapshot** - The custom resource that contains the list of all Components of an Application with their Component Image digests. Once created, the list of Components with their images is immutable. The Integration service updates the status of the resource to reflect the testing outcome.
+**Release Pipeline** - An instance of a Pipeline that is orchestrated by the Release Service.
+**Bundle** - A tekton bundle (image) that contains Tekton resources.
+**Development Workspace** - A workspace shared by 1 or more team members when code is built and tested.
+**Managed Workspace** - A controlled workspace that is managed by an SRE or Release Engineering team. This is where Release Pipelines execute.
 
 ## Resources
-Below are the list of CRs that the Release service is responsible for interacting and performing operations:
+Below is the list of CRs that the Release service is responsible for interacting with:
 
 ### CREATE
 
-| Custom Resource            | When?                                                    | Why?                                                                                       |
-|----------------------------|----------------------------------------------------------|--------------------------------------------------------------------------------------------|
-| SnapshotEnvironmentBinding | When deploying the Snapshot to an Environment            | Create a SnapshotEnvironmentBinding for the Referenced Environment when one does not exist |
-| PipelineRuns               | Once a Release has been composed and ready for execution | To perform the steps in the Release Strategy                                               |
+| Custom Resource             | When?                                                       | Why?                                                                                          |
+|-----------------------------|-------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| SnapshotEnvironmentBinding  | When deploying the Snapshot to an Environment               | To create a SnapshotEnvironmentBinding for the referenced Environment when one does not exist |
+| PipelineRun                 | Once a Release has been composed and is ready for execution | To perform the steps in the Release Strategy                                                  |
 
 ### READ
 
-| Custom Resources        | When?                                                  | Why?                                                                     |
-|-------------------------|--------------------------------------------------------|--------------------------------------------------------------------------|
-| Application & Component | When validating ReleasePlans and ReleasePlanAdmissions | To ensure data consistency                                               |
-| ReleasePlan             | When starting to process a Release                     | To determine the target workspace to run the Release Pipeline            |
-| ReleasePlanAdmission    | When starting to process a Release                     | To determine the Release Strategy to use to compose the Release Pipeline |
-| Snapshot                | Creating and triggering a Release Pipeline             | To determine which components to release                                 |
-| ReleaseStrategy         | Before composing the Release Pipeline                  | To determine the bundle to use to run the Release Pipeline               |
+| Custom Resources        | When?                                                  | Why?                                                                      |
+|-------------------------|--------------------------------------------------------|---------------------------------------------------------------------------|
+| Application & Component | When validating ReleasePlans and ReleasePlanAdmissions | To ensure data consistency                                                |
+| ReleasePlan             | When starting to process a Release                     | To determine the target workspace to run the Release Pipeline in          |
+| ReleasePlanAdmission    | When starting to process a Release                     | To determine the ReleaseStrategy to use to compose the Release Pipeline   |
+| Snapshot                | Creating and triggering a Release Pipeline             | To determine which components to release                                  |
+| ReleaseStrategy         | Before composing the Release Pipeline                  | To determine the bundle to use to run the Release Pipeline                |
 
 ### UPDATE
 
-| Custom Resource            | When?                                                    | Why?                                                         |
-|----------------------------|----------------------------------------------------------|--------------------------------------------------------------|
-| SnapshotEnvironmentBinding | When deploying the Snapshot to an Environment            | Update exiting SnapshotEnvironmentBinding for a new Snapshot |
-| Release                    | During the lifecycle of an attempt to release a Snapshot | Provide status for the execution of the Release Pipeline     |
+| Custom Resource            | When?                                                    | Why?                                                             |
+|----------------------------|----------------------------------------------------------|------------------------------------------------------------------|
+| SnapshotEnvironmentBinding | When deploying the Snapshot to an Environment            | To update existing SnapshotEnvironmentBinding for a new Snapshot |
+| Release                    | During the lifecycle of an attempt to release a Snapshot | To provide status for the execution of the Release Pipeline      |
 
 ### WATCH
 
-| Custom Resource              | When?                                                   | Why?                                                            |
-|------------------------------|---------------------------------------------------------|-----------------------------------------------------------------|
-| PipelineRun                  | Once Pipeline created                                   | Relay the Release PipelineRun status to the Release for viewing |
-| SnapshotEnvironmentBinding   | After the SnapshotEnvironmentBinding created or updated | Relay the GitOps deployment status to the Release for viewing   |
+| Custom Resource            | When?                                                      | Why?                                                               |
+|----------------------------|------------------------------------------------------------|--------------------------------------------------------------------|
+| Release                    | Always                                                     | To provide an API to trigger a release                             |
+| PipelineRun                | Once the PipelineRun is created                            | To relay the Release PipelineRun status to the Release for viewing |
+| SnapshotEnvironmentBinding | After the SnapshotEnvironmentBinding is created or updated | Ro relay the GitOps deployment status to the Release for viewing   |
 
 #### Annotations/Labels
 
 Following the [annotation guidelines](https://docs.google.com/document/d/1gyXM3pkKFFfxHZnopBi_53vREFWhwA0pFUuIhopDuEo/edit#), the Release Service sets the below annotations on PipelineRuns.
 ```
 “pipelines.appstudio.openshift.io/type":     "release",
-"appstudio.openshift.io/snapshot":           “<snapshot name>”,
-“appstudio.openshift.io/component":          “<component name>”,
 “appstudio.openshift.io/application":        “<application name>”,
 "release.appstudio.openshift.io/name":       "<release name>",
-"release.appstudio.openshift.io/namespace":  "<managed workspace name>"
+"release.appstudio.openshift.io/namespace":  "<development workspace name>"
 ```
-The Release service will copy the annotations and labels from the Release CR and append those to the Release PipelineRuns for traceability across the system per [Labels and Annotations for StoneSoup pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#) and [StoneSoup builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#)
+The Release service will copy the annotations and labels from the Release CR and append those to the Release PipelineRuns for traceability across the system per [Labels and Annotations for StoneSoup pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#) and [StoneSoup builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#).
 
 ## Detailed Workflow
 
@@ -90,14 +89,14 @@ The Release service will copy the annotations and labels from the Release CR and
    * The `spec.releasePlan` should reference the ReleasePlan to use.
 2. Find the matching ReleasePlanAdmission in the `spec.target` namespace specified in the ReleasePlan.
 3. Extract the `spec.releaseStrategy` from the ReleasePlanAdmission
-4. Extract the `spec.serviceAccount`, `spec.bundle`, `spec.pipeline` and `spec.policy` to use from the Release Strategy.
+4. Extract the `spec.serviceAccount`, `spec.bundle`, `spec.pipeline` and `spec.policy` to use from the ReleaseStrategy.
 5. Create a Release PipelineRun using the above info.
 6. Watch Release PipelineRun and update Release `status` with progress and outcome.
-7. If ReleasePlanAdmission specified an `spec.environment`, then do the following:
-   * Copy the Snapshot to the managed workspace
+7. If ReleasePlanAdmission specified a `spec.environment`, then do the following:
+   * Copy the Snapshot to the managed workspace.
    * Verify that the Application and Components have been copied to managed workspace.
    * Create or update SnapshotEnvironmentBinding in the managed workspace.
-   * Watch SnapshotEnvironmentBinding to relay deployment status to Release CR `status`
+   * Watch SnapshotEnvironmentBinding to relay deployment status to Release CR `status`.
 
 ### Dependencies
 
