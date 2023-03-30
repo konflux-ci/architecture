@@ -69,7 +69,7 @@ Below is the list of CRs that the Release service is responsible for interacting
 |----------------------------|------------------------------------------------------------|--------------------------------------------------------------------|
 | Release                    | Always                                                     | To provide an API to trigger a release                             |
 | PipelineRun                | Once the PipelineRun is created                            | To relay the Release PipelineRun status to the Release for viewing |
-| SnapshotEnvironmentBinding | After the SnapshotEnvironmentBinding is created or updated | Ro relay the GitOps deployment status to the Release for viewing   |
+| SnapshotEnvironmentBinding | After the SnapshotEnvironmentBinding is created or updated | To relay the GitOps deployment status to the Release for viewing   |
 
 #### Annotations/Labels
 
