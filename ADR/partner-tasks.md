@@ -31,7 +31,6 @@ https://issues.redhat.com/browse/STONE-549
 2. CI tests do the due diligence on the changes proposed in the PR. Success/Failures are reported in a way that the PR author can take reasonable 
 action to resolve the issue.
 3. Upon approval from the Build/Test team, the changes are merged.
-4. Manually/Automatically, a PR is opened to the https://github.com/redhat-appstudio/build-definitions repository.
 
 #### Revoking a Task
 1. Open a PR to delete the Task.
@@ -64,7 +63,7 @@ Component into StoneSoup, customize their Pipeline definition in the .tekton dir
 
 ## Alternatives
 
-* Use the github.com/redhat-appstudio/build-definitions for Task submissions by partners : This is being considered in the short-term, either way, the day-to-day operations will not quite change.
+* ~Use the github.com/redhat-appstudio/build-definitions for Task submissions by partners : This is being considered in the short-term, either way, the day-to-day operations will not quite change~ - this has been promoted to be the primary design.
 * Use Tekton Hub for host Tasks : Tekton Hub is being deprecated.
 
 
