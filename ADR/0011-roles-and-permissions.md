@@ -25,7 +25,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 | Contributor   | Workspace               | Access to namespaces that backs workspace                           |
 |               | Application & Component | appstudio.redhat.com      | get, list, watch                        | applications, components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | get, list, watch                        | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymentttargets, deploymenttargetclaims
+|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymenttargets, deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments
 |               | PipelineRun             | tekton.dev                | get, list, watch                        | pipelineruns
 |               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records
@@ -34,7 +34,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 |               | Release Strategy        | appstudio.redhat.com      | get, list, watch                        | releases, releasestrategies, releaseplans
 |               | Release Admission Plan  | appstudio.redhat.com      | get, list, watch                        | releaseplanadmissions
 |               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch                        | jbsconfigs, artifactbuilds
-|               | *Service Access*        | appstudio.redhat.com      | get, list, watch                        | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequest
+|               | *Service Access*        | appstudio.redhat.com      | get, list, watch                        | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests
 |               | *Configs*               |                           | get, list, watch                        | configmaps
 |               | *Secrets*               |                           |                                         | secrets
 |               | Add User                |
@@ -42,7 +42,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 | Maintainer    | Workspace               | Access to namespaces that backs workspace                           |
 |               | Application & Component | appstudio.redhat.com      | get, list, watch, create, update, patch | applications, components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | get, list, watch                        | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymentttargets, deploymenttargetclaims
+|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymenttargets, deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments
 |               | PipelineRun             | tekton.dev                | get, list, watch                        | pipelineruns
 |               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records
@@ -51,7 +51,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 |               | Release Strategy        | appstudio.redhat.com      | *                                       | releases, releasestrategies, releaseplans
 |               | Release Admission Plan  | appstudio.redhat.com      | *                                       | releaseplanadmissions
 |               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch, create, update, patch | jbsconfigs, artifactbuilds
-|               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequest
+|               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests
 |               | *Configs*               |                           | get, list, watch                        | configmaps
 |               | *Secrets*               |                           |                                         | secrets
 |               | Add User                |
@@ -59,7 +59,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 | Admin         | Workspace               | Access to namespaces that backs workspace                           |
 |               | Application & Component | appstudio.redhat.com      | *                                       | applications, components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | *                                       | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | *                      | deploymentttargets, deploymenttargetclaims
+|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | *                      | deploymenttargets, deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments
 |               | PipelineRun             | tekton.dev                | *                                       | pipelineruns
 |               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records
@@ -68,7 +68,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 |               | Release Strategy        | appstudio.redhat.com      | *                                       | releases, releasestrategies, releaseplans
 |               | Release Admission Plan  | appstudio.redhat.com      | *                                       | releaseplanadmissions
 |               | *JVM Build Service*     | jvmbuildservice.io        | *                                       | jbsconfigs, artifactbuilds
-|               | *Service Access*        | appstudio.redhat.com      | *                                       | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens,spifilecontentrequest
+|               | *Service Access*        | appstudio.redhat.com      | *                                       | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens,spifilecontentrequests
 |               | *Configs*               |                           | *                                       | configmaps
 |               | *Secrets*               |                           | *                                       | secrets
 |               | Add User                |
