@@ -25,7 +25,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 | Contributor   | Workspace               | Access to namespaces that backs workspace                           |
 |               | Application & Component | appstudio.redhat.com      | get, list, watch                        | applications, components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | get, list, watch                        | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymentttargets, deploymenttargetclaims
+|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymenttargets, deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments
 |               | PipelineRun             | tekton.dev                | get, list, watch                        | pipelineruns
 |               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records
@@ -42,7 +42,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 | Maintainer    | Workspace               | Access to namespaces that backs workspace                           |
 |               | Application & Component | appstudio.redhat.com      | get, list, watch, create, update, patch | applications, components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | get, list, watch                        | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymentttargets, deploymenttargetclaims
+|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymenttargets, deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments
 |               | PipelineRun             | tekton.dev                | get, list, watch                        | pipelineruns
 |               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records
@@ -59,7 +59,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 | Admin         | Workspace               | Access to namespaces that backs workspace                           |
 |               | Application & Component | appstudio.redhat.com      | *                                       | applications, components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | *                                       | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | *                      | deploymentttargets, deploymenttargetclaims
+|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | *                      | deploymenttargets, deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments
 |               | PipelineRun             | tekton.dev                | *                                       | pipelineruns
 |               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records
