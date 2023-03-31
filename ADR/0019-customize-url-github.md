@@ -1,10 +1,11 @@
 # 19. Customize URLs Sent to GitHub
 
 Created Date: 2023-03-29
+Accepted Date: 2023-03-31
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -75,9 +76,9 @@ Pipelines as Code's `Repository` custom resource will be extended to let users/s
 customize the `PipelineRun` URL sent to SCM providers. This will take advantage of the upcoming
 parameters feature in Pipelines as Code (see [SRVKP-2940](https://issues.redhat.com/browse/SRVKP-2940)).
 
-The mechanism for how the console URL can be templated using parameters will be documented in
-[SRVKP-2994](https://issues.redhat.com/browse/SRVKP-2944) and related subtasks. AppStudio will
-configure Pipelines as Code to use the following parameters in the console URL templates:
+The mechanism for how the console URL can be templated using parameters will be documented upstream
+and published [online](https://pipelinesascode.com). AppStudio will configure Pipelines as Code to
+use the following parameters in the console URL templates:
 
 - `workspace`
 - `application`
