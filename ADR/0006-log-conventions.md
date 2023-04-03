@@ -69,7 +69,7 @@ Optionally, also refer to the namespace of the *targeted resource* in the human-
 
 ### 5. Where it came from?
 
-**Included in:** `msg`, `kind`, `resource`, and `source
+**Included in:** `msg`, `kind`, `resource`, and `source`
 
 Use the key `kind` with possible resource kind values determined by the component team.  For example, for HAS this can be `CDQ`, `Application`, `Component`, etc.
 
