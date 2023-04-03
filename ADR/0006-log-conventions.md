@@ -21,8 +21,8 @@ In our controller logs, we will use structured log messages, formatted in JSON w
 For example:
 
 ```
-{"ts": "2023-03-07T11:32:29.167Z", "level": "info", "logger": "controllers.Component", "msg": "updating devfile component name kubernetes-deploy ...", "namespace": "samburrai-tenant", "resource": "go-net-http-hello-prqx", "kind": "Component"}
-{"ts": "2023-03-07T11:32:29.020Z", "level": "info", "logger": "controllers.Component", "msg": "API Resource updated", "namespace": "samburrai-tenant", "audit": "true", "resource": "go-net-http-hello-prqx", "kind": "Component", "action": "UPDATE"}
+{"ts": "2023-03-07T11:32:29.167Z", "level": "info", "logger": "controllers.Component", "msg": "updating devfile component name kubernetes-deploy ...", "namespace": "samburrai-tenant", "name": "go-net-http-hello-prqx", "controllerKind": "Component"}
+{"ts": "2023-03-07T11:32:29.020Z", "level": "info", "logger": "controllers.Component", "msg": "API Resource updated", "namespace": "samburrai-tenant", "audit": "true", "name": "go-net-http-hello-prqx", "controllerKind": "Component", "action": "UPDATE"}
 ```
 
 The **ts** field stands for "timestamp" (encoded as UTC/ISO-8601) and the meaning of log **level** should be self evident. The **logger** name helps your team understand which part of your service is emitting the log (usually `Log.WithName` from `zap`). The **msg** is a human readable string describing the event being logged. Further **json** key value pairs contain additional fields useful for searching.
@@ -69,11 +69,12 @@ Optionally, also refer to the namespace of the *targeted resource* in the human-
 
 ### 5. Where it came from?
 
-**Included in:** `msg`, `kind`, `resource`, and `source`
+**Included in:** `msg`, `controllerKind`, `name`, and `source`
 
-Use the key `kind` with possible resource kind values determined by the component team.  For example, for HAS this can be `CDQ`, `Application`, `Component`, etc.
+Use the key `controllerKind` with possible resource kind values determined by the component team. For example, for HAS this can be `Application`, `Component`, etc. For SPI this can be `SPIAccessToken`. The `controllerKind` key is automatically added to the log context by operator-sdk.
 
-Use the key `resource` with the name of the resource being acted upon.
+Use the key `name` with the name of the resource being acted upon. The `name` of the resource is
+automatically added to the log context by operator-sdk.
 
 Optionally, use the key `source` to direct developers to the source code where the action occurred.
 
@@ -197,11 +198,11 @@ func f() {
       "description": "Indicates the target namespace of the resource being reconciled",
       "type": "string"
     },
-    "kind": {
+    "controllerKind": {
       "description": "The kind of the resource being reconciled",
       "type": "string"
     },
-    "resource": {
+    "name": {
       "description": "The name of the resource being reconciled",
       "type": "string"
     },
