@@ -168,7 +168,7 @@ func f() {
 
 ## Appendix
 
-### JSONSchema for ADDITIONAL_JSON_DATA
+### JSONSchema
 
 ```json
 {
