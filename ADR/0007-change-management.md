@@ -6,7 +6,8 @@ Date: 2022-11-22
 
 Accepted
 
-Relates to [ADR 17. Use our own pipelines](0017-use-our-pipelines.html)
+* Relates to [ADR 17. Use our own pipelines](0017-use-our-pipelines.html)
+* Relates to [ADR 20. Source Retention](0020-source-retention.html)
 
 ## Approvers
 
