@@ -156,7 +156,7 @@ func f() {
 * Individual teams should still be able to include key value pairs in their controller logs that are
   not mentioned in this doc, enabling debugging methods unique to that controller.
 * We decided to omit including a `user_id` for situations where one is relevant. This would be
-  helpful for audit purposes (see "Who was involved? above). But, the user id in our system is the
+  helpful for audit purposes (see "Who was involved?" above). But, the user id in our system is the
   same as the username, which constitutes PII - which we do not want to log and forward to other
   systems. If we decide that we do need a `user_id` for audit purposes in the future, then we will
   need to revisit this decision.
