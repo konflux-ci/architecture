@@ -69,14 +69,16 @@ Optionally, also refer to the namespace of the *targeted resource* in the human-
 
 ### 5. Where it came from?
 
-**Included in:** `msg`, `controllerKind`, `name`, and `source`
+**Included in:** `msg`, `controllerKind`, `name`, `logger`, and `caller`
 
 Use the key `controllerKind` with possible resource kind values determined by the component team. For example, for HAS this can be `Application`, `Component`, etc. For SPI this can be `SPIAccessToken`. The `controllerKind` key is automatically added to the log context by operator-sdk.
 
 Use the key `name` with the name of the resource being acted upon. The `name` of the resource is
 automatically added to the log context by operator-sdk.
 
-Optionally, use the key `source` to direct developers to the source code where the action occurred.
+Optionally, use the key `logger` to describe the part of your controller that is emitting the log.
+
+Optionally, use the key `caller` to direct developers to the line of source code where the event was logged ([example in SPI](https://github.com/redhat-appstudio/service-provider-integration-operator/blob/6444c804324e550fdb5492e1d744a76558e7d623/pkg/logs/logs.go#L51)).
 
 Optionally, refer to these in the human-readable `msg`.
 
@@ -206,8 +208,8 @@ func f() {
       "description": "The name of the resource being reconciled",
       "type": "string"
     },
-    "source": {
-      "description": "A url to the source code that is emitting this log",
+    "caller": {
+      "description": "A reference to the line of source code that is emitting this log",
       "type": "string"
     },
     "audit": {
