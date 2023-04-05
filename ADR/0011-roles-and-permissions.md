@@ -51,7 +51,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 |               | Release Strategy        | appstudio.redhat.com      | *                                       | releases, releasestrategies, releaseplans
 |               | Release Admission Plan  | appstudio.redhat.com      | *                                       | releaseplanadmissions
 |               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch, create, update, patch | jbsconfigs, artifactbuilds
-|               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests
+|               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests, spiaccesstokendataupdates
 |               | *Configs*               |                           | get, list, watch                        | configmaps
 |               | *Secrets*               |                           |                                         | secrets
 |               | Add User                |
@@ -68,7 +68,7 @@ We will use the built-in Kubernetes RBAC system for Stonesoup's role and permiss
 |               | Release Strategy        | appstudio.redhat.com      | *                                       | releases, releasestrategies, releaseplans
 |               | Release Admission Plan  | appstudio.redhat.com      | *                                       | releaseplanadmissions
 |               | *JVM Build Service*     | jvmbuildservice.io        | *                                       | jbsconfigs, artifactbuilds
-|               | *Service Access*        | appstudio.redhat.com      | *                                       | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens,spifilecontentrequests
+|               | *Service Access*        | appstudio.redhat.com      | *                                       | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens,spifilecontentrequests, spiaccesstokendataupdates
 |               | *Configs*               |                           | *                                       | configmaps
 |               | *Secrets*               |                           | *                                       | secrets
 |               | Add User                |
