@@ -18,7 +18,7 @@ The Integration service uses the pipeline, snapshot, and environment controllers
 ### High Level Workflow
 
 - When a build pipeline completes, Integration service creates a Snapshot CR representing a new collection of components that should be tested together.
-- When Integration Service sees a new Snapshot CR (created either by itself or by a user), it coordinates deployment of the application for testing. It does this by creating new “ephemeral” StoneSoup Environment CRs which trigger the GitOps Service to provision the ephemeral test environment.
+- When Integration Service sees a new Snapshot CR (created either by itself or by a user), it coordinates deployment of the application for testing. It does this by creating new “ephemeral” AppStudio Environment CRs which trigger the GitOps Service to provision the ephemeral test environment.
 - After the environment is ready and the application snapshot has been deployed to it, Integration Service tests and validates the application according to user-provided configuration. It does this by executing Tekton PipelineRuns against the ephemeral test Environment.
 - When all of the test Tekton PipelineRuns have passed, Integration service triggers a deployment of the application to all Environments which are not labeled as "ephemeral" and which do not have a `parentEnvironment` set. For most users, this will result in a deployment to their "development" environment (or to their "staging" environment, if they do not have a dev environment).
 - Finally, if any automatic ReleasePlans have been created by the user in the workspace, it will create a Release CR signalling intent to release the tested content, to be carried out by the [release-service](./release-service.md).
@@ -135,7 +135,7 @@ Following the [annotation guidelines](https://docs.google.com/document/d/1gyXM3p
 “appstudio.openshift.io/component":      “<component name>”
 “appstudio.openshift.io/application":    “<Application name>”
 ```
-The Integration service will copy the annotations and labels from the Build PipelineRun and append those to the Test PipelineRuns for traceability across the system per [Labels and Annotations for StoneSoup pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#) and [StoneSoup builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#)
+The Integration service will copy the annotations and labels from the Build PipelineRun and append those to the Test PipelineRuns for traceability across the system per [Labels and Annotations for AppStudio pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#) and [AppStudio builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#)
 
 The "test.appstudio.openshift.io/optional" Label provides users an option whether the result of a pipelineRun created according to the IntegrationTestScenario will be taken into account when determining if the Snapshot has passed all required testing. In another word, the label is used to specify if an IntegrationTestScenario is allowed to fail. If the label is not defined in an IntegrationTestScenario, integration service will consider it as "false".
 ```
@@ -207,10 +207,10 @@ The Integration service needs secrets mounted so that the `Environment Provision
 
 ## Appendix
 
-- [StoneSoup Promotion & Environment API](https://docs.google.com/document/d/14LaXAmQEW73kIr3a6TvPswT-zSdBsuaaxLF77HJ3gX4/edit#)
+- [AppStudio Promotion & Environment API](https://docs.google.com/document/d/14LaXAmQEW73kIr3a6TvPswT-zSdBsuaaxLF77HJ3gX4/edit#)
 - [v3 - Environment API draft: Component-scoped with native Snapshots](https://docs.google.com/document/d/1-_rWLgALd5pdSlqNNcQ5FSrD00fZb0l_exU-_FiL68o/edit#heading=h.vf66svd4o6xr)
-- [StoneSoup builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#)
-- [Labels and Annotations for StoneSoup pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#)
+- [AppStudio builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#)
+- [Labels and Annotations for AppStudio pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#)
 - [Implementation design and rules for pipeline customization](https://docs.google.com/document/d/1PXkpFHKrnq1Sg1giTgeXdYzNVf7CTRgwowykr7YPM2I/edit#)
 
 

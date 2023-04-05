@@ -7,7 +7,7 @@
 
 Accepted
 
-Relates to [ADR 13. Stonesoup Test Stream - API contracts](0013-integration-service-api-contracts.html)
+Relates to [ADR 13. AppStudio Test Stream - API contracts](0013-integration-service-api-contracts.html)
 
 ## Context
 

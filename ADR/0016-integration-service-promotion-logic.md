@@ -27,7 +27,7 @@ that the workloads are properly tested before being further promoted to an envir
 service level agreement. 
 The promotion path can be represented with a directed acyclic graph from the environment with the
 lowest SLA to the one with the highest, for example development -> staging -> production.
-In Stonesoup, this promotion logic would be represented by a set of components (container images) defined by
+In AppStudio, this promotion logic would be represented by a set of components (container images) defined by
 an immutable Snapshot being deployed to the relevant environment.
 
 Once the Snapshot is tested and verified successfully, its contents will then be deployed to the user's defined
@@ -36,7 +36,7 @@ lowest environments.
 ## Decision
 
 Consolidate the promotion logic for both HACBS & AppStudio and move it to the integration-service after
-the merger of Stonesoup.
+the merger of AppStudio.
 
 ![](../diagrams/ADR-0016/promotion-logic.jpg)
 
