@@ -36,20 +36,22 @@ Related to [PLNSRVCE-41](https://issues.redhat.com/browse/PLNSRVCE-41) investiga
 
 The output of each Tekton task will be provided in a minimized [Tekton result](https://tekton.dev/docs/pipelines/tasks/#emitting-results) in JSON format listing all test failures. The name of the result will be **HACBS_TEST_OUTPUT**.
 
+To display count of found vulnerabilities and make it easy to understand and evaluate the state of scanned image, the additional output of Tekton task `clair-scan` will be provided in a minimized [Tekton result](https://tekton.dev/docs/pipelines/tasks/#emitting-results) in JSON format listing. The name of the result will be **CLAIR_SCAN_RESULT**.
+
 The maximum size of a [Task's Results](https://tekton.dev/vault/pipelines-v0.17.3/tasks/#emitting-results) is limited by the container [termination message](https://kubernetes.io/docs/tasks/debug/debug-application/determine-reason-pod-failure/#customizing-the-termination-message) feature of Kubernetes.
 
 App Studio builds are structured as [a shared Persistent Volume per AppStudio Workspace](https://docs.google.com/document/d/1IPlihVjkJ4Kb9tdhsk7iz3bn5rkT_SvJCNQhyXzK3aI/edit#bookmark=id.gefgys3vno2). This allows teams to share builds, implement caching and other shared volumes. A single persistent volume is mapped to each default build pipeline. Builds are passed a directory specific to their builds.
 
-#### Tekton Result Format
+#### Tekton Result Format for `HACBS_TEST_OUTPUT`
 
-The Test output of the Tekton result will be a JSON object that includes the context about the test along with the list of check names for all failed checks
+The Test output of the Tekton result **HACBS_TEST_OUTPUT** will be a JSON object that includes the context about the test along with the list of check names for all failed checks
 
 The output will provide the following information about the overall test result:
 - **result** - The outcome of the testing task, can be `SUCCESS`, `FAILURE`, `WARNING`, `SKIPPED` or `ERROR`
-- **namespace** - Optional, the rego namespace of the test policy
+- **namespace** - The rego namespace for the test policy. If not set, it will be assumed to have the value `default`
 - **timestamp** - An UNIX epoch timestamp of the test completion time
 - **successes** - The number of successful checks in the form of an integer
-- **note** - Optional, a short note provided by test workstream to provide additional information about the test
+- **note** - A short note provided by test workstream to provide additional information about the test
 - **failures** - The number of failed checks in the form of an integer
 - **warnings** - The number of warning checks in the form of an integer
 
@@ -60,7 +62,7 @@ Example contents of the test result output file (**HACBS_TEST_OUTPUT**) for a fa
     "namespace": "image_labels",
     "timestamp": "1649148140",
     "successes": 12, 
-    "note": "Please check tekton task log for more detailed failures",
+    "note": "Task fbc-related-image-check failed: Command skopeo inspect could not inspect images. For details, check Tekton task log.",
     "failures": 2,
     "warnings": 0
 }
@@ -72,6 +74,7 @@ Example for a successful run:
     "timestamp": "1649843611",
     "namespace": "required_checks",
     "successes": 16,
+    "note": "Task fbc-related-image-check succeeded: For details, check Tekton task result HACBS_TEST_OUTPUT.",
     "failures": 0,
     "warnings": 0
 }
@@ -83,6 +86,7 @@ Example for a skipped run:
     "note": "We found 0 supported files",
     "timestamp": "1649842004",
     "successes": 0,
+    "note": "Task sast-snyk-check skipped: Snyk code test found zero supported files.",
     "failures": 0,
     "warnings": 0
 }
@@ -93,8 +97,24 @@ Example for a run with an error:
     "result": "ERROR",
     "timestamp": "1649842004",
     "successes": 0,
+    "note": "Task fbc-validation failed: $(workspaces.source.path)/hacbs/inspect-image/image_inspect.json did not generate correctly. For details, check Tekton task result HACBS_TEST_OUTPUT in task inspect-image.",
     "failures": 0,
     "warnings": 0
+}
+```
+
+
+#### Tekton Result Format for `CLAIR_SCAN_RESULT`
+The Test output of the Tekton result **CLAIR_SCAN_RESULT** will be a JSON object that includes the following information about the found vulnerabilities scanned by Clair. Refer to [Red Hat Vulnerability documentation](https://access.redhat.com/articles/red_hat_vulnerability_tutorial) for more context on the vulnerability severity ratings.
+
+```
+{
+  "vulnerabilities": {
+    "critical": 1,
+    "high": 0,
+    "medium": 1,
+    "low":0
+  }
 }
 ```
 
