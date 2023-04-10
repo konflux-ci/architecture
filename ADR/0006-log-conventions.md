@@ -25,7 +25,7 @@ For example:
 {"ts": "2023-03-07T11:32:29.020Z", "level": "info", "logger": "controllers.Component", "msg": "API Resource updated", "namespace": "samburrai-tenant", "audit": "true", "name": "go-net-http-hello-prqx", "controllerKind": "Component", "action": "UPDATE"}
 ```
 
-The **ts** field stands for "timestamp" (encoded as UTC/ISO-8601) and the meaning of log **level** should be self evident. The **logger** name helps your team understand which part of your service is emitting the log (usually `Log.WithName` from `zap`). The **msg** is a human readable string describing the event being logged. Further **json** key value pairs contain additional fields useful for searching.
+The **ts** field stands for "timestamp" (encoded as UTC/ISO-8601) and the meaning of log **level** should be self evident. The **logger** name helps your team understand which part of your service is emitting the log (usually `Log.WithName` from `zap`). The **msg** is a human readable string describing the event being logged. Further **json** key value pairs contain additional fields useful for searching. See full list of fields in the [Appendix](#Appendix).
 
 The opinionated logging mechanism from the controller-runtime framework already conforms to this scheme. Care should be taken to make sure specific key/value pairs are logged.
 
