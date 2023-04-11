@@ -1,4 +1,4 @@
-# Partner Tasks in Build/Test Pipelines
+# 21. Partner Tasks in Build/Test Pipelines
 
 Date: 2023-03-06
 
@@ -28,7 +28,7 @@ https://issues.redhat.com/browse/STONE-549
 #### Adding/Updating a Task
 
 1. Partner opens a PR with a new/updated Task.
-2. CI tests do the due diligence on the changes proposed in the PR. Success/Failures are reported in a way that the PR author can take reasonable 
+2. CI tests do the due diligence on the changes proposed in the PR. Success/Failures are reported in a way that the PR author can take reasonable
 action to resolve the issue.
 3. Upon approval from the Build/Test team, the changes are merged.
 
@@ -39,7 +39,7 @@ action to resolve the issue.
 
 #### Definition of a valid Task
 
-The due diligence is a transparent-to-the-Task-contributor CI job that's running on the repository that validates the Task before we merge it in. 
+The due diligence is a transparent-to-the-Task-contributor CI job that's running on the repository that validates the Task before we merge it in.
 
 Please see the following as prior art:
 1. See CI Results in https://github.com/tektoncd/catalog/
@@ -58,7 +58,7 @@ A non-exhaustive list of checks that would be run on a Task is:
 
 ## Out-of-scope
 
-* Supporting validation of Tasks inside Stonesoup before submission would be out-of-scope. However, partners should be able to import a 
+* Supporting validation of Tasks inside Stonesoup before submission would be out-of-scope. However, partners should be able to import a
 Component into StoneSoup, customize their Pipeline definition in the .tekton directory and have the changes validated in a PipelineRun execution in StoneSoup. To be able to be productive with this flow, they'd need to be able to do https://github.com/redhat-appstudio/book/pull/64 .
 
 ## Alternatives
