@@ -74,6 +74,12 @@ jobs:
           path: crd-temp/devsandbox-api
           repository: codeready-toolchain/api
 
+      - name: Checkout Internal Services API
+        uses: actions/checkout@v3
+        with:
+          path: crd-temp/internal-services
+          repository: redhat-appstudio/internal-services
+
       - name: Install crd-ref-docs
         uses: supplypike/setup-bin@v1
         with:
@@ -107,6 +113,9 @@ jobs:
 
       - name: Generate devsandbox API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/devsandbox.md --renderer=markdown --source-path=crd-temp/devsandbox-api/api/v1alpha1
+
+      - name: Generate Internal Services API docs
+        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/internal-services.md --renderer=markdown --source-path=crd-temp/internal-services/api/v1alpha1/
 
       - name: Upload generated docs
         uses: actions/upload-artifact@v3
