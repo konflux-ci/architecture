@@ -21,7 +21,7 @@ Accepted
 - `RemoteSecret`: A CRD that appears during upload and links `SecretData` + `DeploymentTarget(s)` + K8s `Secret`. `RemoteSecret` is linked to one (or zero) SecretData and manages its deleting/updating.
 - K8s `Secret`: What appears at the output and is used by consumers.
 - `SecretId`: A unique identifier of SecretData in permanent SecretStorage.
-- `SecretStorage`: A database eligible for storing `SecretData` (such as HashiCorp Vault, AWS Secret Manager).
+- `SecretStorage`: A database eligible for storing `SecretData` (such as HashiCorp Vault, AWS Secret Manager). That is an internal mechanism. Only spi-operator will be able to access it directly.
 
 #### Architecture
 
