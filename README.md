@@ -19,7 +19,7 @@ User documentation is out of scope.
 
 [/diagrams](./diagrams/) folder stores the diagrams used on the overview document and slides. These diagrams are done using [draw.io](https://draw.io) and stored in _.svg_ format.
 
-### ADRs
+### Architecture Decision Records - ADRs
 [/ADR](./ADR/) folder contains the ADRs that are executed as part of the process to update these documents as explained in [contributing](#contributing) section.
 
 ## Contributing
