@@ -162,6 +162,7 @@ The Integration service needs secrets mounted so that the `Environment Provision
     - for each Component extract the `spec.containerImage`
 3. Create a Snapshot
     - Populate the `spec.components` list with the component name and the `spec.containerImage` with information from Step 1 and 2, replacing the container image for the built component with the one from the build PipelineRun
+    - If a component does not have a container image associated with it then the component will not be added to the snapshot
 4. Create PipelineRuns for each IntegrationTestScenario
     - Fetch the IntegrationTestScenario for the application/component to get the Tekton Bundle and Environment information
     - Assign annotations of
