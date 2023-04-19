@@ -14,7 +14,7 @@ The OSD-based control plane provisions one namespace in the target member cluste
 
 ## Decision
 
-Every namespace provisioned for a AppStudio top-level workspace will have a name with the fixed suffix `-tenant`. The complete format will be `<workspace-name>-tenant`.
+Every namespace provisioned for an AppStudio top-level workspace will have a name with the fixed suffix `-tenant`. The complete format will be `<workspace-name>-tenant`.
 Every namespace provisioned for a AppStudio sub-workspace (created from a SpaceRequest CR) will have a name with the fixed suffix `-env`. The complete format will be `<sub-workspace-name>-env`.
 
 ## Consequences
