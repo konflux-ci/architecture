@@ -60,7 +60,7 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | Application & Component | appstudio.redhat.com      | *                                       | applications, components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | *                                       | promotionruns, snapshotenvironmentbindings, snapshots, environments
 |               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | *                      | deploymenttargets, deploymenttargetclaims
-|               | *GitOps*                | managed-gitops.redhat.com | *                                       | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
+|               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
 |               | PipelineRun             | tekton.dev                | *                                       | pipelineruns
 |               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records
 |               | IntegrationTestScenario | appstudio.redhat.com      | *                                       | integrationtestscenarios
