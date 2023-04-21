@@ -104,6 +104,47 @@ Example for a run with an error:
 ```
 
 
+#### Tekton Result Schema Validation
+The test output of the Tekton result **HACBS_TEST_OUTPUT** will be validated using the [jsonschema validator package](https://github.com/santhosh-tekuri/jsonschema).
+The schema is configured as follows:
+
+```
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema#",
+  "type": "object",
+  "properties": {
+    "result": {
+      "type": "string",
+      "enum": ["SUCCESS", "FAILURE", "WARNING", "SKIPPED", "ERROR"]
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{10}$"
+    },
+    "successes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "note": {
+      "type": "string",
+    },
+    "failures": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "warnings": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "required": ["result", "timestamp", "successes", "failures", "warnings"]
+}
+```
+
+
 #### Tekton Result Format for `CLAIR_SCAN_RESULT`
 The Test output of the Tekton result **CLAIR_SCAN_RESULT** will be a JSON object that includes the following information about the found vulnerabilities scanned by Clair. Refer to [Red Hat Vulnerability documentation](https://access.redhat.com/articles/red_hat_vulnerability_tutorial) for more context on the vulnerability severity ratings.
 
