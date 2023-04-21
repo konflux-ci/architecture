@@ -25,7 +25,7 @@ The Integration service uses the pipeline, snapshot, and environment controllers
 
 The diagram below shows the interaction of the integration service and other services.
 
-![](../diagrams/hacbs-data-flow.jpg)
+![](../diagrams/integration-service/integration-service-data-flow.jpg)
 
 ### Dependencies
 
