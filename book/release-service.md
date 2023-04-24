@@ -20,7 +20,7 @@ In addition, the Release service ensures that no violations in the [Enterprise C
 
 The diagram below shows the interaction of the release service and other services.
 
-![](../diagrams/hacbs-data-flow.jpg)
+![](../diagrams/integration-service/integration-service-data-flow.jpg)
 
 ## Application Context
 
