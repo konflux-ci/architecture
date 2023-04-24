@@ -41,6 +41,10 @@ The following labels are used for billing and telemetry. Values can be left blan
 - `appstudio.redhat.com/billing_marketplace: "aws"` which marketplace is used for billing
 - `appstudio.redhat.com/billing_marketplace_account: 123456789012` the customer account identifier (numeric AWS identifier). Necessary because a customer can have more than one AWS account.
 
+The following labels are used by required operators:
+
+- `argocd.argoproj.io/managed-by: gitops-service-argocd` is added by the GitOps Service, and is reconciled by the OpenShift GitOps operator. This label allows the Argo CD instance in the `gitops-service-argo` Namespace to deploy to any Namespace with this label.
+
 ## Namespace annotations
 
 We will apply the following annotation to namespaces installed and maintained by AppStudio on the clusters that Red Hat manages.  This will enable OVN network logging to log outgoing network traffic:
