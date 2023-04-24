@@ -43,7 +43,7 @@ The following labels are used for billing and telemetry. Values can be left blan
 
 The following labels are used by required operators:
 
-- `argocd.argoproj.io/managed-by: gitops-service-argocd` is added by the GitOps Service, and is reconciled by the OpenShift GitOps operator. This label allows the Argo CD instance in the `gitops-service-argo` Namespace to deploy to any Namespace with this label.
+- `argocd.argoproj.io/managed-by: gitops-service-argocd` is added by the GitOps Service, and is reconciled by the OpenShift GitOps operator. This label enables a (namespace-scoped) Argo CD instance in the `gitops-service-argo` Namespace to deploy to any Namespace with this label.
 
 ## Namespace annotations
 
