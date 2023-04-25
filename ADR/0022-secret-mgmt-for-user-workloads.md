@@ -12,7 +12,7 @@ Accepted
 * As a StoneSoup component, I expect to have the ability to securely upload a secret, associate it with the component, and propagate it to the target environment.
 * It should be possible to distinguish in time the process of uploading confidential information and deploying it in the destination environment. For example, image-controller creates an image pull secret after `Component` is created, and deploys it after `Environment` is made.
 * It should be possible to set multiple destination targets.
-* The UI should be able to perform a search of existing RemoteSecret by target environment/component/application.
+* Any consumer  should be able to search should be able to perform a search of existing `RemoteSecret` by target environment/component/application.
 
 ## Decision
 
