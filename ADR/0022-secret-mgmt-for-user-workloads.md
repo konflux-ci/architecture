@@ -10,7 +10,7 @@ Accepted
 
 * When user workloads are deployed to environments, the system should be able to provide a way to inject values that are specific to the environment. Currently, this is done through environment variables that are managed as overlays on the GitOps repository for the application. However, this method does not provide a good way to manage `Secret`. This ADR addresses the secret management of user workloads for different environments.
 * As a StoneSoup component, I expect to have the ability to securely upload a secret, associate it with the component, and propagate it to the target environment.
-* It should be possible to distinguish in time the process of uploading confidential information and deploying it in the destination environment. For example, image-controller creates an image pull secret after `Component` is created, and deploys it after `Environment` is made.
+* It is important to distinguish the process of uploading confidential information and deploying it in the destination environment. This should/can be performed by different roles: first, creating a searchable `RemoteSecret` with linked `SecretData` that is stored remotely on `SecretStorage`, and second, finding this `RemoteSecret` and creating a working Secret with `SecretData` linked to it.
 * It should be possible to set multiple destination targets.
 * Any consumer  should be able to search should be able to perform a search of existing `RemoteSecret` by target environment/component/application.
 
