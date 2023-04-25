@@ -35,7 +35,7 @@ The proposed solution is to create a new Kubernetes Custom Resource (CR) called 
 
 
 
-#### Example: If the destination is `Namespace`
+#### Example: If the working Secret should be created along with RemoteSecret.
 ```yaml
 apiVersion: appstudio.redhat.com/v1beta1
 kind: RemoteSecret
@@ -63,7 +63,7 @@ status:
   TBD
 ```
 
-#### Example: If RemoteSecret has to be created with multiple target namespaces
+#### Example:If multiple working Secrets should be created along with RemoteSecret.
 ```yaml
 apiVersion: appstudio.redhat.com/v1beta1
 kind: RemoteSecret
