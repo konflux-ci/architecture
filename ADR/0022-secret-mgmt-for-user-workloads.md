@@ -47,8 +47,8 @@ spec:
           secretName: test-remote-secret-secret-5bmq9
 status:
     TBD
-
 ```
+> :warning: **Note for this and following:** `RemoteSecret` is not Ready, `SecretData` referenced to it has to be uploaded. See `Uploading secret data to RemoteSecret` example.
 
 #### Example: If RemoteSecret has to be created and uploaded without setting any target
 
@@ -78,6 +78,7 @@ spec:
 status:
     TBD
 ```
+
 
 #### Example: If RemoteSecret has to be created with multiple target namespaces including BYC use-case
 ```yaml
