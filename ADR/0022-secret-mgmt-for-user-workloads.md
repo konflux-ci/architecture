@@ -48,7 +48,7 @@ spec:
 status:
     TBD
 ```
-> :warning: **Note for this and following:** `RemoteSecret` is not Ready, `SecretData` referenced to it has to be uploaded. See `Uploading secret data to RemoteSecret` example.
+> :warning: **Note for this and following:** `RemoteSecret` is not Ready, `SecretData` referenced to it has to be uploaded. See `Uploading secret data to RemoteSecret` example. There are two meanings of the term "Ready" for `RemoteSecret`. First, it could refer to the readiness of the stored `SecretData`. In this case, "Ready" means that the data has been successfully stored in the `SecretStorage` and is ready to be used by the `RemoteSecret`. Second, it could refer to the readiness of the `SecretData` for each target. In this case, "Ready" means that the kubernetes secret has been created for each target and is ready to be used by the business logic.
 
 #### Example: If RemoteSecret has to be created and uploaded without setting any target
 
