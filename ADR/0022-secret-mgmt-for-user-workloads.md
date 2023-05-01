@@ -105,9 +105,9 @@ kind: RemoteSecret
 metadata:
     name: test-remote-secret-secret
     labels:
-        appstudio.redhat.com/remotesecret-target-environment: prod
-        appstudio.redhat.com/remotesecret-target-component: m-service
-        appstudio.redhat.com/remotesecret-target-application: coffee-shop
+        appstudio.redhat.com/environment: prod
+        appstudio.redhat.com/component: m-service
+        appstudio.redhat.com/application: coffee-shop
 spec:
     target:
         - namespace: jdoe-tenant
@@ -123,8 +123,8 @@ kind: RemoteSecret
 metadata:
     name: test-remote-secret-secret
     labels:
-        appstudio.redhat.com/remotesecret-target-component: m-service
-        appstudio.redhat.com/remotesecret-target-application: coffee-shop
+        appstudio.redhat.com/component: m-service
+        appstudio.redhat.com/application: coffee-shop
 spec:
     target:
         - namespace: jdoe-tenant
