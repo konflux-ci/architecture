@@ -41,8 +41,8 @@ by admission webhooks. The `Release` CR will be updated with the label `release.
 username that triggered the requests as its value.
 
 As automated `Releases` would also obtain this label, it's important to add a new label to indicate their nature. Automated
-`Releaes` are exclusively created by the Integration service, which will have to add the label
-`release.rhtab.openshift.io/automated` and set it to true so the author label is not set in the webhook.
+`Releases` are exclusively created by the Integration service, which will have to add the label
+`release.rhtap.openshift.io/automated` and set it to true so the author label is not set in the webhook.
 
 ###### Standing Attribution for an Application
 
@@ -78,7 +78,7 @@ of requests to the SSO service.
 ##### Removing attribution data
 
 A `Standing Attribution` for an Application can be deleted by a user when the `ReleasePlan` CR has the label
-`release.rhtab.openshift.io/standing-attribution` set to `false` or removed.
+`release.rhtap.openshift.io/standing-attribution` set to `false` or removed.
 
 ## Consequences
 
