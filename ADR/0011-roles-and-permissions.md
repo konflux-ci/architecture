@@ -28,7 +28,7 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymenttargets, deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
 |               | PipelineRun             | tekton.dev                | get, list, watch                        | pipelineruns
-|               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records
+|               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records, logs
 |               | IntegrationTestScenario | appstudio.redhat.com      | get, list, watch                        | integrationtestscenarios
 |               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                        | enterprisecontractpolicies
 |               | Release Strategy        | appstudio.redhat.com      | get, list, watch                        | releases, releasestrategies, releaseplans
@@ -45,7 +45,7 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymenttargets, deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
 |               | PipelineRun             | tekton.dev                | get, list, watch                        | pipelineruns
-|               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records
+|               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records, logs
 |               | IntegrationTestScenario | appstudio.redhat.com      | *                                       | integrationtestscenarios
 |               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                        | enterprisecontractpolicies
 |               | Release Strategy        | appstudio.redhat.com      | *                                       | releases, releasestrategies, releaseplans
@@ -62,7 +62,7 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | *                      | deploymenttargets, deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
 |               | PipelineRun             | tekton.dev                | *                                       | pipelineruns
-|               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records
+|               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records, logs
 |               | IntegrationTestScenario | appstudio.redhat.com      | *                                       | integrationtestscenarios
 |               | Enterprise contract     | appstudio.redhat.com      | *                                       | enterprisecontractpolicies
 |               | Release Strategy        | appstudio.redhat.com      | *                                       | releases, releasestrategies, releaseplans
