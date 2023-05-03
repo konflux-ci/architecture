@@ -219,7 +219,7 @@ func f() {
   },
   "additionalProperties": true,
   "required": ["ts", "level", "msg"],
-  "not" {
+  "not": {
     "required": [
       "namespace_name",
       "container_name",
