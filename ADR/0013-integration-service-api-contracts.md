@@ -4,7 +4,7 @@ Date: 2023-01-30
 
 ## Status
 
-Accepted
+Deprecated by [ADR 30. Tekton Results Naming Convention](0030-tekton-results-naming-convention.html).
 
 Relates to [ADR 14. Let Pipelines Proceed](0014-let-pipelines-proceed.html)
 

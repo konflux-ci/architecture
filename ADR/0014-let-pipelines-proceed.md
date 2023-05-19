@@ -7,7 +7,9 @@
 
 Accepted
 
-Relates to [ADR 13. AppStudio Test Stream - API contracts](0013-integration-service-api-contracts.html)
+Relates to:
+* [ADR 13. AppStudio Test Stream - API contracts](0013-integration-service-api-contracts.html)
+* [ADR 30. Tekton Results Naming Convention](0030-tekton-results-naming-convention.html)
 
 ## Context
 
@@ -32,7 +34,7 @@ their lower [Environments]?
 All scanning and linting TaskRuns should *succeed* even if they find problems in the content they
 are evaluating.
 
-Use the `HACBS_TEST_OUTPUT` result convention from [ADR-0013] to expose those results and render them
+Use the `TEST_OUTPUT` result convention from [ADR-0030] to expose those results and render them
 for users ([STONE-459]).
 
 ## Consequences
@@ -49,5 +51,5 @@ for users ([STONE-459]).
 
 [STONE-459]: https://issues.redhat.com/browse/STONE-459
 [Environments]: ../ref/application-environment-api.html#environment
-[ADR-0013]: 0013-integration-service-api-contracts.html
+[ADR-0030]: 0030-tekton-results-naming-convention.html
 [enterprise contract]: ../book/enterprise-contract.html
