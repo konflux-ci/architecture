@@ -70,6 +70,8 @@ spec:
  secret:
    type: Opaque
    name: snyk-secret
+   fields: 
+     token: snyk_token 
    linkedTo:
     - serviceAccount:
         reference:
