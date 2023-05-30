@@ -67,7 +67,7 @@ status:
 apiVersion: appstudio.redhat.com/v1beta1
 kind: RemoteSecret
 metadata:
-    namespace: jdoe-tenant
+    name: test-remote-secret-secret
 spec:
     target:
 status:
