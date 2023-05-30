@@ -57,7 +57,33 @@ spec:
           apiUrl: "over-the-rainbow"
           clusterCredentialsSecret: "team-a--prod-dtc--secret"
 status:
-    TBD
+  conditions:
+  - lastTransitionTime: "..."
+    message: ""
+    reason: DataFound
+    status: "True"
+    type: DataObtained
+  - lastTransitionTime: "..."
+    message: "some of the targets were not deployed to"
+    reason: PartiallyInjected
+    status: "False"
+    type: Deployed
+  targets:
+  - namespace: "test-target-namespace-1"
+    secretName: secret-from-remote-lsdjf
+    serviceAccountNames:
+    - sa-from-remote-llrkt
+  - namespace: "test-target-namespace-2"
+    secretName: secret-from-remote-lemvs
+    serviceAccountNames:
+    - sa-from-remote-lkejr
+  - namespace: "test-target-namespace-3"
+    secretName: secret-from-remote-kjfdl
+    serviceAccountNames:
+    - sa-from-remote-lmval
+  - namespace: "test-target-namepace-rainbow"
+    apiUrl: "over-the-rainbow"
+    error: "Connection refused"
 ```
 > :warning: **Note for this and following:** `RemoteSecret` is not Ready, `SecretData` referenced to it has to be uploaded. See `Uploading secret data to RemoteSecret` example. There are two meanings of the term "Ready" for `RemoteSecret`. First, it could refer to the readiness of the stored `SecretData`. In this case, "Ready" means that the data has been successfully stored in the `SecretStorage` and is ready to be used by the `RemoteSecret`. Second, it could refer to the readiness of the `SecretData` for each target. In this case, "Ready" means that the kubernetes secret has been created for each target and is ready to be used by the business logic.
 
