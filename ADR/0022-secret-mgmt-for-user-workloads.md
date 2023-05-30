@@ -166,7 +166,12 @@ spec:
     target:
         - namespace: jdoe-tenant
 status:
-    TBD
+  conditions:
+  - lastTransitionTime: "..."
+    message: ""
+    reason: AwaitingData
+    status: "False"
+    type: DataObtained
 ```
 
 #### Example: If RemoteSecret has to be created all Environments of certain component and application
