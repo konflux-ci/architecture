@@ -40,11 +40,22 @@ The proposed solution is to create a new Kubernetes Custom Resource (CR) called 
 apiVersion: appstudio.redhat.com/v1beta1
 kind: RemoteSecret
 metadata:
-    namespace: jdoe-tenant
+    name: test-remote-secret
+    namespace: default
 spec:
-    target:
-        - namespace: spi-test-target
-          secretName: test-remote-secret-secret-5bmq9
+    secret:
+        generateName: secret-from-remote-
+        linkedTo:
+            - serviceAccount:
+                  managed:
+                      generateName: sa-from-remote-
+    targets:
+        - namespace: "test-target-namespace"
+        - namespace: "test-target-namespace"
+        - namespace: "test-target-namespace"
+        - namespace: "test-target-namespace"
+          apiUrl: "over-the-rainbow"
+          clusterCredentialsSecret: "team-a--prod-dtc--secret"
 status:
     TBD
 ```
@@ -70,11 +81,11 @@ kind: RemoteSecret
 metadata:
     name: test-remote-secret-secret
 spec:
+    secret:
+        name: test-remote-secret-secret
     target:
         - namespace: jdoe-test-ns
-          secretName: test-remote-secret-secret-5bmq9
         - namespace: jdoe-prod-ns
-          secretName: test-remote-secret-secret-5bmq9
 status:
     TBD
 ```
@@ -87,11 +98,11 @@ kind: RemoteSecret
 metadata:
     name: test-remote-secret-secret
 spec:
+    secret:
+        name: test-remote-secret-secret
     target:
         - namespace: jdoe-test-ns
-          secretName: test-remote-secret-secret-5bmq9
         - namespace: jdoe-prod-ns
-          secretName: test-remote-secret-secret-5bmq9
           apiURL: https://somedomain.copm:443
           clusterCredentialsSecret: team-a--prod-dtc--secret
 status:
@@ -109,9 +120,10 @@ metadata:
         appstudio.redhat.com/component: m-service
         appstudio.redhat.com/application: coffee-shop
 spec:
+    secret:
+        name: test-remote-secret-secret
     target:
         - namespace: jdoe-tenant
-          secretName: test-remote-secret-secret-5bmq9
 status:
     TBD
 ```
@@ -126,9 +138,10 @@ metadata:
         appstudio.redhat.com/component: m-service
         appstudio.redhat.com/application: coffee-shop
 spec:
+    secret:
+        name: test-remote-secret-secret
     target:
         - namespace: jdoe-tenant
-          secretName: test-remote-secret-secret-5bmq9
 status:
     TBD
 ```
@@ -141,9 +154,10 @@ kind: RemoteSecret
 metadata:
     name: test-remote-secret
 spec:
+    secret:
+        name: test-remote-secret-secret
     target:
-        - namespace: spi-test-target
-          secretName: test-remote-secret-secret-5bmq9
+        - namespace: jdoe-tenant
 status:
     TBD
 
