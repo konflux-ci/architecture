@@ -189,13 +189,14 @@ Since the determination of concrete namespace/k8s clusters from the environment 
 
 #### Additions to Roles and Permissions
 
-| Role        | Permissions  | API Groups           | Verbs                                   | Resources    |
-|-------------|--------------|----------------------|-----------------------------------------|--------------|
-| Contributor | RemoteSecret | appstudio.redhat.com | get, list, watch                        | remotesecret |
-| Maintainer  | RemoteSecret | appstudio.redhat.com | get, list, watch, create, update, patch | remotesecret |
-| Admin       | RemoteSecret | appstudio.redhat.com | *                                       | remotesecret |
+| Role        | Permissions  | API Groups           | Verbs            | Resources    |
+|-------------|--------------|----------------------|------------------|--------------|
+| Contributor | RemoteSecret | appstudio.redhat.com | get, list, watch | remotesecret |
+| Maintainer  | RemoteSecret | appstudio.redhat.com | get, list, watch | remotesecret |
+| Admin       | RemoteSecret | appstudio.redhat.com | *                | remotesecret |
 
 Only roles with `create` privileges to `Secret`s can create and update secrets. At the time if this ADR this is limited to Admin role only.
+> **Note :**  Initially, we decrease Maintainer's capabilities to the Contributor level. Later we might introduce instruments, so they can modify RemoteSecret.
 
 
 
