@@ -85,7 +85,8 @@ status:
     apiUrl: "over-the-rainbow"
     error: "Connection refused"
 ```
-> :warning: **Note for this and following:** `RemoteSecret` is not Ready, `SecretData` referenced to it has to be uploaded. See `Uploading secret data to RemoteSecret` example. There are two meanings of the term "Ready" for `RemoteSecret`. First, it could refer to the readiness of the stored `SecretData`. In this case, "Ready" means that the data has been successfully stored in the `SecretStorage` and is ready to be used by the `RemoteSecret`. Second, it could refer to the readiness of the `SecretData` for each target. In this case, "Ready" means that the kubernetes secret has been created for each target and is ready to be used by the business logic.
+> There are 2 conditions in the status expressing the state of data readiness (`DataObtained` condition type with `AwaitingData` and `DataFound` as possible reasons) and the overall deployment status (`Deployed` condition type with the condition either missing altogether if there are no targets or `PartiallyInjected` or `Injected` reasons).
+> Additionally, the status contains the details of the deployment of each of the targets in the spec. The entries might not come in the same order as in the spec but correspond to each entry in the spec by the `namespace` + `apiUrl` compound key (we don't support 2 targets of a single remote secret pointing to the same namespace atm). The status of the target contains the actual names of the secret and the (optional) service accounts (this is important in case of using `generateName` for the secret or the service account(s)) and optionally also an `error` that explains why certain target was not deployed to.
 
 #### Example: If RemoteSecret has to be created and uploaded without setting any target
 
