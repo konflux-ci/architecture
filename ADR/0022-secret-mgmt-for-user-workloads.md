@@ -231,7 +231,12 @@ spec:
     target:
         - namespace: jdoe-tenant
 status:
-    TBD
+  conditions:
+  - lastTransitionTime: "..."
+    message: ""
+    reason: AwaitingData
+    status: "False"
+    type: DataObtained
 
 ```
 ```yaml
