@@ -143,7 +143,12 @@ spec:
     target:
         - namespace: jdoe-tenant
 status:
-    TBD
+  conditions:
+  - lastTransitionTime: "..."
+    message: ""
+    reason: AwaitingData
+    status: "False"
+    type: DataObtained
 ```
 > **Note :** The component that will keep the connection between Environments and RemoteSecret's target should track all environments including the one that can be created after RemoteSecret creation.
 
