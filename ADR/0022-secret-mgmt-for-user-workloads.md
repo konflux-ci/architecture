@@ -113,7 +113,22 @@ spec:
         - namespace: jdoe-test-ns
         - namespace: jdoe-prod-ns
 status:
-    TBD
+  conditions:
+  - lastTransitionTime: "..."
+    message: ""
+    reason: DataFound
+    status: "True"
+    type: DataObtained
+  - lastTransitionTime: "..."
+    message: ""
+    reason: Injected
+    status: "True"
+    type: Deployed
+  targets:
+  - namespace: "jdoe-test-ns"
+    secretName: test-remote-secret
+  - namespace: "jdoe-prod-ns"
+    secretName: test-remote-secret
 ```
 
 
