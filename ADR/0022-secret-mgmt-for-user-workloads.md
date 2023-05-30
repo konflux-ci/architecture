@@ -147,7 +147,23 @@ spec:
           apiURL: https://somedomain.copm:443
           clusterCredentialsSecret: team-a--prod-dtc--secret
 status:
-    TBD
+  conditions:
+  - lastTransitionTime: "..."
+    message: ""
+    reason: DataFound
+    status: "True"
+    type: DataObtained
+  - lastTransitionTime: "..."
+    message: ""
+    reason: Injected
+    status: "True"
+    type: Deployed
+  targets:
+  - namespace: "jdoe-test-ns"
+    secretName: test-remote-secret
+  - namespace: "jdoe-prod-ns"
+    apiUrl: "https://somedomain.copm:443"
+    secretName: test-remote-secret
 ```
 
 #### Example: If RemoteSecret has to be created with target namespace and Environment
