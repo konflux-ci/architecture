@@ -50,10 +50,10 @@ spec:
                   managed:
                       generateName: sa-from-remote-
     targets:
-        - namespace: "test-target-namespace"
-        - namespace: "test-target-namespace"
-        - namespace: "test-target-namespace"
-        - namespace: "test-target-namespace"
+        - namespace: "test-target-namespace-1"
+        - namespace: "test-target-namespace-2"
+        - namespace: "test-target-namespace-3"
+        - namespace: "test-target-namespace-rainbow"
           apiUrl: "over-the-rainbow"
           clusterCredentialsSecret: "team-a--prod-dtc--secret"
 status:
