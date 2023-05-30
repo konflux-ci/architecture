@@ -97,7 +97,12 @@ metadata:
 spec:
     target:
 status:
-  TBD
+  conditions:
+  - lastTransitionTime: "..."
+    message: ""
+    reason: AwaitingData
+    status: "False"
+    type: DataObtained
 ```
 
 #### Example:If multiple working Secrets should be created along with RemoteSecret.
