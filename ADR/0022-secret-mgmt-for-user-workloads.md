@@ -254,9 +254,6 @@ stringData:
     c: d
 ```
 
-Since the determination of concrete namespace/k8s clusters from the environment is not trivial and is in process of evolution the concrete controller or process that transforms RemoteSecret's annotations to concrete values of `spec.target` is TBD.
-
-
 ### Security and Access Control
 
 * Access to the secret management backend should be restricted to authorized users and components. See the table for the access levels for different roles.
