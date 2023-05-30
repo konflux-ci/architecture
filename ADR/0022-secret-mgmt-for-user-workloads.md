@@ -12,7 +12,7 @@ Accepted
 * As a StoneSoup component, I expect to have the ability to securely upload a secret, associate it with the component, and propagate it to the target environment.
 * It is important to distinguish the process of uploading confidential information and deploying it in the destination environment. This should/can be performed by different roles: first, creating a searchable `RemoteSecret` with linked `SecretData` that is stored remotely on `SecretStorage`, and second, finding this `RemoteSecret` and creating a working Secret with `SecretData` linked to it.
 * It should be possible to set multiple destination targets.
-* Any consumer  should be able to search should be able to perform a search of existing `RemoteSecret` by target environment/component/application.
+* Any consumer should be able to perform a search of existing `RemoteSecret` by target environment/component/application.
 
 ## Decision
 
