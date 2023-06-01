@@ -17,6 +17,8 @@ Accepted
 * Gorkem Ercan
 * Parag Dave
 * Ralph Bean
+* Andrew McNamara
+
 
 ## Context
 
@@ -69,7 +71,7 @@ to be pushed to.
 | ----------- | ----------- |
 | Quay.io organization      | quay.io/redhat-user-workloads       |
 | OAuth Application  name | Created, name redacted        |
-| Account used to generate token | `shbose` |
+| Account used to generate token | `shbose` , `mkovarik` |
 | Scope | Administer organizations, Adminster repositories, Create Repositories |
 
 <img width="1313" alt="image" src="https://user-images.githubusercontent.com/545280/212758440-5807cd4e-11b1-43bc-aa03-385b9284cb9e.png">
@@ -107,6 +109,7 @@ Until the capability to determine the associated user/tenant/Space a Component i
 
 * Upon removal of a user from Stonesoup,
     * The empty Quay.io organization associated with the user or the user's Space may not be deleted instantly, but would be scheduled for a delayed cleanup.
+* PR-based tags are to be deleted on a regular basis. Image tags associated with `main` may remain un-pruned for now.
     
     
 ### How - Implementation
@@ -170,7 +173,7 @@ spec:
   account with the user's Quay.io account ?
 - Considering the above is figured out, we would need to add existing users as members of the relevant organizations. This is a backend job that 
   would need to be designed and executed at an appropriate time.
-- In the HACBS context, giving ownership of the image repo to users is not a problem for provenance, because integrity of images is based on attestations which are only treated as valid if signed by pipeline-service (by tekton chains). While users can in theory push images built on their laptop, the [release-service](../book/release-service.md) won't treat them as if they were built by the [pipeline-service](https://github.com/openshift-pipelines/pipeline-service). They will fail to pass the [enterprise contract](../book/enterprise-contract.md).
+
 
 
 ## Consequences
