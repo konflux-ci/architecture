@@ -69,6 +69,7 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | Release Admission Plan  | appstudio.redhat.com      | *                                       | releaseplanadmissions
 |               | *JVM Build Service*     | jvmbuildservice.io        | *                                       | jbsconfigs, artifactbuilds
 |               | *Service Access*        | appstudio.redhat.com      | *                                       | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens,spifilecontentrequests, spiaccesstokendataupdates
+|               | *Remote Secrets*        | appstudio.redhat.com      | *                                       | remotesecrets
 |               | *Configs*               |                           | *                                       | configmaps
 |               | *Secrets*               |                           | *                                       | secrets
 |               | Add User                |
