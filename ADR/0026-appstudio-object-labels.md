@@ -17,11 +17,9 @@ other objects is not feasible or practical.
 
 ## Decision
 
-The deployments, pods, configmaps, secrets, etc. that together compose AppStudio itself will have the usual common suggested set of labels such as:
-* `app.kubernetes.io/name = has`
-* `app.kubernetes.io/part-of = appstudio`
+To identify the supporting objects defining the application model within AppStudio, this proposal establishes the 3 basic labels that can identify objects that are related to the most important parts of the model - application, environment and component. This list can grow whenever we find that multiple AppStudio components (controllers) are deriving their own objects based on the state of some part of the application model.
 
-The more important part, though, is to identify the supporting objects defining the application model within AppStudio. This proposal establishes the 3 basic labels that can identify objects that are related to the most important parts of the model - application, environment and component:
+For the basic constituent parts of the application, the following labels are defined.
 
 * `appstudio/application`
 * `appstudio/environment`
@@ -29,8 +27,12 @@ The more important part, though, is to identify the supporting objects defining 
 
 The "domain" part is kept intentionally very short yet unique not to unnecessarily add to the size of the Kubernetes object.
 
+It is not mandatory to have all 3 labels defined if it is not necessary or even possible for certain usecases. For example, the images are being built for application components, but they're common to all environments. Therefore, it doesn't make sense to specify an environment when refering to component builds.
+
+Note that this proposal doesn't solve the situation where more than one application "part" needs to be associated (e.g. an object associated with 2 environments). The label values are limited to 63 characters and the label selectors don't support substring matching so any form delimiter-separated value wouldn't have much utility.
+
 ## Consequences
 
 For this to make sense, all components that interact with and build upon the model objects need to consistently label the related objects they manage with the above labels.
 
-Additionally, having the names of the application, environment and component as label values restricts their length to 63 characters.
+Additionally, having the names of the application, environment and component as label values restricts their length to 63 characters (https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).
