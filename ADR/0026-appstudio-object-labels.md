@@ -1,4 +1,4 @@
-# 26. Record architecture decisions
+# 26. Common labels for objects associtated to Applications
 
 Date: 2023-06-02
 
