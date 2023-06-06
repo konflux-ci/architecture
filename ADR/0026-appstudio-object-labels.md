@@ -1,4 +1,4 @@
-# 26. Common labels for objects associtated to Applications
+# 26. Common labels for objects associated to Applications
 
 Date: 2023-06-02
 
@@ -27,7 +27,7 @@ For the basic constituent parts of the application, the following labels are def
 
 The "domain" part is kept intentionally very short yet unique not to unnecessarily add to the size of the Kubernetes object.
 
-It is not mandatory to have all 3 labels defined if it is not necessary or even possible for certain usecases. For example, the images are being built for application components, but they're common to all environments. Therefore, it doesn't make sense to specify an environment when refering to component builds.
+It is not mandatory to have all 3 labels defined if it is not necessary or even possible for certain use cases. For example, the images are being built for application components, but they're common to all environments. Therefore, it doesn't make sense to specify an environment when referring to component builds.
 
 Note that this proposal doesn't solve the situation where more than one application "part" needs to be associated (e.g. an object associated with 2 environments). The label values are limited to 63 characters and the label selectors don't support substring matching so any form delimiter-separated value wouldn't have much utility.
 
