@@ -74,9 +74,9 @@ metadata:
     name: upload-secret-data-for-remote-secret
     namespace: default
     labels:
-        spi.appstudio.redhat.com/upload-secret: remotesecret
+        appstudio.redhat.com/upload-secret: remotesecret
     annotations:
-        spi.appstudio.redhat.com/remotesecret-name: test-remote-secret
+        appstudio.redhat.com/remotesecret-name: test-remote-secret
 type: Opaque
 stringData:
     username: u
