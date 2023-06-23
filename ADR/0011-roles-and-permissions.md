@@ -20,60 +20,63 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 
 ### Roles and Permissions Table
 
-|     Role      | Permissions             | API Groups                | Verbs                                   | Resources
-|---------------|-------------------------|---------------------------|-----------------------------------------|----------------------------------------------------------------------
-| Contributor   | Workspace               | Access to namespaces that backs workspace                           |
-|               | Application & Component | appstudio.redhat.com      | get, list, watch                        | applications, components, componentdetectionqueries
-|               | Environment             | appstudio.redhat.com      | get, list, watch                        | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymenttargets, deploymenttargetclaims
-|               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
-|               | PipelineRun             | tekton.dev                | get, list, watch                        | pipelineruns
-|               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records, logs
-|               | IntegrationTestScenario | appstudio.redhat.com      | get, list, watch                        | integrationtestscenarios
-|               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                        | enterprisecontractpolicies
-|               | Release Strategy        | appstudio.redhat.com      | get, list, watch                        | releases, releasestrategies, releaseplans
-|               | Release Admission Plan  | appstudio.redhat.com      | get, list, watch                        | releaseplanadmissions
-|               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch                        | jbsconfigs, artifactbuilds
-|               | *Service Access*        | appstudio.redhat.com      | get, list, watch                        | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests
-|               | *Remote Secrets*        | appstudio.redhat.com      | get, list, watch                        | remotesecrets
-|               | *Configs*               |                           | get, list, watch                        | configmaps
-|               | *Secrets*               |                           |                                         | secrets
+|     Role      | Permissions             | API Groups                | Verbs                                           | Resources
+|---------------|-------------------------|---------------------------|-------------------------------------------------|----------------------------------------------------------------------
+| Contributor   | Workspace               | Access to namespaces that backs workspace                                   |
+|               | Application & Component | appstudio.redhat.com      | get, list, watch                                | applications, components, componentdetectionqueries
+|               | Environment             | appstudio.redhat.com      | get, list, watch                                | promotionruns, snapshotenvironmentbindings, snapshots, environments
+|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch               | deploymenttargets, deploymenttargetclaims
+|               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                                | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
+|               | PipelineRun             | tekton.dev                | get, list, watch                                | pipelineruns
+|               | Pipeline Results        | results.tekton.dev        | get, list                                       | results, records, logs
+|               | IntegrationTestScenario | appstudio.redhat.com      | get, list, watch                                | integrationtestscenarios
+|               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                                | enterprisecontractpolicies
+|               | Release Strategy        | appstudio.redhat.com      | get, list, watch                                | releases, releasestrategies, releaseplans
+|               | Release Admission Plan  | appstudio.redhat.com      | get, list, watch                                | releaseplanadmissions
+|               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch                                | jbsconfigs, artifactbuilds
+|               | *Service Access*        | appstudio.redhat.com      | get, list, watch                                | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests
+|               | *Remote Secrets*        | appstudio.redhat.com      | get, list, watch                                | remotesecrets
+|               | Build Service           | appstudio.redhat.com      | get, list, watch                                | buildpipelineselectors
+|               | *Configs*               |                           | get, list, watch                                | configmaps
+|               | *Secrets*               |                           |                                                 | secrets
 |               | Add User                |
 |               | User group (with SSO)   |
-| Maintainer    | Workspace               | Access to namespaces that backs workspace                           |
-|               | Application & Component | appstudio.redhat.com      | get, list, watch, create, update, patch | applications, components, componentdetectionqueries
-|               | Environment             | appstudio.redhat.com      | get, list, watch                        | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch       | deploymenttargets, deploymenttargetclaims
-|               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
-|               | PipelineRun             | tekton.dev                | get, list, watch                        | pipelineruns
-|               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records, logs
-|               | IntegrationTestScenario | appstudio.redhat.com      | *                                       | integrationtestscenarios
-|               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                        | enterprisecontractpolicies
-|               | Release Strategy        | appstudio.redhat.com      | *                                       | releases, releasestrategies, releaseplans
-|               | Release Admission Plan  | appstudio.redhat.com      | *                                       | releaseplanadmissions
-|               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch, create, update, patch | jbsconfigs, artifactbuilds
-|               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests, spiaccesstokendataupdates
-|               | *Remote Secrets*        | appstudio.redhat.com      | get, list, watch                        | remotesecrets
-|               | *Configs*               |                           | get, list, watch                        | configmaps
-|               | *Secrets*               |                           |                                         | secrets
+| Maintainer    | Workspace               | Access to namespaces that backs workspace                                   |
+|               | Application & Component | appstudio.redhat.com      | get, list, watch, create, update, patch         | applications, components, componentdetectionqueries
+|               | Environment             | appstudio.redhat.com      | get, list, watch                                | promotionruns, snapshotenvironmentbindings, snapshots, environments
+|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch               | deploymenttargets, deploymenttargetclaims
+|               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                                | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
+|               | PipelineRun             | tekton.dev                | get, list, watch                                | pipelineruns
+|               | Pipeline Results        | results.tekton.dev        | get, list                                       | results, records, logs
+|               | IntegrationTestScenario | appstudio.redhat.com      | *                                               | integrationtestscenarios
+|               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                                | enterprisecontractpolicies
+|               | Release Strategy        | appstudio.redhat.com      | *                                               | releases, releasestrategies, releaseplans
+|               | Release Admission Plan  | appstudio.redhat.com      | *                                               | releaseplanadmissions
+|               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch, create, update, patch         | jbsconfigs, artifactbuilds
+|               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch         | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests, spiaccesstokendataupdates
+|               | *Remote Secrets*        | appstudio.redhat.com      | get, list, watch                                | remotesecrets
+|               | Build Service           | appstudio.redhat.com      | get, list, watch, create                        | buildpipelineselectors
+|               | *Configs*               |                           | get, list, watch                                | configmaps
+|               | *Secrets*               |                           |                                                 | secrets
 |               | Add User                |
 |               | User group (with SSO)   |
-| Admin         | Workspace               | Access to namespaces that backs workspace                           |
-|               | Application & Component | appstudio.redhat.com      | *                                       | applications, components, componentdetectionqueries
-|               | Environment             | appstudio.redhat.com      | *                                       | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | *                      | deploymenttargets, deploymenttargetclaims
-|               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                        | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
-|               | PipelineRun             | tekton.dev                | *                                       | pipelineruns
-|               | Pipeline Results        | results.tekton.dev        | get, list                               | results, records, logs
-|               | IntegrationTestScenario | appstudio.redhat.com      | *                                       | integrationtestscenarios
-|               | Enterprise contract     | appstudio.redhat.com      | *                                       | enterprisecontractpolicies
-|               | Release Strategy        | appstudio.redhat.com      | *                                       | releases, releasestrategies, releaseplans
-|               | Release Admission Plan  | appstudio.redhat.com      | *                                       | releaseplanadmissions
-|               | *JVM Build Service*     | jvmbuildservice.io        | *                                       | jbsconfigs, artifactbuilds
-|               | *Service Access*        | appstudio.redhat.com      | *                                       | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens,spifilecontentrequests, spiaccesstokendataupdates
-|               | *Remote Secrets*        | appstudio.redhat.com      | *                                       | remotesecrets
-|               | *Configs*               |                           | *                                       | configmaps
-|               | *Secrets*               |                           | *                                       | secrets
+| Admin         | Workspace               | Access to namespaces that backs workspace                                   |
+|               | Application & Component | appstudio.redhat.com      | *                                               | applications, components, componentdetectionqueries
+|               | Environment             | appstudio.redhat.com      | *                                               | promotionruns, snapshotenvironmentbindings, snapshots, environments
+|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | *                              | deploymenttargets, deploymenttargetclaims
+|               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                                | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
+|               | PipelineRun             | tekton.dev                | *                                               | pipelineruns
+|               | Pipeline Results        | results.tekton.dev        | get, list                                       | results, records, logs
+|               | IntegrationTestScenario | appstudio.redhat.com      | *                                               | integrationtestscenarios
+|               | Enterprise contract     | appstudio.redhat.com      | *                                               | enterprisecontractpolicies
+|               | Release Strategy        | appstudio.redhat.com      | *                                               | releases, releasestrategies, releaseplans
+|               | Release Admission Plan  | appstudio.redhat.com      | *                                               | releaseplanadmissions
+|               | *JVM Build Service*     | jvmbuildservice.io        | *                                               | jbsconfigs, artifactbuilds
+|               | *Service Access*        | appstudio.redhat.com      | *                                               | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens,spifilecontentrequests, spiaccesstokendataupdates
+|               | *Remote Secrets*        | appstudio.redhat.com      | *                                               | remotesecrets
+|               | Build Service           | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | buildpipelineselectors
+|               | *Configs*               |                           | *                                               | configmaps
+|               | *Secrets*               |                           | *                                               | secrets
 |               | Add User                |
 |               | User group (with SSO)   |
 
