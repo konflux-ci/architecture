@@ -2,11 +2,10 @@
 
 ## Overview
 
-The Image Controller for AppStudio helps set up container image repositories
+The Image Controller for AppStudio sets up container image repositories
 for AppStudio Components. With image controller, AppStudio ensures one image
-repository per Component and each build pipeline will have dedicated secret to
-push image. AppStudio provides an isolated environment for users to push and
-manage images.
+repository per Component and one secret per Component that is used by each
+triggered PipelineRun that pushes built Component image to that repository.
 
 Image controller watches Components to take actions according to the deletion
 event and the value set to specific annotations. External services are able to
@@ -41,12 +40,13 @@ metadata:
 spec:
   application: city-transit
   componentName: billing
+...
 ```
 
 Image controller then creates following resources:
 
 - A public image repository is created on Quay.io.
-- A robot account is created and associated with the repository properly.
+- A robot account is created and associated with the repository.
 - A Kubernetes Secret is created alongside the Component CR, to which the
   robot account token is written out.
 
@@ -78,6 +78,7 @@ metadata:
 spec:
   application: city-transit
   componentName: billing
+...
 ```
 
 Note that, annotation `image.redhat.com/generate` is removed already.
@@ -115,6 +116,7 @@ metadata:
 spec:
   application: city-transit
   componentName: billing
+...
 ```
 
 As a result, repository becomes private on Quay.io and `visibility` changes to
@@ -131,6 +133,7 @@ metadata:
 spec:
   application: city-transit
   componentName: billing
+...
 ```
 
 ## Error report
