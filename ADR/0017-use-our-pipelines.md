@@ -7,7 +7,7 @@
 Accepted
 
 * Relates to [ADR 7. Change Management](0007-change-management.md)
-* Relates to [ADR 25. Container Image Management Practice](0027-container-images.md)
+* Relates to [ADR 27. Container Image Management Practice](0027-container-images.md)
 
 ## Context
 
