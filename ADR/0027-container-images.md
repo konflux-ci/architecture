@@ -1,10 +1,12 @@
-# 25. Container Image Process
+# 27. Container Image Management Practice
 
-Date: 2023-05-26
+Date: 2023-06-30
 
 ## Status
 
 Proposed
+
+* Relates to [ADR 17. Use our own pipelines](0017-use-our-pipelines.md)
 
 ## Context
 
@@ -20,8 +22,7 @@ The purpose of this document is to establish container image management practice
 
 ### Role
 
-**Component Team** <br>
-&nbsp;&nbsp;&nbsp;Develops and maintains components that are built as images and deployed as part of AppStudio
+**Component Team**: Develops and maintains components that are built as images and deployed as part of AppStudio
 
 
 ### Responsibilities
@@ -30,7 +31,7 @@ The purpose of this document is to establish container image management practice
 ###### Onboard to Pipelines As Code (PaC)
 
 Component Teams are responsible for ensuring their container images are continuously built and scanned for vulnerabilities by following the
-[Extending the Service](https://redhat-appstudio.github.io/infra-deployments/docs/deployment/extending-the-service.html) process to onboard their component to the PaC service. See also [ADR #17](https://github.com/redhat-appstudio/book/blob/main/ADR/0017-use-our-pipelines.md).
+[Extending the Service](https://redhat-appstudio.github.io/infra-deployments/docs/deployment/extending-the-service.html) process to onboard their component to the PaC service.
 
 ***
 #### Container Images <br>
@@ -38,13 +39,16 @@ Component Teams are responsible for ensuring their container images are continuo
 ###### Trigger Builds
 Under the PaC service, images are rebuilt when there are updates to the component’s git repository but additional configuration is needed in the Dockerfile to ensure the underlying base (UBI) images are updated with the latest packages (see the [HAS example](https://github.com/redhat-appstudio/application-service/blob/main/Dockerfile#L24])) or at the very least, the latest [security updates](https://developers.redhat.com/articles/2021/11/11/best-practices-building-images-pass-red-hat-container-certification#best_practice__5__include_the_latest_security_updates_in_your_image).   This will minimize the gap between patching and should meet our CVE timelines as long as the repository is active.
 
+Component teams are encouraged to install [renovatebot](https://github.com/renovatebot/renovate) to keep their dependencies up to date.
+
 ###### Scheduled Builds
 
-Since image updates are based on how active our repos are, there is the risk that over time, as code stabilizes and/or enters maintenance mode, the triggers for rebuilds will be less frequent which will cause the images to degrade.  To avoid this, component teams should also ensure there are scheduled builds in place.
+Since image updates are based on how active our repos are, there is the risk that over time, as code stabilizes and/or enters maintenance mode, the triggers for rebuilds will be less frequent which will cause the images to degrade.  To avoid this, component teams should also ensure there are scheduled, weekly builds in place
 
 
 ###### New Components
-Newly onboarded components are required to use a fully supported and patched major version release for their base images per ESS SEC-PATCH-REQ-2 requirement #3.
+Newly onboarded components are required to use a fully supported and patched major version release for their base images per ESS SEC-PATCH-REQ-2 requirement #3.  Installing [renovatebot](https://github.com/renovatebot/renovate) can
+help achieve this requirement.
 
 ***
 
@@ -60,7 +64,7 @@ You can copy this [workflow](https://github.com/openshift-pipelines/pipeline-ser
 
 #### Remediation
 
-While our automation process will ensure that component teams are keeping their images updated, security scanners are not perfect.  Vulnerabilities can be reported through other channels, in which case, component teams should assess the severity of these findings and remediate according to the Infosec Remediation Guidelines
+While our automation process will ensure that component teams are keeping their images updated, security scanners are not perfect.  Vulnerabilities can be reported through other channels, in which case, component teams must assess the severity of these findings and remediate according to the Infosec Remediation Guidelines
 
 ***
 
