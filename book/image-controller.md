@@ -1,144 +1,36 @@
 # Image Controller
 
-## Overview
+# Overview
+Image controller sets up and manages container image repository for an application's component. With this ability, AppStudio provides an isolated environment for image builds of a component that is each component has its own image repository and secret used to push every built image to that repository.
 
-The Image Controller for AppStudio sets up container image repositories
-for AppStudio Components. With image controller, AppStudio ensures one image
-repository per Component and one secret per Component that is used by each
-triggered PipelineRun that pushes built Component image to that repository.
+Image controller takes these actions by watching on either specific annotation's change or deletion event of a [Component CR](https://redhat-appstudio.github.io/book/ref/application-environment-api.html#component)
 
-Image controller watches Components to take actions according to the deletion
-event and the value set to specific annotations. External services are able to
-interact with image controller via annotations:
+- Setup image repository. Image controller creates an image repository for the Component CR in a remote image registry as well as a robot account which is specific to that repository for image push. A Kubernetes Secret object is also created with that robot account token in order to make it available for build PipelineRun.
 
-- `image.redhat.com/generate`: if set, image controller starts to set up image
-  repository on Quay.io for a Component, or attempts to switch repository
-  visibility if the repository exists already.
+- Visibility switch. Image controller is able to switch image repository's visibility between public and private.
 
-- `image.redhat.com/image`: information of created resources is set to this
-  annotation as a JSON string. Error message will also be set to here if there
-  is.
+- Cleanup. When a Component CR is requested to be deleted, image controller will remove component's image repository and roboto account from the remote registry. The Kubernetes Secret will be removed alongwith the Component CR eventually due to the ownership established between them.
 
-## Set up image repository
+# Dependencies
+Image controller does not depend on other AppStudio services, but a remote image registry. AppStudio services are able to use the resources prepared by image controller, e.g. Build Service makes the Secret available to every build PipelineRun of a component for image push.
 
-To request the controller to setup an image repository, annotate the Component
-CR with `image.redhat.com/generate: '{"visibility": "public"}'` or
-`image.redhat.com/generate: '{"visibility": "private"}'` depending on desired
-repository visibility.
+# Interface
+Image controller uses annotations to interact with external services.
 
-Here is an example that a component is annotated for creating a public image
-repository:
+- `image.redhat.com/generate`: An external service is able to request an image repository for an application component by setting this annotation on the corresponding Component CR. For initial request, the value should include field `visibility` to indicate the visibility of the created image repository in the remote registry, and it can be set again subsequently to change the visibility on demand. Note that, this annotation will be removed once requested operation finishes.
 
-```yaml
-apiVersion: appstudio.redhat.com/v1alpha1
-kind: Component
-metadata:
-  annotations:
-    image.redhat.com/generate: '{"visibility": "public"}'
-  name: billing
-  namespace: image-controller-system
-spec:
-  application: city-transit
-  componentName: billing
-...
-```
+  Here is an example that requests a private image repository:
 
-Image controller then creates following resources:
+  ```yaml
+  image.redhat.com/generate: '{"visibility": "private"}'
+  ```
 
-- A public image repository is created on Quay.io.
-- A robot account is created and associated with the repository.
-- A Kubernetes Secret is created alongside the Component CR, to which the
-  robot account token is written out.
+- `image.redhat.com/image`: image controller provides information of prepared resources to external services via this annotation, which includes the image repository URL, the visibility of that repository, and a secret name pointing to the created Kubernetes Secret.
 
-and writes out the details of the same into the Component as an annotation
-`image.redhat.com/image`, namely:
+  If something went wrong during the requested operation, this annotation will include a field `Message` with a corresponding error message.
 
-- The image repository URL.
-- The image repository visibility.
-- The name of the Kubernets Secret.
+  Here is an example that shows a public image repository is ready on Quay.io and a Secret named `secret-name` contains a robot account token and is available for image push.
 
-```json
-{
-  "image": "quay.io/redhat-user-workloads/image-controller-system/city-transit/billing",
-  "visibility": "public",
-  "secret":" secret-name"
-}
-```
-
-the Component CR YAML looks like:
-
-```yaml
-apiVersion: appstudio.redhat.com/v1alpha1
-kind: Component
-metadata:
-  annotations:
-    image.redhat.com/image: "{\"image\":\"quay.io/redhat-user-workloads/image-controller-system/city-transit/billing\",\"visibility\":\"public\",\"secret\":\"secret-name\"}"
-  name: billing
-  namespace: image-controller-system
-spec:
-  application: city-transit
-  componentName: billing
-...
-```
-
-Note that, annotation `image.redhat.com/generate` is removed already.
-
-Image controller does not use the created Secret. Currently, Build Service uses
-that Secret for the build pipeline so that built images can be pushed to
-component's image repository.
-
-## Cleanup on deletion of a Component CR
-
-All the related resources are cleaned up once image controller detects a
-component has been requested to be deleted from AppStudio. Image controller is
-responsible for removing the corresponding image repository and robot account
-from Quay.io, and the Secret will be removed along with the component
-eventually due to the established ownership between them.
-
-## Switch Visibility
-
-The corresponding image repository can be set as public or private by setting
-annotation `image.redhat.com/generate` on Component CR. Visibility value must
-be `public` or `private`.
-
-Here is an example that makes the repository private by setting `visibility` to
-`private`.
-
-```yaml
-apiVersion: appstudio.redhat.com/v1alpha1
-kind: Component
-metadata:
-  annotations:
-    image.redhat.com/generate: '{"visibility": "private"}'
-    image.redhat.com/image: "{\"image\":\"quay.io/redhat-user-workloads/image-controller-system/city-transit/billing\",\"visibility\":\"public\",\"secret\":\"secret-name\"}"
-  name: billing
-  namespace: image-controller-system
-spec:
-  application: city-transit
-  componentName: billing
-...
-```
-
-As a result, repository becomes private on Quay.io and `visibility` changes to
-`private` in annotation `image.redhat.com/image`:
-
-```yaml
-apiVersion: appstudio.redhat.com/v1alpha1
-kind: Component
-metadata:
-  annotations:
-    image.redhat.com/image: "{\"image\":\"quay.io/redhat-user-workloads/image-controller-system/city-transit/billing\",\"visibility\":\"private\",\"secret\":\"secret-name\"}"
-  name: billing
-  namespace: image-controller-system
-spec:
-  application: city-transit
-  componentName: billing
-...
-```
-
-## Error report
-
-If something went wrong during the requested operation, annotation
-`image.redhat.com/image` will include a field `Message` with the corresponding
-error message.
-
+  ```yaml
+  image.redhat.com/image: "{\"image\":\"quay.io/redhat-user-workloads/image-controller-system/city-transit/billing\",\"visibility\":\"public\",\"secret\":\"secret-name\"}"
+  ```
