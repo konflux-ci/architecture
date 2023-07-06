@@ -64,7 +64,9 @@ TODO - describe exactly how the user specifies that one PR depends on another. P
   * Construct the Snapshot for the test using the image from the triggering build pipeline of PR #2 as well as image found on the latest build pipeline associated with PR#1. This lets a user test PR #2 including unmerged content from PR #1.
   * Post the test results back on PR#1 in addition to the results it would normally post to PR#2.
   * Post a special followup check result on PR#2 that “fails” saying, “don’t merge this. It still depends on another.”
-* When [integration-service] notices a build from a PR that declares it depends on another PR but that other PR is merged, it will do testing and it will post a followup check result that “succeeds” saying “this is mergeable, all other PRs that it depends on are merged.”
+* When [integration-service] notices a build from a PR (PR#2) that declares it depends on another PR (PR#1) but that other PR (PR#1) is merged, it will do testing and it will post a followup check result that “succeeds” saying “this is mergeable, all other PRs that it depends on are merged.”
+  * If PR #2 depends on two or more other PRs (not just 1), then [integration-service] should perform testing and post *distinct* followup check results on PR#2 reporting the merge status of all PRs it depends on. As they merge, those distinct check results turn from failing to passing. When all have passed, then PR#2 will appear as mergeable to the user.
+  * If PR #1 is closed without merging, then PR #2 could languish. [build-service] should check this for this situation on a periodic basis (for want of an event to trigger it) and either update or close PR #2.
 
 ## Applied to Use Cases
 
