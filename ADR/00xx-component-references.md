@@ -8,7 +8,7 @@ Proposed
 
 ## Context
 
-> As an AppStudio user, I want to specify relationships between my components as image digests and I want that to be easy.
+As an AppStudio user, I want to be able to build and test multiple coupled components which depend on each other by digest reference. I want that process to be easy.
 
 There are three use cases in scope for this document:
 
