@@ -30,33 +30,33 @@ Today, users work around how complicated it is to manage digests themselves by i
 
 ## Decision
 
-In order to support linking of multiple components, any component dependency will be recorded as part of the Tekton definition to be run for pull request event types.
+In order to support linking of multiple components, any component dependency will be encoded as part of the Tekton definition to be run for **pull request** event types.
 
 ### User flow
 
-Users will be able to specify dependencies between components by modifying the pull request Tekton definition or by adding configuration to the UI which will result in AppStudio representing the configuration in the Tekton definition. This definition will allow the specification of whether dependent components should be run in parallel or serially when combined.
+Users will be able to specify dependencies between components by modifying the pull request Tekton definition or by adding configuration to the UI which will result in AppStudio encoding the configuration in the Tekton definition. This definition will allow the specification of whether dependent components should be run in parallel or serially when combined.
 
 ### Pipelines as Code (PaC)
 
-PaC will expand its design to include orchestration logic. This orchestrator will enable a plugable scheduler which is capable of identifying the dependent repositories and Tekton definitions (composing the metadata required to specify a component in AppStudio). When a component's Tekton definition indicates a dependency on another component, PaC will be able to combine the defined pipelines so that the resulting Pipeline definition builds images in the proper order.
+Pipelines as Code (PaC) will expand its design to include orchestration logic. This orchestrator will enable a plugable scheduler which is capable of identifying the dependent repositories and Tekton definitions (composing the metadata required to specify a component in AppStudio). When a component's Tekton definition indicates a dependency on another component, PaC will be able to combine the defined pipelines so that the resulting Pipeline definition builds images in the proper order.
 
 When identifying the pipeline definitions to merge, PaC will first look at the linked components for the same branch where a build was triggered from. If no matching branches are found then the default branch will be used.
 
-PaC will need to recursively expand the DAG to ensure that all dependent components are linked.
+PaC will need to recursively expand the directed acyclic graph (DAG) to ensure that all dependent components are linked.
 
 ### Build service
 
-The build service will be able to detect any component pull specs from earlier in a composite pipeline that differ from a previous Snapshot and replace all references of the previous pull spec with the new pull spec before building the component.
+The build service will be able to detect any component pull specs from earlier in a composite pipeline that differs from a previous Snapshot and replace all references of the previous pull spec with the new pull spec before building the component.
 
 ### Integration service
 
-The integration service will be able to support updating multiple Component updates from a single PipelineRun such that all components built in a composite pipeline can be tested together as an Application in any configured integration tests.
+The integration service will be able to support updating multiple Component updates from a single PipelineRun such that all components built in a composite pipeline can be tested together as an Application in any configured integration tests. In order to support this, the composite pipeline constructed by PaC will need to expose multiple results where integration-service can find the pullspecs of the images.
 
 ### Eventual consistency
 
 This flow of related changes as proposed in this ADR is limited to changes in the pull request Tekton definitions. It enables related components to be rebuilt as needed to ensure that image references are maintained and up to date. Once pull requests are merged for one component and the resulting container image is built, the resulting Snapshot will be "out of sync" in that some references in dependent images (i.e. RelatedImages in bundles or image references in a Dockerfile) will not match the latest artifact in the Snapshot. When build dependencies within the same Snapshot are enabled ([RHTAP-967](https://issues.redhat.com/browse/RHTAP-967)), this synchronization issue will be detected and relevant policies will fail.
 
-After a new Snapshot is produced, a Renovatebot will be responsible to propagating the updated image references to all other Components within the Application. After these pull requests have all been merged, consistency should be achieved again and all relevant policies should pass. 
+After a new Snapshot is produced, a Renovatebot instance will be responsible for propagating the updated image references to all other Components within the Application. After these pull requests have all been merged, consistency should be achieved again and all relevant policies should pass. 
 
 ## Applied to Use Cases
 
@@ -91,13 +91,13 @@ Another OLM Operator Scenario: an operator git repo contains both the controller
 ## Consequences
 
 * The creation and maintenance of PRs for builds running from AppStudio components remains unchanged (an alternative design that we considered involved creating PRs on other components to maintain the references). This means that the effect on the user managing multiple components in an application is reduced as there are fewer PRs to maintain and keep track of. 
-* The user can pin their digest references in git. AppStudio will automate maintaining them. No magical resolution of tags in the buildsystem at build time, or worse at runtime.
+* The user can pin their digest references in git. AppStudio will automate their maintenance. The user will not have to resort to magical resolution of tags in the build system at build time, or worse at runtime, in order to pick up changes in dependent images.
 * Changes will be required to multiple AppStudio components including a large change to PaC. This might be too much change across the various services to support this user flow.
 * The composite pipelines generated have the potential to rebuild many container images that will always be "throw-away." This can result in an undesired increased cost of running builds.
 * Users may have only a few Components, or they may have many (many dozens) of Components. Once they get past so many component dependencies, we suspect that users will likely change from checking that all dependent images work with the new parent image to "sharing" the verification load: building the image and pushing it out for other components/dependencies to update and test within their own PRs. With this design, the user can achieve this by deleting their dependent repositories. The parent image will be built and tested as normal. The user can still hypothetically construct their own "dependent PR" to test a particular layered component on an unmerged parent image change.
 
 ## Open Questions
 
-* To reduce the time of inconsistency, can renovatebot create the PRs on dependent components immediately or should renovatebot always respect the configuration files? Does that still make sense if renovatebot is not being run on a cron basis?
+* To reduce the time of inconsistency, can Renovatebot create the PRs on dependent components immediately or should Renovatebot always respect the configuration files? Does that still make sense if Renovatebot is not being run on a cron basis?
 * Would there be a way for a user to be able to issue a command in a PR to enable a one-off linking of multiple components or would this type of linking need to occur via a temporary modification to the Tekton pipeline definition in the same PR?
 * Do we need to extend image signing support to all images produced in PR pipelines? This would primarily benefit users by reducing "false positives" in EC contract failures that would be expected to pass on normal builds. If so, we would need a solution to sign multiple images in a single Pipeline run (i.e. potentially keyless signing instead of Chains-based signing).
