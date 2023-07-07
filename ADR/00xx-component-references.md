@@ -12,9 +12,9 @@ As an AppStudio user, I want to be able to build and test multiple coupled compo
 
 There are three use cases in scope for this document:
 
-* A user team has their own **intermediate base image**. When they propose an update to their base image with new content, they want to see if that’s going to break any of their Components that depend on it before merging. AppStudio should posit what rebuilds of those Components will look like and if they will pass their tests, and report that feedback back to the original pull request that updated content of the intermediate base image ([RHTAP-967](https://issues.redhat.com/browse/RHTAP-967)). A real example of this is in stolostron, where a [layered image component](https://github.com/stolostron/console/blob/main/Dockerfile.mce.prow#L20) refers to a [common parent image](https://github.com/stolostron/common-nodejs-parent).
-  * In this case, the dependent images must be rebuilt to include the intermediate image update in order to determine the actual effect of the proposed change.
-  * This is a many-to-one dependency. Many component images depend on one intermediate base image.
+* A user team has their own **common parent image**. When they propose an update to their base image with new content, they want to see if that’s going to break any of their Components that depend on it before merging. AppStudio should posit what rebuilds of those Components will look like and if they will pass their tests, and report that feedback back to the original pull request that updated content of the common parent image ([RHTAP-967](https://issues.redhat.com/browse/RHTAP-967)). A real example of this is in stolostron, where a [layered image component](https://github.com/stolostron/console/blob/main/Dockerfile.mce.prow#L20) refers to a [common parent image](https://github.com/stolostron/common-nodejs-parent).
+  * In this case, the dependent images must be rebuilt to include the common parent image update in order to determine the actual effect of the proposed change.
+  * This is a many-to-one dependency. Many component images depend on one common parent image.
 * A user team has an **OLM operator**. When they propose an update to one of their operands with new code, they want to see if that’s going to break their operator. In order to be fully tested, a single rebuilt image needs to be included as a reference in a bundle image in order to be tested as a whole unit when deployed via OLM, i.e. for integration tests ([RHTAP-992](https://issues.redhat.com/browse/RHTAP-992)). A real example of this is in [gatekeeper](https://github.com/gatekeeper/gatekeeper-operator) where the operator repo contains both the [controller code](https://github.com/gatekeeper/gatekeeper-operator/blob/main/controllers/gatekeeper_controller.go) and the [bundle metadata](https://github.com/gatekeeper/gatekeeper-operator/blob/main/config/manifests/bases/gatekeeper-operator.clusterserviceversion.yaml), which need to be built into separate images([1](https://github.com/gatekeeper/gatekeeper-operator/blob/main/Dockerfile) and [2](https://github.com/gatekeeper/gatekeeper-operator/blob/main/bundle.Dockerfile)), separate Components in AppStudio.
   * In this case, the bundle image must be rebuilt for the operand image update to be really be evaluated in a functional way.
   * This is a one-to-many dependency. One operator bundle depends on many operand images.
@@ -22,7 +22,7 @@ There are three use cases in scope for this document:
   * In this case, on any given day, component B’s PRs may or may not have dependencies on PRs from component A. Not all changes are linked.
   * This is a many-to-many dependency. The user may have lots of components that depend on lots of other components.
 
-In theory **any combination of the cases above** could be present in an app. They could have one intermediate base image, many operand images that depend on that, and one or more operator bundles which depend on those.
+In theory **any combination of the cases above** could be present in an app. They could have one common parent image, many operand images that depend on that, and one or more operator bundles which depend on those.
 
 Today, users work around how complicated it is to manage digests themselves by instead using *floating tags*, which have the benefit of being easy to use - no need to update - but have the problem of being unclear. It's not exactly clear what you're building against if you refer to it by tag. Potentially insecure. We want to make it easy for users to do better.
 
@@ -76,9 +76,9 @@ Let's apply the architecture to some use cases, and see how it plays out:
 
 Scenario: an application image depends on a common parent image. The user has 1 Application, and 2 Components. One of them is the parent image. The other image is built FROM that image.
 
-* The app image Component declares that it embeds a reference to the parent image Component, by way of a new `ComponentReference` CR.
+* The child image Component declares that it embeds a reference to the parent image Component, by way of a new `ComponentReference` CR.
 * [integration-service] will always skip testing for parent image update builds, will never promote them, or use them to initiate Releases, but it will promote them to the global candidate list.
-* [build-service] will propagate digest references as a PR to the app image Component repo, by analyzing the available `ComponentReference` CRs in the workspace.
+* [build-service] will propagate digest references as a PR to the child image Component repo, by analyzing the available `ComponentReference` CRs in the workspace.
 * [integration-service] will post followup checks on the normal component PRs saying “don’t merge this” until the parent image update is merged.
 * When the parent image PR is merged, [build-service] will update the PRs it originally filed to say “no more dependency here” and potentially rebase the PRs to trigger a new build (or use /retest).
 
