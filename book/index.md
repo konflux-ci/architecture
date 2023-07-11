@@ -49,7 +49,7 @@ Each service that makes up AppStudio is further explained in its own document.
 - [Service Provider Integration](./service-provider-integration.md)
 - [Hybrid Application Service](./hybrid-application-service.md)
 - [Enterprise Contract](./enterprise-contract.md)
-- [Java Rebuilds Service](./java-rebuilds-service.md)
+- [Java Rebuilds Service](./jvm-build-service.md)
 - [Release Service](./release-service.md)
 - [Integration Service](./integration-service.md)
 - [Image Controller](./image-controller.md)
