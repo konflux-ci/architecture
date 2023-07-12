@@ -6,7 +6,7 @@ Overview
 --------
 
 The Enterprise Contract's purpose is to ensure container images produced by
-HACBS meet certain clearly defined requirements before they are considered
+AppStudio meet certain clearly defined requirements before they are considered
 releasable. Should a container image not meet the requirements the Enterprise
 Contract will produce a list of the reasons why so they can be addressed as
 required to produce a releasable build.
@@ -84,10 +84,10 @@ See also the related
 
 ### EC Policies
 
-The reference set of policy rules for HACBS is defined
+The reference set of policy rules for AppStudio is defined
 [here](https://github.com/enterprise-contract/ec-policies/) and documented
 [here](https://enterprise-contract.github.io/ec-policies/). It includes rules for a
-range of different policies that are considered useful for HACBS.
+range of different policies that are considered useful for AppStudio.
 
 There are Conftest bundles containing the latest version of these policies
 available in [quay.io
@@ -100,7 +100,7 @@ Related Components
 ### Tekton Chains
 
 Tekton Chains is a dependency for EC since EC works by examining attestations
-created by Tekton Chains when HACBS build pipelines are running.
+created by Tekton Chains when AppStudio build pipelines are running.
 
 For more information on Tekton Chains refer to the
 [documentation](https://tekton.dev/docs/chains/), and the GitOps configuration
@@ -108,19 +108,19 @@ For more information on Tekton Chains refer to the
 
 ### The Release Pipeline
 
-The HACBS Release Pipeline contains an instance of the EC Task which is used
+The AppStudio Release Pipeline contains an instance of the EC Task which is used
 to gate the release. If the EC task fails the release should be blocked. This
 functionality is handled by the Release Pipeline.
 
-For more information, see [HACBS Release
-Bundles](https://github.com/hacbs-release/release-bundles).
+For more information, see [AppStudio Release Service
+Bundles](https://github.com/redhat-appstudio/release-service-bundles).
 
 ### EC and Renovate Bot
 
 To verify that tasks used in the build pipeline are from known and trusted
 Tekton bundles, EC requires a list of those bundles.
 
-HACBS users can leverage the [Renovate
+AppStudio users can leverage the [Renovate
 Bot](https://github.com/renovatebot/renovate#readme) service to keep such
 Tekton bundle lists up to date. The service can be configured to run
 periodically, and provide pull requests with updated references.
@@ -131,8 +131,8 @@ service or on-demand.
 Additional Resources
 --------------------
 
+- [AppStudio Documentation](https://redhat-appstudio.github.io/docs.appstudio.io)
 - [Enterprise Contract Documentation](https://enterprise-contract.github.io/)
-- [HACBS Documentation](https://red-hat-hybrid-application-cloud-build-services-documentation.pages.redhat.com/hacbs-documentation/)
 - [Book of AppStudio](https://redhat-appstudio.github.io/book/)
 
 
