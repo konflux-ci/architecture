@@ -1,15 +1,15 @@
 # Image Controller
 
 # Overview
-Image controller sets up and manages container image repository for an application's component. With this ability, AppStudio provides an isolated environment for image builds of a component that is each component has its own image repository and secret used to push every built image to that repository.
+Image controller sets up and manages container image repositories for an application's components. This enables greater component isolation within AppStudio where each component has its own image repository and secret for pushing images built via AppStudio.
 
-Image controller takes these actions by watching on either specific annotation's change or deletion event of a [Component CR](https://redhat-appstudio.github.io/book/ref/application-environment-api.html#component)
+The image controller can perform three actions on image repositories by watching for either specific annotation changes or deletion events of a [Component CR](https://redhat-appstudio.github.io/book/ref/application-environment-api.html#component):
 
-- Setup image repository. Image controller creates an image repository for the Component CR in a remote image registry as well as a robot account which is specific to that repository for image push. A Kubernetes Secret object is also created with that robot account token in order to make it available for build PipelineRun.
+- **Setup image repository**: Image controller creates an image repository for the Component CR in a remote image registry as well as a robot account which is specific to that repository for image push. A Kubernetes Secret object is also created with that robot account token in order to make it available for build PipelineRun.
 
-- Visibility switch. Image controller is able to switch image repository's visibility between public and private.
+- **Modify visibility**: Image controller is able to switch an image repository's visibility between public and private.
 
-- Cleanup. When a Component CR is requested to be deleted, image controller will remove component's image repository and roboto account from the remote registry. The Kubernetes Secret will be removed alongwith the Component CR eventually due to the ownership established between them.
+- **Cleanup**: When a Component CR is requested to be deleted, image controller will remove component's image repository and robot account from the remote registry. The Kubernetes Secret will be removed along with the Component CR eventually due to the ownership established between them.
 
 # Dependencies
 Image controller does not depend on other AppStudio services, but a remote image registry. AppStudio services are able to use the resources prepared by image controller, e.g. Build Service makes the Secret available to every build PipelineRun of a component for image push.
