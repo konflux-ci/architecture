@@ -142,12 +142,16 @@ Another OLM Operator Scenario: an operator git repo contains both the controller
     * This works like it does in most other cases. Let the user merge the original PR, and only after that will [integration-service] update the checks for `new-feature` to say “okay to merge now!”
     * When the user merges the originla PR, [build-service] will update the PR it filed on the `new-feature/<suffix>` branch to take it out of "Draft", indicating that it is safe to merge now. It may potentially rebase the PR to trigger a new build or use `/retest`.
 
-## Open Questions
+## Miscellany
 
 * To give the user some control, should we make [build-service] respect [renovatebot
   configuration files](https://docs.renovatebot.com/configuration-options/)? Does that still make
   sense if renovatebot is not being run on a cron basis? (If the answer to the original question is
-  yes, then that may inform whether how we implement the new functionality in [build-service].
+  yes, then that may inform whether how we implement the new functionality in [build-service]). No.
+  Even though [build-service] here is acting _like_ renovatebot and even though we may use
+  renovatebot as the implementation underneath, it likely does not make sense to let the user
+  control this particular path of updates with a renovatebot configuration file. We want to update
+  specific things (digests) at specific times (in response to other PRs).
 * Since we don't have exclusive control over merging changes (or really, any control at all
   exclusive or not), we can't prevent the user from merging things out of order. This means they can
   get themselves into trouble. We try to provide clues like marking the PR as a Draft;
