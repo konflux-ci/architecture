@@ -28,27 +28,33 @@ Today, users work around how complicated it is to manage digests themselves by i
 
 ## Decision
 
-### API
+### Interface changes
 
-* Introduce a new CustomResource called `ComponentEmbedding` that lets one Component declare that another Component **embeds a reference** to it.
-  * A `ComponentEmbedding` spec contains two fields: a embedded component, and a embedding component
-  * [integration-service] handles the testing and promotion of all embedded components in a special way.
-  * A new set of functionality for [build-service] uses the `ComponentEmbedding` links to propose updates to users git repositories.
-* Introduce a new convention for PRs that lets one PR declare that it depends on another PR.
-* Important to understand: the declared reference embeddings as defined in the `ComponentEmbeddings` and PR dependencies are two different things.
-  * `ComponentEmbeddings` are declarations about which Components we should expect to see PR dependencies for.
-    * You say in english: “Component A embeds a reference to Component B.”
-  * PR dependencies can be supplied by the user without any declared `ComponentEmbeddings` on the respective Components.
-    * You say in english: “PR #1 depends on PR #2.”
+**Declared Reference Embeddings**: Introduce a new CustomResource called `ComponentEmbedding` that lets one Component declare that another Component **embeds a reference** to it.
 
-### Integration-service
+* A `ComponentEmbedding` spec contains two fields: a embedded component, and a embedding component
+* [integration-service] handles the testing and promotion of all embedded components in a special way.
+* A new set of functionality for [build-service] uses the `ComponentEmbedding` links to propose updates to users git repositories.
+
+**PR Dependencies**: Introduce a new convention for PRs that lets one PR declare that it depends on another PR.
+
+TODO - describe exactly how the user specifies that one PR depends on another. PaC will have to pass this through to the PipelineRun as an annotation. For now, just assume it is possible and defined.
+
+Important to understand: the declared reference embeddings as defined in the `ComponentEmbeddings` and PR dependencies are two different things:
+
+* `ComponentEmbeddings` are declarations about which Components we should expect to see PR dependencies for.
+  * You say in english: “Component A embeds a reference to Component B.”
+* PR dependencies can be supplied by the user without any declared `ComponentEmbeddings` on the respective Components.
+  * You say in english: “PR #1 depends on PR #2.”
+
+### Integration-service and ComponentEmbeddings
 
 * When [integration-service] notices a build of a Component which is known to be an *embedded component* (where another Component declares that it embeds a reference to this one by way of a `ComponentEmbedding`), it always skips all testing (both pre-merge and post-merge). It always promotes the image to the global candidate list when the PR is merged, but it does not promote to dev environment (post-merge) and it does not create Releases (post-merge).
   * Builds of Components which are known to be *embedded components* never directly trigger tests, never trigger promotion, or Releases.
 * When [integration-service] notices a build of a Component which is known to be an *embedding component* (one that declares that it embeds references to others by way of a `ComponentEmbedding`), it does testing as normal, promotes to global candidate list as normal, and it promotes to dev env as normal, and it creates Releases as normal.
 * When [integration-service] notices a build of a Component that references no other components and no other components refer to it - then it proceeds like normal, runs tests, promotes, deploys, releases, etc.
 
-### Build-service
+### Build-service and ComponentEmbeddings
 
 * [build-service] will propagate the digest from one Component to another as a PR – following the declared `ComponentEmbeddings`. This is a bit like renovatebot wrapped in a controller. The [build-service] acts when it sees that a build pipelinerun has completed successfully for a *embedded component* image.
   * If this is the first time it has seen this *embedded component* updated in this way, it will file a new pull request on the *embedding component* supplying the pullspec and digest of the new embedded component, using the same branch name as was used for the *embedded component* PR.
@@ -56,9 +62,7 @@ Today, users work around how complicated it is to manage digests themselves by i
 
 The [build-service] will also update the PR it filed when the PRs that triggered it are merged or updated. It may update the description and/or it may rebase on the main branch and/or it may issue /retest. Need to figure out what we want here.
 
-### “PR dependency”
-
-TODO - describe exactly how the user specifies that one PR depends on another. PaC will have to pass this through to the PipelineRun as an annotation. For now, just assume it is possible and defined.
+### Integration-service and PR dependencies
 
 * When [integration-service] notices a build from a PR (PR#2) that declares it depends on another PR (PR#1), it will do testing but it will also:
   * Construct the Snapshot for the test using the image from the triggering build pipeline of PR #2 as well as image found on the latest build pipeline associated with PR#1. This lets a user test PR #2 including unmerged content from PR #1.
@@ -66,7 +70,11 @@ TODO - describe exactly how the user specifies that one PR depends on another. P
   * Post a special followup check result on PR#2 that “fails” saying, “don’t merge this. It still depends on another.”
 * When [integration-service] notices a build from a PR (PR#2) that declares it depends on another PR (PR#1) but that other PR (PR#1) is merged, it will do testing and it will post a followup check result that “succeeds” saying “this is mergeable, all other PRs that it depends on are merged.”
   * If PR #2 depends on two or more other PRs (not just 1), then [integration-service] should perform testing and post *distinct* followup check results on PR#2 reporting the merge status of all PRs it depends on. As they merge, those distinct check results turn from failing to passing. When all have passed, then PR#2 will appear as mergeable to the user.
-  * If PR #1 is closed without merging, then PR #2 could languish. [build-service] should check this for this situation on a periodic basis (for want of an event to trigger it) and either update or close PR #2.
+
+### Build-service and PR dependencies
+
+* When [build-service] responds to the build of a PR (PR #1) and propagates the digest from one Component to another as a PR (PR#2) - following the declared `ComponentEmbeddings`, it marks the PR that is submits (PR #2) as being dependent on the triggering PR (PR #1).
+* Later, if PR #1 is closed without merging, then PR #2 could languish. [build-service] should check this for this situation on a periodic basis (for want of an event to trigger it) and either update or close PR #2.
 
 ## Applied to Use Cases
 
