@@ -158,7 +158,8 @@ Another OLM Operator Scenario: an operator git repo contains both the controller
 
 * The basics of AppStudio builds are unchanged with this design (an alternative design that we considered involved changing the way pull-request build pipelines were defined and processed by PaC). This means less change spidering out to other AppStudio systems to support this change.
 * The user can pin their digest references in git. AppStudio will automate maintaining them. No magical resolution of tags in the buildsystem at build time, or worse at runtime.
-* The user is going to get more PRs on their repo. Maybe too many PRs.
+* The user is going to get more PRs on their repo. Maybe too many PRs for a positive UX.
+* Since more PRs will trigger more PipelineRuns, our current PVC quota issues (which limit how many PipelineRuns can be run at any one time) may be exacerbated.
 * Users may have only a few Components, or they may have many (many dozens) of Components. Once they get past so many component dependencies, we suspect that users will likely change from checking that all dependent images work with the new parent image to "sharing" the verification load: building the image and pushing it out for other components/dependencies to update and test within their own PRs. With this design, the user can achieve this by deleting their `ComponentEmbedding` CRs. The parent image will be built and tested as normal. [build-service] will not send PRs. The user can still hypothethically construct their own "dependent PR" to test a particular layered component on an unmerged parent image change.
 
 [build-service]: ../ref/build-service.md
