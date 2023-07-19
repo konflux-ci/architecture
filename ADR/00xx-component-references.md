@@ -43,9 +43,9 @@ Today, users work around how complicated it is to manage digests themselves by i
 
 ### Integration-service
 
-* When [integration-service] notices a build of a *embedded component* Component (where another Component declares that it embeds a reference to this one), it always skips all testing (both pre-merge and post-merge). It always promotes the image to the global candidate list when the PR is merged, but it does not promote to dev environment (post-merge) and it does not create Releases (post-merge).
-  * Builds of *embedded component* Components never directly trigger tests, never trigger promotion, or Releases.
-* When [integration-service] notices a build of a *embedding component* Component (one that declares that it embeds references to others), it does testing as normal, promotes to global candidate list as normal, and it promotes to dev env as normal, and it creates Releases as normal.
+* When [integration-service] notices a build of a Component which is known to be an *embedded component* (where another Component declares that it embeds a reference to this one by way of a `ComponentEmbedding`), it always skips all testing (both pre-merge and post-merge). It always promotes the image to the global candidate list when the PR is merged, but it does not promote to dev environment (post-merge) and it does not create Releases (post-merge).
+  * Builds of Components which are known to be *embedded components* never directly trigger tests, never trigger promotion, or Releases.
+* When [integration-service] notices a build of a Component which is known to be an *embedding component* (one that declares that it embeds references to others by way of a `ComponentEmbedding`), it does testing as normal, promotes to global candidate list as normal, and it promotes to dev env as normal, and it creates Releases as normal.
 * When [integration-service] notices a build of a Component that references no other components and no other components refer to it - then it proceeds like normal, runs tests, promotes, deploys, releases, etc.
 
 ### Build-service
@@ -112,7 +112,7 @@ Another OLM Operator Scenario: an operator git repo contains both the controller
 
 * The user has two Components, that both point to the same repo.
 * The bundle Component declares that it embeds references to the controller image Component, by way of a new `ComponentEmbedding` CR.
-* [integration-service] will always skip testing for the controller component because it is a *embedded component* Component.
+* [integration-service] will always skip testing for the controller Component because it is known to be an *embedded component*.
 * [build-service] will propagate the digest reference as a PR to the bundle image, which happens to be the same git repository as the controller Component.
   * The user submitted their controller image update on the `new-feature` branch.
   * [build-service] could do one of the following:
