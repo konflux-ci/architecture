@@ -36,6 +36,9 @@ Today, users work around how complicated it is to manage digests themselves by i
 * [integration-service] handles the testing and promotion of all embedded components in a special way.
 * A new set of functionality for [build-service] uses the `ComponentEmbedding` links to propose updates to users git repositories.
 * The set of `ComponentEmbeddings` form a directed-acyclic-graph (DAG).
+* A `ComponentEmbedding` is Application-scoped. Declared relationships between Components in
+  different Applications are not to be considered valid. Declared relationships between Components
+  in different namespaces are not to be considered valid.
 
 **PR Groups**: Introduce a new convention for PRs that lets one PR declare that it is related to another PR.
 
