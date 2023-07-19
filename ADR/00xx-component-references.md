@@ -35,17 +35,30 @@ Today, users work around how complicated it is to manage digests themselves by i
 * A `ComponentEmbedding` spec contains two fields: a embedded component, and a embedding component
 * [integration-service] handles the testing and promotion of all embedded components in a special way.
 * A new set of functionality for [build-service] uses the `ComponentEmbedding` links to propose updates to users git repositories.
+* The set of `ComponentEmbeddings` form a directed-acyclic-graph (DAG).
 
-**PR Dependencies**: Introduce a new convention for PRs that lets one PR declare that it depends on another PR.
+**PR Groups**: Introduce a new convention for PRs that lets one PR declare that it is related to another PR.
 
-TODO - describe exactly how the user specifies that one PR depends on another. PaC will have to pass this through to the PipelineRun as an annotation. For now, just assume it is possible and defined.
+* Treat the **source branch name** of the PR as a slash-delimited string, and use the first element of that
+  list as the PR Group name.
+* A new set of functionality for [integration-service] uses PR Groups to guide testing of related
+  PRs.
+* The set of PRs in a PR Group form a flat set.
+* PR Groups are scoped to Component repos under a single Application. Even if PRs across different
+  applications share the same **source branch name**, they shouldn't be considered part of the
+  same PR Group.
+* For example, if the source branch name for a PR is `my-feature/change-1`, then the PR Group
+  name should be interpreted to be `my-feature`.
+* A source branch name with no slashes is the degenerate case. For example, if the source branch
+  name for a PR is `my-feature`, then the PR Group name should be interpreted to be `my-feature`.
+* Since all PRs have a source branch name, all PRs are trivially members of a PR Group.
 
-Important to understand: the declared reference embeddings as defined in the `ComponentEmbeddings` and PR dependencies are two different things:
+Important to understand: the declared reference embeddings as defined in the `ComponentEmbeddings` and PR Groups are two different things:
 
-* `ComponentEmbeddings` are declarations about which Components we should expect to see PR dependencies for.
+* `ComponentEmbeddings` are declarations about which Components we should expect to see PR Groups for.
   * You say in english: “Component A embeds a reference to Component B.”
-* PR dependencies can be supplied by the user without any declared `ComponentEmbeddings` on the respective Components.
-  * You say in english: “PR #1 depends on PR #2.”
+* PR Groups can be supplied by the user without any declared `ComponentEmbeddings` on the respective Components.
+  * You say in english: “PR #1 and PR #2 are in the same PR Group.”
 
 ### Integration-service and ComponentEmbeddings
 
@@ -57,24 +70,21 @@ Important to understand: the declared reference embeddings as defined in the `Co
 ### Build-service and ComponentEmbeddings
 
 * [build-service] will propagate the digest from one Component to another as a PR – following the declared `ComponentEmbeddings`. This is a bit like renovatebot wrapped in a controller. The [build-service] acts when it sees that a build pipelinerun has completed successfully for a *embedded component* image.
-  * If this is the first time it has seen this *embedded component* updated in this way, it will file a new pull request on the *embedding component* supplying the pullspec and digest of the new embedded component, using the same branch name as was used for the *embedded component* PR.
+  * If this is the first time it has seen this *embedded component* updated in this way, it will file a new pull request on the *embedding component* supplying the pullspec and digest of the new embedded component, using the same branch name prefix as was used for the *embedded component* PR.
   * If a PR on that branch already exists, update that branch with an additional commit including the new *embedded component* digest.
 
 The [build-service] will also update the PR it filed when the PRs that triggered it are merged or updated. It may update the description and/or it may rebase on the main branch and/or it may issue /retest. Need to figure out what we want here.
 
-### Integration-service and PR dependencies
+### Integration-service and PR Groups
 
-* When [integration-service] notices a build from a PR (PR#2) that declares it depends on another PR (PR#1), it will do testing but it will also:
-  * Construct the Snapshot for the test using the image from the triggering build pipeline of PR #2 as well as image found on the latest build pipeline associated with PR#1. This lets a user test PR #2 including unmerged content from PR #1.
-  * Post the test results back on PR#1 in addition to the results it would normally post to PR#2.
-  * Post a special followup check result on PR#2 that “fails” saying, “don’t merge this. It still depends on another.”
-* When [integration-service] notices a build from a PR (PR#2) that declares it depends on another PR (PR#1) but that other PR (PR#1) is merged, it will do testing and it will post a followup check result that “succeeds” saying “this is mergeable, all other PRs that it depends on are merged.”
-  * If PR #2 depends on two or more other PRs (not just 1), then [integration-service] should perform testing and post *distinct* followup check results on PR#2 reporting the merge status of all PRs it depends on. As they merge, those distinct check results turn from failing to passing. When all have passed, then PR#2 will appear as mergeable to the user.
+* When [integration-service] notices a build from a PR (PR#2) that it detects is in the same group as a build from another PR (PR#1), it will perform testing but it will perform that process with some modifications. It will:
+  * Construct the Snapshot for the test using the image from the triggering build pipeline of PR #2 as well as image found on the latest build pipeline associated with PR#1. This lets a user test PR #2 including unmerged content from PR #1. It will construct the Snapshot from the latest builds of all PRs in the PR Group.
+  * Post the test results back on PR#1 in addition to the results it would normally post to PR#2. It will post the test results back to all PRs in the PR Group.
 
-### Build-service and PR dependencies
+### Build-service and PR Groups
 
-* When [build-service] responds to the build of a PR (PR #1) and propagates the digest from one Component to another as a PR (PR#2) - following the declared `ComponentEmbeddings`, it marks the PR that is submits (PR #2) as being dependent on the triggering PR (PR #1).
-* Later, if PR #1 is closed without merging, then PR #2 could languish. [build-service] should check this for this situation on a periodic basis (for want of an event to trigger it) and either update or close PR #2.
+* When [build-service] responds to the build of a PR (PR #1) and propagates the digest from one Component to another as a PR (PR#2). It follows the declared `ComponentEmbeddings` to know which other repos should receive an update PR. It marks the PR that is submits (PR #2) as being in the same PR Group as the triggering PR (PR #1). This enables pre-merge testing of both changes.
+* When [build-service] submits PR #2, it marks it as "Draft" and it includes a reference to the triggering PR (PR #1) in the description of the automatically submitted PR (PR #2), giving the user some indication that it should not be merged out of order.
 
 ## Applied to Use Cases
 
@@ -86,15 +96,13 @@ Scenario: an application image depends on a common parent image. The user has 1 
 
 * The child image Component declares that it embeds a reference to the parent image Component, by way of a new `ComponentEmbedding` CR.
 * [integration-service] will always skip testing for parent image update builds, will never promote them, or use them to initiate Releases, but it will promote them to the global candidate list.
-* [build-service] will propagate digest references as a PR to the child image Component repo, by analyzing the available `ComponentEmbedding` CRs in the workspace.
-* [integration-service] will post followup checks on the normal component PRs saying “don’t merge this” until the parent image update is merged.
-* When the parent image PR is merged, [build-service] will update the PRs it originally filed to say “no more dependency here” and potentially rebase the PRs to trigger a new build (or use /retest).
+* [build-service] will propagate digest references as a PR to the child image Component repo, by analyzing the available `ComponentEmbedding` CRs in the workspace. The PR that it files must be submitted in such a way that it appears in the same PR Group as the triggering PR submitted by a user.
+* When the parent image PR is merged, [build-service] will update the PRs it originally filed to take them out of "Draft" to indicate that they are safe to merge now as long as there are no other unmerged triggering PRs in the same group. It may potentially rebase the PRs to trigger a new build or use `/retest`.
 
 Think about branches:
 
 * User team updates parent image with branch update-2023-06-07 (or whatever).
-* [build-service] uses that same branch (update-2023-06-07) everywhere it propagates the digest to.
-* The branch doesn't have much effect in this scenario.
+* [build-service] uses that branch name as a prefix in the branch names that it chooses (update-2023-06-07/<suffix>) everywhere it propagates the digest to.
 
 ### OLM Operators, with components in different repos
 
@@ -102,14 +110,18 @@ Scenario: the user has 5 components. One of them is a “bundle” image. It con
 
 * The bundle Component declares that it embeds references to all other operand image Components, by way of the new `ComponentEmbedding` CR.
 * [integration-service] will always skip testing for all components except for the bundle image Component, because the bundle image Component declares that it embeds references to all other Components.
-* [build-service] will propagate digest references as a PR to the bundle image
-* [integration-service] will post followup checks on the bundle PR saying “don’t merge this” until all operand PRs are merged.
+* [build-service] will propagate digest references as a PR to the bundle image, in the same PR Group
+  as the originating PR. The PR will be marked as "Draft" to indicate they should not be merged.
+* When the operand image PR is merged, [build-service] will update the PRs it originally filed to
+  take them out of "Draft" to indicate that they are safe to merge now as long as there are no other
+  unmerged triggering PRs in the same group.
 
 Think about branches:
 
 * User team updates their operand images with branch feature-1234 (or whatever).
 * [build-service] uses that same branch in its PR to the bundle repo.
-* If user submits three operand image PRs and uses the same branch name for all – then the digests all pile up on the same bundle branch, the same bundle PR.
+* [build-service] uses that branch name as a prefix in the branch names that it chooses (feature-1234/<suffix>) to send to the bundle repo.
+* If user submits three operand image PRs and uses the same branch name for all (feature-1234) – then the digests all pile up on the same bundle branch (feature-1234/<suffix>), the same bundle PR.
 * If the user submits three operand image PRs and uses different branch names for all – then the digests are split among three different bundle branches, three different bundle PRs.
 
 ---
@@ -123,15 +135,10 @@ Another OLM Operator Scenario: an operator git repo contains both the controller
 * [integration-service] will always skip testing for the controller Component because it is known to be an *embedded component*.
 * [build-service] will propagate the digest reference as a PR to the bundle image, which happens to be the same git repository as the controller Component.
   * The user submitted their controller image update on the `new-feature` branch.
-  * [build-service] could do one of the following:
-    * ❌ Push its commits with the new image digest references to the same feature branch.
-      * Will [build-service] -- acting as the TAP github App -- have rights to push to that branch? Probably not.
-    * 🤔 Submit its commits as a suggestion on the original PR, which the user can accept or not.
-      * This would be “odd” for build service, but maybe nice from the user’s point of view. Just one PR to work with.
-    * ❌ Push its commits with the new image digest references to a new feature branch based on the original feature branch, called `new-feature-build-service`
-      * This could be nice, but the PR will trigger new builds of the original image since it contains code changes for the controller (here, I am assuming that we can limit builds in PaC based on contextDirectories for multi-Component repos; we don’t have this today, but assume that we do).
-    * ✅ Push its commits with the new image digest references to a new feature branch that is not based on the original feature branch, called `new-feature-from-build-service`
-      * This works like it does in most other cases. Let the user merge the original PR, and only after that will [integration-service] update the checks for `new-feature-from-build-service` to say “okay to merge now!”
+  * [build-service] could do one of the following pushes its commits with the new image digest
+    references to a new feature branch that uses the triggering feature branch name as a prefix:
+    `new-feature/<suffix>`.
+    * This works like it does in most other cases. Let the user merge the original PR, and only after that will [integration-service] update the checks for `new-feature-from-build-service` to say “okay to merge now!”
 
 ## Open Questions
 
@@ -141,7 +148,7 @@ Another OLM Operator Scenario: an operator git repo contains both the controller
   yes, then that may inform whether how we implement the new functionality in [build-service].
 * Since we don't have exclusive control over merging changes (or really, any control at all
   exclusive or not), we can't prevent the user from merging things out of order. This means they can
-  get themselves into trouble. We try to provide feedback via github checks to help prevent this;
+  get themselves into trouble. We try to provide clues like marking the PR as a Draft;
   but we can't stop it. How does the user recover from this situation? Are there any side-effects?
 
 ## Consequences
