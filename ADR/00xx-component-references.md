@@ -138,10 +138,9 @@ Another OLM Operator Scenario: an operator git repo contains both the controller
 * [integration-service] will always skip testing for the controller Component because it is known to be an *embedded component*.
 * [build-service] will propagate the digest reference as a PR to the bundle image, which happens to be the same git repository as the controller Component.
   * The user submitted their controller image update on the `new-feature` branch.
-  * [build-service] could do one of the following pushes its commits with the new image digest
-    references to a new feature branch that uses the triggering feature branch name as a prefix:
-    `new-feature/<suffix>`.
-    * This works like it does in most other cases. Let the user merge the original PR, and only after that will [integration-service] update the checks for `new-feature-from-build-service` to say “okay to merge now!”
+  * [build-service] pushes its commits with the new image digest references to a new feature branch that uses the triggering feature branch name as a prefix: `new-feature/<suffix>`.
+    * This works like it does in most other cases. Let the user merge the original PR, and only after that will [integration-service] update the checks for `new-feature` to say “okay to merge now!”
+    * When the user merges the originla PR, [build-service] will update the PR it filed on the `new-feature/<suffix>` branch to take it out of "Draft", indicating that it is safe to merge now. It may potentially rebase the PR to trigger a new build or use `/retest`.
 
 ## Open Questions
 
