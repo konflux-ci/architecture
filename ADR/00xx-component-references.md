@@ -20,7 +20,6 @@ There are three use cases in scope for this document:
   * This is a one-to-many dependency. One operator bundle depends on many operand images.
 * A user team just has **two components that depend on each other in a functional way**. When they propose an update to one component, they want to submit a corresponding change to the second component, and have those tested together before merging both.
   * In this case, on any given day, component B’s PRs may or may not have dependencies on PRs from component A. Not all changes are linked.
-  * This is a many-to-many dependency. The user may have lots of components that depend on lots of other components.
 
 In theory **any combination of the cases above** could be present in an app. They could have one common parent image, many operand images that depend on that, and one or more operator bundles which depend on those.
 
