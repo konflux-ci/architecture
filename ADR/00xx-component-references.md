@@ -29,15 +29,15 @@ Today, users work around how complicated it is to manage digests themselves by i
 
 ### Interface changes
 
-**Declared Reference Embeddings**: Introduce a new CustomResource called `ComponentEmbedding` that lets one Component declare that another Component **embeds a reference** to it.
+**Declared Component Dependencies**: Introduce a new field on the `Component` resource called `depends on` that lets one Component declare that another Component **depends on it**.
 
-* A `ComponentEmbedding` spec contains two fields: a embedded component, and a embedding component
-* [integration-service] handles the testing and promotion of all embedded components in a special way.
-* A new set of functionality for [build-service] uses the `ComponentEmbedding` links to propose updates to users git repositories.
-* The set of `ComponentEmbeddings` form a directed-acyclic-graph (DAG).
-* A `ComponentEmbedding` is Application-scoped. Declared relationships between Components in
-  different Applications are not to be considered valid. Declared relationships between Components
-  in different namespaces are not to be considered valid.
+* The `depends on` field is a list.
+* We will call a Component which has a dependency on another Component: a **"dependant"** component.
+* We will call a Component on which other Components have a dependency: a **"dependency"** component.
+* [integration-service] will handle the testing and promotion of all **dependancy** components in a special way.
+* [build-service] will use the `depends on` links to propose updates to users' **dependant** git repositories.
+* The set of Components and their "depends on" links form a directed-acyclic-graph (DAG). Application-service is responsible for making sure that cycles are not introduced and for managing references in the lifecycle of all Components in the Application. Deleting a Component should be well-defined.
+* As with Components in general, the "depends on" references are Application-scoped. Declared relationships between Components in different Applications are not to be considered valid. Declared relationships between Components in different namespaces are not to be considered valid.
 
 **PR Groups**: Introduce a new convention for PRs that lets one PR declare that it is related to another PR.
 
@@ -55,25 +55,25 @@ Today, users work around how complicated it is to manage digests themselves by i
   name for a PR is `my-feature`, then the PR Group name should be interpreted to be `my-feature`.
 * Since all PRs have a source branch name, all PRs are trivially members of a PR Group.
 
-Important to understand: the declared reference embeddings as defined in the `ComponentEmbeddings` and PR Groups are two different things:
+Important to understand: the declared dependencies as defined on the Components' `depends on` lists and PR Groups are two different things:
 
-* `ComponentEmbeddings` are declarations about which Components we should expect to see PR Groups for.
-  * You say in english: “Component A embeds a reference to Component B.”
-* PR Groups can be supplied by the user without any declared `ComponentEmbeddings` on the respective Components.
+* Component dependencies are declarations about which Components' builds need each other. Automation uses this to create PRs in jPR Groups.
+  * You say in english: “Builds of Component A depend on builds of Component B.”
+* PR Groups can be supplied by the user without any declared Component dependencies:
   * You say in english: “PR #1 and PR #2 are in the same PR Group.”
 
-### Integration-service and ComponentEmbeddings
+### Integration-service and Component dependencies
 
-* When [integration-service] notices a build of a Component which is known to be an *embedded component* (where another Component declares that it embeds a reference to this one by way of a `ComponentEmbedding`), it always skips all testing (both pre-merge and post-merge). It always promotes the image to the global candidate list when the PR is merged, but it does not promote to dev environment (post-merge) and it does not create Releases (post-merge).
-  * Builds of Components which are known to be *embedded components* never directly trigger tests, never trigger promotion, or Releases.
-* When [integration-service] notices a build of a Component which is known to be an *embedding component* (one that declares that it embeds references to others by way of a `ComponentEmbedding`), it does testing as normal, promotes to global candidate list as normal, and it promotes to dev env as normal, and it creates Releases as normal.
+* When [integration-service] notices a build of a Component which is known to be a **dependency** component (where another Component declares that it depends on this one by way of a `depends on` reference), it always skips all testing (both pre-merge and post-merge). It always promotes the image to the global candidate list when the PR is merged, but it does not promote to dev environment (post-merge) and it does not create Releases (post-merge).
+  * Builds of Components which are known to be **dependency** components never directly trigger tests, never trigger promotion, or Releases.
+* When [integration-service] notices a build of a Component which is known to be a **dependant** component (one for which there is another Component that depends on it by way of a `depends on` reference on that other Component), it does testing as normal, promotes to global candidate list as normal, and it promotes to dev env as normal, and it creates Releases as normal.
 * When [integration-service] notices a build of a Component that references no other components and no other components refer to it - then it proceeds like normal, runs tests, promotes, deploys, releases, etc.
 
-### Build-service and ComponentEmbeddings
+### Build-service and Component dependencies
 
-* [build-service] will propagate the digest from one Component to another as a PR – following the declared `ComponentEmbeddings`. This is a bit like renovatebot wrapped in a controller. The [build-service] acts when it sees that a build pipelinerun has completed successfully for a *embedded component* image.
-  * If this is the first time it has seen this *embedded component* updated in this way, it will file a new pull request on the *embedding component* supplying the pullspec and digest of the new embedded component, using the same branch name prefix as was used for the *embedded component* PR.
-  * If a PR on that branch already exists, update that branch with an additional commit including the new *embedded component* digest.
+* [build-service] will propagate the digest from one Component to another as a PR – following the declared `depends on` references. This is a bit like renovatebot wrapped in a controller. The [build-service] acts when it sees that a build pipelinerun has completed successfully for a **dependency** component image (one on which others depend).
+  * If this is the first time it has seen this **dependency** component updated in this way, it will file a new pull request on the **dependant** components supplying the pullspec and digest of the new **dependency** components, using the same branch name prefix as was used for the **dependency** component PR.
+  * If a PR on that branch already exists, update that branch with an additional commit including the new **dependency** component digest.
 
 The [build-service] will also update the PR it filed when the PRs that triggered it are merged or updated. It may update the description and/or it may rebase on the main branch and/or it may issue /retest. Need to figure out what we want here.
 
@@ -85,7 +85,7 @@ The [build-service] will also update the PR it filed when the PRs that triggered
 
 ### Build-service and PR Groups
 
-* When [build-service] responds to the build of a PR (PR #1) and propagates the digest from one Component to another as a PR (PR#2). It follows the declared `ComponentEmbeddings` to know which other repos should receive an update PR. It marks the PR that is submits (PR #2) as being in the same PR Group as the triggering PR (PR #1). This enables pre-merge testing of both changes.
+* When [build-service] responds to the build of a PR (PR #1) and propagates the digest from one Component to another as a PR (PR#2). It follows the declared `depends on` references to know which other repos should receive an update PR. It marks the PR that is submits (PR #2) as being in the same PR Group as the triggering PR (PR #1). This enables pre-merge testing of both changes.
 * When [build-service] submits PR #2, it marks it as "Draft" and it includes a reference to the triggering PR (PR #1) in the description of the automatically submitted PR (PR #2), giving the user some indication that it should not be merged out of order.
 
 ## Applied to Use Cases
@@ -96,9 +96,9 @@ Let's apply the architecture to some use cases, and see how it plays out:
 
 Scenario: an application image depends on a common parent image. The user has 1 Application, and 2 Components. One of them is the parent image. The other image is built FROM that image.
 
-* The child image Component declares that it embeds a reference to the parent image Component, by way of a new `ComponentEmbedding` CR.
+* The child image Component declares that it `depends on` the parent image Component, by way of a the new field on the Component CR.
 * [integration-service] will always skip testing for parent image update builds, will never promote them, or use them to initiate Releases, but it will promote them to the global candidate list.
-* [build-service] will propagate digest references as a PR to the child image Component repo, by analyzing the available `ComponentEmbedding` CRs in the workspace. The PR that it files must be submitted in such a way that it appears in the same PR Group as the triggering PR submitted by a user.
+* [build-service] will propagate digest references as a PR to the child image Component repo, by analyzing the `depends on` fields of all other Components in the Application. The PR that it files must be submitted in such a way that it appears in the same PR Group as the triggering PR submitted by a user.
 * When the parent image PR is merged, [build-service] will update the PRs it originally filed to take them out of "Draft" to indicate that they are safe to merge now as long as there are no other unmerged triggering PRs in the same group. It may potentially rebase the PRs to trigger a new build or use `/retest`.
 
 Think about branches:
@@ -110,8 +110,8 @@ Think about branches:
 
 Scenario: the user has 5 components. One of them is a “bundle” image. It contains references to the other four images by digest. None of the images are in the same repo.
 
-* The bundle Component declares that it embeds references to all other operand image Components, by way of the new `ComponentEmbedding` CR.
-* [integration-service] will always skip testing for all components except for the bundle image Component, because the bundle image Component declares that it embeds references to all other Components.
+* The bundle Component declares that it `depends on` all other operand image Components, by way of the new field on the Component CR.
+* [integration-service] will always skip testing for all components except for the bundle image Component, because the bundle image Component declares that it depends on all other Components. (All other Components are **dependency** Components. The bundle is the only **dependant** Component.)
 * [build-service] will propagate digest references as a PR to the bundle image, in the same PR Group
   as the originating PR. The PR will be marked as "Draft" to indicate they should not be merged.
 * When the operand image PR is merged, [build-service] will update the PRs it originally filed to
@@ -133,13 +133,16 @@ Think about branches:
 Another OLM Operator Scenario: an operator git repo contains both the controller code and the bundle metadata.
 
 * The user has two Components, that both point to the same repo.
-* The bundle Component declares that it embeds references to the controller image Component, by way of a new `ComponentEmbedding` CR.
-* [integration-service] will always skip testing for the controller Component because it is known to be an *embedded component*.
+* The bundle Component declares that it `depends on` the controller image Component, by way of the new field on the Component CR.
+* [integration-service] will always skip testing for the controller Component because it is known to be an **dependency** component.
 * [build-service] will propagate the digest reference as a PR to the bundle image, which happens to be the same git repository as the controller Component.
-  * The user submitted their controller image update on the `new-feature` branch.
-  * [build-service] pushes its commits with the new image digest references to a new feature branch that uses the triggering feature branch name as a prefix: `new-feature/<suffix>`.
-    * This works like it does in most other cases. Let the user merge the original PR, and only after that will [integration-service] update the checks for `new-feature` to say “okay to merge now!”
-    * When the user merges the originla PR, [build-service] will update the PR it filed on the `new-feature/<suffix>` branch to take it out of "Draft", indicating that it is safe to merge now. It may potentially rebase the PR to trigger a new build or use `/retest`.
+
+Think about branches:
+
+* The user submitted their controller image update on the `new-feature` branch.
+* [build-service] pushes its commits with the new image digest references to a new feature branch that uses the triggering feature branch name as a prefix: `new-feature/<suffix>`.
+  * This works like it does in most other cases. Let the user merge the original PR, and only after that will [integration-service] update the checks for `new-feature` to say “okay to merge now!”
+  * When the user merges the originla PR, [build-service] will update the PR it filed on the `new-feature/<suffix>` branch to take it out of "Draft", indicating that it is safe to merge now. It may potentially rebase the PR to trigger a new build or use `/retest`.
 
 ## Miscellany
 
@@ -162,7 +165,7 @@ Another OLM Operator Scenario: an operator git repo contains both the controller
 * The user can pin their digest references in git. AppStudio will automate maintaining them. No magical resolution of tags in the buildsystem at build time, or worse at runtime.
 * The user is going to get more PRs on their repo. Maybe too many PRs for a positive UX.
 * Since more PRs will trigger more PipelineRuns, our current PVC quota issues (which limit how many PipelineRuns can be run at any one time) may be exacerbated.
-* Users may have only a few Components, or they may have many (many dozens) of Components. Once they get past so many component dependencies, we suspect that users will likely change from checking that all dependent images work with the new parent image to "sharing" the verification load: building the image and pushing it out for other components/dependencies to update and test within their own PRs. With this design, the user can achieve this by deleting their `ComponentEmbedding` CRs. The parent image will be built and tested as normal. [build-service] will not send PRs. The user can still hypothethically construct their own "dependent PR" to test a particular layered component on an unmerged parent image change.
+* Users may have only a few Components, or they may have many (many dozens) of Components. Once they get past so many component dependencies, we suspect that users will likely change from checking that all dependent images work with the new parent image to "sharing" the verification load: building the image and pushing it out for other components/dependencies to update and test within their own PRs. With this design, the user can achieve this by purging the `depends on` field values from their Component CRs. The parent image will be built and tested as normal. [build-service] will not send PRs. The user can still hypothethically construct their own PR Group to test a particular layered component on an unmerged parent image change.
 
 [build-service]: ../ref/build-service.md
 [integration-service]: ../ref/integration-service.md
