@@ -1,6 +1,6 @@
-# XX. Component References
+# XX. Component Dependencies
 
-* Date 2023-06-xx
+* Date 2023-07-xx
 
 ## Status
 
