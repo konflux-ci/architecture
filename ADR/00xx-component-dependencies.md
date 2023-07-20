@@ -103,8 +103,8 @@ Scenario: an application image depends on a common parent image. The user has 1 
 
 Think about branches:
 
-* User team updates parent image with branch update-2023-06-07 (or whatever).
-* [build-service] uses that branch name as a prefix in the branch names that it chooses (update-2023-06-07/<suffix>) everywhere it propagates the digest to.
+* User team updates parent image with branch `update-2023-06-07` (or whatever).
+* [build-service] uses that branch name as a prefix in the branch names that it chooses (`update-2023-06-07/<suffix>`) everywhere it propagates the digest to.
 
 ### OLM Operators, with components in different repos
 
@@ -120,10 +120,10 @@ Scenario: the user has 5 components. One of them is a “bundle” image. It con
 
 Think about branches:
 
-* User team updates their operand images with branch feature-1234 (or whatever).
+* User team updates their operand images with branch `feature-1234` (or whatever).
 * [build-service] uses that same branch in its PR to the bundle repo.
-* [build-service] uses that branch name as a prefix in the branch names that it chooses (feature-1234/<suffix>) to send to the bundle repo.
-* If user submits three operand image PRs and uses the same branch name for all (feature-1234) – then the digests all pile up on the same bundle branch (feature-1234/<suffix>), the same bundle PR.
+* [build-service] uses that branch name as a prefix in the branch names that it chooses (`feature-1234/<suffix>`) to send to the bundle repo.
+* If user submits three operand image PRs and uses the same branch name for all (`feature-1234`) – then the digests all pile up on the same bundle branch (`feature-1234/<suffix>`), the same bundle PR.
 * If the user submits three operand image PRs and uses different branch names for all – then the digests are split among three different bundle branches, three different bundle PRs.
 
 ---
