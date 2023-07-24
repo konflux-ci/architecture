@@ -39,12 +39,8 @@ _Note: [clair-in-ci](https://quay.io/repository/redhat-appstudio/clair-in-ci) is
 ### SAST Tools
 
 **_gosec_** - https://github.com/securego/gosec
- 
-_Note: AppStudio uses gosec to perform static analysis on our Golang projects. A Tekton Task is available that can be used to run gosec in your own Pipelines [here](https://github.com/redhat-appstudio/build-definitions/blob/main/task/sast-go/)._
 
 **find-sec-bugs** - https://github.com/find-sec-bugs/find-sec-bugs
-
-_Note: AppStudio uses find-sec-bugs to perform static analysis on our Java builds. A Tekton Task is available that can be used to run find-sec-bugs on a Java application in your own Pipelines [here](https://github.com/redhat-appstudio/build-definitions/blob/main/task/sast-java-sec-check)._
 
 **synk** - https://github.com/snyk/cli
 
