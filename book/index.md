@@ -1,8 +1,7 @@
-# Managed Developer Services
-
+# AppStudio
 
 ## Overview
-Red Hat developer services provide the platform for building integrated experiences that streamline, consolidate, and secure the application lifecycle.
+AppStudio is a platform for building integrated experiences that streamline, consolidate, and secure the application lifecycle.
 
 
 ### Goals
