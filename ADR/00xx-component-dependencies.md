@@ -142,7 +142,7 @@ Think about branches:
 * The user submitted their controller image update on the `new-feature` branch.
 * [build-service] pushes its commits with the new image digest references to a new feature branch that uses the triggering feature branch name as a prefix: `new-feature/<suffix>`.
   * This works like it does in most other cases. Let the user merge the original PR, and only after that will [integration-service] update the checks for `new-feature` to say “okay to merge now!”
-  * When the user merges the originla PR, [build-service] will update the PR it filed on the `new-feature/<suffix>` branch to take it out of "Draft", indicating that it is safe to merge now. It may potentially rebase the PR to trigger a new build or use `/retest`.
+  * When the user merges the original PR, [build-service] will update the PR it filed on the `new-feature/<suffix>` branch to take it out of "Draft", indicating that it is safe to merge now. It may potentially rebase the PR to trigger a new build or use `/retest`.
 
 ## Miscellany
 
