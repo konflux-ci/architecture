@@ -23,9 +23,11 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |     Role      | Permissions             | API Groups                | Verbs                                           | Resources
 |---------------|-------------------------|---------------------------|-------------------------------------------------|----------------------------------------------------------------------
 | Contributor   | Workspace               | Access to namespaces that backs workspace                                   |
-|               | Application & Component | appstudio.redhat.com      | get, list, watch                                | applications, components, componentdetectionqueries
+|               | Application             | appstudio.redhat.com      | get, list, watch                                | applications
+|               | Component               | appstudio.redhat.com      | get, list, watch                                | components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | get, list, watch                                | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch               | deploymenttargets, deploymenttargetclaims
+|               | DeploymentTarget        | appstudio.redhat.com      | get, list, watch                                | deploymenttargets
+|               | DeploymentTargetClaim   | appstudio.redhat.com      | get, list, watch                                | deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                                | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
 |               | PipelineRun             | tekton.dev                | get, list, watch                                | pipelineruns
 |               | Pipeline Results        | results.tekton.dev        | get, list                                       | results, records, logs
@@ -42,16 +44,18 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | Add User                |
 |               | User group (with SSO)   |
 | Maintainer    | Workspace               | Access to namespaces that backs workspace                                   |
-|               | Application & Component | appstudio.redhat.com      | get, list, watch, create, update, patch         | applications, components, componentdetectionqueries
+|               | Application             | appstudio.redhat.com      | get, list, watch, create, update, patch         | applications
+|               | Component               | appstudio.redhat.com      | get, list, watch, create, update, patch         | components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | get, list, watch                                | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | get, list, watch               | deploymenttargets, deploymenttargetclaims
+|               | DeploymentTarget        | appstudio.redhat.com      | get, list, watch                                | deploymenttargets
+|               | DeploymentTargetClaim   | appstudio.redhat.com      | get, list, watch                                | deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                                | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
 |               | PipelineRun             | tekton.dev                | get, list, watch                                | pipelineruns
 |               | Pipeline Results        | results.tekton.dev        | get, list                                       | results, records, logs
-|               | IntegrationTestScenario | appstudio.redhat.com      | *                                               | integrationtestscenarios
+|               | IntegrationTestScenario | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | integrationtestscenarios
 |               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                                | enterprisecontractpolicies
-|               | Release Strategy        | appstudio.redhat.com      | *                                               | releases, releasestrategies, releaseplans
-|               | Release Admission Plan  | appstudio.redhat.com      | *                                               | releaseplanadmissions
+|               | Release Strategy        | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | releases, releasestrategies, releaseplans
+|               | Release Admission Plan  | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | releaseplanadmissions
 |               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch, create, update, patch         | jbsconfigs, artifactbuilds
 |               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch         | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests, spiaccesstokendataupdates
 |               | *Remote Secrets*        | appstudio.redhat.com      | get, list, watch                                | remotesecrets
@@ -61,22 +65,24 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | Add User                |
 |               | User group (with SSO)   |
 | Admin         | Workspace               | Access to namespaces that backs workspace                                   |
-|               | Application & Component | appstudio.redhat.com      | *                                               | applications, components, componentdetectionqueries
-|               | Environment             | appstudio.redhat.com      | *                                               | promotionruns, snapshotenvironmentbindings, snapshots, environments
-|               | DeploymentTarget & DeploymentTargetClaim | appstudio.redhat.com      | *                              | deploymenttargets, deploymenttargetclaims
+|               | Application             | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | applications
+|               | Component               | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | components, componentdetectionqueries
+|               | Environment             | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | promotionruns, snapshotenvironmentbindings, snapshots, environments
+|               | DeploymentTarget        | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | deploymenttargets
+|               | DeploymentTargetClaim   | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                                | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
-|               | PipelineRun             | tekton.dev                | *                                               | pipelineruns
+|               | PipelineRun             | tekton.dev                | get, list, watch, create, update, patch, delete | pipelineruns
 |               | Pipeline Results        | results.tekton.dev        | get, list                                       | results, records, logs
-|               | IntegrationTestScenario | appstudio.redhat.com      | *                                               | integrationtestscenarios
-|               | Enterprise contract     | appstudio.redhat.com      | *                                               | enterprisecontractpolicies
-|               | Release Strategy        | appstudio.redhat.com      | *                                               | releases, releasestrategies, releaseplans
-|               | Release Admission Plan  | appstudio.redhat.com      | *                                               | releaseplanadmissions
-|               | *JVM Build Service*     | jvmbuildservice.io        | *                                               | jbsconfigs, artifactbuilds
-|               | *Service Access*        | appstudio.redhat.com      | *                                               | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens,spifilecontentrequests, spiaccesstokendataupdates
-|               | *Remote Secrets*        | appstudio.redhat.com      | *                                               | remotesecrets
+|               | IntegrationTestScenario | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | integrationtestscenarios
+|               | Enterprise contract     | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | enterprisecontractpolicies
+|               | Release Strategy        | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | releases, releasestrategies, releaseplans
+|               | Release Admission Plan  | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | releaseplanadmissions
+|               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch, create, update, patch, delete | jbsconfigs, artifactbuilds
+|               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens,spifilecontentrequests, spiaccesstokendataupdates
+|               | *Remote Secrets*        | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | remotesecrets
 |               | Build Service           | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | buildpipelineselectors
-|               | *Configs*               |                           | *                                               | configmaps
-|               | *Secrets*               |                           | *                                               | secrets
+|               | *Configs*               |                           | get, list, watch, create, update, patch, delete | configmaps
+|               | *Secrets*               |                           | get, list, watch, create, update, patch, delete | secrets
 |               | Add User                |
 |               | User group (with SSO)   |
 
