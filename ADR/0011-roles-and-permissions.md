@@ -77,6 +77,7 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | Build Service           | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | buildpipelineselectors
 |               | *Configs*               |                           | *                                               | configmaps
 |               | *Secrets*               |                           | *                                               | secrets
+|               | *Exec to pods*          |                           | create                                          | pods/exec
 |               | Add User                |
 |               | User group (with SSO)   |
 
