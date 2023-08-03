@@ -57,7 +57,7 @@ Today, users work around how complicated it is to manage digests themselves by i
 
 Important to understand: the declared dependencies as defined on the Components' `depends on` lists and PR Groups are two different things:
 
-* Component dependencies are declarations about which Components' builds need each other. Automation uses this to create PRs in jPR Groups.
+* Component dependencies are declarations about which Components' builds need each other. Automation uses this to create PRs in PR Groups.
   * You say in english: “Builds of Component A depend on builds of Component B.”
 * PR Groups can be supplied by the user without any declared Component dependencies:
   * You say in english: “PR #1 and PR #2 are in the same PR Group.”
