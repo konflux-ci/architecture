@@ -50,9 +50,9 @@ Today, users work around how complicated it is to manage digests themselves by i
   applications share the same **source branch name**, they shouldn't be considered part of the
   same PR Group.
 * For example, if the source branch name for a PR is `my-feature/change-1`, then the PR Group
-  name should be interpreted to be `my-feature`.
+  name should be interpreted as `my-feature`.
 * A source branch name with no slashes is the degenerate case. For example, if the source branch
-  name for a PR is `my-feature`, then the PR Group name should be interpreted to be `my-feature`.
+  name for a PR is `my-feature`, then the PR Group name should be interpreted as `my-feature`.
 * Since all PRs have a source branch name, all PRs are trivially members of a PR Group.
 
 Important to understand: the declared dependencies as defined on the Components' `depends on` lists and PR Groups are two different things:
@@ -80,7 +80,7 @@ The [build-service] will also update the PR it filed when the PRs that triggered
 ### Integration-service and PR Groups
 
 * When [integration-service] notices a build from a PR (PR#2) that it detects is in the same group as a build from another PR (PR#1), it will perform testing but it will perform that process with some modifications. It will:
-  * Construct the Snapshot for the test using the image from the triggering build pipeline of PR #2 as well as image found on the latest build pipeline associated with PR#1. This lets a user test PR #2 including unmerged content from PR #1. It will construct the Snapshot from the latest builds of all PRs in the PR Group.
+  * Construct the Snapshot for the test using the image from the triggering build pipeline of PR #2 as well as the image found on the latest build pipeline associated with PR#1. This lets a user test PR #2 including unmerged content from PR #1. It will construct the Snapshot from the latest builds of all PRs in the PR Group.
   * Post the test results back on PR#1 in addition to the results it would normally post to PR#2. It will post the test results back to all PRs in the PR Group.
 
 ### Build-service and PR Groups
