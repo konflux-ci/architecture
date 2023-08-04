@@ -62,6 +62,12 @@ Important to understand: the declared dependencies as defined on the Components'
 * PR Groups can be supplied by the user without any declared Component dependencies:
   * You say in english: “PR #1 and PR #2 are in the same PR Group.”
 
+**Context directories** for [Pipelines as Code](https://pipelinesascode.com/)(PaC): introduce a new `spec.context` field in the `Repository` CR. When present, this field instructs PaC to only create a PipelineRun for events which include changes to the declared context directory in the git repository. This enables us to only run PipelineRuns that are relevant to Components that change in a given push or pull request event. By default, this is ".": the entire git repository.
+
+* [build-service] is responsible for setting the context dir field on the Repository CR and for propagating changes to the context dir on the user's Component CRs to the Repository CR.
+
+See also [RHTAP-371](https://issues.redhat.com/browse/RHTAP-371).
+
 ### Integration-service and Component dependencies
 
 * When [integration-service] notices a build of a Component which is known to be a **dependency** component (where another Component declares that it depends on this one by way of a `depends on` reference), it always skips all testing (both pre-merge and post-merge). It always promotes the image to the global candidate list when the PR is merged, but it does not promote to dev environment (post-merge) and it does not create Releases (post-merge).
