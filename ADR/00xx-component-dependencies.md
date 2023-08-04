@@ -96,7 +96,7 @@ Let's apply the architecture to some use cases, and see how it plays out:
 
 Scenario: an application image depends on a common parent image. The user has 1 Application, and 2 Components. One of them is the parent image. The other image is built FROM that image.
 
-* The child image Component declares that it `depends on` the parent image Component, by way of a the new field on the Component CR.
+* The child image Component declares that it `depends on` the parent image Component, by way of the new field on the Component CR.
 * [integration-service] will always skip testing for parent image update builds, will never promote them, or use them to initiate Releases, but it will promote them to the global candidate list.
 * [build-service] will propagate digest references as a PR to the child image Component repo, by analyzing the `depends on` fields of all other Components in the Application. The PR that it files must be submitted in such a way that it appears in the same PR Group as the triggering PR submitted by a user.
 * When the parent image PR is merged, [build-service] will update the PRs it originally filed to take them out of "Draft" to indicate that they are safe to merge now as long as there are no other unmerged triggering PRs in the same group. It may potentially rebase the PRs to trigger a new build or use `/retest`.
