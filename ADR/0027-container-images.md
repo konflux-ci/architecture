@@ -43,7 +43,7 @@ Component teams are encouraged to install [renovatebot](https://github.com/renov
 
 ###### Scheduled Builds
 
-Since image updates are based on how active our repos are, there is the risk that over time, as code stabilizes and/or enters maintenance mode, the triggers for rebuilds will be less frequent which will cause the images to degrade.  To avoid this, component teams should also ensure there are scheduled, weekly builds in place
+Since image updates are based on how active our repos are, there is the risk that over time, as code stabilizes and/or enters maintenance mode, the triggers for rebuilds will be less frequent which will cause the images to degrade.  To avoid this, component teams should also ensure there are scheduled, weekly builds or builds driven by renovatebot or dependabot in place.
 
 
 ###### New Components
