@@ -26,33 +26,44 @@ Red Hat developer services provide the platform for building integrated experien
 - Participants: onboarding new participants, the flexibility to satisfy the technology preferences of a heterogeneous set of participants. Think of this as the ability to easily create an ecosystem and the ability to support that ecosystem’s heterogeneous needs.
 - Security, Privacy, and Governance: Sensitive data is protected by fine-grained access control
 
-## System Context
-
-The diagram below shows the interaction of the AppStudio with other systems and environments.
-
-![](../diagrams/appstudio-l1.drawio.svg)
-
-
 ## Application Context
 
-![](../diagrams/appstudio-l2.drawio.svg)
+The diagram below shows the services that make up AppStudio and their API resources.
 
+![](../diagrams/appstudio.svg)
+
+API resources in the first row (Application, Component) should primarilly be thought of as
+control-plane resources. Users supply these resources to indicate to the system what they want it to
+do.
+
+API resources in the second row (PipelineRun, Snapshot) should primarilly be thought of as
+data-plane resources. The system responds to user requests by creating and managing the lifecycle of
+these resources.
 
 ## Service (Component) Context
 
 Each service that makes up AppStudio is further explained in its own document.
 
-- [GitOps Service](./gitops-service.md)
-- [Pipeline Service](./pipeline-service.md)
-- [Build Service](./build-service.md)
-- [Workspace and Terminal Service](./workspace-and-terminal-service.md)
-- [Service Provider Integration](./service-provider-integration.md)
-- [Hybrid Application Service](./hybrid-application-service.md)
-- [Enterprise Contract](./enterprise-contract.md)
-- [Java Rebuilds Service](./jvm-build-service.md)
-- [Release Service](./release-service.md)
-- [Integration Service](./integration-service.md)
-- [Image Controller](./image-controller.md)
+- [Hybrid Application Service](./hybrid-application-service.md) - A workflow system that manages the
+  the definition of the users' Application and Components.
+- [Build Service](./build-service.md) - A workflow system that manages the build pipeline definition
+  for users' Components.
+- [Image Controller](./image-controller.md) - A subsystem of the build-service that manages the
+  creation and access rights to container image repositories.
+- [Java Rebuilds Service](./jvm-build-service.md) - A subsystem of the build-service that manages
+  the rebuild of binary java jars pulled from maven central for an improved degree of provenance.
+- [Integration Service](./integration-service.md) - A workflow service that manages execution of
+  users' tests and promotion in response to completing builds.
+- [Release Service](./release-service.md) - A workflow service that manages execution of privileged
+  pipelines to release user content to protected destinations.
+- [GitOps Service](./gitops-service.md) - A foundational service providing deployment of user
+  applications.
+- [Pipeline Service](./pipeline-service.md) - A foundational service providing PipelineRuns to other
+  services.
+- [Service Provider Integration](./service-provider-integration.md) - A foundational service
+  providing user secret management to other services.
+- [Enterprise Contract](./enterprise-contract.md) - A specialized subsystem responsible for the
+  definition and enforcement of policies related to how container images are built and tested.
 
 ## API References
 
