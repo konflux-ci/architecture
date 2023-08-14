@@ -30,7 +30,7 @@ Red Hat developer services provide the platform for building integrated experien
 
 The diagram below shows the services that make up AppStudio and their API resources.
 
-![](../diagrams/appstudio.svg)
+![](../diagrams/appstudio.drawio.svg)
 
 API resources in the first row (Application, Component) should primarilly be thought of as
 control-plane resources. Users supply these resources to indicate to the system what they want it to

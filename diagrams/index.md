@@ -6,7 +6,7 @@ The diagram below shows the interaction of the AppStudio with other systems and 
 
 ## Application Context
 
-![](../diagrams/appstudio.svg)
+![](../diagrams/appstudio.drawio.svg)
 
 ## Workspace Layout
 

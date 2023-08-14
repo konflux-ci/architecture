@@ -18,4 +18,4 @@ A set of services that streamline, consolidate, connect, and secure the enterpri
 
 #### AppStudio Services
 
-![Data Plane](appstudio.svg)
+![Data Plane](appstudio.drawio.svg)
