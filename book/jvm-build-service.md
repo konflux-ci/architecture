@@ -32,6 +32,10 @@ Once the `ArtifactBuild` object has been created JBS will then attempt to try an
 
 Once the source code location has been discovered a [`DependencyBuild`](#DependencyBuild) object is created. There are generally less `DependencyBuild` objects than there are `ArtifactBuild`, as multiple artifacts can come from the same build. The controller will then try and build the artifact, first it will run a build discovery pipeline, that attempts to determine possible ways of building the artifact. Once discovery is complete it uses this information to attempt to build the artifact in a trial and error manner.
 
+The dependency discovery pipeline can check both configured shared repositories and the main repository
+(for example a Quay.io repository) for pre-existing builds. If a prior build is found, the pipeline will shortcut
+to avoid building the artifact and will instead refer to the found build artifacts instead.
+
 If a build is successful the results are stored in a container image and the state is marked as complete, otherwise it is marked as failed and manual effort is required to fix the build.
 
 
@@ -60,6 +64,7 @@ This is a multipurpose Quarkus CLI based app that performs quite a few different
 In essence any custom logic that is needed in a pipeline goes in here, and then the operator will invoke it with the correct arguments. This is a single container image that can perform a whole host of different functions, based on the parameters that it is invoked with. It's functions include:
 
 - Analysing a build and looking up its build information in the recipe database
+- Checking for pre-existing builds
 - Preprocessing a build to fix common problems, such as removing problematic plugins
 - Verifying the results of a build match what is expected upstream
 - Checking if a build has been contaminated by upstream class files
@@ -161,6 +166,35 @@ metadata:
   name: jvm-build-config
 spec:
   enableRebuilds: "true"
+```
+
+In order to avoid multiple rebuilds of the same artifact, a user may configure a shared registry explicitly within the
+`JBSConfig` custom resource or by using the provided CLI. A shared registry is one that may be shared by many users.
+
+For example:
+
+```yaml
+apiVersion: jvmbuildservice.io/v1alpha1
+kind: JBSConfig
+metadata:
+  name: jvm-build-config
+spec:
+  enableRebuilds: "true"
+  registry:
+      owner: an-owner
+  sharedRegistries:
+      - host: quay.io
+        insecure: true
+        owner: my-team-owner
+        repository: test-jvm-namespace/jvm-build-service-artifacts
+```
+
+This assumes that another user has configured their registry to deploy builds to `my-team-owner`. For example:
+
+```yaml
+spec:
+  registry:
+    owner: my-team-owner
 ```
 
 ### `SystemConfig`
