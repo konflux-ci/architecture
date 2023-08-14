@@ -58,8 +58,8 @@ Each service that makes up AppStudio is further explained in its own document.
   pipelines to release user content to protected destinations.
 - [GitOps Service](./gitops-service.md) - A foundational service providing deployment of user
   applications.
-- [Pipeline Service](./pipeline-service.md) - A foundational service providing PipelineRuns to other
-  services.
+- [Pipeline Service](./pipeline-service.md) - A foundational service providing Pipeline APIs and secure supply
+  chain capabilities to other services
 - [Service Provider Integration](./service-provider-integration.md) - A foundational service
   providing user secret management to other services.
 - [Enterprise Contract](./enterprise-contract.md) - A specialized subsystem responsible for the
