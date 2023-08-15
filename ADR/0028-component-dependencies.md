@@ -91,7 +91,7 @@ The [build-service] will also update the PR it filed when the PRs that triggered
 
 ### Build-service and PR Groups
 
-* When [build-service] responds to the build of a PR (PR #1) and propagates the digest from one Component to another as a PR (PR#2). It follows the declared `depends on` references to know which other repos should receive an update PR. It marks the PR that is submits (PR #2) as being in the same PR Group as the triggering PR (PR #1). This enables pre-merge testing of both changes.
+* When [build-service] responds to the build of a PR (PR #1) and propagates the digest from one Component to another as a PR (PR#2). It follows the declared `depends on` references to know which other repos should receive an update PR. It marks the PR that it submits (PR #2) as being in the same PR Group (slash-prefixed name of the git source branch) as the triggering PR (PR #1). This enables pre-merge testing of both changes.
 * When [build-service] submits PR #2:
   * It marks it as "Draft" and it includes a reference to the triggering PR (PR #1) in the description of the automatically submitted PR (PR #2), giving the user some indication that it should not be merged out of order.
   * It checks to see if the two Components (source and destination as determined by the `depends on` references) are in the same git repository (a monorepo) and if PR #1 contains any changes to the `context` directory for the destination Component. If it does, then it create a new commit copying the code changes from that context directory in PR #1 to that context directory in PR #2, and it bases the commit that updates the digest reference on top of this synthetic commit.
@@ -106,7 +106,7 @@ Scenario: an application image depends on a common parent image. The user has 1 
 
 * The child image Component declares that it `depends on` the parent image Component, by way of the new field on the Component CR.
 * [integration-service] will always skip testing for parent image update builds, will never promote them, or use them to initiate Releases, but it will promote them to the global candidate list.
-* [build-service] will propagate digest references as a PR to the child image Component repo, by analyzing the `depends on` fields of all other Components in the Application. The PR that it files must be submitted in such a way that it appears in the same PR Group as the triggering PR submitted by a user.
+* [build-service] will propagate digest references as a PR to the child image Component repo, by analyzing the `depends on` fields of all other Components in the Application. The PR that it files must be submitted in such a way that it appears in the same PR Group (the same slash-prefixed name of the git source branch) as the triggering PR submitted by a user.
 * When the parent image PR is merged, [build-service] will update the PRs it originally filed to take them out of "Draft" to indicate that they are safe to merge now as long as there are no other unmerged triggering PRs in the same group. It may potentially rebase the PRs to trigger a new build or use `/retest`.
 
 Think about branches:
