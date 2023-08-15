@@ -59,9 +59,9 @@ After being added to the Rover group(s), the related index can be accessed.
 
 | Log type       | Splunk Index              | Rover Group                    |
 |----------------|:-------------------------:|-------------------------------:|
-| application    | rh_rhtap_production_app   | [staging-rhtap-application-logs](https://rover.redhat.com/groups/group/production-rhtap-application-logs) |
-| infrastructure | rh_rhtap_production_audit | [staging-rhtap-audit-logs](https://rover.redhat.com/groups/group/production-rhtap-audit-logs)       |
-| audit          | rh_rhtap_production_audit | [staging-rhtap-audit-logs](https://rover.redhat.com/groups/group/production-rhtap-audit-logs)       |
+| application    | rh_rhtap_production_app   | [production-rhtap-application-logs](https://rover.redhat.com/groups/group/production-rhtap-application-logs) |
+| infrastructure | rh_rhtap_production_audit | [production-rhtap-audit-logs](https://rover.redhat.com/groups/group/production-rhtap-audit-logs)       |
+| audit          | rh_rhtap_production_audit | [production-rhtap-audit-logs](https://rover.redhat.com/groups/group/production-rhtap-audit-logs)       |
 
 
 #### OpenShift Logging Configuration
