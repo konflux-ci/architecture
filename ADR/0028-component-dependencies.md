@@ -102,7 +102,7 @@ Let's apply the architecture to some use cases, and see how it plays out:
 
 ### Common Parent Image
 
-Scenario: an application image depends on a common parent image. The user has 1 Application, and 2 Components. One of them is the parent image. The other image is built FROM that image.
+Scenario: an application image depends on a common parent image. The user has 1 Application, and 2 Components. One of them is the parent image. The other is a child image which uses the parent image in its `FROM` line.
 
 * The child image Component declares that it `depends on` the parent image Component, by way of the new field on the Component CR.
 * [integration-service] will always skip testing for parent image update builds, will never promote them, or use them to initiate Releases, but it will promote them to the global candidate list.
