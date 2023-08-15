@@ -1,10 +1,10 @@
-# XX. Component Dependencies
+# 28. Component Dependencies
 
-* Date 2023-07-xx
+* Date 2023-08-15
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
