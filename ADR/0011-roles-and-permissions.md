@@ -65,8 +65,8 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | Add User                |
 |               | User group (with SSO)   |
 | Admin         | Workspace               | Access to namespaces that backs workspace                                   |
-|               | Application             | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | applications
-|               | Component               | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | components, componentdetectionqueries
+|               | Application             | appstudio.redhat.com      | get, list, watch, create, update, patch, delete, deletecollection | applications
+|               | Component               | appstudio.redhat.com      | get, list, watch, create, update, patch, delete, deletecollection | components, componentdetectionqueries
 |               | Environment             | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | promotionruns, snapshotenvironmentbindings, snapshots, environments
 |               | DeploymentTarget        | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | deploymenttargets
 |               | DeploymentTargetClaim   | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | deploymenttargetclaims
