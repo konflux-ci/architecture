@@ -8,14 +8,14 @@ Proposed
 
 ## Context
 
-- As a user, I would like to configure sensitive information/tokens/credentials for the build/test pipeline to consume as part of a TaskRun.
-- As a user, I would like to provide credentials to access my source code on GitHub for the analyses of project structure, devfile analyses.
+- As a user, I need a secure way to configure sensitive information/tokens/credentials for various components within the RHTAP environment. This includes providing credentials for accessing source code repositories on GitHub and other authentication needs.
 - As a user, I expect to have a place where I can list already provided credentials and adjust them it if needed.
 
 ## Decision
-### How would the sensitive information be persisted and made available to the RHTAP?
 
-1. The UI would take in sensitive information as form input and subsequently, the UI would create an `RemoteSecret` CR
+### Persisting Sensitive Information
+
+We propose that the UI captures sensitive information through form input and creates `RemoteSecret` Custom Resources (CRs) to store this data. The `RemoteSecret.data` will be intercepted by a webhook, securely stored, and removed from the `RemoteSecret` CR to ensure that data is not kept in etcd.
 ```yaml
 apiVersion: appstudio.redhat.com/v1beta1
 kind: RemoteSecret
@@ -31,11 +31,12 @@ data:
   username: Z2VuYQ==
   password: Z2VuYQ==
 ```
-2. `RemoteSecret.data` would be intercepted by webhook, sealed in permanent storage and removed from `RemoteSecret` CR.
+### Accessing Sensitive Information
 
-### How would the sensitive information are made available to the RHTAP's components?
-1. If any RHTAP's component want to consume sensitive information it is performing a search for an appropriate `RemoteSecret` by label `appstudio.redhat.com/sp.host`.
-2. For the necessary `RemoteSecret`s  RHTAP's components has to expand target with desired secret name,label and annotations.
+1. RHTAP components will search for `RemoteSecret` instances based on the `appstudio.redhat.com/sp.host` label.
+2. For the required `RemoteSecret`s, the components will expand the targets using the desired secret name, label, and annotations to access the secret data.
+3. The controller will retrieve `secretData` from permanent storage and deliver it to the desired location.
+4. Once the secret is no longer needed, the components will remove the `RemoteSecret`'s target.
 ```yaml
 apiVersion: appstudio.redhat.com/v1beta1
 kind: RemoteSecret
@@ -55,13 +56,9 @@ spec:
         type: kubernetes.io/basic-auth
 
 ```
-3. `RemoteSecret`s controller deliver `secretData` from permanent storage to the desired location.
-4. After secret is no longer needed (example: `Task` finished) RHTAP's components removes `RemoteSecret`s target.
+### Fine-Grained Credentials
 
-### How would a user specify that credentials a fine-grained and belong to a specific provider's resource?
-1. UI provide an ability for the user to specify a concrete resource names.
-2. UI add extra comma separated annotation to the `RemoteSecret` CR
-
+Users can specify resource names through the UI, which will be added as comma-separated annotation `appstudio.redhat.com/sp.resource` to the `RemoteSecret` CR. RHTAP components will consider these annotations during `RemoteSecret` searches.
 ```yaml
 apiVersion: appstudio.redhat.com/v1beta1
 kind: RemoteSecret
@@ -76,13 +73,12 @@ spec:
     secret:
         type: kubernetes.io/basic-auth
 ```
-3. When RHTAP's component performs a `RemoteSecret` search they have to take this annotation into consideration.
+### Rotation of Tokens/Secrets
 
-### How would these tokens/secrets be rotated ?
-
-1. The user revokes the secret outside RHTAP.
-2. The user generates a new credential outside RHTAP.
-3. The user overwrites the secret in RHTAP with a new one using our UI.
+Users can rotate tokens/secrets through these steps:
+1. Revoke the secret externally.
+2. Generate a new credential externally.
+3. Overwrite the secret in RHTAP using the UI.
 
 
 ## Consequences
