@@ -83,4 +83,6 @@ Users can rotate tokens/secrets through these steps:
 
 ## Consequences
 
-See Michael Nygard's article, linked above.
+1. **Minimal Data Exposure**: Secrets that are not actively used by any workload remain in permanent storage without being populated in etcd, reducing potential data exposure.
+2. **Audit Trail for Unused Secrets**: In the rare case where secrets remain in etcd for an extended period, there is a potential avenue to identify the intended consumers of these secrets. This can help with security audits and potential investigations.
+3. **Extended Credential Usage**: The architecture enables the usage of credentials beyond the current namespaces. This includes scenarios like namespace-backed environments, ephemeral environments, or user-provided clusters (Bring Your Own Cluster - BYOC).
