@@ -1,4 +1,4 @@
-# 0. Record architecture decisions
+# 29. Basic Authentication Secret
 
 Date: 2023-08-25
 
