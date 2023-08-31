@@ -66,7 +66,7 @@ metadata:
     name: github-com-token
     namespace: myns
     annotations:
-        appstudio.redhat.com/sp.repository:   "redhat/secret, redhat/opera"
+        appstudio.redhat.com/sp.repository: "redhat/secret,redhat/opera"
     labels:
         appstudio.redhat.com/sp.host: github.com
 spec:
