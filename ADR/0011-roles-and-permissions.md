@@ -84,6 +84,7 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | *Configs*               |                           | get, list, watch, create, update, patch, delete | configmaps
 |               | *Secrets*               |                           | get, list, watch, create, update, patch, delete | secrets
 |               | *Exec to pods*          |                           | create                                          | pods/exec
+|               | SpaceBindingRequest    | toolchain.dev.openshift.com      | get, list, watch, create, update, patch, delete | spacebindingrequests
 |               | Add User                |
 |               | User group (with SSO)   |
 
