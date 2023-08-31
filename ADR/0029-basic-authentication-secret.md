@@ -58,7 +58,7 @@ spec:
 ```
 ### Fine-Grained Credentials
 
-Users can specify resource names through the UI, which will be added as comma-separated annotation `appstudio.redhat.com/sp.resource` to the `RemoteSecret` CR. RHTAP components will consider these annotations during `RemoteSecret` searches.
+Users can specify resource names through the UI, which will be added as comma-separated annotation `appstudio.redhat.com/sp.repository` to the `RemoteSecret` CR. RHTAP components will consider these annotations during `RemoteSecret` searches.
 ```yaml
 apiVersion: appstudio.redhat.com/v1beta1
 kind: RemoteSecret
@@ -66,7 +66,7 @@ metadata:
     name: github-com-token
     namespace: myns
     annotations:
-        appstudio.redhat.com/sp.resource:   "redhat/secret, redhat/opera"
+        appstudio.redhat.com/sp.repository:   "redhat/secret, redhat/opera"
     labels:
         appstudio.redhat.com/sp.host: github.com
 spec:
