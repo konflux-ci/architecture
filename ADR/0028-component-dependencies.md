@@ -34,7 +34,7 @@ Today, users work around how complicated it is to manage digests themselves by i
 * The `depends on` field is a list.
 * We will call a Component which has a dependency on another Component: a **"dependant"** component.
 * We will call a Component on which other Components have a dependency: a **"dependency"** component.
-* [integration-service] will handle the testing and promotion of all **dependancy** components in a special way.
+* [integration-service] will handle the testing and promotion of all **dependency** components in a special way.
 * [build-service] will use the `depends on` links to propose updates to users' **dependant** git repositories.
 * The set of Components and their "depends on" links form a directed-acyclic-graph (DAG). Application-service is responsible for making sure that cycles are not introduced and for managing references in the lifecycle of all Components in the Application. Deleting a Component should be well-defined.
 * As with Components in general, the "depends on" references are Application-scoped. Declared relationships between Components in different Applications are not to be considered valid. Declared relationships between Components in different namespaces are not to be considered valid.
