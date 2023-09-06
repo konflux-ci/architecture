@@ -29,7 +29,7 @@ Today, users work around how complicated it is to manage digests themselves by i
 
 ### Interface changes
 
-**Declared Component Dependencies**: Introduce a new field on the `Component` resource called `depends on` that lets one Component declare that another Component **depends on it**.
+**Declared Component Dependencies**: Introduce a new field on the `Component` resource called `depends on` that lets one Component declare that another Component **depends on it**. We may end up calling this relationship something else in the real API implementation (like a *nudging* relationship where one Component nudges another). To be decided in [DEVHAS-464](https://issues.redhat.com/browse/DEVHAS-464). For the rest of the text in this ADR we'll just call this "depends on".
 
 * The `depends on` field is a list.
 * We will call a Component which has a dependency on another Component: a **"dependant"** component.
