@@ -142,7 +142,7 @@ Another OLM Operator Scenario: an operator git repo contains both the controller
 
 * The user has two Components, that both point to the same repo.
 * The bundle Component declares that it `depends on` the controller image Component, by way of the new field on the Component CR.
-* [integration-service] will always skip testing for the controller Component because it is known to be an **dependency** component.
+* [integration-service] will always skip testing for the controller Component because it is known to be a **dependency** component.
 * [build-service] will propagate the digest reference as a PR to the bundle image, which happens to be the same git repository as the controller Component.
 
 Think about branches:
