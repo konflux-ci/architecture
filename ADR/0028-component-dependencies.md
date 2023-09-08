@@ -41,7 +41,7 @@ Today, users work around how complicated it is to manage digests themselves by i
 
 **PR Groups**: Introduce a new convention for PRs that lets one PR declare that it is related to another PR.
 
-* Treat the **source branch name** of the PR as a slash-delimited string, and use the first element of that
+* Treat the **source branch name** of the PR as a `@`-delimited string, and use the first element of that
   list as the PR Group name.
 * A new set of functionality for [integration-service] uses PR Groups to guide testing of related
   PRs.
@@ -49,9 +49,9 @@ Today, users work around how complicated it is to manage digests themselves by i
 * PR Groups are scoped to Component repos under a single Application. Even if PRs across different
   applications share the same **source branch name**, they shouldn't be considered part of the
   same PR Group.
-* For example, if the source branch name for a PR is `my-feature/change-1`, then the PR Group
+* For example, if the source branch name for a PR is `my-feature@change-1`, then the PR Group
   name should be interpreted as `my-feature`.
-* A source branch name with no slashes is the degenerate case. For example, if the source branch
+* A source branch name with no `@` is the degenerate case. For example, if the source branch
   name for a PR is `my-feature`, then the PR Group name should be interpreted as `my-feature`.
 * Since all PRs have a source branch name, all PRs are trivially members of a PR Group.
 
@@ -91,7 +91,7 @@ The [build-service] will also update the PR it filed when the PRs that triggered
 
 ### Build-service and PR Groups
 
-* When [build-service] responds to the build of a PR (PR #1) and propagates the digest from one Component to another as a PR (PR#2). It follows the declared `depends on` references to know which other repos should receive an update PR. It marks the PR that it submits (PR #2) as being in the same PR Group (slash-prefixed name of the git source branch) as the triggering PR (PR #1). This enables pre-merge testing of both changes.
+* When [build-service] responds to the build of a PR (PR #1) and propagates the digest from one Component to another as a PR (PR#2). It follows the declared `depends on` references to know which other repos should receive an update PR. It marks the PR that it submits (PR #2) as being in the same PR Group (`@`-prefixed name of the git source branch) as the triggering PR (PR #1). This enables pre-merge testing of both changes.
 * When [build-service] submits PR #2:
   * It marks it as "Draft" and it includes a reference to the triggering PR (PR #1) in the description of the automatically submitted PR (PR #2), giving the user some indication that it should not be merged out of order.
   * It checks to see if the two Components (source and destination as determined by the `depends on` references) are in the same git repository (a monorepo) and if PR #1 contains any changes to the `context` directory for the destination Component. If it does, then it create a new commit copying the code changes from that context directory in PR #1 to that context directory in PR #2, and it bases the commit that updates the digest reference on top of this synthetic commit.
@@ -106,13 +106,13 @@ Scenario: an application image depends on a common parent image. The user has 1 
 
 * The child image Component declares that it `depends on` the parent image Component, by way of the new field on the Component CR.
 * [integration-service] will always skip testing for parent image update builds, will never promote them, or use them to initiate Releases, but it will promote them to the global candidate list.
-* [build-service] will propagate digest references as a PR to the child image Component repo, by analyzing the `depends on` fields of all other Components in the Application. The PR that it files must be submitted in such a way that it appears in the same PR Group (the same slash-prefixed name of the git source branch) as the triggering PR submitted by a user.
+* [build-service] will propagate digest references as a PR to the child image Component repo, by analyzing the `depends on` fields of all other Components in the Application. The PR that it files must be submitted in such a way that it appears in the same PR Group (the same `@`-prefixed name of the git source branch) as the triggering PR submitted by a user.
 * When the parent image PR is merged, [build-service] will update the PRs it originally filed to take them out of "Draft" to indicate that they are safe to merge now as long as there are no other unmerged triggering PRs in the same group. It may potentially rebase the PRs to trigger a new build or use `/retest`.
 
 Think about branches:
 
 * User team updates parent image with branch `update-2023-06-07` (or whatever).
-* [build-service] uses that branch name as a prefix in the branch names that it chooses (`update-2023-06-07/<suffix>`) everywhere it propagates the digest to.
+* [build-service] uses that branch name as a prefix in the branch names that it chooses (`update-2023-06-07@<suffix>`) everywhere it propagates the digest to.
 
 ### OLM Operators, with components in different repos
 
@@ -130,8 +130,8 @@ Think about branches:
 
 * User team updates their operand images with branch `feature-1234` (or whatever).
 * [build-service] uses that same branch in its PR to the bundle repo.
-* [build-service] uses that branch name as a prefix in the branch names that it chooses (`feature-1234/<suffix>`) to send to the bundle repo.
-* If user submits three operand image PRs and uses the same branch name for all (`feature-1234`) – then the digests all pile up on the same bundle branch (`feature-1234/<suffix>`), the same bundle PR.
+* [build-service] uses that branch name as a prefix in the branch names that it chooses (`feature-1234@<suffix>`) to send to the bundle repo.
+* If user submits three operand image PRs and uses the same branch name for all (`feature-1234`) – then the digests all pile up on the same bundle branch (`feature-1234@<suffix>`), the same bundle PR.
 * If the user submits three operand image PRs and uses different branch names for all – then the digests are split among three different bundle branches, three different bundle PRs.
 
 ---
@@ -148,9 +148,9 @@ Another OLM Operator Scenario: an operator git repo contains both the controller
 Think about branches:
 
 * The user submitted their controller image update on the `new-feature` branch.
-* [build-service] pushes its commits with the new image digest references to a new feature branch that uses the triggering feature branch name as a prefix: `new-feature/<suffix>`.
+* [build-service] pushes its commits with the new image digest references to a new feature branch that uses the triggering feature branch name as a prefix: `new-feature@<suffix>`.
   * This works like it does in most other cases. Let the user merge the original PR, and only after that will [integration-service] update the checks for `new-feature` to say “okay to merge now!”
-  * When the user merges the original PR, [build-service] will update the PR it filed on the `new-feature/<suffix>` branch to take it out of "Draft", indicating that it is safe to merge now. It may potentially rebase the PR to trigger a new build or use `/retest`.
+  * When the user merges the original PR, [build-service] will update the PR it filed on the `new-feature@<suffix>` branch to take it out of "Draft", indicating that it is safe to merge now. It may potentially rebase the PR to trigger a new build or use `/retest`.
 
 ## Miscellany
 
