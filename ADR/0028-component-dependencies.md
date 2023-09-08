@@ -62,9 +62,9 @@ Important to understand: the declared dependencies as defined on the Components'
 * PR Groups can be supplied by the user without any declared Component dependencies:
   * You say in english: “PR #1 and PR #2 are in the same PR Group.”
 
-**Context directories** for [Pipelines as Code](https://pipelinesascode.com/)(PaC): introduce a new `spec.context` field in the `Repository` CR. When present, this field instructs PaC to only create a PipelineRun for events which include changes to the declared context directory in the git repository. This enables us to only run PipelineRuns that are relevant to Components that change in a given push or pull request event. By default, this is ".": the entire git repository.
+**CEL expressions on Build Pipelines**: [Pipelines as Code](https://pipelinesascode.com/)(PaC) supports [advanced event matching](https://pipelinesascode.com/docs/guide/authoringprs/#advanced-event-matching) by way of a `pipelinesascode.tekton.dev/on-cel-expression` annotation on the PipelineRun. When used with the `.pathChanged` field, PaC can be directed to only create a PipelineRun for events which include changes to the declared context directory in the git repository. This enables us to only run PipelineRuns that are relevant to Components that change in a given push or pull request event. By default, this is ".": the entire git repository.
 
-* [build-service] is responsible for setting the context dir field on the Repository CR and for propagating changes to the context dir on the user's Component CRs to the Repository CR.
+* [build-service] should start setting `pipelinesascode.tekton.dev/on-cel-expression: "*".pathChanged()`, which should match today's default behavior for running all pipelineruns on changes to any file in the repo and our user documentation should be updated to instruct users to modify that path for components that should only build on changes to certain files to avoid unnecessary rebuilds.
 
 See also [RHTAP-371](https://issues.redhat.com/browse/RHTAP-371).
 
