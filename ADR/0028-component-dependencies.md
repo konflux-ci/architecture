@@ -64,7 +64,7 @@ Important to understand: the declared dependencies as defined on the Components'
 
 **CEL expressions on Build Pipelines**: [Pipelines as Code](https://pipelinesascode.com/)(PaC) supports [advanced event matching](https://pipelinesascode.com/docs/guide/authoringprs/#advanced-event-matching) by way of a `pipelinesascode.tekton.dev/on-cel-expression` annotation on the PipelineRun. When used with the `.pathChanged` field, PaC can be directed to only create a PipelineRun for events which include changes to the declared context directory in the git repository. This enables us to only run PipelineRuns that are relevant to Components that change in a given push or pull request event. By default, this is ".": the entire git repository.
 
-* [build-service] should start setting `pipelinesascode.tekton.dev/on-cel-expression: "*".pathChanged()`, which should match today's default behavior for running all pipelineruns on changes to any file in the repo and our user documentation should be updated to instruct users to modify that path for components that should only build on changes to certain files to avoid unnecessary rebuilds.
+* [build-service] should start setting `pipelinesascode.tekton.dev/on-cel-expression: "*".pathChanged()` on the *pull request PipelineRun definition*, which should match today's default behavior for running all pipelineruns on changes to any file in the repo and our user documentation should be updated to instruct users to modify that path for components that should only build on changes to certain files to avoid unnecessary rebuilds.
 
 See also [RHTAP-371](https://issues.redhat.com/browse/RHTAP-371).
 
