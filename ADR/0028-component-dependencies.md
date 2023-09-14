@@ -81,7 +81,7 @@ See also [RHTAP-371](https://issues.redhat.com/browse/RHTAP-371).
   * If this is the first time it has seen this **dependency** component updated in this way, it will file a new pull request on the **dependant** components supplying the pullspec and digest of the new **dependency** components, using the same branch name prefix as was used for the **dependency** component PR.
   * If a PR on that branch already exists, update that branch with an additional commit including the new **dependency** component digest.
 
-The [build-service] will also update the PR it filed (PR#2) when the PRs (PR#1) that previously triggered [build-service] to create the PR#2 are merged or updated. It may update the description and/or it may rebase on the main branch and/or it may issue /retest. Need to figure out what we want here.
+The [build-service] will also update the PR it filed (PR#2) when the PRs (PR#1) that previously triggered [build-service] to create the PR#2 are merged or have new commits pushed to them. The [build-service] may need to update the description of PR#2 and/or it may rebase PR#2 on the main branch. Need to figure out what we want here.
 
 ### Integration-service and PR Groups
 
