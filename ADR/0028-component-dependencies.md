@@ -29,7 +29,7 @@ Today, users work around how complicated it is to manage digests themselves by i
 
 ### Interface changes
 
-**Declared Component Dependencies**: Introduce a new field on the `Component` resource called `build-nudges-ref` that lets one Component declare its builds **nudge references** in that other Component.
+**Declared Component Dependencies**: Introduce a new field on the `Component` resource called `build-nudges-ref` that lets one Component declare its builds **nudge references** in another Component.
 
 * The `build-nudges-ref` field is a list.
 * We will call a Component which has a `build-nudges-ref` pointing at another Component: a **"nudging"** component.
