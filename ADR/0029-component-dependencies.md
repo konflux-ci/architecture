@@ -1,4 +1,4 @@
-# 28. Component Dependencies
+# 29. Component Dependencies
 
 * Date 2023-08-15
 
