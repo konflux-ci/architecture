@@ -144,7 +144,7 @@ The "test.appstudio.openshift.io/optional" Label provides users an option whethe
 ```
 The label will be copied to the subsequent Test PipelineRuns.
 
-The `test.appstudio.openshift.io/kind` annotation can be used to filter on the kinds of `IntegrationTestScenario`s, first recognized kind is the `enterprise-contract`. The use is optional and it will be copied to the `PipelineRun`s resulting from the `IntegrationTestScenario`.
+The `test.appstudio.openshift.io/kind` annotation is an optional annotation that can be used to filter on the kinds of `IntegrationTestScenario`s. The first recognized kind is the `enterprise-contract`. It will be copied to the `PipelineRun`s resulting from the `IntegrationTestScenario`.
 
 #### Workspace
 
