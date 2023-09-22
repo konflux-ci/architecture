@@ -43,7 +43,7 @@ these resources.
 
 Each service that makes up AppStudio is further explained in its own document.
 
-- [Hybrid Application Service](./hybrid-application-service.md) - A workflow system that manages the
+- [Hybrid Application Service](./hybrid-application-service.md) - A workflow system that manages
   the definition of the users' Application and Components.
 - [Build Service](./build-service.md) - A workflow system that manages the build pipeline definition
   for users' Components.
