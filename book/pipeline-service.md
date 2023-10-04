@@ -1,28 +1,50 @@
 # Pipeline Service
 
-Pipeline Service provides a SaaS for pipelines. It leverages:
+Pipeline Service provides Tekton APIs and services to RHTAP.
+In the initial phase of RHTAP, Pipeline Service will be provided by a stock
+installation of the OpenShift Pipelines operator.
+This deployed version will be the a candidate build of the OpenShift Pipelines
+operator from a Red Hat build system.
 
-- OpenShift for the compute.
-- Tekton Pipelines, Chains, Pipelines as Code, Results for the core of the service.
-- OpenShift GitOps / Argo CD for managing the infrastructure.
+![Pipelines operator deployment](../diagrams/pipeline-service.drawio.svg)
 
-The following features are provided:
+## APIs and Services
 
-- Signing and attestation of `TaskRuns` with [Tekton Chains](https://tekton.dev/docs/chains/).
-- Archiving/Pruning of `PipelineRuns` and `TaskRuns` with [Tekton Results](https://tekton.dev/docs/results/) (not activated).
-- Integrations with GitHub, Gitlab, and Bitbucket with [Pipelines as Code](https://pipelinesascode.com) (PaC).
+Pipeline Service provides the following:
+
+- Tekton APIs directly through its custom resource definitions.
+- Container image signing and provenance attestations through Tekton Chains.
+- Archiving of `PipelineRuns`, `TaskRuns`, and associated logs through Tekton
+  Results.
+
+Pipeline Service also exposes the following ingress points:
+
+- Pipelines as Code controller: this is a `Route` that receives webhook events
+  from source code repositories.
+- Tekton Results API: this is an `Ingress` that serves Tekton Results data
+  over a RESTful API. Clients authenticate with the same `Bearer` token used to
+  authenticate Kubernetes requests.
+
+## Deployment Configuration
+
+The deployment of the OpenShift Pipelines operator will have the following
+notable configurations:
+
+- Tekton Triggers will be disabled entirely.
+- The pruner (provided by the Pipelines operator) will be disabled in favor of
+  pruning via Tekton Results.
+- Pipelines as Code will link the results of pipeline tasks to an appropriate
+  [Hybrid Application Console (HAC)](./hybrid-application-console.md) URL.
 
 ## Architecture
 
-### Component
+### Diagram
 
-The Pipeline Service component is deployed onto the cluster alongside other AppStudio components. The following forms the core architecture of Pipeline Service:
+Legend:
+* Blue: managed by Pipeline Service
+* Yellow: not managed by Pipeline Service
 
-1. _OpenShift Pipelines (OSP):_ It enables the creation and management of Pipelines for user [Applications](https://redhat-appstudio.github.io/book/ref/application-environment-api.html#application).
-2. _Pipelines as Code (PaC):_ An OpenShift Pipelines component that enables receiving webhook events from version control systems. The user would have to install a [GitHub App](https://pipelinesascode.com/docs/install/github_apps/) with the required permissions in order to forward events to the PaC endpoint exposed by the platform.
-3. _Spray Proxy:_ Forwards requests to all clusters in the environment once an event is received on PaC. It is a reverse proxy that broadcasts to multiple backends.
-4. _Tekton Results:_ Responsible for storing logs and pruning PipelineRuns. Utilises AWS RDS as the backend database for our production instance.
-5. _Tekton Chains:_ Provides PipelineRun attestation capabilities, ensuring that all PipelineRuns are verified and can be traced back to their source.
+![Architecture diagram](../diagrams/pipeline-service/architecture.jpg)
 
 ### appstudio-pipeline Service Account
 

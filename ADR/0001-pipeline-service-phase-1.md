@@ -1,11 +1,13 @@
 # 1. Pipeline Service Phase 1
 
 Created: 2022-10-13
-Last Updated: 2022-10-13
+Last Updated: 2023-09-29
 
 ## Status
 
-Accepted
+Obsolete
+
+Superceded by [ADR-0009](./0009-pipeline-service-via-operator.md)
 
 ## Context
 
