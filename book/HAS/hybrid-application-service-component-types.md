@@ -1,4 +1,4 @@
-# HAS Component Types
+# Hybrid Application Service (HAS) Component Types
 
 HAS supports a variety of user repositories for Components. User repositories can contain just a single component, or it may contain multiple components.
 
@@ -23,7 +23,7 @@ These Components will be listed as having a “Dockerfile” runtime.
 
 Before a repository is added to an Application in AppStudio, if no Devfiles or Dockerfiles were specified for the Component resource, HAS will use alizer to attempt to detect the components that exist within the repository. Each component that corresponds to a supported runtime type (or Dockerfile type), will be detected.
 
-If a runtime exists at the top level of the repository, HAS will treat the repository as a single component, and will not attempt to detect components below that level. 
+If a runtime exists at the top level of the repository, HAS will treat the repository as a single component, and will not attempt to detect components below that level.
 
 ## Runtime-Specific Requirements
 

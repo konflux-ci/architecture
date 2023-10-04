@@ -1,4 +1,4 @@
-# HAS Glossary
+# Hybrid Application Service (HAS) Glossary
 
 ## Application
 An application in AppStudio, represented by the HAS Application custom resource. May contain one or more “components”.

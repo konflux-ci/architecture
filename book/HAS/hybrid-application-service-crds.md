@@ -1,4 +1,4 @@
-# Hybrid Application Service Kube CRDs
+# Hybrid Application Service (HAS) Kubernetes CRDs
 
 [Application](hybrid-application-service-crds.md#application)
 

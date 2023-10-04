@@ -1,4 +1,4 @@
-# Hybrid Application Service Kube API
+# Hybrid Application Service (HAS) Kubernetes API
 
 ## Overview
 
@@ -10,16 +10,22 @@ The official Hybrid Application Service (HAS) APIs are listed in the AppStudio [
 
 The topics below offer a more detailed explanation of the API usage with examples.
 
-* [Application](#application)
-  * [Create](#create-application)
-  * [Update](#update-application)
-  * [Delete](#delete-application)
-* [Component](#component)
-  * [Create](#create-component)
-  * [Update](#update-component)
-  * [Delete](#delete-component)
-* [ComponentDetection](#component-detection)
-  * [Create](#create-componentdetectionquery)
+- [Hybrid Application Service (HAS) Kubernetes API](#hybrid-application-service-has-kubernetes-api)
+  - [Overview](#overview)
+  - [References](#references)
+    - [Application CRD](#application-crd)
+      - [Create Application](#create-application)
+        - [Example](#example)
+      - [Update Application](#update-application)
+      - [Delete Application](#delete-application)
+    - [Component CRD](#component-crd)
+      - [Create Component](#create-component)
+        - [Example](#example-1)
+      - [Update Component](#update-component)
+      - [Delete Component](#delete-component)
+    - [ComponentDetectionQuery CRD](#componentdetectionquery-crd)
+      - [Create ComponentDetectionQuery](#create-componentdetectionquery)
+        - [Example](#example-2)
 
 
 ## References
