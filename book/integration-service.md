@@ -131,6 +131,7 @@ Following the [annotation guidelines](https://docs.google.com/document/d/1gyXM3p
 “pipelines.appstudio.openshift.io/type": "test",
 "test.appstudio.openshift.io/test":      “<component|composite>”
 “test.appstudio.openshift.io/scenario":  “<IntegrationTestScenario name>”
+“test.appstudio.openshift.io/kind":      “<enterprise-contract|...>”
 "appstudio.openshift.io/snapshot":       “<snapshot name>”
 “appstudio.openshift.io/component":      “<component name>”
 “appstudio.openshift.io/application":    “<Application name>”
@@ -142,6 +143,8 @@ The "test.appstudio.openshift.io/optional" Label provides users an option whethe
 "test.appstudio.openshift.io/optional":	"false"|"true" 
 ```
 The label will be copied to the subsequent Test PipelineRuns.
+
+The `test.appstudio.openshift.io/kind` annotation is an optional annotation that can be used to filter on the kinds of `IntegrationTestScenario`s. The first recognized kind is the `enterprise-contract`. It will be copied to the `PipelineRun`s resulting from the `IntegrationTestScenario`.
 
 #### Workspace
 
