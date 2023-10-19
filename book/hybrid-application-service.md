@@ -3,14 +3,14 @@
 Hybrid Application Service (HAS) provides an abstract way to define Applications and Components within the cloud. It also allows users to create new Applications and Components or import existing ones into AppStudio. HAS itself is a fully managed service with a set of predefined service types to provide out-of-the-box support.
 
 ## Goals
-- Define an application model that defines the application and its containing components
-- Create new multi-component applications that can be represented by the application model
-- Governs the life-cycle of application model includes create, update and delete
-- Create predefined component types to help to develop, build and deploy components of a particular language or framework
-- Provide sample/starter component for the predefined component types
-- Import existing applications and represent them by the application model
-- Discovery mechanism matching the component type for each component to a predefined type support
-- Set up the development environment (tools) easily for components that match the predefined component type
+- Define an Application model that defines the Application and its containing Components
+- Create new multi-component Applications that can be represented by the Application model
+- Governs the life-cycle of Application model includes create, update and delete
+- Create predefined Component types to help to develop, build and deploy Components of a particular language or framework
+- Provide sample/starter Component for the predefined Component types
+- Import existing Applications and represent them by the Application model
+- Discovery mechanism matching the Component type for each Component to a predefined type support
+- Set up the development environment (tools) easily for Components that match the predefined Component type
 
 
 
