@@ -46,7 +46,9 @@ Legend:
 
 ![Architecture diagram](../diagrams/pipeline-service/architecture.jpg)
 
-### appstudio-pipeline Service Account
+### Tekton Pipelines
+
+#### appstudio-pipeline Service Account
 
 The service should offer users a service account for running pipelines.
 However, the automatic generation of a 'pipeline' service account within namespaces has been disabled in the component because it was found that the permissions granted to that account were overly broad.
@@ -54,6 +56,29 @@ However, the automatic generation of a 'pipeline' service account within namespa
 The Pipeline Service component creates the `appstudio-pipelines-scc` ClusterRole, but does not bind this role to any service account.
 
 The [CodeReadyToolchain](https://github.com/codeready-toolchain) platform (CRT) creates the `appstudio-pipelines-runner` ClusterRole on each tenant/member cluster. It also creates the `appstudio-pipeline` ServiceAccount on every tenant namespace as well as the role bindings for the `appstudio-pipeline` service account within the namespace.
+
+### Tekton Chains
+
+#### Signing Secret
+
+The signing secret is unique to each cluster, and is a long lived secret.
+Rotating the secret is extremely disruptive, as it invalidates any artifact that was built using that secret.
+
+Moving to keyless signing would solve the issue and would be the long-term solution.
+
+The public-key is stored in `openshift-pipelines` namespace as a Secret named `public-key`. The secret is readable by all authenticated users to allow them to verify signed artifacts.
+
+### Tekton Results
+
+#### Storage
+
+AWS RDS and S3 are used to handle the storage needs of Tekton Results.
+
+### Pipeline as Code
+
+#### Secret management
+
+The secrets for the GitHub Application are stored in Vault, and synchronized as an ExternalSecret. The refresh rate for the synchronization is aggressive so that rotating the secrets do not generate too long of an outage.
 
 ## Repository
 
