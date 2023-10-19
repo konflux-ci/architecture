@@ -152,4 +152,108 @@ There are still unanswered questions about these hosts and additional requiremen
 
 
 
+## IBM Cloud Configuration
 
+This section explains what is needed to configure an IBM Cloud Account. Power PC and System Z are both very different and have different configuration, so these are divided into different sections.
+
+### Configure the Workspace
+
+#### Power PC
+
+This section describes the steps involved to setup a workspace, add SSH keys, and creating a boot image from a VM snapshot.
+
+1. Select 'Power Systems For Virtual Server' service from the catalogue.
+2. Click 'Create Workspace' then fill in your workspace details, and create the workspace.
+3. Select the resulting workspace from the list, all further actions are done in the context of this workspace.
+4. Prepare a new SSH key using `ssh-keygen`. Do not use a personal SSH key
+5. Select SSH Keys from the menu on the left, click 'Create SSH Key', and upload an SSH Public Key.
+6. Select 'virtual server instances' on the left, and click 'create instance'.
+7. Start a virtual server using the RHEL image you want to use as the base. This machine is temporary, it does not require much processing or memory, so the values you select here do not matter. Be sure to enable public network access so you can connect to it.
+8. Connect to your new virtual server over SSH, entitle it and install podman.
+9. Select your virtual server from the virtual server list, then under 'VM Actions' in the top right select 'capture and export'. Save the result to the image catalogue with whatever name you want.
+10. Terminate your temporary virtual machine.
+
+#### System Z
+
+1. Select 'Object Storage' from the service catalogue.
+2. Create a new free tier account, and then upload a System Z compatible RHEL boot image into a bucket of your choosing. Note that uploading directly won't work as the image is too big, you will need to install their tool for large uploads.
+3. Select 'Virtual server for VPC' from the service catalogue.
+4. Select 'Images' from the left hand menu and click 'Create', enter a name for the image, select the source as being from 'Cloud Object Storage', then select the image you just uploaded. Select RHEL as the image type and create it.
+5. Select 'SSH Keys' from the left hand menu, click create, and create a new SSH key to connect to the instance.
+6. Select 'Virtual Server Instances' from the left hand menu.
+7. Click 'Create', select IBM Z, pick the boot image you just created, and create a new temporary instance.
+8. Select the instance you just created from the list, and assign it a new public IP
+9. Connect to your new virtual server over SSH, entitle it and install podman.
+10. Using the console stop the virtual server, then select create image from the action menu. Assign your new boot image a name.
+11. The virtual machine can now be deleted.
+
+### Pool based config
+
+Pool based configuration is handled by simply starting virtual machines using the boot images selected above. You must also select/create appropriate SSH Keys for the instances (i.e. don't use a personal key). Once these are up and running they can be added to the `host-config` ConfigMap as per the example above. The SSH keys much be added to the vault and deployed to the namespace using external secrets.
+
+### Dynamic Config
+
+This section lists the config options required for dynamic config. To figure out what these values should be for both Power and System Z you can go to the page to create virtual machines, configuring a machine with the settings you want (including the boot image created above), and then instead of hitting 'create', hit the 'sample API call' button. The sample API call will contain the configuration values you need.
+
+To use dynamic configuration you need to configure a secret with an IBM account access key. This secret requires a single entry with the name `api-key` that contains the IBM API key.
+
+This API key should not be a personal key, but should be a service based key.
+
+#### Power PC
+
+Power PC requires the following config options:
+
+```yaml
+  dynamic.linux-ppc64le.type: ibmp
+  dynamic.linux-ppc64le.ssh-secret: <1>
+  dynamic.linux-ppc64le.secret: <2>
+  dynamic.linux-ppc64le.key: <3>
+  dynamic.linux-ppc64le.image: <4>
+  dynamic.linux-ppc64le.crn: "crn:v1:bluemix:public:power-iaas:dal10:a/934e118c399b4a28a70afdf2210d708f:8c9ef568-16a5-4aa2-bfd5-946349c9aeac::" <5>
+  dynamic.linux-ppc64le.url: "https://us-south.power-iaas.cloud.ibm.com" <6>
+  dynamic.linux-ppc64le.network: "dff71085-73da-49f5-9bf2-5ea60c66c99b" <7>
+  dynamic.linux-ppc64le.system: "e980" <8>
+  dynamic.linux-ppc64le.cores: "0.25" <9>
+  dynamic.linux-ppc64le.memory: "2" <10>
+  dynamic.linux-ppc64le.max-instances: "2" <11>
+```
+1. Name of the secret with the SSH Private Key
+2. Name of the secret with the IAM Access Key
+3. Name of the SSH Key from the IBM Cloud Console
+4. The name of the boot image you created above
+5. The CRN of the workspace
+6. The API endpoint to use, which changes by region
+7. The network ID to use
+8. The type of system to start
+9. The number of cores to allocate
+10. Memory in GB
+11. The maximum number of instances to create at a given time
+
+
+#### System Z
+
+System Z requires the following config options:
+
+```yaml
+  dynamic.linux-s390x.type: ibmz
+  dynamic.linux-s390x.ssh-secret:  <1>
+  dynamic.linux-s390x.secret:  <2>
+  dynamic.linux-s390x.key:  <3>
+  dynamic.linux-s390x.image: "sdouglas-rhel-snapshot" <4>
+  dynamic.linux-s390x.vpc: "us-east-default-vpc" <5>
+  dynamic.linux-s390x.subnet: "us-east-2-default-subnet" <6>
+  dynamic.linux-s390x.region: "us-east-2" <7>
+  dynamic.linux-s390x.url: "https://us-east.iaas.cloud.ibm.com/v1" <8>
+  dynamic.linux-s390x.profile: "bz2-1x4" <9>
+  dynamic.linux-s390x.max-instances: "2" <10>
+```
+1. Name of the secret with the SSH Private Key
+2. Name of the secret with the IAM Access Key
+3. Name of the SSH Key from the IBM Cloud Console
+4. The name of the boot image you created above
+5. The VPC name
+6. The subnet name
+7. The region to use
+8. The region API URI
+9. The type of machine to allocate
+10. The maximum number of instances to create at a given time
