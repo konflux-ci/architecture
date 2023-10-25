@@ -48,9 +48,7 @@ the OSP CRDs. The following changes are specific to RHTAP:
 Furthermore, as the service will be accessed through CodeReadyToolchain (CRT), the
 following changes are also specific to RHTAP:
 - Deploying a proxy (known as `SprayProxy`) on the CRT host cluster that redirects
-  incoming PaC requests to the member clusters. Requests are redirected only if:
-  - the payload is validated using the webhook secret;
-  - the payload size is under 25MB.
+  incoming PaC requests to the member clusters. More on SprayProxy [here](0031-sprayproxy.md).
 - Providing a plugin to the CRT Proxy so Tekton Results requests are redirected
   to the appropriate member cluster.
 
