@@ -76,8 +76,14 @@ spec:
   selectors:
   - name: my-component
     pipelineRef:
-      bundle: quay.io/my-user/my-bundle:v1.0
-      name: my-bundle
+      resolver: bundles
+      params:
+      - name: bundle
+        value: quay.io/my-user/my-bundle:v1.0
+      - name: name
+        value: my-bundle
+      - name: kind
+        value: pipeline
     pipelineParams:
     - name: test
       value: fbc
@@ -87,27 +93,51 @@ spec:
       projectType: springboot
   - name: Label section
     pipelineRef:
-      bundle: quay.io/my-user/my-bundle:v1.0
-      name: labelled
+      resolver: bundles
+      params:
+      - name: bundle
+        value: quay.io/my-user/my-bundle:v1.0
+      - name: name
+        value: labelled
+      - name: kind
+        value: pipeline
     when:
       labels:
         mylabel: test
   - name: Docker build
     pipelineRef:
-      bundle: quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:3649b8ca452e7f97e016310fccdfb815e4c0aa7e
-      name: docker-build
+      resolver: bundles
+      params:
+      - name: bundle
+        value: quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:3649b8ca452e7f97e016310fccdfb815e4c0aa7e
+      - name: name
+        value: docker-build
+      - name: kind
+        value: pipeline
     when:
       dockerfile: true
   - name: NodeJS
     pipelineRef:
-      bundle: quay.io/redhat-appstudio-tekton-catalog/pipeline-nodejs-builder:3649b8ca452e7f97e016310fccdfb815e4c0aa7e
-      name: nodejs-builder
+      resolver: bundles
+      params:
+      - name: bundle
+        value: quay.io/redhat-appstudio-tekton-catalog/pipeline-nodejs-builder:3649b8ca452e7f97e016310fccdfb815e4c0aa7e
+      - name: name
+        value: nodejs-builder
+      - name: kind
+        value: pipeline
     when:
       language: nodejs,node
   - name: Fallback
     pipelineRef:
-      bundle: quay.io/my-user/my-fallback:v1.0
-      name: fallback
+      resolver: bundles
+      params:
+      - name: bundle
+        value: quay.io/my-user/my-fallback:v1.0
+      - name: name
+        value: fallback
+      - name: kind
+        value: pipeline
 ```
 
 In the example the first selector will match only when the component CR name is `my-component` and it's defined in the devfile or detected with `language: java` and `projectType: springboot` if all requests are matching then PipelineRun is generated based on `pipelineRef` and pipelineRun parameters are set to pipelineParams. If any of `when` condition does not match then it's checking the next selector. The `Fallback` sector does not contain `when` so it will be processed in case previous selectors do not match.
