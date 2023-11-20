@@ -8,7 +8,7 @@ Draft
 
 ## Authors
 
-* Ralph Bean
+- Ralph Bean
 
 ## Context
 
