@@ -76,11 +76,11 @@ other ADRs, if we take them up at all:
 template includes an [Environment] that the integration-service will promote to. Tomorrow, the
 appstudio tier template should no longer include an [Environment] which on its own will cause
 integration-service to _not_ trigger a deployment when testing completes. Instead, the appstudio
-tier template should include a [ReleasePlan] with a reference to the [push-to-external-registry]
+tier template should include a [ReleasePlan] with a reference to the [push-to-registry]
 release pipeline. This new default [ReleasePlan] should carry parameters such that whenever
 a [Snapshot] is successfully tested, a [Release] is created that re-tags the images in their same
 quay repositories with a tag like `:released` or `:validated` (name tbd). The
-[push-to-external-registry] pipeline can use the `appstudio-pipeline` service account in the user's
+[push-to-registry] pipeline can use the `appstudio-pipeline` service account in the user's
 dev workspace, which already has push access to the repository in question.
 
 ```mermaid
@@ -162,8 +162,31 @@ flowchart TD
 - Drop the [Environment], [SnapshotEnvironmentBinding], and [GitOpsDeploymentManagedEnvironment]
   APIs from the [application-api] repo.
 
+[renovatebot]: https://github.com/renovatebot/renovate
+[deployment-target-operator]: #
+[gitops-service]: ../ref/gitops-service.md
+[push-to-registry]: https://github.com/redhat-appstudio/release-service-catalog/tree/main/pipelines/push-to-external-registry
+[application-api]: https://github.com/redhat-appstudio/application-api
+[integration-service]: ../book/integration-service.md
+[release-service]: ../book/release-service.md
+[Component]: ../ref/application-environment-api.md#component
+[Components]: ../ref/application-environment-api.md#component
 [Environment]: ../ref/application-environment-api.md#environment
 [Environments]: ../ref/application-environment-api.md#environment
+[GitOpsDeploymentManagedEnvironment]: ../ref/application-environment-api.md#GitOpsDeploymentManagedEnvironment
+[GitOpsDeploymentManagedEnvironments]: ../ref/application-environment-api.md#GitOpsDeploymentManagedEnvironment
+[SnapshotEnvironmentBinding]: ../ref/application-environment-api.md#snapshotenvironmentbinding
+[SnapshotEnvironmentBindings]: ../ref/application-environment-api.md#snapshotenvironmentbinding
+[Snapshot]: ../ref/application-environment-api.md#snapshot
+[Snapshots]: ../ref/application-environment-api.md#snapshot
+[Release]: ../ref/release-service.md#Release
+[Releases]: ../ref/release-service.md#Release
+[ReleasePlan]: ../ref/release-service.md#ReleasePlan
+[ReleasePlans]: ../ref/release-service.md#ReleasePlan
+[ReleasePlanAdmission]: ../ref/release-service.md#ReleasePlanAdmission
+[ReleasePlanAdmissions]: ../ref/release-service.md#ReleasePlanAdmission
+[IntegrationTestScenario]: ../ref/integration-service.md#IntegrationTestScenario
+[IntegrationTestScenarios]: ../ref/integration-service.md#IntegrationTestScenario
 [DT]: ../ref/application-environment-api.md#deploymenttarget
 [DTs]: ../ref/application-environment-api.md#deploymenttarget
 [DeploymentTarget]: ../ref/application-environment-api.md#deploymenttarget
@@ -172,5 +195,7 @@ flowchart TD
 [DTCs]: ../ref/application-environment-api.md#deploymenttargetclaim
 [DeploymentTargetClaim]: ../ref/application-environment-api.md#deploymenttargetclaim
 [DeploymentTargetClaims]: ../ref/application-environment-api.md#deploymenttargetclaim
+[DTCls]: ../ref/application-environment-api.md#deploymenttargetclass
+[DTClses]: ../ref/application-environment-api.md#deploymenttargetclass
 [DeploymentTargetClass]: ../ref/application-environment-api.md#deploymenttargetclass
 [DeploymentTargetClasses]: ../ref/application-environment-api.md#deploymenttargetclass
