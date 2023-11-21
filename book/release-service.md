@@ -44,17 +44,16 @@ Below is the list of CRs that the Release service is responsible for interacting
 | Custom Resource             | When?                                                       | Why?                                                                                          |
 |-----------------------------|-------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
 | SnapshotEnvironmentBinding  | When deploying the Snapshot to an Environment               | To create a SnapshotEnvironmentBinding for the referenced Environment when one does not exist |
-| PipelineRun                 | Once a Release has been composed and is ready for execution | To perform the steps in the Release Strategy                                                  |
+| PipelineRun                 | Once a Release has been composed and is ready for execution | To perform the steps in the Release Pipeline                                                  |
 
 ### READ
 
-| Custom Resources        | When?                                                  | Why?                                                                      |
-|-------------------------|--------------------------------------------------------|---------------------------------------------------------------------------|
-| Application & Component | When validating ReleasePlans and ReleasePlanAdmissions | To ensure data consistency                                                |
-| ReleasePlan             | When starting to process a Release                     | To determine the target workspace to run the Release Pipeline in          |
-| ReleasePlanAdmission    | When starting to process a Release                     | To determine the ReleaseStrategy to use to compose the Release Pipeline   |
-| Snapshot                | Creating and triggering a Release Pipeline             | To determine which components to release                                  |
-| ReleaseStrategy         | Before composing the Release Pipeline                  | To determine the bundle to use to run the Release Pipeline                |
+| Custom Resources        | When?                                                  | Why?                                                             |
+|-------------------------|--------------------------------------------------------|------------------------------------------------------------------|
+| Application & Component | When validating ReleasePlans and ReleasePlanAdmissions | To ensure data consistency                                       |
+| ReleasePlan             | When starting to process a Release                     | To determine the target workspace to run the Release Pipeline in |
+| ReleasePlanAdmission    | When starting to process a Release                     | To determine how to compose the Release Pipeline                 |
+| Snapshot                | Creating and triggering a Release Pipeline             | To determine which components to release                         |
 
 ### UPDATE
 
@@ -88,8 +87,7 @@ The Release service will copy the annotations and labels from the Release CR and
    * The `spec.snaphot` should reference the Snapshot to release.
    * The `spec.releasePlan` should reference the ReleasePlan to use.
 2. Find the matching ReleasePlanAdmission in the `spec.target` namespace specified in the ReleasePlan.
-3. Extract the `spec.releaseStrategy` from the ReleasePlanAdmission
-4. Extract the `spec.serviceAccount`, `spec.bundle`, `spec.pipeline` and `spec.policy` to use from the ReleaseStrategy.
+3. Extract the `spec.pipelineRef`, `spec.serviceAccount`, `spec.policy` from the ReleasePlanAdmission
 5. Create a Release PipelineRun using the above info.
 6. Watch Release PipelineRun and update Release `status` with progress and outcome.
 7. If ReleasePlanAdmission specified a `spec.environment`, then do the following:

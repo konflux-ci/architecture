@@ -43,8 +43,8 @@ originally created the custom resource.
 
 During the course of an attempt to release content, artifacts may need to be signed. The service that
 performs the signing process is an internal service within an organization with no publicly addressable API.
-The [release-service] may execute a release strategy that has a step that wants to access that signing service's
-API and obtain a signature to be used in downstream steps in the release strategy.
+The [release-service] may execute a release pipeline that has a step that wants to access that signing service's
+API and obtain a signature to be used in downstream steps in the release pipeline.
 
 Using the pattern here, the user organization (called MyOrg) would create a signing controller hosted in a cluster inside their network, but which uses a KUBECONFIG pointed at the kcp VirtualWorkspace for a `MyOrgSigningRequest`. They would construct a release pipeline which creates those `MyOrgSigningRequest` CRs in their managed workspace, and which watches for `status` updates on those request CRs to determine when the internally hosted signing process has completed.
 
