@@ -33,8 +33,7 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | Pipeline Results        | results.tekton.dev        | get, list                                       | results, records, logs
 |               | IntegrationTestScenario | appstudio.redhat.com      | get, list, watch                                | integrationtestscenarios
 |               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                                | enterprisecontractpolicies
-|               | Release Strategy        | appstudio.redhat.com      | get, list, watch                                | releases, releasestrategies, releaseplans
-|               | Release Admission Plan  | appstudio.redhat.com      | get, list, watch                                | releaseplanadmissions
+|               | *Release Service*       | appstudio.redhat.com      | get, list, watch                                | releases, releaseplans, releaseplanadmissions
 |               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch                                | jbsconfigs, artifactbuilds
 |               | *Service Access*        | appstudio.redhat.com      | get, list, watch                                | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests
 |               | *Remote Secrets*        | appstudio.redhat.com      | get, list, watch                                | remotesecrets
@@ -54,8 +53,7 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | Pipeline Results        | results.tekton.dev        | get, list                                       | results, records, logs
 |               | IntegrationTestScenario | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | integrationtestscenarios
 |               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                                | enterprisecontractpolicies
-|               | Release Strategy        | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | releases, releasestrategies, releaseplans
-|               | Release Admission Plan  | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | releaseplanadmissions
+|               | *Release Service*       | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | releases, releaseplans, releaseplanadmissions
 |               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch, create, update, patch         | jbsconfigs, artifactbuilds
 |               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch         | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests, spiaccesstokendataupdates
 |               | *Remote Secrets*        | appstudio.redhat.com      | get, list, watch                                | remotesecrets
@@ -75,7 +73,7 @@ We will use the built-in Kubernetes RBAC system for AppStudio's role and permiss
 |               | Pipeline Results        | results.tekton.dev        | get, list                                       | results, records, logs
 |               | IntegrationTestScenario | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | integrationtestscenarios
 |               | Enterprise contract     | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | enterprisecontractpolicies
-|               | Release Strategy        | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | releases, releasestrategies, releaseplans
+|               | *Release Service*       | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | releases, releaseplans, releaseplanadmissions
 |               | Release Admission Plan  | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | releaseplanadmissions
 |               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch, create, update, patch, delete | jbsconfigs, artifactbuilds
 |               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens,spifilecontentrequests, spiaccesstokendataupdates

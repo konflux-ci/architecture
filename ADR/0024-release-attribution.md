@@ -22,8 +22,8 @@ will be validated against Red Hat's SSO.
 #### Terminology
 
 * `Release`: A CRD that describes what should be released and using which plan.
-* `ReleasePlan`: A CRD that describes where and how an application should be released.
-* `ReleaseStrategy`: A CRD that describes which pipeline to execute along with specific pipeline parameters.
+* `ReleasePlan`: A CRD that describes where an application should be released.
+* `ReleasePlanAdmission`: A CRD that describes which pipeline to execute along with specific pipeline parameters.
 
 #### Architecture
 
@@ -50,7 +50,7 @@ It will be obtained by capturing the user that creates or updates the `ReleasePl
 the resource has the label `release.rhtap.openshift.io/standing-attribution` set to `true`.
 
 Since we expect ReleasePlans to be updated by users who may not intend to provide a `Standing Attribution`
-(i.e. Change `ReleaseStrategy`), it is important to keep track of author information when the annotation is set.
+(i.e. Change `ReleasePlanAdmission`), it is important to keep track of author information when the annotation is set.
 ReleasePlans will make use of the same label described above (`release.rhtap.openshift.io/author`) to keep track of the
 user information.
 
