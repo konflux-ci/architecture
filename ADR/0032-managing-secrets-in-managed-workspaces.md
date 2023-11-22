@@ -1,4 +1,4 @@
-# 28. Managing Secrets in Managed Workspaces
+# 32. Managing Secrets in Managed Workspaces
 Date: 2023-11-22
 
 ## Status
@@ -11,5 +11,4 @@ Currently, secrets are managed in managed workspaces via SPI's RemoteSecrets. Th
 Managed workspaces will use ExternalSecrets via the External Secrets Operator. This will permit the tight integration with Vault that is already used in other systems.
 
 ## Consequence
-- Users will need to created and administer workspace secrets using a combination of Vault and ExternalSecret resources.
-
+- Users will need to create and administer workspace secrets using a combination of Vault and ExternalSecret resources.
