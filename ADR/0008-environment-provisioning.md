@@ -4,7 +4,7 @@ Date: 2022-12-14
 
 ## Status
 
-Accepted
+Superceded by [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)
 
 ## Approvers
 

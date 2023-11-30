@@ -10,6 +10,7 @@ Accepted
 Relates to:
 * [ADR 13. AppStudio Test Stream - API contracts](0013-integration-service-api-contracts.html)
 * [ADR 30. Tekton Results Naming Convention](0030-tekton-results-naming-convention.html)
+* [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)
 
 ## Context
 

@@ -6,6 +6,14 @@ Date: 2023-11-17
 
 Draft
 
+Relates to:
+* [ADR 14. Let Pipelines Proceed](0014-let-pipelines-proceed.html)
+
+Supercedes:
+* [ADR 08. Environment Provisioning](0008-environment-provisioning.html)
+* [ADR 16. Integration Service Promotion Logic](0016-integration-service-promotion-logic.html)
+* [ADR 28. Handling SnapshotEnvironmentBinding Errors](0028-handling-snapshotenvironmentbinding-errors.html)
+
 ## Authors
 
 - Ralph Bean

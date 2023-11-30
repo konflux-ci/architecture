@@ -2,7 +2,7 @@
 Date: 2023-08-31
 
 ## Status
-Accepted
+Superceded by [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)
 
 ## Context
 It is currently not possible to determine whether a SnapshotEnvironmentBinding (SEB) is stuck in an unrecoverable state.  This is a major problem when deciding if an ephemeral SEB needs to be cleaned up by the integration service's SnapshotEnvironmentBinding controller.  An inability to clean up errored SEBs can overload the cluster.
