@@ -66,9 +66,9 @@ other ADRs, if we take them up at all:
 
 - Decoupling [integration-service] and [release-service] from a shared [Snapshot] API. They will
   continue to share a [Snapshot] API as of this ADR.
-- Decoupling [integration-service] from the [application-service] APIs. It will still promote images
-  to the "global candidate list" and continue to use the list of [Components] to guide its
-  construction of [Snapshots].
+- Decoupling [integration-service] from the [application-service] APIs, like [Application] and
+  [Component]. It will still promote images to the "global candidate list" (on the [Component]
+  resources) and continue to use the list of [Components] to guide its construction of [Snapshots].
 
 ### Use Case Descriptions
 
