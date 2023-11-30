@@ -78,7 +78,7 @@ appstudio tier template should no longer include an [Environment] which on its o
 integration-service to _not_ trigger a deployment when testing completes. Instead, the appstudio
 tier template should include a [ReleasePlan] with a reference to the [push-to-registry]
 release pipeline. This new default [ReleasePlan] should carry parameters such that whenever
-a [Snapshot] is successfully tested, a [Release] is created that re-tags the images in their same
+a [Snapshot] is successfully tested, a [Release] is created that re-tags the images in build-time
 quay repositories with a tag like `:released` or `:validated` (name tbd). The
 [push-to-registry] pipeline can use the `appstudio-pipeline` service account in the user's
 dev workspace, which already has push access to the repository in question.
