@@ -50,7 +50,8 @@ We are going to decouple the deployment from the build, test, and release portio
 - The [application-service] will stop generating GitOps repo content.
 - HAC will stop rendering [Environments] and their status.
 - If a user wants to make use of deployment capabilities, we will promote the usage of [renovatebot]
-  to propagate _released_ images to their self-managed gitops repo as pull requests.
+  to propagate _released_ images to their self-managed gitops repo as pull requests. Dependabot is
+  equally viable if the user's gitops repo is on GitHub.
 
 **Test and promotion**:
 
