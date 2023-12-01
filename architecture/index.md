@@ -39,6 +39,55 @@ API resources in the second row (PipelineRun, Snapshot) should primarilly be tho
 data-plane resources. The system responds to user requests by creating and managing the lifecycle of
 these resources.
 
+- An [Application] represents a functionally coherent set of git branches that should be built,
+  tested, and released together. The user provides and names their [Applications]. They are
+  generally long-lived and don't change much after they are created.
+- A [Component] represents an image to build from a particular git branch (and a particular context
+  directory). It is owned by an [Application]. The user provides and names their [Components] and
+  specifies which git repositories and branches they relate to. The user may add, remove, or change
+  [Components] over the lifespan of an [Application].
+- A [Snapshot] represents a collection of particular image builds, mapped to the [Components] of an
+  [Application]. A [Snapshot] is owned by an [Application]. Generally, the [integration-service]
+  produces new [Snapshots] automatically in response to completed builds. It is also possible for
+  the user to construct and provide [Snapshots] to test or release deliberate combinations of
+  images. Old [Snapshots] are garbage collected if not bound to other resources like
+  a [SnapshotEnvironmentBinding] or a [Release].
+- An [IntegrationTestScenario] represents a test that should be run against new [Snapshots] that
+  belong to a particular [Application]. It is owned by an [Application]. The user provides writes
+  tekton pipelines that test their application and registers them with the system by creating
+  [IntegrationTestScenarios].
+- An [Environment] represents a destination that [application-service] and the [gitops-service] can
+  deploy things to. Multiple [Applications] in the same workspace can deploy to the same
+  [Environment]. An [Environment] may be long lived (like the `development` [Environment] provided
+  by the system as part of the initialization of a user's workspace) or may be short-lived and
+  ephemeral (like the temporary [Environments] created by the [integration-service] as a part of its
+  test execution processes).
+- A [DeploymentTargetClaim] represents a request to provision a new deployment target. An
+  [Environment] is backed by a [DeploymentTargetClaim]. The [DeploymentTargetClaim] causes new
+  deployment targets to be provisioned which are represented by [DeploymentTargets] that get bound
+  to it. These are typically created and destroyed by the [integration-service] as a part of its
+  test execution processes.
+- A [SnapshotEnvironmentBinding] represents a request to deploy a particular set of images
+  (represented by a [Snapshot]) to a particular location (represented by an [Environment]).
+  A [SnapshotEnvironmentBinding] is owned by an [Application]. The [integration-service promotes
+  images] by updating the [SnapshotEnvironmentBinding] associated with an [Environment]. The
+  [SnapshotEnvironmentBinding] is generally long-lived.
+- A [ReleasePlan] represents a release pipeline that can be used to release a [Snapshot] to some
+  destination, depending on the implementation of the release pipeline. A [ReleasePlan] is owned by
+  an [Application]. It can operate in two modes, one which executes a "tenant" release pipeline in
+  the user's workspace, and another when used in conjunction with a [ReleasePlanAdmission] where it
+  executes a "managed" release pipeline in a separate privileged workspace owned by another team.
+  The [ReleasePlan] is generally long-lived.
+- A [ReleasePlanAdmission] represents an *acceptance* of release pipeline content from another
+  team's workspace into *this* workspace. It is used exclusively in conjunction with a [ReleasePlan]
+  to represent agreement on details about how to release [Snapshots] across workspace boundaries.
+  The [ReleasePlanAdmission] is generally long-lived.
+- A [Release] represents a request to release a particular set of images (represented by
+  a [Snapshot]) by particular means (represented by the release pipeline details in
+  a [ReleasePlan]). The creation of a [Release] causes [release-service] to create a release
+  PipelineRun in one or more workspaces depending on details in the associated [ReleasePlan] and
+  [ReleasePlanAdmission].
+
 ## Service (Component) Context
 
 Each service that makes up AppStudio is further explained in its own document.
@@ -75,3 +124,31 @@ Each service that makes up AppStudio is further explained in its own document.
 ### Naming Conventions
 
 - [Namespace Metadata](../ADR/adr-0010-namespace-metadata)
+
+[integration-service promotes images]: ../ADR/0016-integration-service-promotion-logic.md
+[application-service]: ./hybrid-application-service.md
+[gitops-service]: ./gitops-service.md
+[integration-service]: ./integration-service.md
+[release-service]: ./release-service.md
+[Application]: ../ref/application-environment-api.md#application
+[Applications]: ../ref/application-environment-api.md#application
+[Component]: ../ref/application-environment-api.md#component
+[Components]: ../ref/application-environment-api.md#component
+[Environment]: ../ref/application-environment-api.md#environment
+[Environments]: ../ref/application-environment-api.md#environment
+[Snapshot]: ../ref/application-environment-api.md#snapshot
+[Snapshots]: ../ref/application-environment-api.md#snapshot
+[SnapshotEnvironmentBinding]: ../ref/application-environment-api.md#snapshotenvironmentbinding
+[SnapshotEnvironmentBindings]: ../ref/application-environment-api.md#snapshotenvironmentbinding
+[DeploymentTarget]: ../ref/application-environment-api.md#deploymenttarget
+[DeploymentTargets]: ../ref/application-environment-api.md#deploymenttarget
+[DeploymentTargetClaim]: ../ref/application-environment-api.md#deploymenttargetclaim
+[DeploymentTargetClaims]: ../ref/application-environment-api.md#deploymenttargetclaim
+[Release]: ../ref/release-service.html#release
+[Releases]: ../ref/release-service.html#release
+[ReleasePlan]: ../ref/release-service.html#releaseplan
+[ReleasePlans]: ../ref/release-service.html#releaseplan
+[ReleasePlanAdmission]: ../ref/release-service.html#releaseplanadmission
+[ReleasePlanAdmissions]: ../ref/release-service.html#releaseplanadmission
+[IntegrationTestScenario]: ../ref/integration-service.html#integrationtestscenario
+[IntegrationTestScenarios]: ../ref/integration-service.html#integrationtestscenario
