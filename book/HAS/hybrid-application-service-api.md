@@ -2,11 +2,11 @@
 
 ## Overview
 
-The official Hybrid Application Service (HAS) APIs are listed in the AppStudio [API Reference](https://redhat-appstudio.github.io/book/ref/application-environment-api.html#application).  The APIs Specific to HAS are:
+The official Hybrid Application Service (HAS) APIs are listed in the AppStudio [API Reference](https://redhat-appstudio.github.io/architecture/ref/application-environment-api.html#application).  The APIs Specific to HAS are:
 
-* [Application](https://redhat-appstudio.github.io/book/ref/application-environment-api.html#application)
-* [Component](https://redhat-appstudio.github.io/book/ref/application-environment-api.html#component)
-* [ComponentDetectionQuery](https://redhat-appstudio.github.io/book/ref/application-environment-api.html#componentdetectionquery)
+* [Application](https://redhat-appstudio.github.io/architecture/ref/application-environment-api.html#application)
+* [Component](https://redhat-appstudio.github.io/architecture/ref/application-environment-api.html#component)
+* [ComponentDetectionQuery](https://redhat-appstudio.github.io/architecture/ref/application-environment-api.html#componentdetectionquery)
 
 The topics below offer a more detailed explanation of the API usage with examples.
 

@@ -52,4 +52,4 @@ for users ([STONE-459]).
 [STONE-459]: https://issues.redhat.com/browse/STONE-459
 [Environments]: ../ref/application-environment-api.html#environment
 [ADR-0030]: 0030-tekton-results-naming-convention.html
-[enterprise contract]: ../book/enterprise-contract.html
+[enterprise contract]: ../architecture/enterprise-contract.html

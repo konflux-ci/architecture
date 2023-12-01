@@ -1,4 +1,4 @@
-# Book of AppStudio
+# Architecture of AppStudio
 
 This repository contains the technical and architecture documents for AppStudio.
 User documentation is out of scope.
@@ -7,7 +7,7 @@ User documentation is out of scope.
 
 ### The Technical Overview Document
 
-[/book](./book/index.md) folder hosts the technical overview document. This document represents the latest state of agreed technical and architectural decisions. See [contributing](#contributing) on how to propose changes.
+[/architecture](./architecture/index.md) folder hosts the technical overview document. This document represents the latest state of agreed technical and architectural decisions. See [contributing](#contributing) on how to propose changes.
 
 [/ref](./ref/index.md) folder hosts the API references for all the related services. These API references are generated during publish flow.
 

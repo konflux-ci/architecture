@@ -59,7 +59,7 @@ A non-exhaustive list of checks that would be run on a Task is:
 ## Out-of-scope
 
 * Supporting validation of Tasks inside Stonesoup before submission would be out-of-scope. However, partners should be able to import a
-Component into StoneSoup, customize their Pipeline definition in the .tekton directory and have the changes validated in a PipelineRun execution in StoneSoup. To be able to be productive with this flow, they'd need to be able to do https://github.com/redhat-appstudio/book/pull/64 .
+Component into StoneSoup, customize their Pipeline definition in the .tekton directory and have the changes validated in a PipelineRun execution in StoneSoup. To be able to be productive with this flow, they'd need to be able to do https://github.com/redhat-appstudio/architecture/pull/64 .
 
 ## Alternatives
 
