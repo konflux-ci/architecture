@@ -39,7 +39,7 @@ API resources in the second row (PipelineRun, Snapshot) should primarilly be tho
 data-plane resources. The system responds to user requests by creating and managing the lifecycle of
 these resources.
 
-- An [Application] represents a functionally coherent set of git branches that should be built,
+- An [Application] represents a functionally coherent set of [Components] that should be built,
   tested, and released together. The user provides and names their [Applications]. They are
   generally long-lived and don't change much after they are created.
 - A [Component] represents an image to build from a particular git branch (and a particular context
