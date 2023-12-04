@@ -57,7 +57,7 @@ these resources.
   tekton pipelines that test their application and registers them with the system by creating
   [IntegrationTestScenarios].
 - An [Environment] represents a destination that [application-service] and the [gitops-service] can
-  deploy things to. Multiple [Applications] in the same workspace can deploy to the same
+  deploy to. Multiple [Applications] in the same workspace can deploy to the same
   [Environment]. An [Environment] may be long lived (like the `development` [Environment] provided
   by the system as part of the initialization of a user's workspace) or may be short-lived and
   ephemeral (like the temporary [Environments] created by the [integration-service] as a part of its
