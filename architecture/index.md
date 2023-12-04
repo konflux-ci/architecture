@@ -42,15 +42,15 @@ these resources.
 - An [Application] represents a functionally coherent set of [Components] that should be built,
   tested, and released together. The user provides and names their [Applications]. They are
   generally long-lived and don't change much after they are created.
-- A [Component] represents an image to build from a particular git branch (and a particular context
+- A [Component] represents an OCI artifact to build from a particular git branch (and a particular context
   directory). It is owned by an [Application]. The user provides and names their [Components] and
   specifies which git repositories and branches they relate to. The user may add, remove, or change
   [Components] over the lifespan of an [Application].
-- A [Snapshot] represents a collection of particular image builds, mapped to the [Components] of an
+- A [Snapshot] represents a collection of particular OCI artifact builds, mapped to the [Components] of an
   [Application]. A [Snapshot] is owned by an [Application]. Generally, the [integration-service]
   produces new [Snapshots] automatically in response to completed builds. It is also possible for
   the user to construct and provide [Snapshots] to test or release deliberate combinations of
-  images. Old [Snapshots] are garbage collected if not bound to other resources like
+  OCI artifacts. Old [Snapshots] are garbage collected if not bound to other resources like
   a [SnapshotEnvironmentBinding] or a [Release].
 - An [IntegrationTestScenario] represents a test that should be run against new [Snapshots] that
   belong to a particular [Application]. It is owned by an [Application]. The user provides writes
@@ -67,10 +67,10 @@ these resources.
   deployment targets to be provisioned which are represented by [DeploymentTargets] that get bound
   to it. These are typically created and destroyed by the [integration-service] as a part of its
   test execution processes.
-- A [SnapshotEnvironmentBinding] represents a request to deploy a particular set of images
+- A [SnapshotEnvironmentBinding] represents a request to deploy a particular set of OCI artifacts
   (represented by a [Snapshot]) to a particular location (represented by an [Environment]).
   A [SnapshotEnvironmentBinding] is owned by an [Application]. The [integration-service promotes
-  images] by updating the [SnapshotEnvironmentBinding] associated with an [Environment]. The
+  OCI artifacts] by updating the [SnapshotEnvironmentBinding] associated with an [Environment]. The
   [SnapshotEnvironmentBinding] is generally long-lived.
 - A [ReleasePlan] represents a release pipeline that can be used to release a [Snapshot] to some
   destination, depending on the implementation of the release pipeline. A [ReleasePlan] is owned by
@@ -82,7 +82,7 @@ these resources.
   team's workspace into *this* workspace. It is used exclusively in conjunction with a [ReleasePlan]
   to represent agreement on details about how to release [Snapshots] across workspace boundaries.
   The [ReleasePlanAdmission] is generally long-lived.
-- A [Release] represents a request to release a particular set of images (represented by
+- A [Release] represents a request to release a particular set of OCI artifacts (represented by
   a [Snapshot]) by particular means (represented by the release pipeline details in
   a [ReleasePlan]). The creation of a [Release] causes [release-service] to create a release
   PipelineRun in one or more workspaces depending on details in the associated [ReleasePlan] and
@@ -97,7 +97,7 @@ Each service that makes up AppStudio is further explained in its own document.
 - [Build Service](./build-service.md) - A workflow system that manages the build pipeline definition
   for users' Components.
 - [Image Controller](./image-controller.md) - A subsystem of the build-service that manages the
-  creation and access rights to container image repositories.
+  creation and access rights to OCI repositories.
 - [Java Rebuilds Service](./jvm-build-service.md) - A subsystem of the build-service that manages
   the rebuild of binary java jars pulled from maven central for an improved degree of provenance.
 - [Integration Service](./integration-service.md) - A workflow service that manages execution of
@@ -111,7 +111,7 @@ Each service that makes up AppStudio is further explained in its own document.
 - [Service Provider Integration](./service-provider-integration.md) - A foundational service
   providing user secret management to other services.
 - [Enterprise Contract](./enterprise-contract.md) - A specialized subsystem responsible for the
-  definition and enforcement of policies related to how container images are built and tested.
+  definition and enforcement of policies related to how OCI artifacts are built and tested.
 
 ## API References
 
