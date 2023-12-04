@@ -44,9 +44,9 @@ these resources.
   generally long-lived and don't change much after they are created.
 - A [Component] represents an OCI artifact to build from a particular git branch (and a particular context
   directory). It is owned by an [Application]. The user provides and names their [Components] and
-  specifies which git repositories and branches they relate to. The user may add, remove, or change
-  [Components] over the lifespan of an [Application].
-- A [Snapshot] represents a collection of particular OCI artifact builds, mapped to the [Components] of an
+  specifies which git repositories and branches define how the artifact is built. The user may add,
+  remove, or change [Components] over the lifespan of an [Application].
+- A [Snapshot] represents a collection of particular OCI artifact, mapped to the [Components] of an
   [Application]. A [Snapshot] is owned by an [Application]. Generally, the [integration-service]
   produces new [Snapshots] automatically in response to completed builds. It is also possible for
   the user to construct and provide [Snapshots] to test or release deliberate combinations of
@@ -125,7 +125,7 @@ Each service that makes up AppStudio is further explained in its own document.
 
 - [Namespace Metadata](../ADR/adr-0010-namespace-metadata)
 
-[integration-service promotes images]: ../ADR/0016-integration-service-promotion-logic.md
+[integration-service promotes OCI artifacts]: ../ADR/0016-integration-service-promotion-logic.md
 [application-service]: ./hybrid-application-service.md
 [gitops-service]: ./gitops-service.md
 [integration-service]: ./integration-service.md
