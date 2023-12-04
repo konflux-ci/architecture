@@ -89,6 +89,6 @@ The promotion logic has originally been implemented as part of HACBS-802 / HACBS
 This document is created for posterity and visibility.
 
 [parentEnvironment]: https://github.com/redhat-appstudio/application-api/blob/5f554103549049bf02c1e344a13f0711081df6a1/api/v1alpha1/environment_types.go#L36-L39
-[Global Candidate List]: ../book/integration-service.html
+[Global Candidate List]: ../architecture/integration-service.html
 [HACBS-802]: https://issues.redhat.com/browse/HACBS-802
 [HACBS-801]: https://issues.redhat.com/browse/HACBS-801

@@ -80,7 +80,7 @@ You can view the source code for the ECP CRD
 [here](https://github.com/enterprise-contract/enterprise-contract-controller) and
 see its documentation [here](https://enterprise-contract.github.io/ecc/main/).
 See also the related
-[API Reference](https://redhat-appstudio.github.io/book/ref/enterprise-contract.html)
+[API Reference](https://redhat-appstudio.github.io/architecture/ref/enterprise-contract.html)
 
 ### EC Policies
 
@@ -133,7 +133,7 @@ Additional Resources
 
 - [AppStudio Documentation](https://redhat-appstudio.github.io/docs.appstudio.io)
 - [Enterprise Contract Documentation](https://enterprise-contract.github.io/)
-- [Book of AppStudio](https://redhat-appstudio.github.io/book/)
+- [Architecture of AppStudio](https://redhat-appstudio.github.io/architecture/)
 
 
 

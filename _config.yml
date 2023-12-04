@@ -1,28 +1,28 @@
 remote_theme: vaibhavvikas/jekyll-theme-minimalistic
-title: Book Of AppStudio
+title: Architecture Of AppStudio
 description: Technical documents about the Managed Developer Platform
 color-scheme: auto
 navigation:
   - name: Technical Overview Document
-    link: /book/book/index.html
+    link: /architecture/architecture/index.html
   - name: Architecture Decision Records
-    link: /book/ADR/index.html
+    link: /architecture/ADR/index.html
   - name: API References
-    link: /book/ref/index.html
+    link: /architecture/ref/index.html
     sublist:
     - name: Application and Environment API
-      link: /book/ref/application-environment-api.html
+      link: /architecture/ref/application-environment-api.html
     - name: Service Provider (SPI)
-      link: /book/ref/service-provider.html
+      link: /architecture/ref/service-provider.html
     - name: GitOps Service
-      link: /book/ref/gitops.html
+      link: /architecture/ref/gitops.html
     - name: Build Service
-      link: /book/ref/build-service.html
+      link: /architecture/ref/build-service.html
     - name: JVM Build Service
-      link: /book/ref/jvm-build-service.html
+      link: /architecture/ref/jvm-build-service.html
     - name: Integration Service
-      link: /book/ref/integration-service.html
+      link: /architecture/ref/integration-service.html
     - name: Release Service
-      link: /book/ref/release-service.html
+      link: /architecture/ref/release-service.html
     - name: Enterprise Contract
-      link: /book/ref/enterprise-contract.html
+      link: /architecture/ref/enterprise-contract.html

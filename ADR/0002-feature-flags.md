@@ -124,11 +124,11 @@ can know that the [integration-service] features of HACBS are enabled in the wor
 
 Originally drafted in a [google document](https://docs.google.com/document/d/1KcXWZ8VGUg_iR0RjdGuDYedP8ZW63XCgF26KZUNgpeQ/edit)
 
-[hac]: ../book/hybrid-application-console.md
+[hac]: ../architecture/hybrid-application-console.md
 [hac-dev]: https://github.com/openshift/hac-dev
-[has]: ../book/application-service.md
-[build-service]: ../book/build-service.md
-[integration-service]: ../book/integration-service.md
+[has]: ../architecture/application-service.md
+[build-service]: ../architecture/build-service.md
+[integration-service]: ../architecture/integration-service.md
 [customized pipelines]: https://issues.redhat.com/browse/HACBS-9
 [KCP]: ../ref/kcp.md
 [APIBinding]: ../ref/kcp.md#apibinding
