@@ -47,7 +47,9 @@ We are going to decouple the deployment from the build, test, and release portio
 
 - The [Environment], [SnapshotEnvironmentBinding], and [GitOpsDeploymentManagedEnvironment]
   resources will be deprecated and eventually decomissioned.
-- The [application-service] will stop generating GitOps repo content.
+- The [application-service] will stop generating GitOps repo content and stop creating GitOps
+  repositories.
+- We will stop deploying the [gitops-service] entirely and the RDS instance it uses.
 - HAC will stop rendering [Environments] and their status.
 - If a user wants to make use of deployment capabilities, we will promote the usage of [renovatebot]
   to propagate _released_ images to their self-managed gitops repo as pull requests. Dependabot is
@@ -112,36 +114,38 @@ flowchart TD
 Outside of the AppStudio member cluster, the user is responsible for acquiring a gitops repo and
 deployment environments of their choice, manually laying out their application resources in the repo
 (assisted by tools like `kam`), specifying image references by tag to match the `:released` or
-`:validated` tagging schem mentioned above, configuring Argo to deploy from their gitops repo, and
-configuring [renovatebot] to propagate image updates by digest to their gitops repo.
+`:validated` tagging schem mentioned above, configuring ArgoCD to deploy from their gitops repo, and
+configuring [renovatebot] to propagate image updates by digest to their gitops repo. Really, ArgoCD
+here is just an example and other gitops tools can be used. It can even update Helm repos with the
+new images. Options for the user are not limited.
 
 **For manual creation of new environments** - the user manages this directly using a combination of
 their gitops repo and argo, outside of the AppStudio member cluster.
 
 **For automated testing in ephemeral environments** - the user specifies an
-[IntegrationTestScenario] CR with a [DeploymentTargetClass] reference. After a build completes, but
-before it executes tests, the integration-service creates a new [DeploymentTargetClaim] CR with
-a [DTCLS] matching the one on the [IntegrationTestScenario]. This should cause the
-[deployment-target-operator] to provision and bind a [DeploymentTarget] matching the
-[DeploymentTargetClass]. [integration-service] then passes the kubeconfig and [Snapshot] to the
-integration test to deploy the user's app and run tests.  The integration-service should delete the
-[DTC] once it isn’t needed anymore for the test.
+[IntegrationTestScenario] CR with a [DeploymentTargetClaim] *spec* embedded. After a build
+completes, but before it executes tests, the integration-service creates a new
+[DeploymentTargetClaim] CR with a spec copied from the one on the [IntegrationTestScenario]. This
+should cause the [deployment-target-operator] to provision and bind a [DeploymentTarget] matching
+the [DeploymentTargetClass] referenced in the spec. [integration-service] then passes the kubeconfig
+and [Snapshot] to the integration test to deploy the user's app and run tests.  The
+integration-service should delete the [DTC] once it isn’t needed anymore for the test.
 
 ```mermaid
 flowchart TD
     User --> |provides| IntegrationTestScenario
-    IntegrationTestScenario --> |references| DeploymentTargetClass
+    IntegrationTestScenario --> |embeds| spec[DeploymentTargetClaim spec]
     commit[fa:fa-code-commit Git Commit] --> |webhook| PipelinesAsCode
     PipelinesAsCode --> |creates| build[Build PipelineRun]
     build --> |triggers| integration-service
     integration-service --> |consults| IntegrationTestScenario
+    spec --> |is used to create| DeploymentTargetClaim
     integration-service --> |creates| DeploymentTargetClaim
-    DeploymentTargetClaim --> |references| DeploymentTargetClass
     DeploymentTargetClaim --> |is bound to| DeploymentTarget
     DeploymentTarget --> |is associated with| kubeconfig[kubeconfig Secret]
     kubeconfig --> |is provided to| test
     integration-service --> |creates| test[Test PipelineRun]
-    DeploymentTarget --> |represents| cluster
+    DeploymentTarget --> |represents| cluster[cluster, namespace, or other external resource]
     test --> |deploys user app to| cluster
     test --> |executes tests against| cluster
 ```
@@ -158,9 +162,11 @@ flowchart TD
 - As a team, we'll be in a position to try to achieve independence for the [DeploymentTarget] APIs,
   make it usable outside the context of AppStudio, and ideally make it attractive for collaborators.
 
-## Phases of implementation
+## Implementation
 
-- Create the [deployment-target-operator], as step 0.
+Some of these phases can be done at the same time.
+
+- Create the [deployment-target-operator].
 - [integration-service]: use [DTCs] directly instead of [Environments].
 - [release-service]: Drop the environment reference from the [ReleasePlanAdmission] spec, and
   related controller code for managing a [SnapshotEnvironmentBinding].
@@ -168,8 +174,10 @@ flowchart TD
 - [HAC]: Drop UI features showing the [Environments]: (commit view, Environments pane, etc.)
 - [integration-service]: stop creating a [SEB] for the lowest [Environments].
 - [application-service]: stop generating the gitops repo content in response to [SEBs].
+- [application-service]: stop creating gitops repos.
 - Drop the [Environment], [SnapshotEnvironmentBinding], and [GitOpsDeploymentManagedEnvironment]
   APIs from the [application-api] repo.
+- Stop deploying the [gitops-service] and decomission the RDS database.
 
 [renovatebot]: https://github.com/renovatebot/renovate
 [deployment-target-operator]: #
