@@ -210,25 +210,19 @@ The Integration service needs secrets mounted so that the `Environment Provision
 
 ### Image extraction details
 
-Integration service is getting specific information about the image that's being built by the RHTAP build pipeline by parsing the expected Tekton results for the pipeline.
+Integration service is getting specific information about the image that's being built by the RHTAP build pipeline by parsing the expected Tekton results for the pipeline. All of them are required to be present in order to correctly construct a Snapshot.
 
 <ins>Results are following:</ins>
- - IMAGE_URL *required*
+ - IMAGE_URL
     - Represents image repository where the built image was pushed. Used to construct the component image reference.
- - IMAGE_DIGEST *required*
+ - IMAGE_DIGEST
     - Digest of the image that was built. Used to construct the component image reference.
  - CHAINS-GIT_URL
-    - Git url of the target repository.
+    - Git url of the source repository. Added to the source section of the component within the Snapshot.
  - CHAINS-GIT_COMMIT
-    - The precise commit SHA that was fetched by git-clone task.
+    - The precise commit SHA that was fetched by git-clone task. Added to the source section of the component within the Snapshot.
 
 >All those results contributes to a snapshot preparation for a pipelinerun
-
-<ins>Parameters are following:</ins>
-- git-url *required*
-    - Git url of the source repository.  Added to the source section of the component within the snapshot
-- revision *required*
-    - The precise commit SHA that was fetched by git-clone task. Added to the source section of the component within the Snapshot.
 
 
 ## Appendix
