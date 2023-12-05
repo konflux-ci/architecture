@@ -176,9 +176,9 @@ flowchart TD
 [gitops-service]: ../ref/gitops-service.md
 [push-to-registry]: https://github.com/redhat-appstudio/release-service-catalog/tree/main/pipelines/push-to-external-registry
 [application-api]: https://github.com/redhat-appstudio/application-api
-[application-service]: ../book/application-service.md
-[integration-service]: ../book/integration-service.md
-[release-service]: ../book/release-service.md
+[application-service]: ../architecture/application-service.md
+[integration-service]: ../architecture/integration-service.md
+[release-service]: ../architecture/release-service.md
 [Component]: ../ref/application-environment-api.md#component
 [Components]: ../ref/application-environment-api.md#component
 [Environment]: ../ref/application-environment-api.md#environment
