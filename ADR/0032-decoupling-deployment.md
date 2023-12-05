@@ -7,12 +7,14 @@ Date: 2023-11-17
 Draft
 
 Relates to:
-* [ADR 14. Let Pipelines Proceed](0014-let-pipelines-proceed.html)
+
+- [ADR 14. Let Pipelines Proceed](0014-let-pipelines-proceed.html)
 
 Supercedes:
-* [ADR 08. Environment Provisioning](0008-environment-provisioning.html)
-* [ADR 16. Integration Service Promotion Logic](0016-integration-service-promotion-logic.html)
-* [ADR 28. Handling SnapshotEnvironmentBinding Errors](0028-handling-snapshotenvironmentbinding-errors.html)
+
+- [ADR 08. Environment Provisioning](0008-environment-provisioning.html)
+- [ADR 16. Integration Service Promotion Logic](0016-integration-service-promotion-logic.html)
+- [ADR 28. Handling SnapshotEnvironmentBinding Errors](0028-handling-snapshotenvironmentbinding-errors.html)
 
 ## Authors
 
@@ -187,6 +189,8 @@ Some of these phases can be done at the same time.
 [application-service]: ../architecture/application-service.md
 [integration-service]: ../architecture/integration-service.md
 [release-service]: ../architecture/release-service.md
+[Application]: ../ref/application-environment-api.md#application
+[Applications]: ../ref/application-environment-api.md#application
 [Component]: ../ref/application-environment-api.md#component
 [Components]: ../ref/application-environment-api.md#component
 [Environment]: ../ref/application-environment-api.md#environment
