@@ -88,7 +88,11 @@ these resources.
   a [Snapshot]) by particular means (represented by the release pipeline details in
   a [ReleasePlan]). The creation of a [Release] causes [release-service] to create a release
   PipelineRun in one or more workspaces depending on details in the associated [ReleasePlan] and
-  [ReleasePlanAdmission].
+  [ReleasePlanAdmission]. A [Release] can be created in one of two ways: if the [ReleasePlan] has an
+  *automated release* flag set to true, then [integration-service] will automatically create new
+  [Releases] for every [Snapshot] that successfully passes its post-merge testing. If that flag is
+  set to false, then the user is expected to create new a [Release] manually, associated with
+  [Snapshot] selected by the user manually.
 
 ## Service (Component) Context
 
