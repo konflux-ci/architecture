@@ -42,11 +42,12 @@ these resources.
 - An [Application] represents a functionally coherent set of [Components] that should be built,
   tested, and released together. The user provides and names their [Applications]. They are
   generally long-lived and don't change much after they are created.
-- A [Component] represents an OCI artifact to build from a particular git branch (and a particular context
-  directory). It is owned by an [Application]. The user provides and names their [Components] and
-  specifies which git repositories and branches define how the artifact is built. The user may add,
-  remove, or change [Components] over the lifespan of an [Application].
-- A [Snapshot] represents a collection of particular OCI artifact, mapped to the [Components] of an
+- A [Component] represents a git branch on a git repository (and a particular context directory)
+  that should be used to build OCI artifacts from commits that appear there. A [Component] is owned
+  by an [Application]. The user provides and names their [Components] and specifies which git
+  repositories and branches define how the artifact is built.  The user may add, remove, or change
+  [Components] over the lifespan of an [Application].
+- A [Snapshot] represents a collection of particular OCI artifacts, mapped to the [Components] of an
   [Application]. A [Snapshot] is owned by an [Application]. Generally, the [integration-service]
   produces new [Snapshots] automatically in response to completed builds. It is also possible for
   the user to construct and provide [Snapshots] to test or release deliberate combinations of
