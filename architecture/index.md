@@ -51,8 +51,9 @@ these resources.
   [Application]. A [Snapshot] is owned by an [Application]. Generally, the [integration-service]
   produces new [Snapshots] automatically in response to completed builds. It is also possible for
   the user to construct and provide [Snapshots] to test or release deliberate combinations of
-  OCI artifacts. Old [Snapshots] are garbage collected if not bound to other resources like
-  a [SnapshotEnvironmentBinding] or a [Release].
+  OCI artifacts. [Snapshots] are immutable. For a user to "modify" a [Snapshot], they need to create
+  a new [Snapshot] based on an old [Snapshot]. Old [Snapshots] are garbage collected if not bound to
+  other resources like a [SnapshotEnvironmentBinding] or a [Release].
 - An [IntegrationTestScenario] represents a test that should be run against new [Snapshots] that
   belong to a particular [Application]. It is owned by an [Application]. The user provides
   tekton pipelines that test their application and registers them with the system by creating
