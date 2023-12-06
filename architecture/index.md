@@ -47,9 +47,9 @@ these resources.
   by an [Application]. The user provides and names their [Components] and specifies which git
   repositories and branches define how the artifact is built.  The user may add, remove, or change
   [Components] over the lifespan of an [Application].
-- A [Snapshot] represents a collection of particular OCI artifacts, mapped to the [Components] of an
-  [Application]. A [Snapshot] is owned by an [Application]. Generally, the [integration-service]
-  produces new [Snapshots] automatically in response to completed builds. It is also possible for
+- A [Snapshot] represents a collection of particular OCI artifacts, mapped to [Components].
+  A [Snapshot] is owned by an [Application]. Generally, the [integration-service] produces new
+  [Snapshots] automatically in response to completed builds. It is also possible for
   the user to construct and provide [Snapshots] to test or release deliberate combinations of
   OCI artifacts. [Snapshots] are immutable. For a user to "modify" a [Snapshot], they need to create
   a new [Snapshot] based on an old [Snapshot]. Old [Snapshots] are garbage collected if not bound to
