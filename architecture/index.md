@@ -54,7 +54,7 @@ these resources.
   OCI artifacts. Old [Snapshots] are garbage collected if not bound to other resources like
   a [SnapshotEnvironmentBinding] or a [Release].
 - An [IntegrationTestScenario] represents a test that should be run against new [Snapshots] that
-  belong to a particular [Application]. It is owned by an [Application]. The user provides writes
+  belong to a particular [Application]. It is owned by an [Application]. The user provides
   tekton pipelines that test their application and registers them with the system by creating
   [IntegrationTestScenarios].
 - An [Environment] represents a destination that [application-service] and the [gitops-service] can
