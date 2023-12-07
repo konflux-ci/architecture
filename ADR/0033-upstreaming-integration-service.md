@@ -170,7 +170,7 @@ TODO - describe this in more detail
 to make use of [integration-service] from a jenkins pipeline. For example, perhaps their jenkins job
 performs CI on a git repository that contains pullspecs which should be mirrored to some environment
 of theirs. Before mirroring, they want to make sure that the same test works against dozens of
-different kubernetes configurations on different public clouds. That platform engineering team first
+different kubernetes configurations on different public clouds. That platform team first
 creates a single tekton pipeline that contains the logic to perform the test given a single cluster.
 They then configure dozens of [IntegrationTestScenario] resources, one for each kubernetes
 configuration they want to target. When a new set of pullspecs is proposed to their git repo,
@@ -178,13 +178,13 @@ Jenkins responds. Jenkins then creates a single [TestSubject] in the kubernetes 
 representing the new set of images under test. [integration-service] responds, inspecting all of the
 defined [IntegrationTestScenarios], it invokes the [deployment-target-operator] (from [Decoupling
 Deployment]) to provision each cluster configuration and it runs tests of the [TestSubject] against
-each. The aggregate results and stored in the `status` of the [TestSubject] for jenkins to monitor
+each. The aggregate results are stored in the `status` of the [TestSubject] for jenkins to monitor
 and report back to the platform team in CI.
 
 **Using integration-service with TestSubject automation.** A hypothetical platform team might want
 to make use of [integration-service] in conjunction with tekton pipelines that they use for
 building images. Imagine, every night they have a cron trigger which rebuilds their images using
-a static Dockerfile that installs the latest deb packages available to a base image and then
+a static Dockerfile that installs the latest debian packages available to a base image and then
 rebuilds all of their utility images on that new base image. Their pipelines expose the pullspecs of
 all of those images as results. The platform team configures a [TestSubjectConstructor] which
 instructs the [test-subject-construction-controller] to watch all PipelineRuns in their namespace with
@@ -192,7 +192,7 @@ a certain label. As those builds finish, the [test-subject-construction-controll
 [TestSubjects] by combining the image list from the **control** [TestSubject] with the new pullspec
 found in the result with the name described in the [TestSubjectConstructor]. The platform team
 benefits from integration-service's [two-phase architecture]. They build reports on the history of
-[TestSubjects] to understand when some new deb package has broken their suite of images.
+[TestSubjects] to understand when some new debian package has broken their suite of images.
 
 **Using integration-service in AppStudio** From the user's point of view, AppStudio should work like
 it does today. Our tier template needs to be modified to put a [TestSubjectConstructor] in place
