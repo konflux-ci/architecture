@@ -112,11 +112,46 @@ Today, control of the **Snapshot Construction** process is mixed up in the [Appl
 model, and is partly just implied. We *always* construct [Snapshots].
 
 **TestSubject Construction** (called Snapshot Construction in our system today) should have a clear
-control plane resource: the [ToBeDetermined] resource.
+control plane resource: the [TestSubjectConstructor]. A hypothetical schema for the resource
+follows:
 
-TODO - describe this in more detail
+```yaml
+version: appstudio.redhat.com/v1alpha1
+kind: TestSubjectConstructor
+metadata:
+  name: my-application-test-subject-constructor
+spec:
+  selector:
+    fields:
+      match:
+        kind: PipelineRun
+        version: tekton.dev/v1
+    labels:
+      match:
+        "appstudio.openshift.io/application": my-application
+        "pipelinesascode.tekton.dev/state": completed
+  extractor:
+    image_url: '.status.results.[] | select(.name == "IMAGE_URL").value'
+    image_digest: '.status.results.[] | select(.name == "IMAGE_DIGEST").value'
+    name: '.metadata.labels."appstudio.openshift.io/component"'
+    source:
+      git:
+        revision: '.metadata.labels."pipelinesascode.tekton.dev/sha"'
+        url: '.metadata.labels."pipelinesascode.tekton.dev/repo-url"'
+```
 
-TODO - describe the spec of this resource.
+Don't take the fields literally. The details will likely change after the ADR has settled. It is
+here for illustration purposes.
+
+The `selector` field will be used to identify resources that should trigger the construction of new
+[TestSubjects]. When created, the *basis* for the new test subject should always be taken from the
+**control** [TestSubject]. The values extracted from the triggering resource by way of the
+expressions on the `extractor` resource should be applied to that basis in the construction of a new
+[TestSubject].
+
+In the above example, the constructor will select only pipelineruns which are completed and which
+are associated with the app `my-application`. When triggered, it will extract the same image and
+source details that we extract today to supply to a new [TestSubject].
 
 ### Release Initiation, as owned by the release-service
 
@@ -151,16 +186,16 @@ to make use of [integration-service] in conjunction with tekton pipelines that t
 building images. Imagine, every night they have a cron trigger which rebuilds their images using
 a static Dockerfile that installs the latest deb packages available to a base image and then
 rebuilds all of their utility images on that new base image. Their pipelines expose the pullspecs of
-all of those images as results. The platform team configures a [ToBeDetermined] resource which
-instructed the [ToBeDetermined] controller to watch all PipelineRuns in their namespace with
-a certain label. As those builds finish, the [ToBeDetermined] controller constructs new
+all of those images as results. The platform team configures a [TestSubjectConstructor] which
+instructs the [test-subject-construction-controller] to watch all PipelineRuns in their namespace with
+a certain label. As those builds finish, the [test-subject-construction-controller] constructs new
 [TestSubjects] by combining the image list from the **control** [TestSubject] with the new pullspec
-found in the result with the name described in the [ToBeDetermined] resource. The platform team
+found in the result with the name described in the [TestSubjectConstructor]. The platform team
 benefits from integration-service's [two-phase architecture]. They build reports on the history of
 [TestSubjects] to understand when some new deb package has broken their suite of images.
 
 **Using integration-service in AppStudio** From the user's point of view, AppStudio should work like
-it does today. Our tier template needs to be modified to put a [ToBeDetermined] resource in place
+it does today. Our tier template needs to be modified to put a [TestSubjectConstructor] in place
 that instructs [integration-service] to construct [TestSubjects] in response to our [PaC]
 PipelineRuns.
 
@@ -172,10 +207,10 @@ PipelineRuns.
   a cluster that only carries the Tekton APIs and the DeploymentTarget APIs. The purpose of
   integration-service is to trigger *integration tests on collections of container images*. You can
   instruct it to do this on a case by case basis by creating TestSubject resources, or you can
-  configure a [ToBeDetermined] resource to instruct it to create its own [TestSubjects].
+  configure a [TestSubjectConstructor] to instruct it to create its own [TestSubjects].
 - [integration-service] today has only one CustomResource of its own: [IntegrationTestScenario].
   After this change, it will have three: [IntegrationTestScenario], [TestSubject], and
-  [ToBeDetermined].
+  [TestSubjectConstructor] resource.
 - We lose some ability to validate references between resources owned by different AppStudio
   controllers. Previously, if an IntegrationTestScenario was created referencing an Application
   which did not exist, we could reject that IntegrationTestScenario early, notifying the user of
