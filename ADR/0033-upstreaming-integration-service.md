@@ -45,7 +45,8 @@ Today, [integration-service] does the following things:
 - **Release Initiation**: When all PipelineRuns corresponding with the [IntegrationTestScenarios]
   that are marked as non-optional complete and if the [Snapshot] is designated as a post-merge
   [Snapshot], and if there is a [ReleasePlan] in the namespace with auto-release enabled, then
-  [integration-service] updates the "global candidate list" by way of the [Component] API.
+  [integration-service] updates the "global candidate list" by way of the [Component] API and
+  creates a [Release] CR to initiate a release in [release-service].
 
 Note that **Snapshot Construction** and **Global Candidate List Maintenance** are related: the only
 purpose of global candidate list maintenance is to support snapshot construction.
