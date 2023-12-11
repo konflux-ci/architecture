@@ -35,7 +35,7 @@ Today, [integration-service] does the following things:
   of a version of the application to be tested. See also [Decoupling Deployment].
 - **Snapshot Test Results Recording**: As PipelineRuns corresponding with the [IntegrationTestScenarios]
   complete, [integration-service] updates test results on the [Snapshot].
-- **Source Repo Test Results Recording**: As PipelineRuns corresponding with the [IntegrationTestScenarios]
+- **Source Repo Test Results Reporting**: As PipelineRuns corresponding with the [IntegrationTestScenarios]
   complete, [integration-service] updates test results in the source repo service's API (like the
   github "checks" API).
 - **Global Candidate List Maintenance**: When all PipelineRuns corresponding with the
@@ -55,7 +55,7 @@ purpose of global candidate list maintenance is to support snapshot construction
 - **App Deployment** will be dropped, per the [Decoupling Deployment] ADR.
 - **Release Initiation** will become the responsibility of [release-service]. See more below.
 - [integration-service] will continue to own **Test Initiation**, **DeploymentTarget Provisioning**,
-  **Snapshot Test Results Recording**, and **Source Repo Test Results Recording**.
+  **Snapshot Test Results Recording**, and **Source Repo Test Results Reporting**.
 - **Snapshot Construction** and **Global Candidate List Maintenance** will remain responsibilities
   of [integration-service], but will undergo some changes to remove dependence on external APIs.
 
