@@ -155,14 +155,12 @@ source details that we extract today to supply to a new [TestSubject].
 
 ### Release Initiation, as owned by the release-service
 
+For the purpose of this ADR, we will only say that release-service will take over the
+responsibility of initiating Releases. That will be described in more detail in a subsequent,
+forthcoming ADR.
+
 Note, in this pattern, [Release] construction looks a lot like [TestSubject] construction. The
 triggered system knows enough about the triggering system to optionally initiate itself.
-
-TODO - describe this in more detail
-
-> :memo: Another alternative could be to establish an overarching workflow operator that knows how
-> to bridge the gaps (create TestSubjects and create Releases). TODO what would this look like? Too
-> much domain knowledge in one place?
 
 ## Use Cases in Detail
 
