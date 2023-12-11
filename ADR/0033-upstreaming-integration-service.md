@@ -101,6 +101,13 @@ carries this `CONTROLLABEL` label the **control** TestSubject for the `LABELNAME
 the last control [TestSubject] for the `LABELNAME` label, when the `CONTROLLABEL` label is applied
 to a new [TestSubject] bearing the `LABELNAME` label.
 
+The **control** TestSubject is used as the *basis* for new TestSubject construction. See
+"TestSubject Construction as optional behavior", below.
+
+[integration-service] should promote a [TestSubject] under test to become the new **control**
+TestSubject after it passes all of the required IntegrationTestScenarios with the matching
+`LABELNAME` label.
+
 ### TestSubject Construction as optional behavior
 
 **Test Initiation** has a clear control plane: the [IntegrationTestScenario] combined with the
@@ -148,7 +155,8 @@ The `selector` field will be used to identify resources that should trigger the 
 [TestSubjects]. When created, the *basis* for the new test subject should always be taken from the
 **control** [TestSubject]. The values extracted from the triggering resource by way of the
 expressions on the `extractor` resource should be applied to that basis in the construction of a new
-[TestSubject].
+[TestSubject]. If there is no **control** [TestSubject], then the new TestSubject should be created
+containing only one element: the new pullspec.
 
 In the above example, the constructor will select only pipelineruns which are completed and which
 are associated with the app `my-application`. When triggered, it will extract the same image and
