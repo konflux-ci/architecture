@@ -53,10 +53,10 @@ purpose of global candidate list maintenance is to support snapshot construction
 
 ## Decision
 
-- **App Deployment** will be dropped, per the [Decoupling Deployment] ADR.
+- **App Deployment** and **DeploymentTarget Provisioning** will be dropped, per the [Decoupling Deployment] ADR.
 - **Release Initiation** will become the responsibility of [release-service]. See more below.
-- [integration-service] will continue to own **Test Initiation**, **DeploymentTarget Provisioning**,
-  **Snapshot Test Results Recording**, and **Source Repo Test Results Reporting**.
+- [integration-service] will continue to own **Test Initiation**, **Snapshot Test Results Recording**,
+  and **Source Repo Test Results Reporting**.
 - **Snapshot Construction** and **Global Candidate List Maintenance** will remain responsibilities
   of [integration-service], but will undergo some changes to remove dependence on external APIs.
 
@@ -178,13 +178,13 @@ to make use of [integration-service] from a jenkins pipeline. For example, perha
 performs CI on a git repository that contains pullspecs which should be mirrored to some environment
 of theirs. Before mirroring, they want to make sure that the same test works against dozens of
 different kubernetes configurations on different public clouds. That platform team first
-creates a single tekton pipeline that contains the logic to perform the test given a single cluster.
+creates tekton pipelines that contains the logic to perform the test, and use [Dynamic Resource
+Allocation APIs] to request provisioning of those clusters.
 They then configure dozens of [IntegrationTestScenario] resources, one for each kubernetes
 configuration they want to target. When a new set of pullspecs is proposed to their git repo,
 Jenkins responds. Jenkins then creates a single [TestSubject] in the kubernetes namespace,
 representing the new set of images under test. [integration-service] responds, inspecting all of the
-defined [IntegrationTestScenarios], it invokes the [deployment-target-operator] (from [Decoupling
-Deployment]) to provision each cluster configuration and it runs tests of the [TestSubject] against
+defined [IntegrationTestScenarios] and it runs tests of the [TestSubject] against
 each. The aggregate results are stored in the `status` of the [TestSubject] for jenkins to monitor
 and report back to the platform team in CI.
 
@@ -208,10 +208,10 @@ PipelineRuns.
 
 ## Consequences
 
-- [integration-service] now knows nothing about [Applications], [Components], [Environments], etc.
-  It will now only depend on Tekton APIs and DeploymentTarget APIs.
+- [integration-service] now knows nothing about [Applications], [Components], [Environments],
+  [DeploymentTargets], etc. It will now only depend on Tekton APIs.
 - We should now be able to tell a story about how someone might want to use [integration-service] on
-  a cluster that only carries the Tekton APIs and the DeploymentTarget APIs. The purpose of
+  a cluster that only carries the Tekton APIs. The purpose of
   integration-service is to trigger *integration tests on collections of container images*. You can
   instruct it to do this on a case by case basis by creating TestSubject resources, or you can
   configure a [TestSubjectConstructor] to instruct it to create its own [TestSubjects].
@@ -225,6 +225,7 @@ PipelineRuns.
   have enough information to know if the user has made a typo or not.  This decrease in our ability
   validate is a byproduct of the decoupling.
 
+[Dynamic Resource Allocation APIs]: https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/
 [TestSubject]: #
 [TestSubjects]: #
 [ToBeDetermined]: #
@@ -234,7 +235,6 @@ PipelineRuns.
 [pac]: https://pipelinesascode.com/
 [two-phase architecture]: https://github.com/redhat-appstudio/book/blob/main/ADR/0015-integration-service-two-phase-architecture.md
 [decoupling deployment]: https://github.com/redhat-appstudio/book/pull/147
-[deployment-target-operator]: https://github.com/redhat-appstudio/book/pull/147
 [selector]: https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/
 [Application]: ../ref/application-environment-api.md#application
 [Applications]: ../ref/application-environment-api.md#application
