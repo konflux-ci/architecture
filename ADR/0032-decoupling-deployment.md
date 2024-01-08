@@ -9,6 +9,7 @@ Draft
 Relates to:
 
 - [ADR 14. Let Pipelines Proceed](0014-let-pipelines-proceed.html)
+- [ADR 22. Secret Management for User Workloads](0022-secret-mgmt-for-user-workloads.html)
 
 Supercedes:
 
@@ -184,6 +185,8 @@ Some of these phases can be done at the same time.
   related controller code for managing a [SnapshotEnvironmentBinding].
 - [HAC]: update [IntegrationTestScenario] no longer use [Environments].
 - [HAC]: Drop UI features showing the [Environments]: (commit view, Environments pane, etc.)
+- [HAC]: Drop UI features differentiating "build" and "deploy" secrets. With this change, "deploy"
+  secrets are no longer relevant.
 - [integration-service]: stop creating a [SEB] for the lowest [Environments].
 - [application-service]: stop generating the gitops repo content in response to [SEBs].
 - [application-service]: stop creating gitops repos.

@@ -7,6 +7,10 @@ Date revised: 2023-08-29
 
 Accepted
 
+Relates to:
+
+- [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)
+
 ## Context
 
 * When user workloads are deployed to environments, the system should be able to provide a way to inject values that are specific to the environment. Currently, this is done through environment variables that are managed as overlays on the GitOps repository for the application. However, this method does not provide a good way to manage `Secret`. This ADR addresses the secret management of user workloads for different environments.
