@@ -228,8 +228,9 @@ PipelineRuns.
 [Dynamic Resource Allocation APIs]: https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/
 [TestSubject]: #
 [TestSubjects]: #
-[ToBeDetermined]: #
-[ToBeDetermineds]: #
+[TestSubjectConstructor]: #
+[TestSubjectConstructors]: #
+[test-subject-constructor-controller]: #
 [integration-service]: ../book/integration-service.md
 [release-service]: ../book/release-service.md
 [pac]: https://pipelinesascode.com/
