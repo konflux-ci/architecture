@@ -20,7 +20,7 @@ The Integration service uses the pipeline, snapshot, and environment controllers
 - When a build pipeline completes, Integration service creates a Snapshot CR representing a new collection of components that should be tested together.
 - When Integration Service sees a new Snapshot CR (created either by itself or by a user), it coordinates deployment of the application for testing. It does this by creating new “ephemeral” AppStudio Environment CRs which trigger the GitOps Service to provision the ephemeral test environment.
 - After the environment is ready and the application snapshot has been deployed to it, Integration Service tests and validates the application according to user-provided configuration. It does this by executing Tekton PipelineRuns against the ephemeral test Environment.
-- When all of the test Tekton PipelineRuns have passed, Integration service triggers a deployment of the application to all Environments which are not labeled as "ephemeral" and which do not have a `parentEnvironment` set. For most users, this will result in a deployment to their "development" environment (or to their "staging" environment, if they do not have a dev environment).
+- When all of the required test Tekton PipelineRuns have passed, Integration service triggers a deployment of the application to all Environments which are not labeled as "ephemeral" and which do not have a `parentEnvironment` set. For most users, this will result in a deployment to their "development" environment (or to their "staging" environment, if they do not have a dev environment).
 - Finally, if any automatic ReleasePlans have been created by the user in the workspace, it will create a Release CR signalling intent to release the tested content, to be carried out by the [release-service](./release-service.md).
 
 The diagram below shows the interaction of the integration service and other services.
@@ -51,7 +51,7 @@ The [Integration Service](./integration-service.md) is dependent on the followin
 
 **Composite Pipeline** - This is the pipeline run that runs if two or more Components have completed and passed their Component pipeline concurrently so that they should be tested together.
 
-**Global Candidate List** - The list of all Component digest that have passed individual component testing. This can be retrieved from the Application to see what Components it is made of and then querying each of the Components `spec.containerImage`. 
+**Global Candidate List** - The list of all Component digest that have passed individual component testing. This can be retrieved from the Application to see what Components it is made of and then querying each of the Components `spec.containerImage`.
 
 **Snapshot** -  The custom resource that contains the list of all Components of an Application with their Component Image digests. Once created, the list of Components with their images is immutable. The Integration service updates the status of the resource to reflect the testing outcome.
 
@@ -67,7 +67,7 @@ The [Integration Service](./integration-service.md) is dependent on the followin
 
 **Final Pipeline** -  This is the same as the Composite Pipeline. Going forward the Final Pipeline will be referred as Composite Pipeline.
 
-## Resources 
+## Resources
 Below are the list of CRs that the integration service is responsible for interacting and performing operations:
 
 ### CREATE
@@ -113,7 +113,7 @@ The test pipeline will consist of a single definition that could be executed as 
 - Component pipeline run
 - Composite pipeline run
 
-The Component pipeline run is always triggered for each Component of an Application and is triggered by a completed build of a component.  
+The Component pipeline run is always triggered for each Component of an Application and is triggered by a completed build of a component.
 
 The Composite pipeline run is only triggered when it has been determined by the Integration Service that two or more Components of an Application have been successfully built concurrently by their respective Component pipeline and need to be tested together.
 
@@ -140,7 +140,7 @@ The Integration service will copy the annotations and labels from the Build Pipe
 
 The "test.appstudio.openshift.io/optional" Label provides users an option whether the result of a pipelineRun created according to the IntegrationTestScenario will be taken into account when determining if the Snapshot has passed all required testing. In another word, the label is used to specify if an IntegrationTestScenario is allowed to fail. If the label is not defined in an IntegrationTestScenario, integration service will consider it as "false".
 ```
-"test.appstudio.openshift.io/optional":	"false"|"true" 
+"test.appstudio.openshift.io/optional":	"false"|"true"
 ```
 The label will be copied to the subsequent Test PipelineRuns.
 
@@ -161,7 +161,7 @@ The Integration service needs secrets mounted so that the `Environment Provision
 ## Detailed Workflow
 1. Watch for Build PipelineRuns of `type: build`
     - Extract  Component Name, Application Name, and Image from pipeline annotations
-2. Query the Application 
+2. Query the Application
     - for each Component extract the `spec.containerImage`
 3. Create a Snapshot
     - Populate the `spec.components` list with the component name and the `spec.containerImage` with information from Step 1 and 2, replacing the container image for the built component with the one from the build PipelineRun
@@ -178,11 +178,12 @@ The Integration service needs secrets mounted so that the `Environment Provision
     - Pass in the Snapshot json representation as a parameter
     - Optional: Create the ephemeral Environment if the IntegrationTestScenario specifies one. After the Environment is ready, link it to the pipelineRun and start it
 5. Watch the PipelineRun of `test: component` and `component: <component name>`
-    - When all PipelineRuns complete
-        - Check if all the PipelineRuns associated with the snapshot have passed successfully
-        - If all PipelineRuns passed, mark the Snapshot as validated by setting its status condition `HACBSTestsSucceeded` as true
-        - If not all PipelineRuns passed, mark the Snapshot as not validated by setting its status condition `HACBSTestsSucceeded` as false, end the Integration testing process
-6. Update the Component `spec.containerImage` 
+    - When all required PipelineRuns complete
+        - Check if all the required PipelineRuns associated with the snapshot have passed successfully
+        - If all required PipelineRuns passed, mark the Snapshot as validated by setting its status condition `HACBSTestsSucceeded` as true
+        - If not all required PipelineRuns passed, mark the Snapshot as not validated by setting its status condition `HACBSTestsSucceeded` as false, end the Integration testing process
+    - Note: Users are allowed to mark an Integration Test Scenario as optional. In this case results of testing are ignored for the optional scenario and don't block further processing of the Snapshot.
+6. Update the Component `spec.containerImage`
 7. Query the Application and find all of its components
     - For each Component extract the `spec.containerImage`
 8. Prepare a new Snapshot
@@ -198,7 +199,7 @@ The Integration service needs secrets mounted so that the `Environment Provision
 12. Create a Release with the `spec.ReleasPlan` and `spec.Snapshot`
 13. Done - Repeat from Step 1 again
 14. If not the same, repeat step 4
-    - Assign the same annotations except 
+    - Assign the same annotations except
         Test: composite
         Snapshot: name from step 8
     - Pass in the Snapshot name as a parameter
