@@ -1,4 +1,4 @@
-# 0009 Pipeline Service via Operator
+# 9. Pipeline Service via Operator
 
 Created: 2023-09-29
 Last Updated: 2023-09-29
@@ -19,7 +19,7 @@ cluster (specifically OpenShift Dedicated).
 All Tekton APIs will be provided using the stock OpenShift Pipelines operator (OSP).
 In the spirit of developing in a "Service First" manner, RHTAP will deploy
 a candidate "nightly" release of the operator. The service will be defined in
-the [pipeline-service](https://github.com/openshift/pipeline-service)
+the [pipeline-service](https://github.com/openshift-pipelines/pipeline-service)
 repository, which is then imported into
 [infra-deployments](https://github.com/redhat-appstudio/infra-deployments) as
 an ArgoCD application.
