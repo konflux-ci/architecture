@@ -16,7 +16,7 @@ AppStudio is a platform for building integrated software that streamlines, conso
 ## Architecture Goals
 
 - Just in time scaling: In contrast to “just in case” scaling. The system should be able to scale without capacity reserved ahead of time.
-- Static stability: the overall system continues to work when a dependency is impaired
+- Static stability: the overall system continues to work when a dependency is impaired.
 - Each subservice can fulfill its primary use cases independently, without relying on other systems’ availability.
 - Each sub-service owns its data and logic.
 - Communication among services and participants is always asynchronous.
