@@ -37,6 +37,7 @@ AppStudio is a platform for building integrated software that streamlines, conso
 - The cluster is our **unit of sharding**. Each cluster is independent and runs an instance of every subsystems. User workspaces are allocated to one cluster. If we lose a cluster, all workspaces on that cluster are inaccessible, but workspaces on other clusters are not impacted, limiting the blast radius. No subsystem should coordinate across clusters.
 - Artifacts built, tested, and shipped by the system are **OCI artifacts**. SBOMs, attestations, signatures, and other supporting metadata are stored in the registry alongside the artifact, tagged by the `cosign triangulate` convention.
 - While not true today, it should be possible to **install** one subsystem without the others and to replace one subsystem with a new one without affecting the others. See (!148)[https://github.com/redhat-appstudio/architecture/pull/148] for an example of attempting to achieve this.
+- Any attestation used for making a release-time decision should be provably trusted (either because it is GPG signed or its immutable reference is added to the provenance by a trusted task).
 
 ## Application Context
 
