@@ -1,29 +1,39 @@
 # AppStudio
 
 ## Overview
-AppStudio is a platform for building integrated experiences that streamline, consolidate, and secure the application lifecycle.
+AppStudio is a platform for building integrated software that streamlines, consolidates, and secures the development lifecycle.
 
 
 ### Goals
-- Compose cloud native applications that consist of multiple components and services
-- Provide managed application lifecycle
-- Rapid bootstrapping of applications
-- Fast onboarding of applications to the cloud
-- Supports both existing and new applications
-- Provide APIs to manage your application lifecycle
-- Provide a surface for partners to integrate into the application lifecycle
+- Compose software that consists of multiple components, from multiple repositories.
+- Provide transparency on the software supply chain, including both what makes up the software and how it was built.
+- Provide a way for software teams to release to destinations under the control of their SRE or release engineering team(s).
+- Rapid bootstrapping of new software projects
+- Support both existing and new projects
+- Provide APIs to manage your software lifecycle
+- Provide a surface for partners to integrate, add value
 
-## Architecture Goals and Constraints
-- Robust delivery automation: Establish continuous delivery practices but also deliver operational tooling.
+## Architecture Goals
+
 - Just in time scaling: In contrast to “just in case” scaling. The system should be able to scale without capacity reserved ahead of time.
 - Static stability: the overall system continues to work when a dependency is impaired
-- Each subservice can fulfill its primary use cases independently, without relying on  other systems’ availability.
+- Each subservice can fulfill its primary use cases independently, without relying on other systems’ availability.
 - Each sub-service owns its data and logic.
 - Communication among services and participants is always asynchronous.
 - Each sub-service is owned by one team. Ownership does not mean that only one team can change the code, but the owning team has the final decision.
 - Minimize shared infrastructure among sub-services
 - Participants: onboarding new participants, the flexibility to satisfy the technology preferences of a heterogeneous set of participants. Think of this as the ability to easily create an ecosystem and the ability to support that ecosystem’s heterogeneous needs.
 - Security, Privacy, and Governance: Sensitive data is protected by fine-grained access control
+
+## Architecture Constraints
+
+- Our API server is **the kube API server**. Services expose their API as Custom Resource Definitions. This means that requests are necessarily asyncronous. This means that RBAC is implemented the same way across services. In any exceptional case that a service needs to expose its own bespoke HTTP endpoint (like tekton results), use SubjectAccessReviews to ensure RBAC is consistent.
+- **Use tekton** for anything that should be configurable by the user (building, testing, releasing). Expose as much detail via kube resources as possible. Prefer to implement native tasks to perform work on cluster, rather than calling out to third-party services.
+- As a corollary, adding new functionality usually looks like either adding a new controller or adding new tekton tasks.
+- The **user has admin** in their workspace. This means that the user can access secrets in their workspace. This means that the system can never provide secrets to the user that are scoped beyond that user's domain. A user can exfiltrate the push secret from their workspace, build invalid content on their laptop, and push it to their buildtime registry. Such a build will be rejected as release time.
+- The cluster is our **unit of sharding**. Each cluster is independent and runs an instance of every subsystems. User workspaces are allocated to one cluster. If we lose a cluster, all workspaces on that cluster are inaccessible, but workspaces on other clusters are not impacted, limiting the blast radius. No subsystem should coordinate across clusters.
+- Artifacts built, tested, and shipped by the system are **OCI artifacts**. SBOMs, attestations, signatures, and other supporting metadata are stored in the registry alongside the artifact, tagged by the `cosign triangulate` convention.
+- While not true today, it should be possible to **install** one subsystem without the others and to replace one subsystem with a new one without affecting the others. See (!148)[https://github.com/redhat-appstudio/architecture/pull/148] for an example of attempting to achieve this.
 
 ## Application Context
 
