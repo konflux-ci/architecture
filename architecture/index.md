@@ -15,6 +15,9 @@ AppStudio is a platform for building integrated software that streamlines, conso
 
 ## Architecture Goals
 
+- Build artifacts once with enough data to determine suitability for releasing.
+- Build artifacts once that can be released to multiple locations, use cases.
+- "Shift left" the decisions for releasing into PRs; you should be able to release artifacts from a PR as soon as it is merged.
 - Just in time scaling: In contrast to “just in case” scaling. The system should be able to scale without capacity reserved ahead of time.
 - Static stability: the overall system continues to work when a dependency is impaired.
 - Each subservice can fulfill its primary use cases independently, without relying on other systems’ availability.
