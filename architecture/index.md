@@ -22,7 +22,7 @@ AppStudio is a platform for building integrated software that streamlines, conso
 - "Shift left" the decisions for releasing into PRs; you should be able to release artifacts from a PR as soon as it is merged.
 - Just in time scaling: In contrast to “just in case” scaling. The system should be able to scale without capacity reserved ahead of time.
 - Static stability: the overall system continues to work when a dependency is impaired.
-- Each subservice can fulfill its primary use cases independently, without relying on other systems’ availability.
+- Each subservice can fulfill its primary use cases independently, without relying on other systems’ availability. An exception to this is the tekton [pipeline service] which provides foundational APIs on which [build-service], [integration-service], and [release-service] depend.
 - Each sub-service owns its data and logic.
 - Communication among services and participants is always asynchronous.
 - Each sub-service is owned by one team. Ownership does not mean that only one team can change the code, but the owning team has the final decision.
@@ -150,7 +150,9 @@ Each service that makes up AppStudio is further explained in its own document.
 
 [integration-service promotes OCI artifacts]: ../ADR/0016-integration-service-promotion-logic.md
 [application-service]: ./hybrid-application-service.md
+[pipeline-service]: ./pipeline-service.md
 [gitops-service]: ./gitops-service.md
+[build-service]: ./build-service.md
 [integration-service]: ./integration-service.md
 [release-service]: ./release-service.md
 [Application]: ../ref/application-environment-api.md#application
