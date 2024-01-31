@@ -16,7 +16,7 @@ AppStudio is a platform for building integrated software that streamlines, conso
 ## Architecture Goals
 
 - Build artifacts once with enough data to determine suitability for releasing.
-- Build artifacts once that can be released to multiple locations, use cases.
+- Build artifacts once that can be released to multiple locations, multiple use cases.
 - Specify builds and their dependencies entirely from git and not from transient state of the build system. Employ tools like [renovate](https://docs.renovatebot.com/) to manage dependency updates.
 - "Shift left" the decisions for releasing into PRs; you should be able to release artifacts from a PR as soon as it is merged.
 - Just in time scaling: In contrast to “just in case” scaling. The system should be able to scale without capacity reserved ahead of time.
