@@ -22,6 +22,7 @@ AppStudio is a platform for building integrated software that streamlines, conso
 - "Shift left" the decisions for releasing into PRs; you should be able to release artifacts from a PR as soon as it is merged.
 - Just in time scaling: In contrast to “just in case” scaling. The system should be able to scale without capacity reserved ahead of time.
 - Static stability: the overall system continues to work when a dependency is impaired.
+- Enhancements to the pipelines (the extensible elements of the system) should be rolled out in such a way that individual users can control **when** they accept the update to their workspaces, their processes. Use policy to drive eventual compliance.
 - Each subservice can fulfill its primary use cases independently, without relying on other systems’ availability. An exception to this is the tekton [pipeline service] which provides foundational APIs on which [build-service], [integration-service], and [release-service] depend.
 - Each sub-service owns its data and logic.
 - Communication among services and participants is always asynchronous.
