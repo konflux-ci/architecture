@@ -1,10 +1,11 @@
 # 32. Decoupling Deployment
 
-Date: 2023-11-17
+Date started: 2023-11-17
+Date accepted: 2023-02-01
 
 ## Status
 
-Draft
+Accepted
 
 Relates to:
 
