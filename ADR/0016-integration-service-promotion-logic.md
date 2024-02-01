@@ -5,7 +5,7 @@
 
 ## Status
 
-Accepted
+Superceded by [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)
 
 ## Context
 
@@ -24,7 +24,7 @@ Note: This functionality has now been completely dropped from the build-service 
 
 DevOps workflows often automate deployments of applications across different environments to ensure
 that the workloads are properly tested before being further promoted to an environment with a higher
-service level agreement. 
+service level agreement.
 The promotion path can be represented with a directed acyclic graph from the environment with the
 lowest SLA to the one with the highest, for example development -> staging -> production.
 In AppStudio, this promotion logic would be represented by a set of components (container images) defined by
@@ -76,7 +76,7 @@ push (merge-to-main) events gets promoted to lowest environments and released.
 ## Consequences
 
 * As per this decision, Integration Service now holds the full charge to automatically promote the Snapshot of the
-  Application to the user’s defined lowest environments only. 
+  Application to the user’s defined lowest environments only.
   The integration service doesn't hold the control to make promotions to the non-lowest/production environments.
 
 * Once all the tests succeed the Snapshot will always be deployed via a single code path, in a single service.
