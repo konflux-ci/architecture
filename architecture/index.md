@@ -27,7 +27,7 @@ AppStudio is a platform for building integrated software that streamlines, conso
 - Each sub-service owns its data and logic.
 - Communication among services and participants is always asynchronous.
 - Each sub-service is owned by one team. Ownership does not mean that only one team can change the code, but the owning team has the final decision.
-- Minimize shared infrastructure among sub-services
+- Minimize shared resources among sub-services.
 - Participants: onboarding new participants, the flexibility to satisfy the technology preferences of a heterogeneous set of participants. Think of this as the ability to easily create an ecosystem and the ability to support that ecosystem’s heterogeneous needs.
 - Security, Privacy, and Governance: Sensitive data is protected by fine-grained access control
 
