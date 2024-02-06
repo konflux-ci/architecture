@@ -90,11 +90,17 @@ the kubernetes cluster or new artifacts being pushed to an external location) in
 `Artifact`. An example of this constructor can resemble the `TestSubjectConstructor` as proposed in
 [Upstreaming integration-service].
 
+`Artifact`s can also store references to the process which created the object (i.e. PipelineRun). As soon as a
+PipelineRun is created, an `Artifact` should be created to enable visibility into the ongoing process if
+an `ArtifactStream` is used for tracking or visualization.
+
 ### ArtifactStream
 
-An `ArtifactStream` is a floating reference to the latest produced artifact as defined by an `ArtifactConfig`.
-When a new `Artifact` is generated, the reference resolved by it mapped `ArtifactStream` will be updated to
-point to that latest `Artifact`.
+All `Artifact`s have an owner reference to a single `ArtifactStream`. The `ArtifactStream` keeps track of the latest
+produced `Artifact` that has been created owned by that stream (i.e. similar to a floating tag reference).
+
+A validation webhook will prevent an `Artifact` from being created unless its configuration matches that of its owning
+`ArtifactStream`.
 
 ### ArtifactCollection
 
@@ -102,19 +108,16 @@ An `ArtifactCollection` is a set of `Artifact`s that are grouped together. An `A
 references to other `ArtifactCollection`s to enable intermediate logical separation and aggregated groupings.
 Additionally, there are no restrictions around how many `ArtifactCollection`s a given `Artifact` may belong to.
 
-<!-- 
+### ArtifactCollectionStream
 
-Where is the best place to define an ArtifactCollection? 
-  Should it be represented in the ArtifactConfig or elsewhere?
-  How would you be able to define ArtifactCollection membership in another ArtifactCollection?
-Would any ArtifactStream update propagate to the ArtifactCollection? By default?
-Should there be some "gating" process available for updating ArtifactCollections? (I think not)
-    ArtifactCollections can be manually created if specific gating is required, i.e. by integration-service
-Do ArtifactCollections only exist as an immutable object?
-  Would we need to introduce something like an ArtifactCollectionStream if we want them to be immutable?
-  What would be the value/drawbacks of this decision?
+All `ArtifactCollection`s have an owner reference to a single `ArtifactCollectionStream`. The `ArtifactCollectionStream`
+defines the set of `ArtifactStream`s and `ArtifactCollectionStream`s that are allowed in the owned `ArtifactCollection`s.
+The `ArtifactCollectionStream` also defines whether any individual update to a contained stream results in the automatic
+generation of a new owned `ArtifactCollection`. The `ArtifactCollectionStream` keeps track of the latest produced
+`ArtifactCollection` owned by that stream.
 
--->
+A validation webhook will prevent an `ArtifactCollection` from being created unless all contained `Artifact`s and
+`ArtifactCollection`s match its owning `ArtifactCollectionStream`.
 
 ## Consequences
 
@@ -129,6 +132,8 @@ Do ArtifactCollections only exist as an immutable object?
 - While each of the controllers that compose AppStudio should be able to exist on their own, they can all
   "come together" around a common description of produced artifacts in order to create a unified build, test,
   and delivery pipeline.
+- The owning references of `ArtifactStream`s and `ArtifactCollectionStream`s can be used for grouping and visualizing
+  related `Artifact`s and `ArtifactCollection`s.
 
 
 [ADR 32. Decoupling Deployment]: 0032-decoupling-deployment.md
