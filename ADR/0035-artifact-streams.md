@@ -134,6 +134,9 @@ A validation webhook will prevent an `ArtifactCollection` from being created unl
   and delivery pipeline.
 - The owning references of `ArtifactStream`s and `ArtifactCollectionStream`s can be used for grouping and visualizing
   related `Artifact`s and `ArtifactCollection`s.
+- Some `Artifact` types can have custom uniqueness requirements which would enable the prevention of `Artifact` creation
+  if the uniqueness failed. For example, an RPM-typed `Artifact` may require global uniqueness of `name`, `version`, and
+  `release` properties.
 
 
 [ADR 32. Decoupling Deployment]: 0032-decoupling-deployment.md
