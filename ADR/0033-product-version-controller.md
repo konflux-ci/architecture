@@ -203,11 +203,11 @@ The template would be created with the following characteristics:
   of the *ProjectDevelopmentStreamTemplate* resource, while *status* and other
   transient properties would be stripped.
 
-* Resources names within the template will be set as following:
+* Resource names within the template will be set as following:
 
     * If the name on the cloned resource ends with the
       *ProjectDevelopmentStream* resource's version value as determined above,
-      the value is stripped and the "`{version}`" template string is places
+      the value is stripped and the "`{version}`" template string is placed
       instead.
     * Otherwise the "`{version}`" template string is appended to the name.
 
