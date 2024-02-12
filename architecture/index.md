@@ -12,6 +12,7 @@ AppStudio is a platform for building integrated software that streamlines, conso
 - Support both existing and new projects
 - Provide APIs to manage your software lifecycle
 - Provide a surface for partners to integrate, add value
+- Provide a unified user interface across the entire process
 
 ## Architecture Goals
 
