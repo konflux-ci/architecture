@@ -17,7 +17,7 @@ Accepted
 
 ## Context
 
-Instrumenting the application build pipelines with OpenTelemetry tracing will provide us invaluable insight in case things go wrong. We are going to get traces for the tekton controller activity and generating spans for tekton tasks to achieve an easier mental model to use for debugging.
+Instrumenting the application build pipelines with OpenTelemetry tracing will provide us (specify who is us -- SREs? Konflux Devs?) invaluable insight in case things go wrong. We are going to get traces for the tekton controller activity and generating spans for tekton tasks to achieve an easier mental model to use for debugging.
 
 (what else can we add as context here?)
 
@@ -26,6 +26,8 @@ Instrumenting the application build pipelines with OpenTelemetry tracing will pr
 We are going to enable as much native tracing in Konflux as we can so that we can quickly enable any pre-existing tracing capabilities in the system, and only once that is done shift focus towards more comprehensive instrumentation. (needs more details)
 
 Tekton already natively supports [OpenTelemetry Distributed Tracing for Tasks and Pipelines](https://github.com/tektoncd/community/blob/main/teps/0124-distributed-tracing-for-tasks-and-pipelines.md), so no upstream changes are required.
+
+(figure out what other Konflux components also have native OTel tracing support that can be enabled)
 
 ## Consequences
 
