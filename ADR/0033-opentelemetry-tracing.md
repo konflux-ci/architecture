@@ -11,6 +11,8 @@ Accepted
 
 Instrumenting Konflux with OpenTelemetry tracing will provide SREs and developers invaluable insight for incident response, debugging and monitoring. Our goal is to get traces for the Tekton controller activity and generate spans for Tekton tasks in order to achieve an easier mental model to use for debugging.
 
+OpenTelemetry is the industry standard to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) to help you analyze software performance and behavior. Our goal is to collect [traces](https://opentelemetry.io/docs/concepts/signals/traces/) from the Konflux activity of building and deploying applications.
+
 (what else can we add as context here?)
 
 ## Decision
