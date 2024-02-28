@@ -23,6 +23,8 @@ Instrumenting the application build pipelines with OpenTelemetry tracing will pr
 
 Tekton already natively supports [OpenTelemetry Distributed Tracing for Tasks and Pipelines](https://github.com/tektoncd/community/blob/main/teps/0124-distributed-tracing-for-tasks-and-pipelines.md), so no upstream changes are required.
 
+We are going to enable as much native tracing in Konflux as we can so that we can quickly enable any pre-existing tracing capabilities in the system, and only once that is done shift focus towards more comprehensive instrumentation. (needs more details)
+
 ## Consequences
 
 A few environment variables will need to be set in the controller manifest of each AppStudio instance in order to enable tracing:
