@@ -33,7 +33,7 @@ Quarkus
 - If a .dockerignore file is present, make sure that a wildcard, *, entry is not present, as AppStudio builds the Application source as part of the Container build
 
 Python
-- Pip is used to manage dependencies for AppStudio Python projects. Make sure that your project has a requirements.txt at the root
+- Pip is used to manage dependencies for AppStudio Python projects. Make sure that your project has a requirements.txt or a pyproject.toml file at the root.
 
 NodeJS
 - HAS expects NodeJS based Components to have a package.json at the Component's base folder
