@@ -7,17 +7,9 @@ Date accepted: 2024-MM-DD
 
 Accepted
 
-## Approvers
-
--   ?
-
-## Reviewers
-
--   ?
-
 ## Context
 
-Instrumenting the application build pipelines with OpenTelemetry tracing will provide us (specify who is us -- SREs? Konflux Devs?) invaluable insight in case things go wrong. We are going to get traces for the tekton controller activity and generating spans for tekton tasks to achieve an easier mental model to use for debugging.
+Instrumenting Konflux with OpenTelemetry tracing will provide SREs and developers invaluable insight for incident response, debugging and monitoring. Our goal is to get traces for the Tekton controller activity and generate spans for Tekton tasks in order to achieve an easier mental model to use for debugging.
 
 (what else can we add as context here?)
 
@@ -27,11 +19,13 @@ We are going to enable as much native tracing in Konflux as we can so that we ca
 
 Tekton already natively supports [OpenTelemetry Distributed Tracing for Tasks and Pipelines](https://github.com/tektoncd/community/blob/main/teps/0124-distributed-tracing-for-tasks-and-pipelines.md), so no upstream changes are required.
 
+[Pipeline Service](https://github.com/redhat-appstudio/architecture/blob/main/architecture/pipeline-service.md) also has to be instrumented with OTel as it provides Tekton APIs and services to RHTAP.
+
 (figure out what other Konflux components also have native OTel tracing support that can be enabled)
 
 ## Consequences
 
-A few environment variables will need to be set in the controller manifest of each AppStudio instance in order to enable tracing:
+A few environment variables will need to be set in the controller manifest of each Konflux instance in order to enable tracing:
 
 ```
 OTEL_EXPORTER_JAEGER_ENDPOINT
@@ -45,6 +39,6 @@ At this time, instrumenting individual steps within each task is not natively su
 
 ## Implementation
 
-The AppStudio Tekton pipeline definition and tasks will require changes.
+The Konflux Tekton pipeline definition and tasks will require changes.
 
 (how much into detail do we want to get here?)
