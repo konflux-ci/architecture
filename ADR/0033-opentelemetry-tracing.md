@@ -9,51 +9,45 @@ Accepted
 
 ## Context
 
-Instrumenting Konflux with OpenTelemetry tracing will provide SREs and developers invaluable insight for incident response, debugging and monitoring. Our goal is to get traces for the Tekton controller activity and generate spans for Tekton tasks in order to achieve an easier mental model to use for debugging.
+Instrumenting Konflux with OpenTelemetry (OTel) tracing will provide SREs and developers invaluable insight for incident response, debugging and monitoring. Our goal is to get traces for the Konflux activity in order to achieve an easier mental model to use for debugging.
 
 OpenTelemetry is the industry standard to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) to help you analyze software performance and behavior. Our goal is to collect [traces](https://opentelemetry.io/docs/concepts/signals/traces/) from the Konflux activity of building and deploying applications.
-
-(what else can we add as context here?)
 
 ## Decision
 
 We’ll enable tracing in Konflux and its services in the following order:
 
 1. Enable native tracing capabilities
-1. Enable tracing via [zero-code instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/zero-code/) (automatic instrumentation)
-1. Enable tracing via [code-based instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/code-based/) (manual instrumentation)
+1. Enable tracing via [zero-code instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/zero-code/) (a.k.a. automatic instrumentation)
+1. Enable tracing via [code-based instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/code-based/) (a.k.a. manual instrumentation)
 
 ### Native Tracing
 
 We are going to enable as much native tracing in Konflux as we can so that we can quickly enable any pre-existing tracing capabilities in the system.
 
-For instance, [Pipeline Service](https://github.com/redhat-appstudio/architecture/blob/main/architecture/pipeline-service.md) has to be instrumented with OTel as it provides Tekton APIs and services to RHTAP. Pipeline Services includes Tekton which already natively supports [OpenTelemetry Distributed Tracing for Tasks and Pipelines](https://github.com/tektoncd/community/blob/main/teps/0124-distributed-tracing-for-tasks-and-pipelines.md), so no upstream changes are required. We just need to work to enable this native tracing (e.g. set environment variables)
-
-At this time, instrumenting individual steps within each task is not natively supported by Tekton, so this is an option that can be explored as a potential upstream contribution. This effort would likely be under Code-based Instrumentation.
+For instance, [Pipeline Service](https://github.com/redhat-appstudio/architecture/blob/main/architecture/pipeline-service.md) has to be instrumented with OTel as it provides Tekton APIs and services to Konflux. Pipeline Services includes Tekton which already natively supports [OpenTelemetry Distributed Tracing for Tasks and Pipelines](https://github.com/tektoncd/community/blob/main/teps/0124-distributed-tracing-for-tasks-and-pipelines.md), so no upstream changes are required. We just need to work to enable this native tracing (e.g. set environment variables).
 
 ### Zero-code Instrumentation
 
-Next, we can quickly enable additional instrumentation for Konflux services with no functional code change through auto-instrumentation libraries.
+Next, we can quickly enable additional instrumentation for Konflux services (e.g. Pipeline Service, Build Service, etc.) with no functional code change through auto-instrumentation libraries. In Pipeline Service’s case, we see the potential to benefit from not only the native Tekton tracing but also from zero-code instrumentation as well.
 
-See [https://opentelemetry.io/docs/concepts/instrumentation/zero-code/]
+See [https://opentelemetry.io/docs/concepts/instrumentation/zero-code/].
+
+Also, for golang there is [OpenTelemetry Go Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-go-instrumentation).
 
 ### Code-based Instrumentation
 
-Later, we’ll create our own instrumentation code to fill gaps in the service’s instrumentation.
+Later, we’ll create our own instrumentation code to fill the perceived gaps in the services’ instrumentation.
 
-See [https://opentelemetry.io/docs/concepts/instrumentation/code-based/]
+For instance, at the time of writing, instrumenting individual steps within each task is not natively supported by Tekton. So we can propose and submit changes upstream to Tekton in order to enable tracing of each individual step within a task. That will allow us to create spans not only for the tasks but also for the steps themselves.
+
+See [https://opentelemetry.io/docs/concepts/instrumentation/code-based/].
 
 ## Consequences
 
-Enabling tracing will provide developers with insight into Konflux’s performance across its different components and workflows. This insight is valuable as it provides an easier mental model to use for debugging and optimizing Konflux’s performance (Expand on this) (For instance, answer the question: Why is this important?)
+Enabling tracing will provide developers with insight into Konflux’s performance across its different components and workflows. This insight is valuable as it provides an easier mental model to use for debugging and optimizing Konflux’s performance and also empowers SREs and developers during incident response.
 
-(any other consequences that we can foresee?)
-
-## Implementation
-
-The Konflux Tekton pipeline definition and tasks will require changes.
-
-A few environment variables will need to be set in the controller manifest of each Konflux instance in order to enable tracing:
+However, the Konflux Tekton pipeline definition, tasks and a few Konflux services will require changes. A few environment variables will need to be set in the controller manifest of each Konflux instance in order to enable tracing:
 
 ```
 OTEL_EXPORTER_JAEGER_ENDPOINT
@@ -61,4 +55,6 @@ OTEL_EXPORTER_JAEGER_USER
 OTEL_EXPORTER_JAEGER_PASSWORD
 ```
 
-(how much into detail do we want to get here?)
+It is possible that some new dependencies such as the [OpenTelemetry Go Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-go-instrumentation) are introduced into Konflux’s code.
+
+On top of that, in order to gather traces, an [OpenTelemetry collector](https://opentelemetry.io/docs/collector/) instance will have to be created in order to collect the traces generated by each Openshift instance where Konflux pipelines are running.
