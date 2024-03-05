@@ -1,7 +1,6 @@
 # 33. OpenTelemetry Tracing
 
 Date started: 2024-02-27
-
 Date accepted: 2024-MM-DD
 
 ## Status
@@ -32,7 +31,7 @@ For instance, [Pipeline Service](https://github.com/redhat-appstudio/architectur
 
 Next, we can quickly enable additional instrumentation for Konflux services (e.g. Pipeline Service, Build Service, etc.) with no functional code change through auto-instrumentation libraries. In Pipeline Service’s case, we see the potential to benefit from not only the native Tekton tracing but also from zero-code instrumentation as well.
 
-See [https://opentelemetry.io/docs/concepts/instrumentation/zero-code/].
+See [Zero-code Instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/zero-code/).
 
 Also, for golang there is [OpenTelemetry Go Automatic Instrumentation](https://github.com/open-telemetry/opentelemetry-go-instrumentation).
 
@@ -42,7 +41,7 @@ Later, we’ll create our own instrumentation code to fill the perceived gaps in
 
 For instance, at the time of writing, instrumenting individual steps within each task is not natively supported by Tekton. So we can propose and submit changes upstream to Tekton in order to enable tracing of each individual step within a task. That will allow us to create spans not only for the tasks but also for the steps themselves.
 
-See [https://opentelemetry.io/docs/concepts/instrumentation/code-based/].
+See [Code-based Instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/code-based/).
 
 ## Consequences
 
