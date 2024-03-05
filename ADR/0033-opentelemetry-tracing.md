@@ -1,6 +1,7 @@
 # 33. OpenTelemetry Tracing
 
 Date started: 2024-02-27
+
 Date accepted: 2024-MM-DD
 
 ## Status
