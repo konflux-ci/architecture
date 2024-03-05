@@ -1,4 +1,4 @@
-# 0032 Product and Version Controller
+# 0033 Product and Version Controller
 
 Date: 2024-02-01
 
@@ -429,8 +429,8 @@ spec:
       value: Dockerfile-rhel10
 ```
 
-Sine the *ProjectDevelopmentStream* resource is referencing a template, here are
-the resources that would get created as a result:
+Since the *ProjectDevelopmentStream* resource is referencing a template, here
+are the resources that would get created as a result:
 
 ```
 ---
@@ -490,4 +490,24 @@ spec:
 
 ## Consequences
 
-TBD.
+With a dedicated controller managing *Project* and *ProjectDevelopmentStream*
+resources, it becomes easier for users to manage multiple parallel development
+streams in Konflux.
+
+With UI support, using those concepts to navigate data in Konflux also becomes
+possible.
+
+Without UI support, this solution is still usable via API, CLI or GitOps. But
+obviously data organization and visualization capabilities would not be in
+place.
+
+Using this functionality can result in the creation if large amounts of
+*Component* and *Application* resources. Navigating a UI based on those can thus
+become a bit cumbersome. This indicates the significance of having a project and
+development stream based UI.
+
+This solution is planned to be a layer on top of existing elements, to be
+optional to use, and to co-exist with using the system as it is used today. This
+also means that if we decide at a later time that this was not a sound technical
+direction, we can drop the whole thing without extra cost or risk to exiting
+system elements.
