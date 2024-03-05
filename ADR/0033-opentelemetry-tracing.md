@@ -9,7 +9,7 @@ Accepted
 
 ## Context
 
-Instrumenting Konflux with OpenTelemetry (OTel) tracing will provide SREs and developers invaluable insight for incident response, debugging and monitoring. Our goal is to get traces for the Konflux activity in order to achieve an easier mental model to use for debugging.
+Instrumenting Konflux with [OpenTelemetry (OTel)](https://opentelemetry.io/docs/) tracing will provide SREs and developers invaluable insight for incident response, debugging and monitoring. Our goal is to get traces for the Konflux activity in order to achieve an easier mental model to use for debugging.
 
 OpenTelemetry is the industry standard to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) to help you analyze software performance and behavior. Our goal is to collect [traces](https://opentelemetry.io/docs/concepts/signals/traces/) from the Konflux activity of building and deploying applications.
 
