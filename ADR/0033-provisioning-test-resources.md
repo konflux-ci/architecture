@@ -217,38 +217,28 @@ Konflux dataplane clusters:
 
 ### Access Management
   
-Introducing new cluster(s) creates complexity elsewhere. A tenant needs the ability to request
-access to a namespace from which they can manage select resources
-(e.g. `ClusterTemplateInstances`, `Secrets`, `ClusterPools`). `SpaceRequests`, which the
-user already has permission to create in their tenant namespace, can be leveraged here.
-A new cluster role will be created on the `ToolchainCluster` Custom Resource to classify the
-cluster(s) used for test environment provisioning. The `SpaceRequest` controller, noticing the
-cluster role on the request will create the namespace on the remote cluster. It will also create a
-secret in the tenant namespace containing a token for a service account with access to the remote
-namespace. This secret can then be used from any `PipelineRun` workload like any other.
+Introducing new cluster(s) creates complexity elsewhere. A tenant needs access to a namespace
+on the remote cluster within which they can manage select resources
+(e.g. `ClusterTemplateInstances`, `Secrets`, `ClusterPools`).
 
-```mermaid
-flowchart TD
-  subgraph dataplane [Dataplane Cluster]
-    subgraph tenant [Tenant Namespace]
-      TaskRun
-      SpaceRequest
-      tenant-secret[spacerequest-sa-token]
-    end
-  end
+We will either update or create [NSTemplateTiers] with the addition of a `SpaceRequest`. A new
+cluster role will be created on the `ToolchainCluster` Custom Resource to classify the cluster(s)
+used for test environment provisioning. The `SpaceRequest` controller, noticing the
+cluster role on the request, will create the namespace on one of the remote clusters. It
+will also create a secret in the tenant namespace containing credentials for a service account
+with access to the remote namespace. This secret can then be used from a `PipelineRun` workload
+like any other.
 
-  subgraph cluster [New Cluster]
-    subgraph userns [Provisioned Namespace]
-      ClusterTemplateInstance
-      provisioned-secret[spacerequest-sa-token]
-    end
-  end
+The user will not be allowed to completely remove the `SpaceRequest` from their workspace as the
+member operator will restore it from the assigned `NSTemplateTier` if attempted.
 
-  User --> |1. creates| SpaceRequest
-  SpaceRequest --> |2. triggers creation of| userns
-  provisioned-secret --> |3. copied to| tenant-secret
-  TaskRun --> |4. uses| tenant-secret
-  TaskRun --> |5. creates| ClusterTemplateInstance
+
+Should a new `NSTemplateTier` be created, existing tenants can be migrated to the new tier by an
+admin with a single `sandbox-cli` command. This technique can also be used for a manual approval
+workflow, if desired.
+
+```
+sandbox-cli promote-user <username> <tier-name>
 ```
 
 ### Tekton Tasks
@@ -268,10 +258,10 @@ Task(s) that will handle the process of:
   OpenShift clusters. The cluster will need to be registered with kubesaw using a new type of
   cluster role and include adequate monitoring to support its operation.
 * The CaaS Operator along with Hive and/or Hypershift will be deployed to the new clusters.
-* Users will be granted permission to manage a limited set of resources in namespaces they request
+* Users will be granted permission to manage a limited set of resources in namespaces they own
   on the new clusters.
-* Users will continue to be granted create permissions for `SpaceRequests` in their tenant
-  namespaces.
+* Kubesaw `NSTemplateTiers` and `SpaceRequests` will be used to grant tenants access to namespaces
+  on the new clusters.
 * New Tekton Task(s) for creating `ClusterTemplateInstances` will be created that can be added to
   a `Pipeline` with minimal effort.
 * Konflux admins will be responsible for maintaining `ClusterTemplates` and the necessary secrets
@@ -284,3 +274,4 @@ Task(s) that will handle the process of:
 [Hypershift]: https://www.redhat.com/en/blog/multi-arch-workloads-hosted-control-planes-aws
 [CAPI]: https://cluster-api.sigs.k8s.io/introduction
 [CaaS]: https://github.com/stolostron/cluster-templates-operator
+[NSTemplateTiers]: https://github.com/codeready-toolchain/host-operator/tree/master/deploy/templates/nstemplatetiers
