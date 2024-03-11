@@ -2,15 +2,11 @@
 
 approvers:
 - jduimovich
-- sbose78
 - zregvart
 - simonbaird
-- michkov
 - johnmcollier
 - jgwest
 - bamachrn
-- amfred
-- gorkem
 - rhopp
 - alexeykazakov
 - chmouel
@@ -18,9 +14,8 @@ approvers:
 - elsony
 - gazarenkov
 - skabashnyuk
-- deboer-tim
 - ksprinkl
 - scoheb
 - eisraeli
 - amisstea
-- bkorren
+- ifireball
