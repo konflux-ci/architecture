@@ -96,6 +96,8 @@ While the vulnerability classifications should remain consistent in order to ena
 
 Some scanners are additionally aware of whether a specific vulnerability is patched or unpatched (i.e. whether there is a known fix that has been published by the vulnerable package's maintainers). If vulnerabilities are known to be unpatched, the scanner may use the **unpatched_vulnerabilities** object to represent their quantities and severities.
 
+For multi-arch scans, the output should be a single JSON object that aggregates the total number of vulnerabilities per severity across all image manifests of different architectures to represent an overview of the present vulnerabilities in the multi-arch image manifest, regardless of the architecture.
+
 #### Tekton Result Format for `SCAN_OUTPUT`
 The output of the Tekton result **SCAN_OUTPUT** will be a JSON object that includes the following information about the found vulnerabilities. While the vulnerability classification may vary based on the scanner used in the task, an example description of vulnerability severity ratings can be found at the [Red Hat Vulnerability documentation](https://access.redhat.com/articles/red_hat_vulnerability_tutorial).
 
