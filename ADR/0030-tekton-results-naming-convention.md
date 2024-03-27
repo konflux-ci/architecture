@@ -32,16 +32,18 @@ Test-like tasks are those whose results can be immediately classified as success
 
 The output of each Tekton task will be provided in a minimized [Tekton result](https://tekton.dev/docs/pipelines/tasks/#emitting-results) in JSON format listing the categories of reported test results and the count of results within each. The name of the result will be **TEST_OUTPUT**.
 
+For tasks processing multi-arch images, the output should be a single JSON object that aggregates the total number of results across all image manifests of different architectures to represent an overview of the tests performed on the multi-arch image, regardless of the architecture.
+
 #### Tekton Result Format for `TEST_OUTPUT`
 
 The output of the Tekton result **TEST_OUTPUT** will be a JSON object that includes the context about the test along with the list of check names for all failed checks
 
 The output will provide the following information about the overall test result:
-- **result** - The outcome of the testing task, can be `SUCCESS`, `FAILURE`, `WARNING`, `SKIPPED` or `ERROR`
+- **result** - The outcome of the testing task, can be `SUCCESS`, `FAILURE`, `WARNING`, `SKIPPED` or `ERROR`. For multi-arch images, the *result* value in the aggregated JSON object should reflect the highest priority status encountered, in accordance to the following rank order: `ERROR`, `FAILURE`, `WARNING`, `SKIPPED`, `SUCCESS`.
 - **namespace** - The rego namespace for the test policy. If not set, it will be assumed to have the value `default`
 - **timestamp** - A RFC3339 formatted timestamp of the test completion time
 - **successes** - The number of successful checks in the form of an integer
-- **note** - A short note provided by test definition to provide additional information
+- **note** - A short note provided by test definition to provide additional information. For multi-arch images, the *note* should correspond to the *result* value that was selected adhering to the rank order mentioned above.
 - **failures** - The number of failed checks in the form of an integer
 - **warnings** - The number of warning checks in the form of an integer
 
