@@ -1,4 +1,4 @@
-# 0033 Product and Version Controller
+# 0033 Project Controller fur Multi-version support
 
 Date: 2024-02-01
 
@@ -119,26 +119,26 @@ spec:
   variables:
   - name: foo
   - name: bar
-    defaultValue: "baz{foo}"
+    defaultValue: "baz{{.foo}}"
   resources:
   - apiVersion: appstudio.redhat.com/v1alpha1
     kind: Application
     metadata:
-      name: "{foo}-app1"
+      name: "{{.foo}}-app1"
     spec:
-      displayName: "{foo}-app1"
+      displayName: "{{.foo}}-app1"
   - apiVersion: appstudio.redhat.com/v1alpha1
     kind: Component
     metadata:
-      name: "{foo}-comp1"
+      name: "{{.foo}}-comp1"
     spec:
-      application: "{foo}-app1"
-      componentName: "{foo}-comp1"
+      application: "{{.foo}}-app1"
+      componentName: "{{.foo}}-comp1"
       source:
         git:
           context: ./
           dockerfileUrl: Dockerfile
-          revision: {bar}
+          revision: "{{.bar}}"
           uri: ...
 ```
 
@@ -207,9 +207,9 @@ The template would be created with the following characteristics:
 
     * If the name on the cloned resource ends with the
       *ProjectDevelopmentStream* resource's version value as determined above,
-      the value is stripped and the "`{version}`" template string is placed
+      the value is stripped and the "`{{.version}}`" template string is placed
       instead.
-    * Otherwise the "`{version}`" template string is appended to the name.
+    * Otherwise the "`{{.version}}`" template string is appended to the name.
 
 * The template will include variables for customizing *revision* (branch),
   *dockerfileUrl* and *context* values for all included *Component* resources.
@@ -367,42 +367,42 @@ spec:
   - apiVersion: appstudio.redhat.com/v1alpha1
     kind: Application
     metadata:
-      name: "cool-app-{version}"
+      name: "cool-app-{{.version}}"
       annotations:
         pvc.konflux.dev/cloned-from: cool-app1-main
     spec:
-      displayName: "Cool App {version}"
+      displayName: "Cool App {{.version}}"
 
   - apiVersion: appstudio.redhat.com/v1alpha1
     kind: Component
     metadata:
-      name: "cool-comp1-{version}"
+      name: "cool-comp1-{{.version}}"
       annotations:
         pvc.konflux.dev/cloned-from: cool-comp1-main
     spec:
-      application: "cool-app-{version}"
-      componentName: "cool-comp1-{version}"
+      application: "cool-app-{{.version}}"
+      componentName: "cool-comp1-{{.version}}"
       source:
         git:
-          context: {cool-comp1-context}
-          dockerfileUrl: {cool-comp1-dockerfileUrl}
-          revision: {cool-comp1-revision}
+          context: "{{.cool-comp1-context}}"
+          dockerfileUrl: "{{.cool-comp1-dockerfileUrl}}"
+          revision: "{{.cool-comp1-revision}}"
           uri: git@github.com:example/comp1.git
 
   - apiVersion: appstudio.redhat.com/v1alpha1
     kind: Component
     metadata:
-      name: "cool-comp2-{version}"
+      name: "cool-comp2-{{.version}}"
       annotations:
         pvc.konflux.dev/cloned-from: cool-comp2-main
     spec:
-      application: "cool-app-{version}"
-      componentName: "cool-comp2-{version}"
+      application: "cool-app-{{.version}}"
+      componentName: "cool-comp2-{{.version}}"
       source:
         git:
-          context: {cool-comp2-context}
-          dockerfileUrl: {cool-comp2-dockerfileUrl}
-          revision: {cool-comp2-revision}
+          context: "{{.cool-comp2-context}}"
+          dockerfileUrl: "{{.cool-comp2-dockerfileUrl}}"
+          revision: "{{.cool-comp2-revision}}"
           uri: git@github.com:example/comp2.git
 ```
 
@@ -509,5 +509,5 @@ development stream based UI.
 This solution is planned to be a layer on top of existing elements, to be
 optional to use, and to co-exist with using the system as it is used today. This
 also means that if we decide at a later time that this was not a sound technical
-direction, we can drop the whole thing without extra cost or risk to exiting
+direction, we can drop the whole thing without extra cost or risk to existing
 system elements.
