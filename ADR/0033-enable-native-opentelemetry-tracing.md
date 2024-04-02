@@ -1,7 +1,7 @@
-# 33. OpenTelemetry Tracing
+# 33. Enable Native OpenTelemetry Tracing
 
 Date started: 2024-02-27
-Date accepted: 2024-MM-DD
+Date accepted: 2024-04-02
 
 ## Status
 
