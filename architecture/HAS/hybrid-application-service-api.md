@@ -51,11 +51,11 @@ If no repository is set in the appModelRepository and gitOpsRepository fields, t
 
 Click on the following links to compare the contents of the Application CR before and after creation
 
-[Application Before Creation](https://github.com/yangcao77/has-kube-samples/blob/master/001-create-application/input-hasApplication.yaml)
+[Application Before Creation](https://github.com/has-resources/has-kube-samples/blob/main/001-create-application/input-hasApplication.yaml)
 
 A successful creation of the resource will result in the controller generating the Devfile model for the Application and storing it in the `status.devfile` field.
 
-[Application After Creation](https://github.com/yangcao77/has-kube-samples/blob/master/001-create-application/output-hasApplication.yaml#L74C13-L83)
+[Application After Creation](https://github.com/has-resources/has-kube-samples/blob/main/001-create-application/output-hasApplication.yaml#L74C13-L83)
 
 </ul>
 </ul>
@@ -95,15 +95,15 @@ When the Component is created, the HAS controller retrieves the Component’s De
 
 Click on the following links to compare the contents of the Component CR before and after creation.
 
-[Component Before Creation](https://github.com/yangcao77/has-kube-samples/blob/master/003-add-component-from-sample/input-hasComponent.yaml)
+[Component Before Creation](https://github.com/has-resources/has-kube-samples/blob/main/003-add-component-from-sample/input-hasComponent.yaml)
 
 Upon successful creation, the CR `status.devfile` will be populated with the flattened Devfile retrieved from the specified samples repository.
 
-[Component After Creation](https://github.com/yangcao77/has-kube-samples/blob/master/003-add-component-from-sample/output-hasComponent.yaml#L125-L222)
+[Component After Creation](https://github.com/has-resources/has-kube-samples/blob/main/003-add-component-from-sample/output-hasComponent.yaml#L125-L222)
 
 Once a Component has been created, the Application Devfile model will be updated to include the name of the newly created Component and its corresponding git source sample repo.
 
-[Updated Application After Component Creation](https://github.com/yangcao77/has-kube-samples/blob/master/003-add-component-from-sample/output-hasApplication.yaml#L83-L87)
+[Updated Application After Component Creation](https://github.com/has-resources/has-kube-samples/blob/main/003-add-component-from-sample/output-hasApplication.yaml#L83-L87)
 
 </ul>
 </ul>
@@ -144,11 +144,11 @@ If the detection cannot figure out the language and project type, the return val
 
 Click on the following links to compare the contents of the ComponentDetectionQuery CR before and after creation.
 
-[ComponentDetectionQuery Before Creation](https://github.com/yangcao77/has-kube-samples/blob/master/004-detect-service/input-serviceDetectionQuery.yaml)
+[ComponentDetectionQuery Before Creation](https://github.com/has-resources/has-kube-samples/blob/main/004-detect-service/input-serviceDetectionQuery.yaml)
 
 After the detection request finishes, its status will be set to success/unsuccessful. If it was successful, the `status.componentDetected` field will be populated with the detected language, project type (and if necessary) matching Devfile of each Component
 
-[ComponentDetectionQuery After Creation](https://github.com/yangcao77/has-kube-samples/blob/master/004-detect-service/output-serviceDetectionQuery.yaml#L100-L143)
+[ComponentDetectionQuery After Creation](https://github.com/has-resources/has-kube-samples/blob/main/004-detect-service/output-serviceDetectionQuery.yaml#L100-L143)
 
 </ul>
 
