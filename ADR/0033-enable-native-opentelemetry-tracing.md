@@ -1,6 +1,7 @@
 # 33. Enable Native OpenTelemetry Tracing
 
 Date started: 2024-02-27
+
 Date accepted: 2024-04-02
 
 ## Status
@@ -9,15 +10,13 @@ Accepted
 
 ## Context
 
-Konflux is a tool under active development and, therefore, unforeseen issues may arise. A recent (at the time of writing this ADR) example is the [long running](https://github.com/redhat-appstudio/build-definitions/pull/856/checks?check_run_id=22307468968) [e2e-test](https://github.com/redhat-appstudio/build-definitions/blob/main/.tekton/tasks/e2e-test.yaml) in [Konflux’s build definitions](https://github.com/redhat-appstudio/build-definitions). Fixing and debugging such issues is not a trivial thing for Konflux’s developers. Additional data, metrics, telemetry and tracing are essential in enabling Konflux developers and SREs to come up with fixes.
+Konflux is a tool under active development and, therefore, unforeseen issues may arise. A recent (at the time of writing this ADR) example is the [long running](https://github.com/redhat-appstudio/build-definitions/pull/856/checks?check_run_id=22307468968) [e2e-test](https://github.com/redhat-appstudio/build-definitions/blob/main/.tekton/tasks/e2e-test.yaml) in Konflux’s build definitions. Fixing and debugging such issues is not a trivial thing for Konflux’s developers. Additional data, metrics, telemetry and tracing are essential in enabling Konflux developers and SREs to come up with fixes.
 
 Tracing, in particular, enables a straightforward model for dealing with complex, distributed systems. It gives unique insight into a system’s execution, grouping functions together. These grouping functions can be critical for finding fields that correlate to some problem, and provide powerful insights to reduce the range of possible causes.
 
-Konflux users will also benefit from tracing, as they gain a more introspective view into their application’s build pipeline, enabling them to focus on effective and impactful corrective actions.
-
 OpenTelemetry is the industry standard to instrument, generate, collect, and export telemetry data (metrics, logs, and traces) to help you analyze software performance and behavior. Our goal is to collect [traces](https://opentelemetry.io/docs/concepts/signals/traces/) from the Konflux activity of building applications.
 
-Instrumenting Konflux with [OpenTelemetry (OTel)](https://opentelemetry.io/docs/) tracing will provide SREs, developers and users invaluable insight for incident response, debugging and monitoring. Our goal is to get traces for the Konflux activity in order to achieve an easier mental model to use for debugging.
+Instrumenting Konflux with [OpenTelemetry (OTel)](https://opentelemetry.io/docs/) tracing will provide SREs and developers invaluable insight for incident response, debugging and monitoring. Our goal is to get traces for the Konflux activity in order to achieve an easier mental model to use for debugging.
 
 ## Decision
 
@@ -27,14 +26,14 @@ For instance, [Pipeline Service](https://github.com/redhat-appstudio/architectur
 
 There are a few ways to enable native tracing in Konflux. Openshift and Tekton natively have Jaeger tracing which can be collected by a compatible application, such as an actual Jaeger instance, an OpenTelemetry collector or even something like Grafana Tempo.
 
-We recommend using an OpenTelemetry Collector as the way to collect Konflux native tracing as it has the least installation and setup overhead while also providing flexibility to forward traces to any tracing viewing frontend.
+We recommend using an OpenTelemetry Collector as the way to collect Konflux native tracing as it has the least installation and setup overhead while also providing flexibility to forward traces to any tracing frontend.
 
 ## Consequences
 
-Additional applications will have to be installed in the same OpenShift cluster that the Konflux instance runs, or a Jaeger instance or OpenTelemetry collector will have to be available in order to collect traces. Also, some configuration changes are required on the tekton-pipelines namespace in the OpenShift cluster that the Konflux instance runs.
+Additional applications will have to be installed in the same OpenShift cluster that the Konflux instance runs or OpenTelemetry collector will have to be available in order to collect traces. Also, some configuration changes are required on the tekton-pipelines namespace in the OpenShift cluster that the Konflux instance runs.
 
 Enabling Konflux native tracing is not without risks:
 - There is a span or trace flooding risk from within the OpenShift cluster
 - There is a secret leakage risk (although this is not an exclusive risk for traces, logs are also liable to this)
 
-However, we assess that the benefits far outweigh the risks and therefore, by instrumenting Konflux with [OpenTelemetry (OTel)](https://opentelemetry.io/docs/) tracing, we will provide Konflux SREs, developers and users invaluable insight for incident response, debugging and monitoring, ultimately achieving an improved mental model for debugging and incident response.
+However, we assess that the benefits far outweigh the risks and therefore, by instrumenting Konflux with [OpenTelemetry (OTel)](https://opentelemetry.io/docs/) tracing, we will provide Konflux SREs and developers invaluable insight for incident response, debugging and monitoring, ultimately achieving an improved mental model for debugging and incident response.
