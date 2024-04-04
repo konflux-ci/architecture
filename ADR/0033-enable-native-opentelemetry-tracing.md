@@ -30,7 +30,7 @@ We recommend using an OpenTelemetry Collector as the way to collect Konflux nati
 
 ## Consequences
 
-Additional applications will have to be installed in the same OpenShift cluster that the Konflux instance runs or OpenTelemetry collector will have to be available in order to collect traces. Also, some configuration changes are required on the tekton-pipelines namespace in the OpenShift cluster that the Konflux instance runs.
+Additional applications will have to be installed in the same OpenShift cluster that the Konflux instance runs or OpenTelemetry collector(s) will have to be available in order to collect traces. Also, some configuration changes are required on the tekton-pipelines namespace in the OpenShift cluster that the Konflux instance runs.
 
 Enabling Konflux native tracing is not without risks:
 - There is a span or trace flooding risk from within the OpenShift cluster
