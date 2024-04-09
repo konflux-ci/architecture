@@ -24,11 +24,15 @@ We are going to enable as much native tracing in Konflux as we can by quickly en
 
 Native tracing will be enabled for the core Tekton controller as no upstream changes are required in order to do so, as Tekton  already natively supports [OpenTelemetry Distributed Tracing for Tasks and Pipelines](https://github.com/tektoncd/community/blob/main/teps/0124-distributed-tracing-for-tasks-and-pipelines.md). We just need to work to enable this native tracing (e.g. set environment variables).
 
-Other Tekton pieces that Konflux leverages such as [chains](https://tekton.dev/docs/chains/) and [results](https://tekton.dev/docs/results/) will have to be instrumented separately and will require upstream changes, so they are out of scope for this ADR.
-
 There are a few ways to enable native tracing in Konflux. Openshift and Tekton natively have Jaeger tracing which can be collected by a compatible application, such as an actual Jaeger instance, an OpenTelemetry collector or even something like Grafana Tempo.
 
 We recommend using an OpenTelemetry Collector as the way to collect Konflux native tracing as it has the least installation and setup overhead while also providing flexibility to forward traces to any tracing frontend.
+
+Other Tekton pieces that Konflux leverages such as [pipeline as code](https://pipelinesascode.com/), [chains](https://tekton.dev/docs/chains/) and [results](https://tekton.dev/docs/results/) will have to be instrumented separately and will require upstream changes, so they are out of scope for this ADR.
+
+Also, other Konflux services such as the [build service](https://github.com/redhat-appstudio/architecture/blob/main/architecture/build-service.md), [application service](https://github.com/redhat-appstudio/architecture/blob/main/architecture/hybrid-application-service.md) and [integration service](https://github.com/redhat-appstudio/architecture/blob/main/architecture/integration-service.md) will also require either automatic instrumentation or code based instrumentation and therefore are also out of scope for this ADR.
+
+Any other type of instrumentation that isn't native will be addressed in a future ADR.
 
 ## Consequences
 
