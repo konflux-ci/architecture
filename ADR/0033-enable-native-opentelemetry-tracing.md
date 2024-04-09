@@ -22,7 +22,7 @@ Instrumenting Konflux with [OpenTelemetry (OTel)](https://opentelemetry.io/docs/
 
 We are going to enable as much native tracing in Konflux as we can by quickly enabling any pre-existing tracing capabilities in the system. Any other type of tracing (e.g. zero code instrumentation or code based instrumentation) is out of scope for this ADR.
 
-Native tracing will be enabled for the core Tekton controller as no upstream changes are required in order to do so, as Tekton  already natively supports [OpenTelemetry Distributed Tracing for Tasks and Pipelines](https://github.com/tektoncd/community/blob/main/teps/0124-distributed-tracing-for-tasks-and-pipelines.md), We just need to work to enable this native tracing (e.g. set environment variables).
+Native tracing will be enabled for the core Tekton controller as no upstream changes are required in order to do so, as Tekton  already natively supports [OpenTelemetry Distributed Tracing for Tasks and Pipelines](https://github.com/tektoncd/community/blob/main/teps/0124-distributed-tracing-for-tasks-and-pipelines.md). We just need to work to enable this native tracing (e.g. set environment variables).
 
 Other Tekton pieces that Konflux leverages such as [chains](https://tekton.dev/docs/chains/) and [results](https://tekton.dev/docs/results/) will have to be instrumented separately and will require upstream changes, so they are out of scope for this ADR.
 
