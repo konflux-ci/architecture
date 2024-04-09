@@ -22,7 +22,9 @@ Instrumenting Konflux with [OpenTelemetry (OTel)](https://opentelemetry.io/docs/
 
 We are going to enable as much native tracing in Konflux as we can by quickly enabling any pre-existing tracing capabilities in the system. Any other type of tracing (e.g. zero code instrumentation or code based instrumentation) is out of scope for this ADR.
 
-For instance, [Pipeline Service](https://github.com/redhat-appstudio/architecture/blob/main/architecture/pipeline-service.md) has to be instrumented with OTel as it provides Tekton APIs and services to Konflux. Pipeline Services includes Tekton which already natively supports [OpenTelemetry Distributed Tracing for Tasks and Pipelines](https://github.com/tektoncd/community/blob/main/teps/0124-distributed-tracing-for-tasks-and-pipelines.md), so no upstream changes are required. We just need to work to enable this native tracing (e.g. set environment variables).
+Native tracing will be enabled for the core Tekton controller as no upstream changes are required in order to do so, as Tekton  already natively supports [OpenTelemetry Distributed Tracing for Tasks and Pipelines](https://github.com/tektoncd/community/blob/main/teps/0124-distributed-tracing-for-tasks-and-pipelines.md), We just need to work to enable this native tracing (e.g. set environment variables).
+
+Other Tekton pieces that Konflux leverages such as [chains](https://tekton.dev/docs/chains/) and [results](https://tekton.dev/docs/results/) will have to be instrumented separately and will require upstream changes, so they are out of scope for this ADR.
 
 There are a few ways to enable native tracing in Konflux. Openshift and Tekton natively have Jaeger tracing which can be collected by a compatible application, such as an actual Jaeger instance, an OpenTelemetry collector or even something like Grafana Tempo.
 
