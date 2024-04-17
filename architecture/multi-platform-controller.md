@@ -156,40 +156,9 @@ There are still unanswered questions about these hosts and additional requiremen
 
 This section explains what is needed to configure an IBM Cloud Account. Power PC and System Z are both very different and have different configuration, so these are divided into different sections.
 
-### Configure the Workspace
-
-#### Power PC
-
-This section describes the steps involved to setup a workspace, add SSH keys, and creating a boot image from a VM snapshot.
-
-1. Select 'Power Systems For Virtual Server' service from the catalogue.
-2. Click 'Create Workspace' then fill in your workspace details, and create the workspace.
-3. Select the resulting workspace from the list, all further actions are done in the context of this workspace.
-4. Prepare a new SSH key using `ssh-keygen`. Do not use a personal SSH key
-5. Select SSH Keys from the menu on the left, click 'Create SSH Key', and upload an SSH Public Key.
-6. Select 'virtual server instances' on the left, and click 'create instance'.
-7. Start a virtual server using the RHEL image you want to use as the base. This machine is temporary, it does not require much processing or memory, so the values you select here do not matter. Be sure to enable public network access so you can connect to it.
-8. Connect to your new virtual server over SSH, entitle it and install podman.
-9. Select your virtual server from the virtual server list, then under 'VM Actions' in the top right select 'capture and export'. Save the result to the image catalogue with whatever name you want.
-10. Terminate your temporary virtual machine.
-
-#### System Z
-
-1. Select 'Object Storage' from the service catalogue.
-2. Create a new free tier account, and then upload a System Z compatible RHEL boot image into a bucket of your choosing. Note that uploading directly won't work as the image is too big, you will need to install their tool for large uploads.
-3. Select 'Virtual server for VPC' from the service catalogue.
-4. Select 'Images' from the left hand menu and click 'Create', enter a name for the image, select the source as being from 'Cloud Object Storage', then select the image you just uploaded. Select RHEL as the image type and create it.
-5. Select 'SSH Keys' from the left hand menu, click create, and create a new SSH key to connect to the instance.
-6. Select 'Virtual Server Instances' from the left hand menu.
-7. Click 'Create', select IBM Z, pick the boot image you just created, and create a new temporary instance.
-8. Select the instance you just created from the list, and assign it a new public IP
-9. Connect to your new virtual server over SSH, entitle it and install podman.
-10. Using the console stop the virtual server, then select create image from the action menu. Assign your new boot image a name.
-11. The virtual machine can now be deleted.
-
 ### Pool based config
 
-Pool based configuration is handled by simply starting virtual machines using the boot images selected above. You must also select/create appropriate SSH Keys for the instances (i.e. don't use a personal key). Once these are up and running they can be added to the `host-config` ConfigMap as per the example above. The SSH keys much be added to the vault and deployed to the namespace using external secrets.
+Pool based configuration is handled by simply starting virtual machines using the boot images selected. You must also select/create appropriate SSH Keys for the instances (i.e. don't use a personal key). Once these are up and running they can be added to the `host-config` ConfigMap as per the example above. The SSH keys much be added to the vault and deployed to the namespace using external secrets.
 
 ### Dynamic Config
 
