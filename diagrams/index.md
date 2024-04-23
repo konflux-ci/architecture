@@ -2,15 +2,15 @@
 
 ## System Context
 
-The diagram below shows the interaction of the AppStudio with other systems and environments.
+The diagram below shows the interaction of the Konflux with other systems and environments.
 
 ## Application Context
 
-![](../diagrams/appstudio.drawio.svg)
+![](../diagrams/konflux.drawio.svg)
 
 ## Workspace Layout
 
-![](../diagrams/appstudio-workspace-layout.drawio.svg)
+![](../diagrams/konflux-workspace-layout.drawio.svg)
 
 ## Personal Data
 

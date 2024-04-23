@@ -13,12 +13,12 @@ Accepted
 ---
 
 Many organizations, including Red Hat, possess numerous internal services that help productize their software.
-In many cases, these internal services will continue to play a role in the release workflows used in AppStudio/HACBS.
+In many cases, these internal services will continue to play a role in the release workflows used in Konflux.
 
 We originally thought that we should expose access to an organization's internal services by encouraging the use of "[bastion](https://en.wikipedia.org/wiki/Bastion_host)" interfaces that are publicly addressable but which also have some degree of internal network access. On review, we see now that internal network ingress like this opens up unwanted
 attack vectors towards an organization's internal networks.
 
-**Problem**: AppStudio/Release pipelines need to **initiate** processes with an organization's internal services which
+**Problem**: Konflux Release pipelines need to **initiate** processes with an organization's internal services which
 are **not publicly addressable** in a secure fashion and be able to obtain process status and completion results.
 
 ## Decision

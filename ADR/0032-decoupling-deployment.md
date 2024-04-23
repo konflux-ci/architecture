@@ -120,7 +120,7 @@ flowchart TD
     argocd --> |deploys to| cluster[User provided cluster]
 ```
 
-Outside of the AppStudio member cluster, the user is responsible for acquiring a gitops repo and
+Outside of the Konflux member cluster, the user is responsible for acquiring a gitops repo and
 deployment environments of their choice, manually laying out their application resources in the repo
 (assisted by tools like `kam`), specifying image references by tag to match the `:released` or
 `:validated` tagging schem mentioned above, configuring ArgoCD to deploy from their gitops repo, and
@@ -129,7 +129,7 @@ here is just an example and other gitops tools could be used; renovate could eve
 with the new images. Options for the user are not limited.
 
 **For manual creation of new environments** - the user manages this directly using a combination of
-their gitops repo and argo, outside of the AppStudio member cluster.
+their gitops repo and argo, outside of the Konflux member cluster.
 
 **For automated testing in ephemeral environments** - the user specifies an
 [IntegrationTestScenario] CR, which references a pipeline which (somehow) creates a `resourceClaim`.
@@ -164,13 +164,13 @@ flowchart TD
 
 - Users who expect effortless deployment of their app when onboarding to the system will be
   dissapointed. They have more work to do to set up a deployment of their app outside the system.
-- Users will lose visibility of their applications' deployments and status in the AppStudio UI
+- Users will lose visibility of their applications' deployments and status in the Konflux UI
   (HAC). Other systems like the Argo UI are arguably better at this than we are.
 - Users who expect to provide and manage their own resources to control their app will be delighted.
   They now no longer have to interact with an intermediary API to try to express details about their
   deployment(s).
 - As a team, we'll be in a better position to try to achieve independence for [integration-service],
-  make it usable outside the context of AppStudio, and ideally make it attractive for collaborators.
+  make it usable outside the context of Konflux, and ideally make it attractive for collaborators.
 
 ## Implementation
 

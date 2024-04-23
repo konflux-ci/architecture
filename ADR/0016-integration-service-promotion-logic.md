@@ -9,7 +9,7 @@ Superceded by [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)
 
 ## Context
 
-Before the merge of HACBS & AppStudio, the AppStudio build-service created the
+Before the merge of HACBS & AppStudio, the Konflux build-service created the
 ApplicationSnapshot and promoted the content to the user's lowest environment as soon as
 the build was completed and once the environment was built.
 The integration-service fulfilled the same role for HACBS in addition to running the
@@ -27,7 +27,7 @@ that the workloads are properly tested before being further promoted to an envir
 service level agreement.
 The promotion path can be represented with a directed acyclic graph from the environment with the
 lowest SLA to the one with the highest, for example development -> staging -> production.
-In AppStudio, this promotion logic would be represented by a set of components (container images) defined by
+In Konflux, this promotion logic would be represented by a set of components (container images) defined by
 an immutable Snapshot being deployed to the relevant environment.
 
 Once the Snapshot is tested and verified successfully, its contents will then be deployed to the user's defined
@@ -36,7 +36,7 @@ lowest environments.
 ## Decision
 
 Consolidate the promotion logic for both HACBS & AppStudio and move it to the integration-service after
-the merger of AppStudio.
+the merger of Konflux.
 
 ![](../diagrams/ADR-0016/promotion-logic.jpg)
 

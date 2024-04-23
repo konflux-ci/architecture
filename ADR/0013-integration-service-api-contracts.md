@@ -1,4 +1,4 @@
-# 13. AppStudio Test Stream - API contracts
+# 13. Konflux Test Stream - API contracts
 
 Date: 2023-01-30
 
@@ -10,9 +10,9 @@ Relates to [ADR 14. Let Pipelines Proceed](0014-let-pipelines-proceed.html)
 
 ## Context
 
-The AppStudio project being developed aims to serve Red Hat teams but also partners and customers. This requires a level of adaptability to avoid recreating custom flows and Tasks for each stakeholder.
+The Konflux project being developed aims to serve Red Hat teams but also partners and customers. This requires a level of adaptability to avoid recreating custom flows and Tasks for each stakeholder.
 
-In this respect Tasks developed by AppStudio test stream should allow swapping external systems to accommodate different environments. This swap should not induce the complete recreation of pipelines.
+In this respect Tasks developed by Konflux test stream should allow swapping external systems to accommodate different environments. This swap should not induce the complete recreation of pipelines.
 
 This and the idea of providing a homogeneous experience, which is easier to comprehend and navigate complex systems, leads to the definition of `API contracts`. These contracts need to be understood as guidance that may evolve with time and experience while keeping the aim of building a flexible homogeneous system.
 
@@ -40,7 +40,7 @@ To display count of found vulnerabilities and make it easy to understand and eva
 
 The maximum size of a [Task's Results](https://tekton.dev/vault/pipelines-v0.17.3/tasks/#emitting-results) is limited by the container [termination message](https://kubernetes.io/docs/tasks/debug/debug-application/determine-reason-pod-failure/#customizing-the-termination-message) feature of Kubernetes.
 
-App Studio builds are structured as [a shared Persistent Volume per AppStudio Workspace](https://docs.google.com/document/d/1IPlihVjkJ4Kb9tdhsk7iz3bn5rkT_SvJCNQhyXzK3aI/edit#bookmark=id.gefgys3vno2). This allows teams to share builds, implement caching and other shared volumes. A single persistent volume is mapped to each default build pipeline. Builds are passed a directory specific to their builds.
+App Studio builds are structured as [a shared Persistent Volume per Konflux Workspace](https://docs.google.com/document/d/1IPlihVjkJ4Kb9tdhsk7iz3bn5rkT_SvJCNQhyXzK3aI/edit#bookmark=id.gefgys3vno2). This allows teams to share builds, implement caching and other shared volumes. A single persistent volume is mapped to each default build pipeline. Builds are passed a directory specific to their builds.
 
 #### Tekton Result Format for `HACBS_TEST_OUTPUT`
 
@@ -57,11 +57,11 @@ The output will provide the following information about the overall test result:
 
 Example contents of the test result output file (**HACBS_TEST_OUTPUT**) for a failed run:
 ```
-{ 
+{
     "result": "FAILURE",
     "namespace": "image_labels",
     "timestamp": "1649148140",
-    "successes": 12, 
+    "successes": 12,
     "note": "Task fbc-related-image-check failed: Command skopeo inspect could not inspect images. For details, check Tekton task log.",
     "failures": 2,
     "warnings": 0
@@ -170,7 +170,7 @@ Each test will have a standardized short name in snake case, e.g. `release_label
 The output will provide the following information about the overall test result:
 - **filename** - Name of the file that was inspected by the Tekton task
   - This will reflect the data that the test was executed on, such as `image-inspect.json`, `clair-vulnerabilities.json` etc.
-- **namespace** - The rego namespace of the test policy. 
+- **namespace** - The rego namespace of the test policy.
 - **successes** - The number of successful checks in the form of an integer
 - **failures** - A JSON list containing objects describing each failure
 
@@ -238,7 +238,7 @@ Since tags can be moved from one image to another, they should not be relied on 
 ## Consequences
 
 As a result of the decision here to summarize results in a **HACBS_TEST_OUTPUT** result and store the larger test output as a file named **test_name_output.json**, we should find that:
-* Other components in AppStudio can leverage information exposed by TaskRuns - notably the UI (HAC), integration-service, and enterprise-contract - enabling features for the larger system that need to depend on some data from inside a variety of TaskRuns.
+* Other components in Konflux can leverage information exposed by TaskRuns - notably the UI (HAC), integration-service, and enterprise-contract - enabling features for the larger system that need to depend on some data from inside a variety of TaskRuns.
 * We'll be able to have PipelineRuns that _succeed_ and continue, even if they have tasks whose payloads fail and expose errors. This enables a progressive model where the user can get a build and a functional test and a deployment to their development Environment, even if a linter or scanner in their build pipeline emits an error.
 * By having chosen a convention that has "HACBS" in the name, we're going to have trouble integrating third-party Task providers in the future. In order to have its output respected by our system, a hypothetical vendor of a third-party scanner will need to add a "HACBS_TEST_OUTPUT" result on their Task, which is oddly specific to our system. At some point in the future, we should revise this decision to instead align to a common upstream convention that gains traction in the broader tekton ecosystem. See also [HACBS-1563](https://issues.redhat.com/browse/HACBS-1563).
 
@@ -269,7 +269,7 @@ Information, which relates to an environment like connection details and credent
 ## Appendix
 
 - **Task recommendations**: This document focuses (it was at least the original intention) on API contracts but there are more recommendations regarding Task developments. The following ones have been collected by the Tekton project: https://github.com/tektoncd/catalog/blob/main/recommendations.md
-- **Programming language**: Tekton supports “choosing the right language for the right task”. That said, from an operational point of view it is beneficial to limit the number of programming languages needed to support AppStudio. Defining “default” languages helps with limiting the skills required to support the platform. This also helps with avoiding knowledge islands where only a few people are able to maintain some Tasks.
+- **Programming language**: Tekton supports “choosing the right language for the right task”. That said, from an operational point of view it is beneficial to limit the number of programming languages needed to support Konflux. Defining “default” languages helps with limiting the skills required to support the platform. This also helps with avoiding knowledge islands where only a few people are able to maintain some Tasks.
 - **Failure behavior**: A retry mechanism with configurable timeout and exponential backoff needs to be implemented for technical or functional recoverable failures. A scenario example: An image may not have been completely indexed when the result of the security scan is interrogated. In such a case the Task should have a retry mechanism that may wait till completion of the indexing or time out.
 - **Repositories**: Whenever there is no sensitive information we aim to have the PoC sources in a public repository. Is there a public GitHub organization for that? Can we use [this](https://github.com/redhat-appstudio)? When a Task is specifically for Red Hat’s infrastructure it should be kept in a private repository.  Is there a private GitLab group for that?
 
