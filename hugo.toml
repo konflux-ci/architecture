@@ -1,0 +1,42 @@
+baseURL = 'http://localhost:1313/'
+languageCode = 'en-us'
+title = 'Standalone Konflux Architecture Docs'
+theme = 'hugo-universal-theme'
+
+# Site language. Available translations in the theme's `/i18n` directory.
+defaultContentLanguage = "en"
+
+# number of words of summarized post content (default 70)
+summaryLength = 70
+
+# Define the number of posts per page
+paginate = 10
+
+# not pluralize title pages by default
+pluralizelisttitles = false
+
+[params]
+    disabled_logo = false
+    logo_text = "Konflux"
+
+    # Style options: default (light-blue), blue, green, marsala, pink, red, turquoise, violet
+    style = "default"
+
+[[menu.main]]
+    name       = "Architecture"
+    identifier = "menu.architecture"
+    url        = "/architecture/"
+    weight     = 3
+
+[[menu.main]]
+    name       = "Decisions"
+    identifier = "menu.decisionss"
+    url        = "/decisions/"
+    weight     = 4
+
+[[menu.main]]
+    name       = "API"
+    identifier = "menu.api"
+    url        = "/ref/"
+    weight     = 5
+
