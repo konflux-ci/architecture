@@ -1,3 +1,5 @@
 **/.export
 .DS_Store
 .idea/
+.hugo_build.lock
+public/
