@@ -15,7 +15,7 @@ revision and its change history are preserved indefinitely and cannot be deleted
 subject to an established and transparent policy for obliteration, such as a legal or policy
 requirement."
 
-We intend for the AppStudio pipeline to support this requirement in
+We intend for the Konflux pipeline to support this requirement in
 [RHTAP-107](https://issues.redhat.com/browse/RHTAP-107). Since we [Use our own pipelines (ADR
 .17)](0017-use-our-pipelines.html), this would satisfy the control for us, if it were implemented.
 
@@ -24,7 +24,7 @@ a "technical control") that precribes how our own source repositories must be ma
 
 ## Decision
 
-The source history of branches used to build AppStudio components (usually the `main` branch), must
+The source history of branches used to build Konflux components (usually the `main` branch), must
 not be overwritten or deleted.
 
 This practice can be supported by enabling branch protection rules on a repo by repo basis that

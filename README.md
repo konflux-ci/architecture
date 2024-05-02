@@ -1,6 +1,6 @@
-# Architecture of AppStudio
+# Architecture of Konflux
 
-This repository contains the technical and architecture documents for AppStudio.
+This repository contains the technical and architecture documents for Konflux.
 User documentation is out of scope.
 
 ## Guide to Sections

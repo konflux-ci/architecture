@@ -20,7 +20,7 @@ The diagram below shows the interaction of the internal services controller and 
 ## Terminology
 
 * **InternalRequest** - The custom resource that describes the internal service to trigger the internal job on.
-* **Remote Cluster** - A **public**, AppStudio cluster residing outside a private network.
+* **Remote Cluster** - A **public**, Konflux cluster residing outside a private network.
 * **Internal, Private Cluster** - A cluster that is not externally addressable but which has access to a private network.
 
 ## Resources

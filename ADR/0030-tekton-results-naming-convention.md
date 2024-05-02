@@ -7,12 +7,12 @@ Date: 2023-09-27
 Accepted
 
 Relates to:
-* [ADR 13. AppStudio Test Stream - API contracts](0013-integration-service-api-contracts.html)
+* [ADR 13. Konflux Test Stream - API contracts](0013-integration-service-api-contracts.html)
 * [ADR 14. Let Pipelines Proceed](0014-let-pipelines-proceed.html)
 
 ## Context
 
-In order to [Let Pipelines Proceed](0014-let-pipelines-proceed.html), the default interface of a Tekton Task's status code becomes an unsuitable API contract for communicating the successes and failures of tasks. [ADR 13. AppStudio Test Stream - API contracts](0013-integration-service-api-contracts.html) established the first API contract for Tekton result standardization within AppStudio for the built-in Task definitions when task failure was not an option. As AppStudio onboarding continues, more non-default tasks (partner and user tasks, for example) will be defined and the current standardization's narrow scope may start to confuse task authors. Further compounding this issue is the lack of a concrete guidance or standard from the Tekton community around standard sets of result names. Therefore, the AppStudio components should adhere to generic standards for supported results types while still enabling the platform to operate within the Tekton result size limitations.
+In order to [Let Pipelines Proceed](0014-let-pipelines-proceed.html), the default interface of a Tekton Task's status code becomes an unsuitable API contract for communicating the successes and failures of tasks. [ADR 13. Konflux Test Stream - API contracts](0013-integration-service-api-contracts.html) established the first API contract for Tekton result standardization within Konflux for the built-in Task definitions when task failure was not an option. As Konflux onboarding continues, more non-default tasks (partner and user tasks, for example) will be defined and the current standardization's narrow scope may start to confuse task authors. Further compounding this issue is the lack of a concrete guidance or standard from the Tekton community around standard sets of result names. Therefore, the Konflux components should adhere to generic standards for supported results types while still enabling the platform to operate within the Tekton result size limitations.
 
 ## Decision
 
@@ -25,7 +25,7 @@ If tasks exist outside of the build pipeline, they _may_ adhere to the following
 
 There are two defined standards for minimized [Tekton result](https://tekton.dev/docs/pipelines/tasks/#emitting-results) formats based on the common task types -- test-like and scan-like tasks. Each of these standards will have a unique result name as well as their own result format.
 
-The standards presented in this ADR supersede those in [ADR 13. AppStudio Test Stream - API contracts](0013-integration-service-api-contracts.html). All other standards presented in the previous ADR hold unless _this_ ADR is superseded by an additional ADR that deprecates those standards. These other non-deprecated standards presented include [Detailed Conftest Output JSON](0013-integration-service-api-contracts.html#detailed-conftest-output-json), [Information injection](0013-integration-service-api-contracts.html#information-injection), [Information format](0013-integration-service-api-contracts.html#information-format), and [Image references](0013-integration-service-api-contracts.html#image-references).
+The standards presented in this ADR supersede those in [ADR 13. Konflux Test Stream - API contracts](0013-integration-service-api-contracts.html). All other standards presented in the previous ADR hold unless _this_ ADR is superseded by an additional ADR that deprecates those standards. These other non-deprecated standards presented include [Detailed Conftest Output JSON](0013-integration-service-api-contracts.html#detailed-conftest-output-json), [Information injection](0013-integration-service-api-contracts.html#information-injection), [Information format](0013-integration-service-api-contracts.html#information-format), and [Image references](0013-integration-service-api-contracts.html#image-references).
 
 ### Results for Test-like Tasks
 Test-like tasks are those whose results can be immediately classified as successful or failed. If these tests are taken into account in the final suitability of an artifact for promotion or release, then all pass/fail determination would be deferred to the task run.
@@ -94,7 +94,7 @@ Scan-like results should still use the **TEST_OUTPUT** result for indicating whe
 
 To display count of found vulnerabilities and make it easy to understand and evaluate the state of scanned content, the additional output of scan-like tasks will be provided in a minimized [Tekton result](https://tekton.dev/docs/pipelines/tasks/#emitting-results) in JSON format listing. The name of the result will be **SCAN_OUTPUT**.
 
-While the vulnerability classifications should remain consistent in order to enable easier extensions into other AppStudio components (namely the user interface and enterprise contract), it is the responsibility of every scan-like task to inform the user about what criteria fits each vulnerability classification used. The vulnerability classifications from most important/severe to least are **critical**, **high**, **medium**, and **low**. If a vulnerability is classified as **unknown** then the scanner cannot make further judgement about its severity.
+While the vulnerability classifications should remain consistent in order to enable easier extensions into other Konflux components (namely the user interface and enterprise contract), it is the responsibility of every scan-like task to inform the user about what criteria fits each vulnerability classification used. The vulnerability classifications from most important/severe to least are **critical**, **high**, **medium**, and **low**. If a vulnerability is classified as **unknown** then the scanner cannot make further judgement about its severity.
 
 Some scanners are additionally aware of whether a specific vulnerability is patched or unpatched (i.e. whether there is a known fix that has been published by the vulnerable package's maintainers). If vulnerabilities are known to be unpatched, the scanner may use the **unpatched_vulnerabilities** object to represent their quantities and severities.
 
@@ -257,5 +257,5 @@ The output of the Tekton result **IMAGES_PROCESSED** can be validated using the 
 
 ## Consequences
 
-* Until a time arrives when a standard is set upstream around the best practices for defining a result API, AppStudio will define its own standard for adherence.
+* Until a time arrives when a standard is set upstream around the best practices for defining a result API, Konflux will define its own standard for adherence.
 * In situations where pipelines do not _need_ to proceed, (**IntegrationTestScenario**s, for example), this API does not need to be leveraged. Instead, the default API of the Task's status of success/failure can be used in lieu of the test-like results.

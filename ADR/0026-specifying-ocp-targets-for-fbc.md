@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-One of the supported component types within AppStudio are [File-based Catalogs (FBC)].
+One of the supported component types within Konflux are [File-based Catalogs (FBC)].
 These catalogs can either be used in isolation with a version of `opm` packaged in the container
 itself or in conjunction with other catalog configurations via a service such as
 [IIB Image Builder]. Red Hat OpenShift Container Platform (OCP) is one example of a platform that
@@ -16,9 +16,9 @@ leverages FBCs for defining the operator graphs. In order to enable operator sup
 version-by-version basis, Red Hat maintains one catalog per OpenShift version.
 
 In order to support being able to target FBC components to specific versions of Red Hat OpenShift,
-AppStudio needs to be able to keep track of the specific targeted version. In addition to the concerns
+Konflux needs to be able to keep track of the specific targeted version. In addition to the concerns
 around releasing FBC components to OpenShift, the version of `opm` used by each version of OpenShift
-may differ, so the AppStudio integration process will need to ensure that tests are run using an appropriate
+may differ, so the Konflux integration process will need to ensure that tests are run using an appropriate
 binary version.
 
 ## Decision
@@ -57,18 +57,18 @@ $ skopeo inspect --raw docker://quay.io/hacbs-release-tests/managed-release-team
 ```
 
 The target Red Hat OpenShift version will then be able to be pulled from the image tag on the
-"org.opencontainers.image.base.name" annotation. If a task within the AppStudio pipeline needs to access
+"org.opencontainers.image.base.name" annotation. If a task within the Konflux pipeline needs to access
 an appropriate `opm` binary for performing validation, it can determine the base image and use the binary from
-that container if it is trusted (for example, if it is an image from the 
+that container if it is trusted (for example, if it is an image from the
 `registry.redhat.io/openshift4/ose-operator-registry` repository), or fail if the base image isn't trusted.
 
 
 ## Consequences
 
-* AppStudio services should be able to avoid directly using the `opm` version packaged in FBC components
+* Konflux services should be able to avoid directly using the `opm` version packaged in FBC components
   to prevent the execution of untrusted binaries by a process in the trusted control plane.
 * No additional kubernetes objects need to be created to track the target OCP versions
-* There is a desire to use [FBC templates] within AppStudio in the future. The current decision can be
+* There is a desire to use [FBC templates] within Konflux in the future. The current decision can be
   re-evaluated if and when that functionality is introduced.
 
 [FBC templates]: https://olm.operatorframework.io/docs/reference/catalog-templates/

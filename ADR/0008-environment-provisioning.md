@@ -32,7 +32,7 @@ In our old KCP architecture, we had [a
 design](https://docs.google.com/document/d/1WKd1FVHAxaNQKCIzIW-vUQRgsoOP9T-8rYozAMDpYc0/edit#) for
 provisioning a new deployment target in support of new [Environments].  This design was to be
 implemented in [GITOPSRVCE-228](https://issues.redhat.com/browse/GITOPSRVCE-228) by an environment
-controller that would create and manage sub-workspaces of the user’s main AppStudio workspace, and
+controller that would create and manage sub-workspaces of the user’s main Konflux workspace, and
 that would provide a serviceaccount to Argo in order to deploy the user’s application to those
 sub-workspaces. Now, without KCP, we need a new design.
 
@@ -43,7 +43,7 @@ The [Environment] CR serves two purposes:
 
 Some use cases to consider for [Environments]:
 
-1.  As a part of the AppStudio workspace initialization process, the user should find that both a **dev and stage environment** with corresponding deployment targets are ready for them ([STONE-180](https://issues.redhat.com/browse/STONE-180)). In our post-KCP architecture, these will be backed by **namespaces** on a devsandbox member cluster.
+1.  As a part of the Konflux workspace initialization process, the user should find that both a **dev and stage environment** with corresponding deployment targets are ready for them ([STONE-180](https://issues.redhat.com/browse/STONE-180)). In our post-KCP architecture, these will be backed by **namespaces** on a devsandbox member cluster.
 2.  The user will want to manually create **additional** [Environments] (for example, a prod environment). The user may want to use our compute resources provided in the form of a new **namespace on a devsandbox member cluster** for this ([STONE-183](https://issues.redhat.com/browse/STONE-183)) or they may want to **bring their own cluster** as a target ([STONE-162](https://issues.redhat.com/browse/STONE-162)).
 3.  The integration-service expects to be able to create **ephemeral** [Environments] for automated testing purposes ([STONE-114](https://issues.redhat.com/browse/STONE-114)). For our short-term goals, the automated testing use case requires the same kind of compute as for the dev and stage [Environments] (devsandbox member cluster namespaces), but will expand to include other kinds of deployment targets in the future - like hypershift clusters ([STONE-185](https://issues.redhat.com/browse/STONE-185)).
 
@@ -408,7 +408,7 @@ spec:
 
 ### Phase 3
 
-The result of this phase is to automatically provisioning of Hypershift cluster using AppStudio's
+The result of this phase is to automatically provisioning of Hypershift cluster using Konflux's
 credentials. We call it `provided compute` (compute that we provide, not the user) and it’s included
 as part of the offering. This compute can be used for both long lived clusters and for ephemeral
 clusters used by the integration service.

@@ -8,13 +8,13 @@ Accepted
 
 ## Context
 
-A default service account must be provided to allow AppStudio components to run pipelines.
+A default service account must be provided to allow Konflux components to run pipelines.
 While OpenShift Pipelines has the option to automatically create a `pipeline` ServiceAccount on any namespace, the permissions granted to the account are overly broad and the solution was rejected after a security review.
-Therefore AppStudio must manage this default service account.
+Therefore Konflux must manage this default service account.
 
 ## Decision
 
-AppStudio will provide a service account named `appstudio-pipeline`.
+Konflux will provide a service account named `appstudio-pipeline`.
 
 ### Ownership
 

@@ -1,7 +1,7 @@
-# AppStudio
+# Konflux
 
 ## Overview
-AppStudio is a platform for building integrated software that streamlines, consolidates, and secures the development lifecycle.
+Konflux is a platform for building integrated software that streamlines, consolidates, and secures the development lifecycle.
 
 
 ### Goals
@@ -47,9 +47,9 @@ AppStudio is a platform for building integrated software that streamlines, conso
 
 ## Application Context
 
-The diagram below shows the services that make up AppStudio and their API resources.
+The diagram below shows the services that make up Konflux and their API resources.
 
-![](../diagrams/appstudio.drawio.svg)
+![](../diagrams/konflux.drawio.svg)
 
 API resources in the first row (Application, Component) should primarilly be thought of as
 control-plane resources. Users supply these resources to indicate to the system what they want it to
@@ -116,7 +116,7 @@ these resources.
 
 ## Service (Component) Context
 
-Each service that makes up AppStudio is further explained in its own document.
+Each service that makes up Konflux is further explained in its own document.
 
 - [Hybrid Application Service](./hybrid-application-service.md) - A workflow system that manages
   the definition of the users' Application and Components.

@@ -1,7 +1,7 @@
 # Image Controller
 
 # Overview
-Image controller sets up and manages container image repositories for an application's components. This enables greater component isolation within AppStudio where each component has its own image repository and secret for pushing images built via AppStudio.
+Image controller sets up and manages container image repositories for an application's components. This enables greater component isolation within Konflux where each component has its own image repository and secret for pushing images built via Konflux.
 
 The image controller can perform three actions on image repositories by watching for either specific annotation changes or deletion events of a [Component CR](https://redhat-appstudio.github.io/architecture/ref/application-environment-api.html#component):
 
@@ -12,7 +12,7 @@ The image controller can perform three actions on image repositories by watching
 - **Cleanup**: When a Component CR is requested to be deleted, image controller will remove component's image repository and robot account from the remote registry. The Kubernetes Secret will be removed along with the Component CR eventually due to the ownership established between them.
 
 # Dependencies
-Image controller does not depend on other AppStudio services, but a remote image registry. AppStudio services are able to use the resources prepared by image controller, e.g. Build Service makes the Secret available to every build PipelineRun of a component for image push.
+Image controller does not depend on other Konflux services, but a remote image registry. Konflux services are able to use the resources prepared by image controller, e.g. Build Service makes the Secret available to every build PipelineRun of a component for image push.
 
 # Interface
 Image controller uses annotations to interact with external services.

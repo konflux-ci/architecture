@@ -7,7 +7,7 @@
 [ComponentDetectionQuery](hybrid-application-service-crds.md#componentdetectionquery)
 
 ## Application
-The Application resource defines an Application in AppStudio. The fields in the resource are relatively bare, just the name of the resource (a UUID), an annotation with the application’s name, a description for the Application, and its git repository.
+The Application resource defines an Application in Konflux. The fields in the resource are relatively bare, just the name of the resource (a UUID), an annotation with the application’s name, a description for the Application, and its git repository.
 
 When the resource is created, the `status.devfile` field is populated with the Application model for the app (a Devfile). When the Application resource is updated, or Components are added to the Application, the Application model in this resource is updated accordingly.
 
@@ -53,7 +53,7 @@ When the resource is created, the `status.devfile` field is populated with the A
 
 ## Component
 
-The Component resource defines an application’s Component in AppStudio. The fields in the resource contain the name of the resource, the component’s name, the Application it is linked to (referenced via a label), and the source for the Component (a git repository, container image, or external Devfile URL).
+The Component resource defines an application’s Component in Konflux. The fields in the resource contain the name of the resource, the component’s name, the Application it is linked to (referenced via a label), and the source for the Component (a git repository, container image, or external Devfile URL).
 
 When the Component is created, the HAS controller retrieves the component’s Devfile from the specified source (a git repo, a container image, or an external URL). The Application resource for the Component’s Application also has its model updated to reference the Component (via its `status.devfile` field). The controller also adds labels for the Component name and Application CR name to the resource.
 

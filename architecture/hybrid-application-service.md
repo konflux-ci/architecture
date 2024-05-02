@@ -1,6 +1,6 @@
 # Hybrid Application Service (HAS)
 
-Hybrid Application Service (HAS) provides an abstract way to define Applications and Components within the cloud. It also allows users to create new Applications and Components or import existing ones into AppStudio. HAS itself is a fully managed service with a set of predefined service types to provide out-of-the-box support.
+Hybrid Application Service (HAS) provides an abstract way to define Applications and Components within the cloud. It also allows users to create new Applications and Components or import existing ones into Konflux. HAS itself is a fully managed service with a set of predefined service types to provide out-of-the-box support.
 
 ## Goals
 - Define an Application model that defines the Application and its containing Components
@@ -15,7 +15,7 @@ Hybrid Application Service (HAS) provides an abstract way to define Applications
 
 
 ## Architecture Overview
-To see how HAS fits into the AppStudio architecture, refer to the AppStudio [Application Context](./index.md#application-context).
+To see how HAS fits into the Konflux architecture, refer to the Konflux [Application Context](./index.md#application-context).
 
 The diagram below shows the interaction between HAC and HAS services for the creation of Application and Component.
 
