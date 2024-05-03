@@ -26,6 +26,12 @@ Some relevant changes that have occurred or are ongoing.
 * We made the decision (at Red Hat) to stop trying to offer a managed service interface for Konflux. The user signup, waitlist, and workspace provisioning interfaces made a lot of sense there. Do they still make sense?
 * For [konflux-ci], we want everything to work on vanilla kubernetes - no OpenShift required. But, [kubesaw] brings along OpenShift Templates for workspace provisioning. Are we going to work around that?i
 
+### Some challenges
+
+* Recently, we find ourselves being asked by users to provide service accounts. Our existing proxy layer doesn't support service accounts and we're having to come up with workarounds - breaking the existing abstraction.
+* We find users requesting quota increases, but the tier system provided by our existing workspace quota management tooling doesn't permit us to adjust the quota of individual workspaces. We have to increase the whole tier, or add a new tier.
+* We worry that new contributors will find the proxy layer confusing and offputting - more complex than it needs to be. "Is something more than just kubernetes in play here?"
+
 ## Decision
 
 TBD - what do we want to do?
