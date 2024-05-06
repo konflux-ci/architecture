@@ -16,11 +16,13 @@ paginate = 10
 pluralizelisttitles = false
 
 [params]
+    mainSections = ["architecture", "decisions"]
     disabled_logo = false
     logo_text = "Konflux"
 
     # Style options: default (light-blue), blue, green, marsala, pink, red, turquoise, violet
     style = "default"
+
 
 [[menu.main]]
     name       = "Architecture"
