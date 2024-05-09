@@ -1,4 +1,8 @@
-# 17. Use our own pipelines
+---
+title: Use our own pipelines
+number: 17
+---
+# Use our own pipelines
 
 * Date 2023-02-10
 

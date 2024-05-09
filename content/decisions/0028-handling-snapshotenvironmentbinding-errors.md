@@ -1,5 +1,9 @@
-# 28. Handling SnapshotEnvironmentBinding Errors
-Date: 2023-08-31
+---
+title: Handling SnapshotEnvironmentBinding Errors
+number: 28
+---
+# Handling SnapshotEnvironmentBinding Errors
+date: 2023-08-31T00:00:00Z
 
 ## Status
 Superceded by [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)

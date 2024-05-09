@@ -1,6 +1,9 @@
-# 12. Namespace Name Format
-
-Date: 2023-01-23
+---
+date: 2023-01-23T00:00:00Z
+title: Namespace Name Format
+number: 12
+---
+# Namespace Name Format
 
 ## Status
 

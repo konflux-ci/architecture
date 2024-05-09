@@ -1,6 +1,9 @@
-# 21. Partner Tasks in Build/Test Pipelines
-
-Date: 2023-03-06
+---
+date: 2023-03-06T00:00:00Z
+title: Partner Tasks in Build/Test Pipelines
+number: 21
+---
+# Partner Tasks in Build/Test Pipelines
 
 ## Status
 
@@ -72,6 +75,3 @@ Component into StoneSoup, customize their Pipeline definition in the .tekton dir
 * We have a mechanism to take in Tekton Tasks from Partners with due diligence.
 * We should also be able to take in Tekton Tasks from Red Hat teams with the same level of validation/diligence that Red Hat Partners would have to go through.
 * We do build up a little tech-debt because this process needs to be merged with the official Red Hat certification process in the future.
-
-
-

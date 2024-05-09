@@ -1,6 +1,9 @@
-# 24. Release Objects Attribution Tracking and Propagation
-
-Date: 2023-04-25
+---
+date: 2023-04-25T00:00:00Z
+title: Release Objects Attribution Tracking and Propagation
+number: 24
+---
+# Release Objects Attribution Tracking and Propagation
 
 ## Status
 

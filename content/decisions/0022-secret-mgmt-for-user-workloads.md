@@ -1,4 +1,8 @@
-# 22. Secret Management For User Workloads
+---
+title: Secret Management For User Workloads
+number: 22
+---
+# Secret Management For User Workloads
 
 Date started: 2023-03-25
 Date revised: 2023-08-29

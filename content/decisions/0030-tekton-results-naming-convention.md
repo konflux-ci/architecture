@@ -1,6 +1,9 @@
-# 30. Tekton Results Naming Convention
-
-Date: 2023-09-27
+---
+date: 2023-09-27T00:00:00Z
+title: Tekton Results Naming Convention
+number: 30
+---
+# Tekton Results Naming Convention
 
 ## Status
 

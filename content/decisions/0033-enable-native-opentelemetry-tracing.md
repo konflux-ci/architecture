@@ -1,4 +1,8 @@
-# 33. Enable Native OpenTelemetry Tracing
+---
+title: Enable Native OpenTelemetry Tracing
+number: 33
+---
+# Enable Native OpenTelemetry Tracing
 
 Date started: 2024-02-27
 

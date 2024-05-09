@@ -1,6 +1,9 @@
-# 31. Sprayproxy
-
-Created: 2023-10-24
+---
+date: 2023-10-24T00:00:00Z
+title: Sprayproxy
+number: 31
+---
+# Sprayproxy
 
 ## Status
 
