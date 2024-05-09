@@ -1,2 +1,4 @@
 github.com/devcows/hugo-universal-theme v0.0.0-20240312142249-b34533c67125 h1:J8y2CtVoD8DxOEoOEuQf3fmVKRErANEx4GPfDjdAWgA=
 github.com/devcows/hugo-universal-theme v0.0.0-20240312142249-b34533c67125/go.mod h1:MqYH15Evmut/wgYkFi7ArsX+k44HfRrH675FbVLBkq0=
+github.com/konflux-ci/konflux-ci.github.io/website/themes/konflux v0.0.0-20240509114905-d4077b01c954 h1:FZk9zuAZS+JVN0H0gTO22r9+55sSRvUEHPCEO/T15Yk=
+github.com/konflux-ci/konflux-ci.github.io/website/themes/konflux v0.0.0-20240509114905-d4077b01c954/go.mod h1:bOKbzWgz1nvEzVeJ0Ne+PsgvfMRYnuNpyw2FkUl3uTs=
