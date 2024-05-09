@@ -1,6 +1,9 @@
-# 11. Roles and Permissions for Konflux
-
-Date: 2023-01-10
+---
+date: 2023-01-10T00:00:00Z
+title: Roles and Permissions for Konflux
+number: 11
+---
+# Roles and Permissions for Konflux
 
 ## Status
 
@@ -93,4 +96,3 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 * It will also allow us to assign the appropriate level of permissions to each role, based on the responsibilities and privileges associated with each role in our project.
 * The use of the built-in Kubernetes RBAC system will improve the testability of our system, as we can use the well-documented and widely-used Kubernetes APIs for testing and validation.
 * Using the built-in Kubernetes RBAC system may require some initial configuration and setup. However, it will likely require less ongoing maintenance and support compared to using a custom solution.
-

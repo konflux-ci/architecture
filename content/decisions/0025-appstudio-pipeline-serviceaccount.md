@@ -1,6 +1,9 @@
-# 25. appstudio-pipeline Service Account
-
-Date: 2023-05-30
+---
+date: 2023-05-30T00:00:00Z
+title: appstudio-pipeline Service Account
+number: 25
+---
+# appstudio-pipeline Service Account
 
 ## Status
 

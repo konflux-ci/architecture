@@ -1,6 +1,9 @@
-# 0. Record architecture decisions
-
-Date: 2022-06-17
+---
+date: 2022-06-17T00:00:00Z
+title: Record architecture decisions
+number: 0
+---
+# Record architecture decisions
 
 ## Status
 

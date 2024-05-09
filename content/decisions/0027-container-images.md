@@ -1,6 +1,9 @@
-# 27. Container Image Management Practice
-
-Date: 2023-06-30
+---
+date: 2023-06-30T00:00:00Z
+title: Container Image Management Practice
+number: 27
+---
+# Container Image Management Practice
 
 ## Status
 
@@ -95,4 +98,3 @@ In summary, component teams should have the following in place in order to meet 
 * Images deployed from dependencies must not have vulnerabilities
 
 See also [RHTAP-828](https://issues.redhat.com/browse/RHTAP-828).
-

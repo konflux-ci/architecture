@@ -1,4 +1,8 @@
-# 14. Let Pipelines Proceed
+---
+title: Let Pipelines Proceed
+number: 14
+---
+# Let Pipelines Proceed
 
 * Date Decided: 2022-05-??
 * Date Documented: 2023-01-31

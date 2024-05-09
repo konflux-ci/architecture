@@ -1,4 +1,8 @@
-# 26. Specifying OCP targets for File-based Catalogs
+---
+title: Specifying OCP targets for File-based Catalogs
+number: 26
+---
+# Specifying OCP targets for File-based Catalogs
 
 * Date 2023-06-08
 

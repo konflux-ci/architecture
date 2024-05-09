@@ -1,6 +1,10 @@
-# 9. Pipeline Service via Operator
+---
+date: 2023-09-29T00:00:00Z
+title: Pipeline Service via Operator
+number: 9
+---
+# Pipeline Service via Operator
 
-Created: 2023-09-29
 Last Updated: 2023-09-29
 
 ## Status

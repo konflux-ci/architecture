@@ -1,4 +1,8 @@
-# 6. Log Conventions
+---
+title: Log Conventions
+number: 6
+---
+# Log Conventions
 
 * Date started: 2022-11-11
 * Date revised: 2023-03-08

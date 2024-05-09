@@ -1,4 +1,8 @@
-# 32. Decoupling Deployment
+---
+title: Decoupling Deployment
+number: 32
+---
+# Decoupling Deployment
 
 Date started: 2023-11-17
 Date accepted: 2023-02-01

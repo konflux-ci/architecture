@@ -1,7 +1,11 @@
-# 19. Customize URLs Sent to GitHub
+---
+title: Customize URLs Sent to GitHub
+number: 19
+---
+# Customize URLs Sent to GitHub
 
-Created Date: 2023-03-29
-Accepted Date: 2023-03-31
+Created date: 2023-03-29T00:00:00Z
+Accepted date: 2023-03-31T00:00:00Z
 
 ## Status
 

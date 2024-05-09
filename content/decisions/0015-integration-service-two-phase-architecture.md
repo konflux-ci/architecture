@@ -1,4 +1,8 @@
-# 15. The Two-phase Architecture of the Integration Service
+---
+title: The Two-phase Architecture of the Integration Service
+number: 15
+---
+# The Two-phase Architecture of the Integration Service
 
 Date Documented: 2023-02-09
 Date Accepted: 2023-02-14
@@ -106,4 +110,3 @@ However, we realized (through conversations like
 [this slack conversation](https://redhat-internal.slack.com/archives/C02CTEB3MMF/p1669961732100869))
 that it is not obvious without documentation.
 We are documenting it here as an ADR for posterity, visibility.
-

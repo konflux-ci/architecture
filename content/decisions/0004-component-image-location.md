@@ -1,6 +1,9 @@
-# 4. Out-of-the-box image repository for StoneSoup users 
-
-Date: Oct 29, 2022 
+---
+date: Oct 29, 2022T00:00:00Z
+title: Out-of-the-box image repository for StoneSoup users
+number: 4
+---
+# Out-of-the-box image repository for StoneSoup users
 
 ## Status
 
@@ -28,13 +31,13 @@ As an application centric experience, StoneSoup should not make it mandatory for
 to be pushed to.
 
 
-**Goals**: 
+**Goals**:
 * Provide an out-of-the-box location for users’ images to be pushed after being built from source.
 
 
-**Non-Goals**: 
+**Non-Goals**:
 * Define the user experience for users bringing existing images from other image registry services.
-* Provide users an option to choose what the out-of-the-box location for images would be. 
+* Provide users an option to choose what the out-of-the-box location for images would be.
 * Define the user experience for users who are willing to configure additional credentials for pushing to an image registry of their choice.
 
 **Design Goals**
@@ -53,7 +56,7 @@ to be pushed to.
 
 * Per workspace called "david", setup a new org “quay.io/unique-org-david/…”
 * Per component, setup a new new repo “quay.io/unique-org-david/unique-component-repo”
-* Use User’s Quay.io API token to manage the org/repo. Short-term, we'll use a pre-configured Quay.io API token associated with StoneSoup to create the org/repo till we 
+* Use User’s Quay.io API token to manage the org/repo. Short-term, we'll use a pre-configured Quay.io API token associated with StoneSoup to create the org/repo till we
  figure out how to determinstically map a user in StoneSoup to a user in Quay.io.
 * Generate a robot account token scoped to the relevant repository and persist it in the user's workspace for the image build and push process to consume.
 
@@ -62,9 +65,9 @@ to be pushed to.
 
 #### Quay.io API token Configuration
 
-1. Setup a Quay.io organization to host the OAuth app. 
+1. Setup a Quay.io organization to host the OAuth app.
 2. Create an OAuth Application in the Quay.io organization.
-3. Geneate a token for the OAuth Application. This token would act as the 'service account' using which Quay.io resources would be created. Important to note, the token acts on behalf of the user who is requesting it - but uses the explicit scopes specified at the time of token generation. 
+3. Geneate a token for the OAuth Application. This token would act as the 'service account' using which Quay.io resources would be created. Important to note, the token acts on behalf of the user who is requesting it - but uses the explicit scopes specified at the time of token generation.
 4. Allowlist user 'shbose' to be create organizations using non-user-tokens using the Quay.io API.
 
 | Syntax      | Description |
@@ -79,12 +82,12 @@ to be pushed to.
 
 #### Organization and Image Repository creation
 
-When a user creates a Component, a StoneSoup service would need to generate the image repository for consumption by the 
+When a user creates a Component, a StoneSoup service would need to generate the image repository for consumption by the
 build, test and deployment services.
 
 * For each user, create a new Quay.io org “quay.io/unique-org-david”
 * For each `Component` 'foo', create a new image repo “quay.io/unique-org-david/appname/componentname”
-* Configure the robot account “redhat-<resource-uuid>” in “quay.io/unique-org-david” to be able to push to “quay.io/unique-org-david/appname-foo” 
+* Configure the robot account “redhat-<resource-uuid>” in “quay.io/unique-org-david” to be able to push to “quay.io/unique-org-david/appname-foo”
 * Configure a `Secret` in the user's namespace with the robot account token.
 * Annotate the `Component` with the name of the image repository and the name of the `Secret` containing the robot account token.
 
@@ -99,19 +102,19 @@ Until the capability to determine the associated user/tenant/Space a Component i
 
 #### Lifecycle of the Quay.io resources
 
-* Token generation: 
+* Token generation:
     * Robot account token: At the moment, the controller responsible for generating the Quay.io resources would be responsible for rotating the tokens https://docs.quay.io/api/swagger/#!/robot/regenerateUserRobotToken
-    * Quay.io API token: No programmatic way to regenerate this token is known at this point of time. This would be a manual activity to begin with. 
+    * Quay.io API token: No programmatic way to regenerate this token is known at this point of time. This would be a manual activity to begin with.
 
-* Upon deletion of an `Application`/`Component` from StoneSoup, 
+* Upon deletion of an `Application`/`Component` from StoneSoup,
     * The controller/finalizer would delete the the relevant Quay.io resources namely, the image repository and the robot account.
     * The controller/finalizer would delete the linked `Secret` from the user's namespace. Most likely, this should be a mere `ownerReference`-based garbage collection.
 
 * Upon removal of a user from Stonesoup,
     * The empty Quay.io organization associated with the user or the user's Space may not be deleted instantly, but would be scheduled for a delayed cleanup.
 * PR-based tags are to be deleted on a regular basis. Image tags associated with `main` may remain un-pruned for now.
-    
-    
+
+
 ### How - Implementation
 
 The implementation of the above design will be improved overtime with the possible introduction of new CRDs/APIs. At the moment, no new API is being planned till the need for it arises.
@@ -133,7 +136,7 @@ spec:
   componentName: billing
 ```
 
-The `Image controller` creates the necessary resources on Quay.io and writes out the details of the same into the `Component` resource as an annotation, namely: 
+The `Image controller` creates the necessary resources on Quay.io and writes out the details of the same into the `Component` resource as an annotation, namely:
 
 * The image repository URL.
 * The name of the Kubernets `Secret` in which the robot account token was written out to.
@@ -162,16 +165,16 @@ spec:
   application: city-transit
   componentName: billing
 ```
-    
-    
+
+
 
 
 ## Open Questions
 
 - What would be a progammatic way to regenerate the main Quay.io API token ?
-- Since the long-term goal is to have the Quay.io organizations owned by the user, how do we build a frictionless experience to map the user's 
+- Since the long-term goal is to have the Quay.io organizations owned by the user, how do we build a frictionless experience to map the user's
   account with the user's Quay.io account ?
-- Considering the above is figured out, we would need to add existing users as members of the relevant organizations. This is a backend job that 
+- Considering the above is figured out, we would need to add existing users as members of the relevant organizations. This is a backend job that
   would need to be designed and executed at an appropriate time.
 
 

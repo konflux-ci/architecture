@@ -1,6 +1,9 @@
-# 1. Pipeline Service Phase 1
-
-Created: 2022-10-13
+---
+date: 2022-10-13T00:00:00Z
+title: Pipeline Service Phase 1
+number: 1
+---
+# Pipeline Service Phase 1
 Last Updated: 2023-09-29
 
 ## Status

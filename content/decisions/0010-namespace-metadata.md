@@ -1,6 +1,9 @@
-# 10. Namespace Metadata
-
-Date: 2022-12-09
+---
+date: 2022-12-09T00:00:00Z
+title: Namespace Metadata
+number: 10
+---
+# Namespace Metadata
 
 ## Status
 

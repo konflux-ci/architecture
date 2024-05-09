@@ -19,6 +19,7 @@ pluralizelisttitles = false
     mainSections = ["architecture", "decisions"]
     disabled_logo = false
     logo_text = "Konflux"
+    date_format = "January 2, 2006"
 
     # Style options: default (light-blue), blue, green, marsala, pink, red, turquoise, violet
     style = "default"

@@ -1,6 +1,9 @@
-# 8. Environment Provisioning
-
-Date: 2022-12-14
+---
+date: 2022-12-14T00:00:00Z
+title: Environment Provisioning
+number: 8
+---
+# Environment Provisioning
 
 ## Status
 

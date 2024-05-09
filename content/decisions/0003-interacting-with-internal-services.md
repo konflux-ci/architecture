@@ -1,6 +1,9 @@
-# 3. Interacting with Internal Services
-
-Date: 2022-10-20
+---
+date: 2022-10-20T00:00:00Z
+title: Interacting with Internal Services
+number: 3
+---
+# Interacting with Internal Services
 
 ## Status
 
@@ -81,4 +84,3 @@ A proof of concept for the **Internal Services Controller** can be found [here](
 
 [KCP]: ../ref/kcp.md
 [release-service]: ../architecture/release-service.md
-
