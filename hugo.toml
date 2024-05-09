@@ -1,7 +1,7 @@
 baseURL = 'http://localhost:1313/'
 languageCode = 'en-us'
 title = 'Standalone Konflux Architecture Docs'
-theme = 'github.com/devcows/hugo-universal-theme'
+theme = ['github.com/konflux-ci/konflux-ci.github.io/website/themes/konflux', 'github.com/devcows/hugo-universal-theme']
 
 # Site language. Available translations in the theme's `/i18n` directory.
 defaultContentLanguage = "en"
