@@ -121,32 +121,34 @@ these resources.
 
 Each service that makes up Konflux is further explained in its own document.
 
-- [Hybrid Application Service](./hybrid-application-service.md) - A workflow system that manages
+- [Hybrid Application Service](./hybrid-application-service/) - A workflow system that manages
   the definition of the users' Application and Components.
-- [Build Service](./build-service.md) - A workflow system that manages the build pipeline definition
+- [Build Service](./build-service/) - A workflow system that manages the build pipeline definition
   for users' Components.
-- [Image Controller](./image-controller.md) - A subsystem of the build-service that manages the
+- [Image Controller](./image-controller/) - A subsystem of the build-service that manages the
   creation and access rights to OCI repositories.
-- [Java Rebuilds Service](./jvm-build-service.md) - A subsystem of the build-service that manages
+- [Java Rebuilds Service](./jvm-build-service/) - A subsystem of the build-service that manages
   the rebuild of binary java jars pulled from maven central for an improved degree of provenance.
-- [Integration Service](./integration-service.md) - A workflow service that manages execution of
+- [Integration Service](./integration-service/) - A workflow service that manages execution of
   users' tests and promotion in response to completing builds.
-- [Release Service](./release-service.md) - A workflow service that manages execution of privileged
+- [Release Service](./release-service/) - A workflow service that manages execution of privileged
   pipelines to release user content to protected destinations.
-- [GitOps Service](./gitops-service.md) - A foundational service providing deployment of user
+- [GitOps Service](./gitops-service/) - A foundational service providing deployment of user
   applications.
-- [Pipeline Service](./pipeline-service.md) - A foundational service providing Pipeline APIs and secure supply
+- [Pipeline Service](./pipeline-service/) - A foundational service providing Pipeline APIs and secure supply
   chain capabilities to other services
-- [Service Provider Integration](./service-provider-integration.md) - A foundational service
+- [Service Provider Integration](./service-provider-integration/) - A foundational service
   providing user secret management to other services.
-- [Enterprise Contract](./enterprise-contract.md) - A specialized subsystem responsible for the
+- [Enterprise Contract](./enterprise-contract/) - A specialized subsystem responsible for the
   definition and enforcement of policies related to how OCI artifacts are built and tested.
+- [Internal Services Controller](./internal-services/) - A specialized subsystem that enables
+  invoking services that are not network addressable.
 
 ## API References
 
 ### Developer Services
 
-- [Application and Environment API](../ref/application-environment-api.md)
+- [Application and Environment API](../ref/application-environment-api/)
 - [Service Provider](../ref/service-provider.md)
 - [GitOps Service](../ref/gitops.md):
 
@@ -154,27 +156,28 @@ Each service that makes up Konflux is further explained in its own document.
 
 - [Namespace Metadata](../ADR/adr-0010-namespace-metadata)
 
-[integration-service promotes OCI artifacts]: ../ADR/0016-integration-service-promotion-logic.md
-[application-service]: ./hybrid-application-service.md
-[pipeline-service]: ./pipeline-service.md
-[gitops-service]: ./gitops-service.md
-[build-service]: ./build-service.md
-[integration-service]: ./integration-service.md
-[release-service]: ./release-service.md
-[Application]: ../ref/application-environment-api.md#application
-[Applications]: ../ref/application-environment-api.md#application
-[Component]: ../ref/application-environment-api.md#component
-[Components]: ../ref/application-environment-api.md#component
-[Environment]: ../ref/application-environment-api.md#environment
-[Environments]: ../ref/application-environment-api.md#environment
-[Snapshot]: ../ref/application-environment-api.md#snapshot
-[Snapshots]: ../ref/application-environment-api.md#snapshot
-[SnapshotEnvironmentBinding]: ../ref/application-environment-api.md#snapshotenvironmentbinding
-[SnapshotEnvironmentBindings]: ../ref/application-environment-api.md#snapshotenvironmentbinding
-[DeploymentTarget]: ../ref/application-environment-api.md#deploymenttarget
-[DeploymentTargets]: ../ref/application-environment-api.md#deploymenttarget
-[DeploymentTargetClaim]: ../ref/application-environment-api.md#deploymenttargetclaim
-[DeploymentTargetClaims]: ../ref/application-environment-api.md#deploymenttargetclaim
+[integration-service promotes OCI artifacts]: ../ADR/0016-integration-service-promotion-logic/
+[application-service]: ./hybrid-application-service/
+[pipeline-service]: ./pipeline-service/
+[gitops-service]: ./gitops-service/
+[build-service]: ./build-service/
+[integration-service]: ./integration-service/
+[release-service]: ./release-service/
+[internal-services]: ./internal-services/
+[Application]: ../ref/application-environment-api/#application
+[Applications]: ../ref/application-environment-api/#application
+[Component]: ../ref/application-environment-api/#component
+[Components]: ../ref/application-environment-api/#component
+[Environment]: ../ref/application-environment-api/#environment
+[Environments]: ../ref/application-environment-api/#environment
+[Snapshot]: ../ref/application-environment-api/#snapshot
+[Snapshots]: ../ref/application-environment-api/#snapshot
+[SnapshotEnvironmentBinding]: ../ref/application-environment-api/#snapshotenvironmentbinding
+[SnapshotEnvironmentBindings]: ../ref/application-environment-api/#snapshotenvironmentbinding
+[DeploymentTarget]: ../ref/application-environment-api/#deploymenttarget
+[DeploymentTargets]: ../ref/application-environment-api/#deploymenttarget
+[DeploymentTargetClaim]: ../ref/application-environment-api/#deploymenttargetclaim
+[DeploymentTargetClaims]: ../ref/application-environment-api/#deploymenttargetclaim
 [Release]: ../ref/release-service.html#release
 [Releases]: ../ref/release-service.html#release
 [ReleasePlan]: ../ref/release-service.html#releaseplan
