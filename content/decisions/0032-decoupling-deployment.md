@@ -13,14 +13,14 @@ Accepted
 
 Relates to:
 
-- [ADR 14. Let Pipelines Proceed](0014-let-pipelines-proceed.html)
-- [ADR 22. Secret Management for User Workloads](0022-secret-mgmt-for-user-workloads.html)
+- [ADR 14. Let Pipelines Proceed]({{< relref "0014-let-pipelines-proceed.md" >}})
+- [ADR 22. Secret Management for User Workloads]({{< relref "0022-secret-mgmt-for-user-workloads.md" >}})
 
 Supercedes:
 
-- [ADR 08. Environment Provisioning](0008-environment-provisioning.html)
-- [ADR 16. Integration Service Promotion Logic](0016-integration-service-promotion-logic.html)
-- [ADR 28. Handling SnapshotEnvironmentBinding Errors](0028-handling-snapshotenvironmentbinding-errors.html)
+- [ADR 08. Environment Provisioning]({{< relref "0008-environment-provisioning.md" >}})
+- [ADR 16. Integration Service Promotion Logic]({{< relref "0016-integration-service-promotion-logic.md" >}})
+- [ADR 28. Handling SnapshotEnvironmentBinding Errors]({{< relref "0028-handling-snapshotenvironmentbinding-errors.md" >}})
 
 ## Authors
 
@@ -203,41 +203,41 @@ Some of these phases can be done at the same time.
 [Dynamic Resource Allocation APIs]: https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/
 [renovatebot]: https://github.com/renovatebot/renovate
 [deployment-target-operator]: #
-[gitops-service]: ../ref/gitops-service.md
+[gitops-service]: {{< relref "../ref/gitops.md" >}}
 [push-to-registry]: https://github.com/redhat-appstudio/release-service-catalog/tree/main/pipelines/push-to-external-registry
 [application-api]: https://github.com/redhat-appstudio/application-api
-[application-service]: ../architecture/application-service.md
-[integration-service]: ../architecture/integration-service.md
-[release-service]: ../architecture/release-service.md
-[Application]: ../ref/application-environment-api.md#application
-[Applications]: ../ref/application-environment-api.md#application
-[Component]: ../ref/application-environment-api.md#component
-[Components]: ../ref/application-environment-api.md#component
-[Environment]: ../ref/application-environment-api.md#environment
-[Environments]: ../ref/application-environment-api.md#environment
-[GitOpsDeploymentManagedEnvironment]: ../ref/application-environment-api.md#GitOpsDeploymentManagedEnvironment
-[GitOpsDeploymentManagedEnvironments]: ../ref/application-environment-api.md#GitOpsDeploymentManagedEnvironment
-[SnapshotEnvironmentBinding]: ../ref/application-environment-api.md#snapshotenvironmentbinding
-[SnapshotEnvironmentBindings]: ../ref/application-environment-api.md#snapshotenvironmentbinding
-[Snapshot]: ../ref/application-environment-api.md#snapshot
-[Snapshots]: ../ref/application-environment-api.md#snapshot
-[Release]: ../ref/release-service.md#Release
-[Releases]: ../ref/release-service.md#Release
-[ReleasePlan]: ../ref/release-service.md#ReleasePlan
-[ReleasePlans]: ../ref/release-service.md#ReleasePlan
-[ReleasePlanAdmission]: ../ref/release-service.md#ReleasePlanAdmission
-[ReleasePlanAdmissions]: ../ref/release-service.md#ReleasePlanAdmission
-[IntegrationTestScenario]: ../ref/integration-service.md#IntegrationTestScenario
-[IntegrationTestScenarios]: ../ref/integration-service.md#IntegrationTestScenario
-[DT]: ../ref/application-environment-api.md#deploymenttarget
-[DTs]: ../ref/application-environment-api.md#deploymenttarget
-[DeploymentTarget]: ../ref/application-environment-api.md#deploymenttarget
-[DeploymentTargets]: ../ref/application-environment-api.md#deploymenttarget
-[DTC]: ../ref/application-environment-api.md#deploymenttargetclaim
-[DTCs]: ../ref/application-environment-api.md#deploymenttargetclaim
-[DeploymentTargetClaim]: ../ref/application-environment-api.md#deploymenttargetclaim
-[DeploymentTargetClaims]: ../ref/application-environment-api.md#deploymenttargetclaim
-[DTCls]: ../ref/application-environment-api.md#deploymenttargetclass
-[DTClses]: ../ref/application-environment-api.md#deploymenttargetclass
-[DeploymentTargetClass]: ../ref/application-environment-api.md#deploymenttargetclass
-[DeploymentTargetClasses]: ../ref/application-environment-api.md#deploymenttargetclass
+[application-service]: {{< relref "../architecture/hybrid-application-service.md" >}}
+[integration-service]: {{< relref "../architecture/integration-service.md" >}}
+[release-service]: {{< relref "../architecture/release-service.md" >}}
+[Application]: {{< relref "../ref/application-environment-api.md#application" >}}
+[Applications]: {{< relref "../ref/application-environment-api.md#application" >}}
+[Component]: {{< relref "../ref/application-environment-api.md#component" >}}
+[Components]: {{< relref "../ref/application-environment-api.md#component" >}}
+[Environment]: {{< relref "../ref/application-environment-api.md#environment" >}}
+[Environments]: {{< relref "../ref/application-environment-api.md#environment" >}}
+[GitOpsDeploymentManagedEnvironment]: {{< relref "../ref/application-environment-api.md#GitOpsDeploymentManagedEnvironment" >}}
+[GitOpsDeploymentManagedEnvironments]: {{< relref "../ref/application-environment-api.md#GitOpsDeploymentManagedEnvironment" >}}
+[SnapshotEnvironmentBinding]: {{< relref "../ref/application-environment-api.md#snapshotenvironmentbinding" >}}
+[SnapshotEnvironmentBindings]: {{< relref "../ref/application-environment-api.md#snapshotenvironmentbinding" >}}
+[Snapshot]: {{< relref "../ref/application-environment-api.md#snapshot" >}}
+[Snapshots]: {{< relref "../ref/application-environment-api.md#snapshot" >}}
+[Release]: {{< relref "../ref/release-service.md#Release" >}}
+[Releases]: {{< relref "../ref/release-service.md#Release" >}}
+[ReleasePlan]: {{< relref "../ref/release-service.md#ReleasePlan" >}}
+[ReleasePlans]: {{< relref "../ref/release-service.md#ReleasePlan" >}}
+[ReleasePlanAdmission]: {{< relref "../ref/release-service.md#ReleasePlanAdmission" >}}
+[ReleasePlanAdmissions]: {{< relref "../ref/release-service.md#ReleasePlanAdmission" >}}
+[IntegrationTestScenario]: {{< relref "../ref/integration-service.md#IntegrationTestScenario" >}}
+[IntegrationTestScenarios]: {{< relref "../ref/integration-service.md#IntegrationTestScenario" >}}
+[DT]: {{< relref "../ref/application-environment-api.md#deploymenttarget" >}}
+[DTs]: {{< relref "../ref/application-environment-api.md#deploymenttarget" >}}
+[DeploymentTarget]: {{< relref "../ref/application-environment-api.md#deploymenttarget" >}}
+[DeploymentTargets]: {{< relref "../ref/application-environment-api.md#deploymenttarget" >}}
+[DTC]: {{< relref "../ref/application-environment-api.md#deploymenttargetclaim" >}}
+[DTCs]: {{< relref "../ref/application-environment-api.md#deploymenttargetclaim" >}}
+[DeploymentTargetClaim]: {{< relref "../ref/application-environment-api.md#deploymenttargetclaim" >}}
+[DeploymentTargetClaims]: {{< relref "../ref/application-environment-api.md#deploymenttargetclaim" >}}
+[DTCls]: {{< relref "../ref/application-environment-api.md#deploymenttargetclass" >}}
+[DTClses]: {{< relref "../ref/application-environment-api.md#deploymenttargetclass" >}}
+[DeploymentTargetClass]: {{< relref "../ref/application-environment-api.md#deploymenttargetclass" >}}
+[DeploymentTargetClasses]: {{< relref "../ref/application-environment-api.md#deploymenttargetclass" >}}

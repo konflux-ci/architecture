@@ -57,7 +57,7 @@ perform the EC policy validation, which it does as follows:
 
 The ec-cli also supports other related functions. For more information on
 ec-cli refer to the
-[documentation](https://enterprise-contract.github.io/ec-cli/main/reference.html)
+[documentation](https://enterprisecontract.dev/docs/ec-cli/main/index.html)
 and the [code](https://github.com/enterprise-contract/ec-cli).
 
 ### EC Task Definition
@@ -80,7 +80,7 @@ You can view the source code for the ECP CRD
 [here](https://github.com/enterprise-contract/enterprise-contract-controller) and
 see its documentation [here](https://enterprise-contract.github.io/ecc/main/).
 See also the related
-[API Reference](https://redhat-appstudio.github.io/architecture/ref/enterprise-contract.html)
+[API Reference]({{< relref "../ref/enterprise-contract.md" >}})
 
 ### EC Policies
 
@@ -131,9 +131,9 @@ service or on-demand.
 Additional Resources
 --------------------
 
-- [Konflux Documentation](https://redhat-appstudio.github.io/docs.appstudio.io)
+- [Konflux Documentation](https://konflux-ci.dev/)
 - [Enterprise Contract Documentation](https://enterprise-contract.github.io/)
-- [Architecture of Konflux](https://redhat-appstudio.github.io/architecture/)
+- [Architecture of Konflux](https://konflux-ci.dev/architecture/)
 
 
 

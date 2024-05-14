@@ -9,8 +9,8 @@ number: 7
 
 Accepted
 
-* Relates to [ADR 17. Use our own pipelines](0017-use-our-pipelines.html)
-* Relates to [ADR 20. Source Retention](0020-source-retention.html)
+* Relates to [ADR 17. Use our own pipelines]({{< relref "0017-use-our-pipelines.md" >}})
+* Relates to [ADR 20. Source Retention]({{< relref "0020-source-retention.md" >}})
 
 ## Approvers
 

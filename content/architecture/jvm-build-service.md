@@ -20,17 +20,17 @@ JBS depends on Tekton, but is otherwise largely independent of the rest of Konfl
 
 ### Flow Overview
 
-The JVM Build service can be enabled on a specific namespace by creating a [`JBSConfig`](#JBSConfig) object, with `enableRebuilds: true` specified. This will trigger the controller to create a deployment of the local Cache in the namespace. This cache has a number of purposes, but the primary one is to cache artifacts from Maven central to speed up Java builds.
+The JVM Build service can be enabled on a specific namespace by creating a [`JBSConfig`](#jbsconfig) object, with `enableRebuilds: true` specified. This will trigger the controller to create a deployment of the local Cache in the namespace. This cache has a number of purposes, but the primary one is to cache artifacts from Maven central to speed up Java builds.
 
 Once it is enabled and the cache has started the JVM Build Service will watch for `PipelineRun` objects with the `JAVA_COMMUNITY_DEPENDENCIES` results. This will be present on end user builds that have dependencies from untrusted upstream sources.
 
 When one of these `PipelineRun` objects is observed JBS will extract the dependency list, and attempt to rebuild all the listed JVM artifacts from source.
 
-The first stage of this process is to create an [`ArtifactBuild`](#ArtifactBuild) object. This object represents a Maven `group:artifact:version` (GAV) coordinate of the library that needs to be built from source.
+The first stage of this process is to create an [`ArtifactBuild`](#artifactbuild) object. This object represents a Maven `group:artifact:version` (GAV) coordinate of the library that needs to be built from source.
 
 Once the `ArtifactBuild` object has been created JBS will then attempt to try and build it. This first step is to attempt to find the relevant source code.
 
-Once the source code location has been discovered a [`DependencyBuild`](#DependencyBuild) object is created. There are generally less `DependencyBuild` objects than there are `ArtifactBuild`, as multiple artifacts can come from the same build. The controller will then try and build the artifact, first it will run a build discovery pipeline, that attempts to determine possible ways of building the artifact. Once discovery is complete it uses this information to attempt to build the artifact in a trial and error manner.
+Once the source code location has been discovered a [`DependencyBuild`](#dependencybuild) object is created. There are generally less `DependencyBuild` objects than there are `ArtifactBuild`, as multiple artifacts can come from the same build. The controller will then try and build the artifact, first it will run a build discovery pipeline, that attempts to determine possible ways of building the artifact. Once discovery is complete it uses this information to attempt to build the artifact in a trial and error manner.
 
 The dependency discovery pipeline can check both configured shared repositories and the main repository
 (for example a Quay.io repository) for pre-existing builds. If a prior build is found, the pipeline will shortcut
@@ -200,4 +200,3 @@ spec:
 ### `SystemConfig`
 
 This is a singleton object that configures the JVM Build System. The main configuration it provides is the builder images to use.
-

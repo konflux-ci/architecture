@@ -10,25 +10,25 @@ number: 30
 Accepted
 
 Relates to:
-* [ADR 13. Konflux Test Stream - API contracts](0013-integration-service-api-contracts.html)
-* [ADR 14. Let Pipelines Proceed](0014-let-pipelines-proceed.html)
+* [ADR 13. Konflux Test Stream - API contracts]({{< relref "0013-integration-service-api-contracts.md" >}})
+* [ADR 14. Let Pipelines Proceed]({{< relref "0014-let-pipelines-proceed.md" >}})
 
 ## Context
 
-In order to [Let Pipelines Proceed](0014-let-pipelines-proceed.html), the default interface of a Tekton Task's status code becomes an unsuitable API contract for communicating the successes and failures of tasks. [ADR 13. Konflux Test Stream - API contracts](0013-integration-service-api-contracts.html) established the first API contract for Tekton result standardization within Konflux for the built-in Task definitions when task failure was not an option. As Konflux onboarding continues, more non-default tasks (partner and user tasks, for example) will be defined and the current standardization's narrow scope may start to confuse task authors. Further compounding this issue is the lack of a concrete guidance or standard from the Tekton community around standard sets of result names. Therefore, the Konflux components should adhere to generic standards for supported results types while still enabling the platform to operate within the Tekton result size limitations.
+In order to [Let Pipelines Proceed]({{< relref "0014-let-pipelines-proceed.md" >}}), the default interface of a Tekton Task's status code becomes an unsuitable API contract for communicating the successes and failures of tasks. [ADR 13. Konflux Test Stream - API contracts]({{< relref "0013-integration-service-api-contracts.md" >}}) established the first API contract for Tekton result standardization within Konflux for the built-in Task definitions when task failure was not an option. As Konflux onboarding continues, more non-default tasks (partner and user tasks, for example) will be defined and the current standardization's narrow scope may start to confuse task authors. Further compounding this issue is the lack of a concrete guidance or standard from the Tekton community around standard sets of result names. Therefore, the Konflux components should adhere to generic standards for supported results types while still enabling the platform to operate within the Tekton result size limitations.
 
 ## Decision
 
 The following decision holds for all Pipeline Tasks denoted as must succeed in the build pipeline
 
 > All scanning and linting TaskRuns should *succeed* even if they find problems in the content they
-are evaluating. [[ADR-0014](0014-let-pipelines-proceed.html)]
+are evaluating. [[ADR-0014]({{< relref "0014-let-pipelines-proceed.md" >}})]
 
 If tasks exist outside of the build pipeline, they _may_ adhere to the following decisions or they may fall back to the status (failing or succeeding) of a TaskRun.
 
 There are two defined standards for minimized [Tekton result](https://tekton.dev/docs/pipelines/tasks/#emitting-results) formats based on the common task types -- test-like and scan-like tasks. Each of these standards will have a unique result name as well as their own result format.
 
-The standards presented in this ADR supersede those in [ADR 13. Konflux Test Stream - API contracts](0013-integration-service-api-contracts.html). All other standards presented in the previous ADR hold unless _this_ ADR is superseded by an additional ADR that deprecates those standards. These other non-deprecated standards presented include [Detailed Conftest Output JSON](0013-integration-service-api-contracts.html#detailed-conftest-output-json), [Information injection](0013-integration-service-api-contracts.html#information-injection), [Information format](0013-integration-service-api-contracts.html#information-format), and [Image references](0013-integration-service-api-contracts.html#image-references).
+The standards presented in this ADR supersede those in [ADR 13. Konflux Test Stream - API contracts]({{< relref "0013-integration-service-api-contracts.md" >}}). All other standards presented in the previous ADR hold unless _this_ ADR is superseded by an additional ADR that deprecates those standards. These other non-deprecated standards presented include [Detailed Conftest Output JSON]({{< relref "0013-integration-service-api-contracts.md#detailed-conftest-output-json" >}}), [Information injection]({{< relref "0013-integration-service-api-contracts.md#information-injection" >}}), [Information format]({{< relref "0013-integration-service-api-contracts.md#information-format" >}}), and [Image references]({{< relref "0013-integration-service-api-contracts.md#image-references" >}}).
 
 ### Results for Test-like Tasks
 Test-like tasks are those whose results can be immediately classified as successful or failed. If these tests are taken into account in the final suitability of an artifact for promotion or release, then all pass/fail determination would be deferred to the task run.

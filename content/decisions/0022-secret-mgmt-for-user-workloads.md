@@ -13,7 +13,7 @@ Accepted
 
 Relates to:
 
-- [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)
+- [ADR 32. Decoupling Deployment]({{< relref "0032-decoupling-deployment.md" >}})
 
 ## Context
 

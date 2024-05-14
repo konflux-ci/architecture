@@ -1,10 +1,10 @@
 # Hybrid Application Service (HAS) Kubernetes CRDs
 
-[Application](hybrid-application-service-crds.md#application)
+[Application]({{< relref "hybrid-application-service-crds.md#application" >}})
 
-[Component](hybrid-application-service-crds.md#component)
+[Component]({{< relref "hybrid-application-service-crds.md#component" >}})
 
-[ComponentDetectionQuery](hybrid-application-service-crds.md#componentdetectionquery)
+[ComponentDetectionQuery]({{< relref "hybrid-application-service-crds.md#componentdetectionquery" >}})
 
 ## Application
 The Application resource defines an Application in Konflux. The fields in the resource are relatively bare, just the name of the resource (a UUID), an annotation with the application’s name, a description for the Application, and its git repository.
@@ -154,28 +154,3 @@ When the Component is created, the HAS controller retrieves the component’s De
 |language|string| specifies the language of the Component detected                                                   | Java                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 |projectType|string| specifies the type of project for the Component detected                                           | Spring                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 |componentStub|ComponentSpec| Stub of the Component CR detected with all the info gathered from the Devfile or service detection | <pre>Component Stub: <br/>Application:<br/>Container Image: <br/>Component Name:     java-springboot <br/>Env: <br/>  Name:    FOO <br/>  Value:   foo1 <br/>  Name:    BAR <br/>  Value:   bar1 <br/>Replicas:  1 <br/>Resources: <br/>  Limits: <br/>  Cpu:                  2 <br/>  Memory:               500Mi <br/>  Storage:              400Mi <br/>Requests: <br/>  Cpu:                  700m <br/>Route:                    route111 <br/>Source: <br/>  Git: <br/>  URL:      https://github.com/maysunfaisal/multi-components <br/>Target Port:  1111 <br/> |
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -10,7 +10,7 @@ Last Updated: 2023-09-29
 
 Obsolete
 
-Superceded by [ADR-0009](./0009-pipeline-service-via-operator.md)
+Superceded by [ADR-0009]({{< relref "./0009-pipeline-service-via-operator.md" >}})
 
 ## Context
 

@@ -34,7 +34,7 @@ one or more workspaces. This will be referred to as the **Internal Service Contr
 **Request** is used here as a general type meaning that real use cases might involve custom resources
 such as **ServiceABCRequest**.
 
-This strategy will make use of [KCP]'s VirtualWorkspace model allowing an internal service controller to watch a group of
+This strategy will make use of KCP's VirtualWorkspace model allowing an internal service controller to watch a group of
 workspace via a single _KUBECONFIG_. This internal service controller is expected to trigger a specific job that encapsulates the Internal Service's unit of work
 that HACBS wants to initiate. It is expected that the internal service controller should update the **status** of the **Request** CR to denote the progress of the
 triggered unit of work.
@@ -82,5 +82,4 @@ A proof of concept for the **Internal Services Controller** can be found [here](
 
 ---
 
-[KCP]: ../ref/kcp.md
-[release-service]: ../architecture/release-service.md
+[release-service]: {{< relref "../architecture/release-service.md" >}}

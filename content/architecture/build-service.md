@@ -3,18 +3,18 @@
 
 ## Overview
 
-The Build Service is composed of controllers that create and configure build pipelines. The main input for the Build Service is a Component CR managed by the [Hybrid Application Service (HAS)](hybrid-application-service.md).
+The Build Service is composed of controllers that create and configure build pipelines. The main input for the Build Service is a Component CR managed by the [Hybrid Application Service (HAS)]({{< relref "hybrid-application-service.md" >}}).
 
 ![](../diagrams/build-service/build-service.drawio.svg)
 
 ### Dependencies
 
 The Build Service is dependent on the following services:
-- [Pipeline Service](./pipeline-service.md)
+- [Pipeline Service]({{< relref "./pipeline-service.md" >}})
   - Pipeline execution, Pipeline logging
-- [Hybrid Application Service](./hybrid-application-service.md)
+- [Hybrid Application Service]({{< relref "./hybrid-application-service.md" >}})
   - Provides Component CR with annotations and `.status.devfile` which is used for PipelineRun configuration.
-- [Image Controller](./image-controller.md)
+- [Image Controller]({{< relref "./image-controller.md" >}})
   - Generation of a container image repository and robot account for Component CR which is used by PipelineRun
 
 ## Controllers
@@ -56,7 +56,7 @@ Custom Mode:
 
 #### PipelineRun selection
 
-The Build Service owns [BuildPipelineSelector CRD](https://redhat-appstudio.github.io/architecture/ref/build-service.html#buildpipelineselector) which defines which PipelineRun to select for the Component CR. By default global BuildPipelineSelector `build-pipeline-selector` in `build-service` namespace is used. BuildPipelineSelector CR contains selectors, the first matching selector is used for the Component CR. The list of selectors can be extended by creating BuildPipelineSelector CR with the same name as the Application CR in the user's namespace. This will ensure that it is applied to Component CRs under the corresponding Application CR. The list of selectors can be also extended for the whole user namespace by creating BuildPipelineSelector CR named `build-pipeline-selector` in the user's namespace.
+The Build Service owns [BuildPipelineSelector CRD]({{< relref "../ref/build-service.md#buildpipelineselector" >}}) which defines which PipelineRun to select for the Component CR. By default global BuildPipelineSelector `build-pipeline-selector` in `build-service` namespace is used. BuildPipelineSelector CR contains selectors, the first matching selector is used for the Component CR. The list of selectors can be extended by creating BuildPipelineSelector CR with the same name as the Application CR in the user's namespace. This will ensure that it is applied to Component CRs under the corresponding Application CR. The list of selectors can be also extended for the whole user namespace by creating BuildPipelineSelector CR named `build-pipeline-selector` in the user's namespace.
 
 Selectors are processed in this order:
 - BuildPipelineSelector CR with the same name as Application CR in the user's namespace

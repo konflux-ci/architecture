@@ -9,7 +9,7 @@ number: 27
 
 Proposed
 
-* Relates to [ADR 17. Use our own pipelines](0017-use-our-pipelines.md)
+* Relates to [ADR 17. Use our own pipelines]({{< relref "0017-use-our-pipelines.md" >}})
 
 ## Context
 

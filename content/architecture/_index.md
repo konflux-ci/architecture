@@ -121,68 +121,67 @@ these resources.
 
 Each service that makes up Konflux is further explained in its own document.
 
-- [Hybrid Application Service](./hybrid-application-service/) - A workflow system that manages
+- [Hybrid Application Service]({{< relref "./hybrid-application-service.md" >}}) - A workflow system that manages
   the definition of the users' Application and Components.
-- [Build Service](./build-service/) - A workflow system that manages the build pipeline definition
+- [Build Service]({{< relref "./build-service.md" >}}) - A workflow system that manages the build pipeline definition
   for users' Components.
-- [Image Controller](./image-controller/) - A subsystem of the build-service that manages the
+- [Image Controller]({{< relref "./image-controller.md" >}}) - A subsystem of the build-service that manages the
   creation and access rights to OCI repositories.
-- [Java Rebuilds Service](./jvm-build-service/) - A subsystem of the build-service that manages
+- [Java Rebuilds Service]({{< relref "./jvm-build-service.md" >}}) - A subsystem of the build-service that manages
   the rebuild of binary java jars pulled from maven central for an improved degree of provenance.
-- [Integration Service](./integration-service/) - A workflow service that manages execution of
+- [Integration Service]({{< relref "./integration-service.md" >}}) - A workflow service that manages execution of
   users' tests and promotion in response to completing builds.
-- [Release Service](./release-service/) - A workflow service that manages execution of privileged
+- [Release Service]({{< relref "./release-service.md" >}}) - A workflow service that manages execution of privileged
   pipelines to release user content to protected destinations.
-- [GitOps Service](./gitops-service/) - A foundational service providing deployment of user
+- [GitOps Service]({{< relref "./gitops-service.md" >}}) - A foundational service providing deployment of user
   applications.
-- [Pipeline Service](./pipeline-service/) - A foundational service providing Pipeline APIs and secure supply
+- [Pipeline Service]({{< relref "./pipeline-service.md" >}}) - A foundational service providing Pipeline APIs and secure supply
   chain capabilities to other services
-- [Service Provider Integration](./service-provider-integration/) - A foundational service
+- [Service Provider Integration]({{< relref "./service-provider-integration.md" >}}) - A foundational service
   providing user secret management to other services.
-- [Enterprise Contract](./enterprise-contract/) - A specialized subsystem responsible for the
+- [Enterprise Contract]({{< relref "./enterprise-contract.md" >}}) - A specialized subsystem responsible for the
   definition and enforcement of policies related to how OCI artifacts are built and tested.
-- [Internal Services Controller](./internal-services/) - A specialized subsystem that enables
+- [Internal Services Controller]({{< relref "./internal-services.md" >}}) - A specialized subsystem that enables
   invoking services that are not network addressable.
 
 ## API References
 
 ### Developer Services
 
-- [Application and Environment API](../ref/application-environment-api/)
-- [Service Provider](../ref/service-provider.md)
-- [GitOps Service](../ref/gitops.md):
+- [Application and Environment API]({{< relref "../ref/application-environment-api.md" >}})
+- [Service Provider]({{< relref "../ref/service-provider.md" >}})
+- [GitOps Service]({{< relref "../ref/gitops.md" >}}):
 
 ### Naming Conventions
 
-- [Namespace Metadata](../ADR/adr-0010-namespace-metadata)
+- [Namespace Metadata]({{< relref "../decisions/0010-namespace-metadata.md" >}})
 
-[integration-service promotes OCI artifacts]: ../ADR/0016-integration-service-promotion-logic/
-[application-service]: ./hybrid-application-service/
-[pipeline-service]: ./pipeline-service/
-[gitops-service]: ./gitops-service/
-[build-service]: ./build-service/
-[integration-service]: ./integration-service/
-[release-service]: ./release-service/
-[internal-services]: ./internal-services/
-[Application]: ../ref/application-environment-api/#application
-[Applications]: ../ref/application-environment-api/#application
-[Component]: ../ref/application-environment-api/#component
-[Components]: ../ref/application-environment-api/#component
-[Environment]: ../ref/application-environment-api/#environment
-[Environments]: ../ref/application-environment-api/#environment
-[Snapshot]: ../ref/application-environment-api/#snapshot
-[Snapshots]: ../ref/application-environment-api/#snapshot
-[SnapshotEnvironmentBinding]: ../ref/application-environment-api/#snapshotenvironmentbinding
-[SnapshotEnvironmentBindings]: ../ref/application-environment-api/#snapshotenvironmentbinding
-[DeploymentTarget]: ../ref/application-environment-api/#deploymenttarget
-[DeploymentTargets]: ../ref/application-environment-api/#deploymenttarget
-[DeploymentTargetClaim]: ../ref/application-environment-api/#deploymenttargetclaim
-[DeploymentTargetClaims]: ../ref/application-environment-api/#deploymenttargetclaim
-[Release]: ../ref/release-service.html#release
-[Releases]: ../ref/release-service.html#release
-[ReleasePlan]: ../ref/release-service.html#releaseplan
-[ReleasePlans]: ../ref/release-service.html#releaseplan
-[ReleasePlanAdmission]: ../ref/release-service.html#releaseplanadmission
-[ReleasePlanAdmissions]: ../ref/release-service.html#releaseplanadmission
-[IntegrationTestScenario]: ../ref/integration-service.html#integrationtestscenario
-[IntegrationTestScenarios]: ../ref/integration-service.html#integrationtestscenario
+[integration-service promotes OCI artifacts]: {{< relref "../decisions/0016-integration-service-promotion-logic.md" >}}
+[application-service]: {{< relref "./hybrid-application-service.md" >}}
+[pipeline-service]: {{< relref "./pipeline-service.md" >}}
+[gitops-service]: {{< relref "./gitops-service.md" >}}
+[build-service]: {{< relref "./build-service.md" >}}
+[integration-service]: {{< relref "./integration-service.md" >}}
+[release-service]: {{< relref "./release-service.md" >}}
+[Application]: {{< relref "../ref/application-environment-api.md#application" >}}
+[Applications]: {{< relref "../ref/application-environment-api.md#application" >}}
+[Component]: {{< relref "../ref/application-environment-api.md#component" >}}
+[Components]: {{< relref "../ref/application-environment-api.md#component" >}}
+[Environment]: {{< relref "../ref/application-environment-api.md#environment" >}}
+[Environments]: {{< relref "../ref/application-environment-api.md#environment" >}}
+[Snapshot]: {{< relref "../ref/application-environment-api.md#snapshot" >}}
+[Snapshots]: {{< relref "../ref/application-environment-api.md#snapshot" >}}
+[SnapshotEnvironmentBinding]: {{< relref "../ref/application-environment-api.md#snapshotenvironmentbinding" >}}
+[SnapshotEnvironmentBindings]: {{< relref "../ref/application-environment-api.md#snapshotenvironmentbinding" >}}
+[DeploymentTarget]: {{< relref "../ref/application-environment-api.md#deploymenttarget" >}}
+[DeploymentTargets]: {{< relref "../ref/application-environment-api.md#deploymenttarget" >}}
+[DeploymentTargetClaim]: {{< relref "../ref/application-environment-api.md#deploymenttargetclaim" >}}
+[DeploymentTargetClaims]: {{< relref "../ref/application-environment-api.md#deploymenttargetclaim" >}}
+[Release]: {{< relref "..//ref/release-service.md#release" >}}
+[Releases]: {{< relref "..//ref/release-service.md#release" >}}
+[ReleasePlan]: {{< relref "..//ref/release-service.md#releaseplan" >}}
+[ReleasePlans]: {{< relref "..//ref/release-service.md#releaseplan" >}}
+[ReleasePlanAdmission]: {{< relref "..//ref/release-service.md#releaseplanadmission" >}}
+[ReleasePlanAdmissions]: {{< relref "..//ref/release-service.md#releaseplanadmission" >}}
+[IntegrationTestScenario]: {{< relref "..//ref/integration-service.md#integrationtestscenario" >}}
+[IntegrationTestScenarios]: {{< relref "..//ref/integration-service.md#integrationtestscenario" >}}

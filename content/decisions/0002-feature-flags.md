@@ -59,9 +59,9 @@ that would appreciate independence.
 
 Use “api discovery” to control the enablement of *individual* features in *individual* workspaces.
 
-[KCP] provides the [APIBinding] resource as a way of letting the user declare that a particular API
+KCP provides the APIBinding resource as a way of letting the user declare that a particular API
 (read: CRD) should be made available in a single workspace. The user installs something in their
-workspace by creating an [APIBinding]. Our processes (controllers and [hac]) should query for the
+workspace by creating an APIBinding. Our processes (controllers and [hac]) should query for the
 availability of a particular API they care about, and let their behavior be influenced by the
 existence or non-existence of that API.
 
@@ -93,10 +93,10 @@ can know that the [integration-service] features of HACBS are enabled in the wor
 
 - When generating a list of workspaces, [hac] could describe those workspaces as HACBS-enabled or
   not if one or more HACBS APIs are available via kubernetes API discovery in kcp. Those APIs will
-  be present if [APIBinding] objects are present in the workspace and have been handled by KCP.
+  be present if APIBinding objects are present in the workspace and have been handled by KCP.
 - When viewing an App Studio workspace, the [hac-dev] plugin should present the user with the
   corresponding HACBS view if one or more HACBS APIs are present in the workspace, which again will
-  be present if corresponding [APIBinding] objects have been created in the workspace and handled by
+  be present if corresponding APIBinding objects have been created in the workspace and handled by
   fulfilled by KCP.
 
 ## Open Questions
@@ -111,7 +111,7 @@ can know that the [integration-service] features of HACBS are enabled in the wor
 
 - We should experience a cleaner API - composable services, more aligned with a larger App Cloud API
   being developed by multiple teams.
-- We may find ourselves forced into creating a CRD (and corresponding [APIBinding]) just so that we
+- We may find ourselves forced into creating a CRD (and corresponding APIBinding) just so that we
   can influence the behavior of another service, just so we can give it a feature flag to check.
 - Services that change their behavior based on the existence or non-existence of APIs that they do
   not own need to take special care if they manage some off-cluster state.
@@ -127,17 +127,15 @@ can know that the [integration-service] features of HACBS are enabled in the wor
 
 Originally drafted in a [google document](https://docs.google.com/document/d/1KcXWZ8VGUg_iR0RjdGuDYedP8ZW63XCgF26KZUNgpeQ/edit)
 
-[hac]: ../architecture/hybrid-application-console.md
+[hac]: {{< relref "../architecture/hybrid-application-console.md" >}}
 [hac-dev]: https://github.com/openshift/hac-dev
-[has]: ../architecture/application-service.md
-[build-service]: ../architecture/build-service.md
-[integration-service]: ../architecture/integration-service.md
+[has]: {{< relref "../architecture/hybrid-application-service.md" >}}
+[build-service]: {{< relref "../architecture/build-service.md" >}}
+[integration-service]: {{< relref "../architecture/integration-service.md" >}}
 [customized pipelines]: https://issues.redhat.com/browse/HACBS-9
-[KCP]: ../ref/kcp.md
-[APIBinding]: ../ref/kcp.md#apibinding
-[Component]: ../ref/application-environment-api.md#component
-[ApplicationSnapshot]: ../ref/application-environment-api.md#applicationsnapshot
-[ApplicationSnapshots]: ref/application-environment-api.md#applicationsnapshot
-[ReleasePlan]: ../ref/release-service.md#releaseplan
-[ReleasePlans]: ../ref/release-service.md#releaseplan
-[IntegrationTestScenario]: ../ref/integration-service.md#integrationtestscenario
+[Component]: {{< relref "../ref/application-environment-api.md#component" >}}
+[ApplicationSnapshot]: {{< relref "../ref/application-environment-api.md#applicationsnapshot" >}}
+[ApplicationSnapshots]: {{< relref "ref/application-environment-api.md#applicationsnapshot" >}}
+[ReleasePlan]: {{< relref "../ref/release-service.md#releaseplan" >}}
+[ReleasePlans]: {{< relref "../ref/release-service.md#releaseplan" >}}
+[IntegrationTestScenario]: {{< relref "../ref/integration-service.md#integrationtestscenario" >}}

@@ -98,22 +98,22 @@ The Release service will copy the annotations and labels from the Release CR and
 
 ### Dependencies
 
-The [Release Service](./release-service.md) is dependent on the following services:
-- [Pipeline Service](./pipeline-service.md)
+The [Release Service]({{< relref "./release-service.md" >}}) is dependent on the following services:
+- [Pipeline Service]({{< relref "./pipeline-service.md" >}})
     - Pipeline execution, Pipeline logging
-- [Integration Service](./integration-service.md)
+- [Integration Service]({{< relref "./integration-service.md" >}})
     - Facilitates automated testing of content produced by the build pipelines
-- [GitOps Service](./gitops-service.md)
+- [GitOps Service]({{< relref "./gitops-service.md" >}})
     - Provides the facility to create
         - Snapshots defining sets of Builds to release
         - Environment to deploy the Application to
         - SnapshotEnvironmentBindings to have the Snapshot of the Application deployed to a specific Environment
-- [Enterprise Contract Service](./enterprise-contract.md)
+- [Enterprise Contract Service]({{< relref "./enterprise-contract.md" >}})
     - Provides facilities to validate whether content has passed the Enterprise Contract.
 
 ## References
 
-[Enterprise Contract]: ./enterprise-contract.md
-[Integration Service]: ./integration-service.md
-[GitOps Service]: ./gitops-service.md
-[Pipeline Service]: ./pipeline-service.md
+[Enterprise Contract]: {{< relref "./enterprise-contract.md" >}}
+[Integration Service]: {{< relref "./integration-service.md" >}}
+[GitOps Service]: {{< relref "./gitops-service.md" >}}
+[Pipeline Service]: {{< relref "./pipeline-service.md" >}}

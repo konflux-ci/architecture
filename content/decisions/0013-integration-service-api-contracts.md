@@ -7,9 +7,9 @@ number: 13
 
 ## Status
 
-Deprecated by [ADR 30. Tekton Results Naming Convention](0030-tekton-results-naming-convention.html).
+Deprecated by [ADR 30. Tekton Results Naming Convention]({{< relref "0030-tekton-results-naming-convention.md" >}}).
 
-Relates to [ADR 14. Let Pipelines Proceed](0014-let-pipelines-proceed.html)
+Relates to [ADR 14. Let Pipelines Proceed]({{< relref "0014-let-pipelines-proceed.md" >}})
 
 ## Context
 

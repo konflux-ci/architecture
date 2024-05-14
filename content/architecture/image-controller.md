@@ -3,7 +3,7 @@
 # Overview
 Image controller sets up and manages container image repositories for an application's components. This enables greater component isolation within Konflux where each component has its own image repository and secret for pushing images built via Konflux.
 
-The image controller can perform three actions on image repositories by watching for either specific annotation changes or deletion events of a [Component CR](https://redhat-appstudio.github.io/architecture/ref/application-environment-api.html#component):
+The image controller can perform three actions on image repositories by watching for either specific annotation changes or deletion events of a [Component CR]({{< relref "../ref/application-environment-api.md#component" >}}):
 
 - **Setup image repository**: Image controller creates an image repository for the Component CR in a remote image registry as well as a robot account which is specific to that repository for image push. A Kubernetes Secret object is also created with that robot account token in order to make it available for build PipelineRun.
 

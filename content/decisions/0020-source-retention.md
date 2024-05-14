@@ -9,7 +9,7 @@ number: 20
 
 Accepted
 
-Relates to [ADR 7. Change Management](0007-change-management.html)
+Relates to [ADR 7. Change Management]({{< relref "0007-change-management.md" >}})
 
 ## Context
 
@@ -20,7 +20,7 @@ requirement."
 
 We intend for the Konflux pipeline to support this requirement in
 [RHTAP-107](https://issues.redhat.com/browse/RHTAP-107). Since we [Use our own pipelines (ADR
-.17)](0017-use-our-pipelines.html), this would satisfy the control for us, if it were implemented.
+.17)]({{< relref "0017-use-our-pipelines.md" >}}), this would satisfy the control for us, if it were implemented.
 
 So long as it is not yet implemented, we need a policy (an "administrative control" rather than
 a "technical control") that precribes how our own source repositories must be managed.

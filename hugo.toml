@@ -15,6 +15,9 @@ paginate = 10
 # not pluralize title pages by default
 pluralizelisttitles = false
 
+# use relative links by default
+relativeURLs = true
+
 [params]
     mainSections = ["architecture", "decisions"]
     disabled_logo = false

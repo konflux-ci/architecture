@@ -15,7 +15,7 @@ Hybrid Application Service (HAS) provides an abstract way to define Applications
 
 
 ## Architecture Overview
-To see how HAS fits into the Konflux architecture, refer to the Konflux [Application Context](./index.md#application-context).
+To see how HAS fits into the Konflux architecture, refer to the Konflux [Application Context]({{< relref "./index.md#application-context)." >}}
 
 The diagram below shows the interaction between HAC and HAS services for the creation of Application and Component.
 
@@ -31,9 +31,9 @@ The diagram below shows the interaction between HAC and HAS services for the cre
 
 Navigate the various Hybrid Application Service topics to read more about them.
 
-- [Hybrid Application Service (HAS) Design](./HAS/hybrid-application-service-design.md)
-- [Hybrid Application Service (HAS) Glossary](./HAS/hybrid-application-service-glossary.md)
-- [Hybrid Application Service (HAS) Kubernetes API](./HAS/hybrid-application-service-api.md)
-- [Hybrid Application Service (HAS) Kubernetes CRDs](./HAS/hybrid-application-service-crds.md)
-- [Component Detection Query (CDQ) Controller Logic](./HAS/component-detection-query-controller-logic.md)
-- [Hybrid Application Service (HAS) Component Types](./HAS/hybrid-application-service-component-types.md)
+- [Hybrid Application Service (HAS) Design]({{< relref "./HAS/hybrid-application-service-design.md" >}})
+- [Hybrid Application Service (HAS) Glossary]({{< relref "./HAS/hybrid-application-service-glossary.md" >}})
+- [Hybrid Application Service (HAS) Kubernetes API]({{< relref "./HAS/hybrid-application-service-api.md" >}})
+- [Hybrid Application Service (HAS) Kubernetes CRDs]({{< relref "./HAS/hybrid-application-service-crds.md" >}})
+- [Component Detection Query (CDQ) Controller Logic]({{< relref "./HAS/component-detection-query-controller-logic.md" >}})
+- [Hybrid Application Service (HAS) Component Types]({{< relref "./HAS/hybrid-application-service-component-types.md" >}})

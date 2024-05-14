@@ -37,7 +37,7 @@ The following components in Konflux send data/results back to GitHub via the Che
 
 An Konflux workspace is associated with a Kubernetes namespace on a Konflux “member cluster”,
 which is not directly accessible by end users. The namespace name on the member cluster currently
-correlates with the workspace name (a suffix is added). [ADR 10](0010-namespace-metadata.html)
+correlates with the workspace name (a suffix is added). [ADR 10]({{< relref "0010-namespace-metadata.md" >}})
 specifies that a namespace label should exist which links the member cluster namespace back to the
 Konflux workspace.
 
@@ -72,7 +72,7 @@ permission to view the requested `PipelineRun` resource.
 ### Dev Sandbox: Member Cluster Labels
 
 Member cluster namespaces MUST have the `appstudio.redhat.com/workspace_name` label, in accordance
-with [ADR 10](0010-namespace-metadata.html).
+with [ADR 10]({{< relref "0010-namespace-metadata.md" >}}).
 
 ### Pipelines as Code: Customize URLs per Repository
 
@@ -114,4 +114,4 @@ source control repositories. This potential disclosure of identifying informatio
 presented to end users.
 
 This concern is mitigated if workspace names are changed to be an arbitrary string, or a hash of a
-known identifier (see [ADR 06](0006-log-conventions.html)).
+known identifier (see [ADR 06]({{< relref "0006-log-conventions.md" >}})).

@@ -12,9 +12,9 @@ number: 14
 Accepted
 
 Relates to:
-* [ADR 13. Konflux Test Stream - API contracts](0013-integration-service-api-contracts.html)
-* [ADR 30. Tekton Results Naming Convention](0030-tekton-results-naming-convention.html)
-* [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)
+* [ADR 13. Konflux Test Stream - API contracts]({{< relref "0013-integration-service-api-contracts.md" >}})
+* [ADR 30. Tekton Results Naming Convention]({{< relref "0030-tekton-results-naming-convention.md" >}})
+* [ADR 32. Decoupling Deployment]({{< relref "0032-decoupling-deployment.md" >}})
 
 ## Context
 
@@ -55,6 +55,6 @@ for users ([STONE-459]).
   unwritten principle. Documenting it here for posterity, visibility.
 
 [STONE-459]: https://issues.redhat.com/browse/STONE-459
-[Environments]: ../ref/application-environment-api.html#environment
-[ADR-0030]: 0030-tekton-results-naming-convention.html
-[enterprise contract]: ../architecture/enterprise-contract.html
+[Environments]: {{ relref "../ relref "../ref/application-environment-api.md#environment" }}" }}
+[ADR-0030]: {{< relref "0030-tekton-results-naming-convention.md" >}}
+[enterprise contract]: {{< relref "../architecture/enterprise-contract.md" >}}

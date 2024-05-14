@@ -34,7 +34,7 @@ We recommend using an OpenTelemetry Collector as the way to collect Konflux nati
 
 Other Tekton pieces that Konflux leverages such as [pipeline as code](https://pipelinesascode.com/), [chains](https://tekton.dev/docs/chains/) and [results](https://tekton.dev/docs/results/) will have to be instrumented separately and will require upstream changes, so they are out of scope for this ADR.
 
-Also, other Konflux services such as the [build service](https://github.com/redhat-appstudio/architecture/blob/main/architecture/build-service.md), [application service](https://github.com/redhat-appstudio/architecture/blob/main/architecture/hybrid-application-service.md) and [integration service](https://github.com/redhat-appstudio/architecture/blob/main/architecture/integration-service.md) will also require either automatic instrumentation or code based instrumentation and therefore are also out of scope for this ADR.
+Also, other Konflux services such as the [build service]({{< relref "../architecture/build-service.md" >}}), [application service]({{< relref "../architecture/hybrid-application-service.md" >}}) and [integration service]({{< relref "../architecture/integration-service.md" >}}) will also require either automatic instrumentation or code based instrumentation and therefore are also out of scope for this ADR.
 
 Any other type of instrumentation that isn't native will be addressed in a future ADR.
 

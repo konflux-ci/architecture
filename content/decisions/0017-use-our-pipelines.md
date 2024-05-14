@@ -10,8 +10,8 @@ number: 17
 
 Accepted
 
-* Relates to [ADR 7. Change Management](0007-change-management.md)
-* Relates to [ADR 27. Container Image Management Practice](0027-container-images.md)
+* Relates to [ADR 7. Change Management]({{< relref "0007-change-management.md" >}})
+* Relates to [ADR 27. Container Image Management Practice]({{< relref "0027-container-images.md" >}})
 
 ## Context
 
@@ -44,6 +44,6 @@ start doing, but haven't made time to do so yet.
   and [Component] APIs.
 * This ADR supports [STONE-434](https://issues.redhat.com/browse/STONE-434).
 
-[integration-service]: ../ref/integration-service.html
-[Application]: ../ref/application-environment-api.html#application
-[Components]: ../ref/application-environment-api.html#component
+[integration-service]: {{< relref "..//ref/integration-service.md" >}}
+[Application]: {{< relref "..//ref/application-environment-api.md#application" >}}
+[Components]: {{< relref "..//ref/application-environment-api.md#component" >}}

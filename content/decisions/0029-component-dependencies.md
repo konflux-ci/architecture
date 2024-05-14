@@ -179,5 +179,5 @@ Think about branches:
 * Since more PRs will trigger more PipelineRuns, our current PVC quota issues (which limit how many PipelineRuns can be run at any one time) may be exacerbated.
 * Users may have only a few Components, or they may have many (many dozens) of Components. Once they get past so many component dependencies, we suspect that users will likely change from checking that all dependent images work with the new parent image to "sharing" the verification load: building the image and pushing it out for other components/dependencies to update and test within their own PRs. With this design, the user can achieve this by purging the `build-nudges-ref` field values from their Component CRs. The parent image will be built and tested as normal. [build-service] will not send PRs. The user can still hypothethically construct their own PR Group to test a particular layered component on an unmerged parent image change.
 
-[build-service]: ../ref/build-service.md
-[integration-service]: ../ref/integration-service.md
+[build-service]: {{< relref "../ref/build-service.md" >}}
+[integration-service]: {{< relref "../ref/integration-service.md" >}}

@@ -7,7 +7,7 @@ number: 8
 
 ## Status
 
-Superceded by [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)
+Superceded by [ADR 32. Decoupling Deployment]({{< relref "0032-decoupling-deployment.md" >}})
 
 ## Approvers
 
@@ -457,15 +457,15 @@ spec:
 - [Original miro](https://miro.com/app/board/uXjVP77ztI4=)
 - [Issue tracking creation of this ADR (STONE-174)](https://issues.redhat.com/browse/STONE-174)
 
-[Environment]: ../ref/application-environment-api.md#environment
-[Environments]: ../ref/application-environment-api.md#environment
-[DT]: ../ref/application-environment-api.md#deploymenttarget
-[DTs]: ../ref/application-environment-api.md#deploymenttarget
-[DeploymentTarget]: ../ref/application-environment-api.md#deploymenttarget
-[DeploymentTargets]: ../ref/application-environment-api.md#deploymenttarget
-[DTC]: ../ref/application-environment-api.md#deploymenttargetclaim
-[DTCs]: ../ref/application-environment-api.md#deploymenttargetclaim
-[DeploymentTargetClaim]: ../ref/application-environment-api.md#deploymenttargetclaim
-[DeploymentTargetClaims]: ../ref/application-environment-api.md#deploymenttargetclaim
-[DeploymentTargetClass]: ../ref/application-environment-api.md#deploymenttargetclass
-[DeploymentTargetClasses]: ../ref/application-environment-api.md#deploymenttargetclass
+[Environment]: {{< relref "../ref/application-environment-api.md#environment" >}}
+[Environments]: {{< relref "../ref/application-environment-api.md#environment" >}}
+[DT]: {{< relref "../ref/application-environment-api.md#deploymenttarget" >}}
+[DTs]: {{< relref "../ref/application-environment-api.md#deploymenttarget" >}}
+[DeploymentTarget]: {{< relref "../ref/application-environment-api.md#deploymenttarget" >}}
+[DeploymentTargets]: {{< relref "../ref/application-environment-api.md#deploymenttarget" >}}
+[DTC]: {{< relref "../ref/application-environment-api.md#deploymenttargetclaim" >}}
+[DTCs]: {{< relref "../ref/application-environment-api.md#deploymenttargetclaim" >}}
+[DeploymentTargetClaim]: {{< relref "../ref/application-environment-api.md#deploymenttargetclaim" >}}
+[DeploymentTargetClaims]: {{< relref "../ref/application-environment-api.md#deploymenttargetclaim" >}}
+[DeploymentTargetClass]: {{< relref "../ref/application-environment-api.md#deploymenttargetclass" >}}
+[DeploymentTargetClasses]: {{< relref "../ref/application-environment-api.md#deploymenttargetclass" >}}

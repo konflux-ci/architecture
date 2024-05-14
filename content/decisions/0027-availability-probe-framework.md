@@ -44,7 +44,7 @@ The availability Prometheus metric will be computed for each component based on 
 status of the latest execution of the CronJobs evaluating the component's availability.
 Component owners will provide the implementation for each component's CronJobs. By
 adhering to a specific standard
-([see naming convention below](#Probes-Naming-Convention)),
+([see naming convention below](#probes-naming-convention)),
 results will be aggregated into a standardized Prometheus metric to report on
 availability (i.e. component owners will not be required to provide the translation
 mechanism).

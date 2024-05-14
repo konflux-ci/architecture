@@ -79,7 +79,7 @@ enabling customers to test functionality and provide feedback during the develop
 use of bundle resolvers, if needed.
 
 
-[CR]: https://redhat-appstudio.github.io/architecture/ref/integration-service.html#integrationtestscenariospec
+[CR]: {{< relref "../ref/integration-service.md#integrationtestscenariospec" >}}
 [RHTAP-402]: https://issues.redhat.com/browse/RHTAP-402
 [PLNSRVCE-1030]: https://issues.redhat.com/browse/PLNSRVCE-1030
 [Tekton-resolvers]: https://tekton.dev/vault/pipelines-main/resolution/

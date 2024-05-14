@@ -2,11 +2,11 @@
 
 ## Overview
 
-The official Hybrid Application Service (HAS) APIs are listed in the Konflux [API Reference](https://redhat-appstudio.github.io/architecture/ref/application-environment-api.html#application).  The APIs Specific to HAS are:
+The official Hybrid Application Service (HAS) APIs are listed in the Konflux [API Reference]({{< relref "../../ref/application-environment-api.md#application" >}}).  The APIs Specific to HAS are:
 
-* [Application](https://redhat-appstudio.github.io/architecture/ref/application-environment-api.html#application)
-* [Component](https://redhat-appstudio.github.io/architecture/ref/application-environment-api.html#component)
-* [ComponentDetectionQuery](https://redhat-appstudio.github.io/architecture/ref/application-environment-api.html#componentdetectionquery)
+* [Application]({{< relref "../../ref/application-environment-api.md#application" >}})
+* [Component]({{< relref "../../ref/application-environment-api.md#component" >}})
+* [ComponentDetectionQuery]({{< relref "../../ref/application-environment-api.md#componentdetectionquery" >}})
 
 The topics below offer a more detailed explanation of the API usage with examples.
 
@@ -30,11 +30,11 @@ The topics below offer a more detailed explanation of the API usage with example
 
 ## References
 
-* [HAS Glossary](has-glossary.md)
+* [HAS Glossary]({{< relref "hybrid-application-service-glossary.md" >}})
 * [Sample Generated GitOpsRepo](https://github.com/jgwest/gitops-repository-template)
 
 
-### [Application CRD](hybrid-application-service-crds.md#application)
+### [Application CRD]({{% relref "hybrid-application-service-crds.md#application" %}}){#application-crd}
 
 #### Create Application
 <ul>
@@ -77,7 +77,7 @@ To delete an Application in HAS, simply delete the Application resource correspo
 
 </ul>
 
-### [Component CRD](hybrid-application-service-crds.md#component)
+### [Component CRD]({{% relref "hybrid-application-service-crds.md#component" %}}){#component-crd}
 
 #### Create Component
 <ul>
@@ -124,7 +124,7 @@ To delete a given Component in HAS, just delete its corresponding Component. The
 
 </ul>
 
-### [ComponentDetectionQuery CRD](hybrid-application-service-crds.md#componentdetectionquery)
+### [ComponentDetectionQuery CRD]({{% relref "hybrid-application-service-crds.md#componentdetectionquery" %}}){#componentdetectionquery-crd}
 
 #### Create ComponentDetectionQuery
 <ul>
@@ -164,5 +164,3 @@ targetPort will not have a default value, since it would be difficult to ascerta
 
 </ul>
 </ul>
-
-

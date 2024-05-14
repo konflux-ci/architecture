@@ -2,7 +2,7 @@
 
 ## Application CR Create
 
-Hybrid Application Console (HAC) collects the information required for creating Applications. An Application is a collection of one or more Components. Required information to be collected can be found in the [Hybrid Application Service (HAS) Kubernetes CRDs](hybrid-application-service-crds.md) doc. When all the Application information is available, HAC will create the Application CR to trigger the Application creation. The HAS Application CR Operator will:
+Hybrid Application Console (HAC) collects the information required for creating Applications. An Application is a collection of one or more Components. Required information to be collected can be found in the [Hybrid Application Service (HAS) Kubernetes CRDs]({{< relref "hybrid-application-service-crds.md" >}}) doc. When all the Application information is available, HAC will create the Application CR to trigger the Application creation. The HAS Application CR Operator will:
 1. Validate all the required fields in the Application CR
 2. If the Application model repository `spec.appModelRepository` and the GitOps repository `spec.gitOpsRepository` values are specified:
    1. It will be used for the Application model and GitOps repository.

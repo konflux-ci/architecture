@@ -20,7 +20,7 @@ The Integration service uses the pipeline, snapshot, and environment controllers
 - When a build pipeline completes, Integration service creates a Snapshot CR representing a new collection of components that should be tested together.
 - When Integration Service sees a new Snapshot CR (created either by itself or by a user), it coordinates deployment of the application for testing. It does this by creating new “ephemeral” Konflux Environment CRs which trigger the GitOps Service to provision the ephemeral test environment.
 - After the environment is ready and the application snapshot has been deployed to it, Integration Service tests and validates the application according to user-provided configuration. It does this by executing Tekton PipelineRuns against the ephemeral test Environment.
-- Finally, if any automatic ReleasePlans have been created by the user in the workspace, it will create a Release CR signalling intent to release the tested content, to be carried out by the [release-service](./release-service.md).
+- Finally, if any automatic ReleasePlans have been created by the user in the workspace, it will create a Release CR signalling intent to release the tested content, to be carried out by the [release-service]({{< relref "./release-service.md" >}}).
 
 The diagram below shows the interaction of the integration service and other services.
 
@@ -28,18 +28,18 @@ The diagram below shows the interaction of the integration service and other ser
 
 ### Dependencies
 
-The [Integration Service](./integration-service.md) is dependent on the following services:
-- [Pipeline Service](./pipeline-service.md)
+The [Integration Service]({{< relref "./integration-service.md" >}}) is dependent on the following services:
+- [Pipeline Service]({{< relref "./pipeline-service.md" >}})
   - Pipeline execution, Pipeline logging
-- [GitOps Service](./gitops-service.md)
+- [GitOps Service]({{< relref "./gitops-service.md" >}})
   - Provides the facility to create
     - Snapshots defining sets of Builds to test
     - Environment to test the Application on
-- [Hybrid Application Service](./hybrid-application-service.md)
+- [Hybrid Application Service]({{< relref "./hybrid-application-service.md" >}})
   - Provides the Application and Component model. Integration Service updates the pullspec reference on the Component CR when a component passes its required testing.
-- [Release Service](./release-service.md)
+- [Release Service]({{< relref "./release-service.md" >}})
   - Provides the ReleasePlan that will be used to determine if integration-service should create a Release
-- [Enterprise Contract Service](./enterprise-contract.md)
+- [Enterprise Contract Service]({{< relref "./enterprise-contract.md" >}})
   - Provides facilities to validate whether content has passed the Enterprise Contract.
 
 
