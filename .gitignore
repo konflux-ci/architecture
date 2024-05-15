@@ -3,3 +3,5 @@
 .idea/
 .hugo_build.lock
 public/
+crd-temp
+content/ref
