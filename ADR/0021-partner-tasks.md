@@ -18,7 +18,7 @@ https://issues.redhat.com/browse/STONE-549
 
 ### Plumbing
 
-1. Setup a new Git high-level directory in https://github.com/redhat-appstudio/build-definitions for partners to contribute Tasks to.
+1. Setup a new Git high-level directory in https://github.com/konflux-ci/build-definitions for partners to contribute Tasks to.
 2. Define a directory structure for Task submissions as manifests in the yaml format.
 3. Configure a CI job that validates the Tasks upon opening of a pull request.
 4. Optionally, configure a CI job that generates an OCI artifact consumable in a Tekton Pipeline.
@@ -35,7 +35,7 @@ action to resolve the issue.
 #### Revoking a Task
 1. Open a PR to delete the Task.
 2. The Build/Test team reviews the PR and merges it.
-3. The Build/Test team updates the https://github.com/redhat-appstudio/build-definitions to remove references to the Task's OCI image whenever it is reasonable to do so.
+3. The Build/Test team updates the https://github.com/konflux-ci/build-definitions to remove references to the Task's OCI image whenever it is reasonable to do so.
 
 #### Definition of a valid Task
 
@@ -63,7 +63,7 @@ Component into StoneSoup, customize their Pipeline definition in the .tekton dir
 
 ## Alternatives
 
-* ~Use the github.com/redhat-appstudio/build-definitions for Task submissions by partners : This is being considered in the short-term, either way, the day-to-day operations will not quite change~ - this has been promoted to be the primary design.
+* ~Use the github.com/konflux-ci/build-definitions for Task submissions by partners : This is being considered in the short-term, either way, the day-to-day operations will not quite change~ - this has been promoted to be the primary design.
 * Use Tekton Hub for host Tasks : Tekton Hub is being deprecated.
 
 

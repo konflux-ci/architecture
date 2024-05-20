@@ -34,7 +34,7 @@ $ docker run --rm -i ghcr.io/hadolint/hadolint < Dockerfile
 - Check these [docs](https://quay.github.io/clair/howto/deployment.html) to understand the deployment models Clair currently uses.
 - For teams using quay.io as their container image registry, we enjoy the benefit of these scans via their website. You can check the results under the vulnerabilites tab of an image.
 
-_Note: [clair-in-ci](https://quay.io/repository/redhat-appstudio/clair-in-ci) is a feature which includes security scanning via clair. It is enabled by default for any Pipelines created in Konflux. A Tekton Task is available that can be used to run clair in your own Pipelines [here](https://github.com/redhat-appstudio/build-definitions/tree/main/task/clair-scan/)._
+_Note: [clair-in-ci](https://quay.io/repository/redhat-appstudio/clair-in-ci) is a feature which includes security scanning via clair. It is enabled by default for any Pipelines created in Konflux. A Tekton Task is available that can be used to run clair in your own Pipelines [here](https://github.com/konflux-ci/build-definitions/tree/main/task/clair-scan/)._
 
 ### SAST Tools
 
@@ -44,7 +44,7 @@ _Note: [clair-in-ci](https://quay.io/repository/redhat-appstudio/clair-in-ci) is
 
 **synk** - https://github.com/snyk/cli
 
-_Note: Konflux uses synk to perform static analysis. A Tekton Task is available that can be used to run synk in your own Pipelines [here](https://github.com/redhat-appstudio/build-definitions/blob/main/task/sast-snyk-check)._
+_Note: Konflux uses synk to perform static analysis. A Tekton Task is available that can be used to run synk in your own Pipelines [here](https://github.com/konflux-ci/build-definitions/blob/main/task/sast-snyk-check)._
 
 **checkov** - https://github.com/bridgecrewio/checkov
 - Checkov uses a common command line interface to manage and analyze infrastructure as code (IaC) scan results across platforms such as Terraform, CloudFormation, Kubernetes, Helm, ARM Templates and Serverless framework. ([source](https://www.checkov.io/))

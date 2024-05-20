@@ -10,7 +10,7 @@ Accepted
 
 ## Context
 
-Konflux is a tool under active development and, therefore, unforeseen issues may arise. A recent (at the time of writing this ADR) example is the [long running](https://github.com/redhat-appstudio/build-definitions/pull/856/checks?check_run_id=22307468968) [e2e-test](https://github.com/redhat-appstudio/build-definitions/blob/main/.tekton/tasks/e2e-test.yaml) in Konflux’s build definitions. Fixing and debugging such issues is not a trivial thing for Konflux’s developers. Additional data, metrics, telemetry and tracing are essential in enabling Konflux developers and SREs to come up with fixes.
+Konflux is a tool under active development and, therefore, unforeseen issues may arise. A recent (at the time of writing this ADR) example is the [long running](https://github.com/konflux-ci/build-definitions/pull/856/checks?check_run_id=22307468968) [e2e-test](https://github.com/konflux-ci/build-definitions/blob/main/.tekton/tasks/e2e-test.yaml) in Konflux’s build definitions. Fixing and debugging such issues is not a trivial thing for Konflux’s developers. Additional data, metrics, telemetry and tracing are essential in enabling Konflux developers and SREs to come up with fixes.
 
 Tracing, in particular, enables a straightforward model for dealing with complex, distributed systems. It gives unique insight into a system’s execution, grouping functions together. These grouping functions can be critical for finding fields that correlate to some problem, and provide powerful insights to reduce the range of possible causes.
 
