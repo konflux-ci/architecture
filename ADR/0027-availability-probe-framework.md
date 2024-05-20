@@ -8,15 +8,15 @@ Accepted
 
 ## Context
 
-As an AppStudio developer building functionality for the platform, I want to be able to
+As an Konflux developer building functionality for the platform, I want to be able to
 easily visualize and comprehend the stability and availability of deployed systems in
 order to inform and influence future work towards improving the overall system
 reliability.
-  
-Such indication should tell us the overall uptime of AppStudio with respect to services
-under the control of AppStudio developers.
 
-AppStudio is defined to be available at a given moment if all of its components are
+Such indication should tell us the overall uptime of Konflux with respect to services
+under the control of Konflux developers.
+
+Konflux is defined to be available at a given moment if all of its components are
 reporting to be available at that given moment, and unavailable otherwise.
 
 A component is defined to be available at a given moment if all of its availability
@@ -25,7 +25,7 @@ probes are reporting to be available at that given moment, and unavailable other
 A convention is required for providing the availability of a probe.
 
 Once this is in place, those indicators can be aggregated in order to report the overall
-availability of AppStudio.
+availability of Konflux.
 
 ## Decision
 
@@ -59,7 +59,7 @@ API server. It generates
 and
 [CronJob](https://github.com/kubernetes/kube-state-metrics/blob/main/docs/cronjob-metrics.md)
 metrics that will be processed using Prometheus recording rules in order to
-generate AppStudio's availability Prometheus metric.
+generate Konflux's availability Prometheus metric.
 
 A single set of rules will be defined globally which will apply for all CronJobs.
 
@@ -122,7 +122,7 @@ Considerations for defining probes' CronJobs:
 
 ## Consequences
 
-* The different teams for all AppStudio services will define the CronJobs required for
+* The different teams for all Konflux services will define the CronJobs required for
   testing their components' availability, and will name them according to the naming
   convention.
 * A single set of Prometheus recording rules will be defined for transforming the

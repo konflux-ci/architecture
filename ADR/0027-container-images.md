@@ -10,11 +10,11 @@ Proposed
 
 ## Context
 
-The purpose of this document is to establish container image management practices for AppStudio container images that are deployed in the staging and production environments.  The goal is to ensure that AppStudio is continuously maintaining secure operations that are in accordance with the ESS SEC-PATCH-REQ-2 (OS Patching) requirements.
+The purpose of this document is to establish container image management practices for Konflux container images that are deployed in the staging and production environments.  The goal is to ensure that Konflux is continuously maintaining secure operations that are in accordance with the ESS SEC-PATCH-REQ-2 (OS Patching) requirements.
 
 ### Scope
 * The scope of this process is limited to the images found in our [quay.io/organization/redhat-appstudio](https://quay.io/organization/redhat-appstudio) repository.
-* Images from dependencies that fall outside of this AppStudio process should follow the [ESS Security Patching at Application/OS Level (requirements 27 and 28)](https://drive.google.com/file/d/1P6-q2HJxA3yZhykaI29gF2IV4avzxtjM/view).  It is up to the component teams to ensure they are adhering to these requirements.
+* Images from dependencies that fall outside of this Konflux process should follow the [ESS Security Patching at Application/OS Level (requirements 27 and 28)](https://drive.google.com/file/d/1P6-q2HJxA3yZhykaI29gF2IV4avzxtjM/view).  It is up to the component teams to ensure they are adhering to these requirements.
 * Images that are not intended for the staging and/or production environments are out of scope.
 
 
@@ -22,7 +22,7 @@ The purpose of this document is to establish container image management practice
 
 ### Role
 
-**Component Team**: Develops and maintains components that are built as images and deployed as part of AppStudio
+**Component Team**: Develops and maintains components that are built as images and deployed as part of Konflux
 
 
 ### Responsibilities

@@ -26,7 +26,7 @@ The diagram below shows the interaction of the release service and other service
 
 The diagram below shows the flow of custom resources and the orchestration of pipelines by the release service.
 
-![](../diagrams/release-service/hacbs-release-service-data-flow.jpg)
+![](../diagrams/release-service/konflux-release-service-data-flow.jpg)
 
 ## Terminology
 

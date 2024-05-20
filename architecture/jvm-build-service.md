@@ -14,7 +14,7 @@ JBS automates this process as much as possible, making it much less time-consumi
 
 ### Dependencies
 
-JBS depends on Tekton, but is otherwise largely independent of the rest of AppStudio. Given the right configuration it can be deployed outside of AppStudio, which is mainly used for testing and development.
+JBS depends on Tekton, but is otherwise largely independent of the rest of Konflux. Given the right configuration it can be deployed outside of Konflux, which is mainly used for testing and development.
 
 ## Architecture
 

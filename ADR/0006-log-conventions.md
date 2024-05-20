@@ -47,13 +47,13 @@ Optionally, also describe the action in the human-readable `msg`.
 
 **Included in:** _none_
 
-There is no need to identify which AppStudio subsystem the log is coming from (i.e., HAS, SPI, or
+There is no need to identify which Konflux subsystem the log is coming from (i.e., HAS, SPI, or
 GitOps).
 
 Consider: if an engineer is looking at logs directly in the namespace where a controller is
 deployed, then you know which service you are looking at. If an engineer is looking at logs
 centralized in cloudwatch or splunk, then the namespace from which the log came will be included
-automatically as `namespace_name`, which is sufficient to determine what AppStudio subsystem
+automatically as `namespace_name`, which is sufficient to determine what Konflux subsystem
 produced the log. See section on automatically added logs below.
 
 ### 4. Who was involved?

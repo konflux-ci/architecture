@@ -443,7 +443,7 @@
 						xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 228px; height: 1px; padding-top: 970px; margin-left: 691px;">
 						<div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
 							<div style="display: inline-block; font-size: 21px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
-								<font style="font-size: 17px;">AppStudio
+								<font style="font-size: 17px;">Konflux
 									<br />
 									<font style="font-size: 17px;">Build Service
 										<br />
@@ -453,7 +453,7 @@
 						</div>
 					</div>
 				</foreignObject>
-				<text x="805" y="976" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="21px" text-anchor="middle">AppStudio...</text>
+				<text x="805" y="976" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="21px" text-anchor="middle">Konflux...</text>
 			</switch>
 		</g>
 		<path d="M 920 690 L 1060 690 Q 1070 690 1070 680 L 1070 518.5 Q 1070 508.5 1080 508.5 L 1930.51 508.52" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
@@ -518,7 +518,7 @@
 						xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 228px; height: 1px; padding-top: 1040px; margin-left: 691px;">
 						<div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
 							<div style="display: inline-block; font-size: 17px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
-								<font style="font-size: 17px;">HACBS
+								<font style="font-size: 17px;">Konflux
 									<br style="font-size: 17px;" />
 									<font style="font-size: 17px;">Integration Service</font>
 								</font>
@@ -526,7 +526,7 @@
 						</div>
 					</div>
 				</foreignObject>
-				<text x="805" y="1045" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="17px" text-anchor="middle">HACBS...</text>
+				<text x="805" y="1045" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="17px" text-anchor="middle">Konflux...</text>
 			</switch>
 		</g>
 		<rect x="1281.71" y="6.67" width="510" height="490" rx="73.5" ry="73.5" fill="#f5f5f5" stroke="#666666" pointer-events="none"/>
@@ -1075,14 +1075,14 @@
 						xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 228px; height: 1px; padding-top: 1110px; margin-left: 691px;">
 						<div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
 							<div style="display: inline-block; font-size: 21px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
-								<font style="font-size: 17px">HACBS
+								<font style="font-size: 17px">Konflux
 									<br />Release Service
 								</font>
 							</div>
 						</div>
 					</div>
 				</foreignObject>
-				<text x="805" y="1116" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="21px" text-anchor="middle">HACBS...</text>
+				<text x="805" y="1116" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="21px" text-anchor="middle">Konflux...</text>
 			</switch>
 		</g>
 		<path d="M 920 1180 L 1100 1180 Q 1110 1180 1110 1190 L 1110 1231.2 Q 1110 1241.2 1120 1241.2 L 1275.34 1241.2" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
@@ -1109,14 +1109,14 @@
 					<div
 						xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 228px; height: 1px; padding-top: 1180px; margin-left: 691px;">
 						<div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
-							<div style="display: inline-block; font-size: 17px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">HACBS
+							<div style="display: inline-block; font-size: 17px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">Konflux
 								<br style="font-size: 17px;" />
 								<font style="font-size: 17px">JVM Build Service</font>
 							</div>
 						</div>
 					</div>
 				</foreignObject>
-				<text x="805" y="1185" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="17px" text-anchor="middle">HACBS...</text>
+				<text x="805" y="1185" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="17px" text-anchor="middle">Konflux...</text>
 			</switch>
 		</g>
 		<path d="M 690 760 L 600 760 Q 590 760 590 750 L 590 494.2 Q 590 484.2 600 484.21 L 636.6 484.23" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>

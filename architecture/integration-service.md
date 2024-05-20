@@ -18,9 +18,8 @@ The Integration service uses the pipeline, snapshot, and environment controllers
 ### High Level Workflow
 
 - When a build pipeline completes, Integration service creates a Snapshot CR representing a new collection of components that should be tested together.
-- When Integration Service sees a new Snapshot CR (created either by itself or by a user), it coordinates deployment of the application for testing. It does this by creating new “ephemeral” AppStudio Environment CRs which trigger the GitOps Service to provision the ephemeral test environment.
+- When Integration Service sees a new Snapshot CR (created either by itself or by a user), it coordinates deployment of the application for testing. It does this by creating new “ephemeral” Konflux Environment CRs which trigger the GitOps Service to provision the ephemeral test environment.
 - After the environment is ready and the application snapshot has been deployed to it, Integration Service tests and validates the application according to user-provided configuration. It does this by executing Tekton PipelineRuns against the ephemeral test Environment.
-- When all of the required test Tekton PipelineRuns have passed, Integration service triggers a deployment of the application to all Environments which are not labeled as "ephemeral" and which do not have a `parentEnvironment` set. For most users, this will result in a deployment to their "development" environment (or to their "staging" environment, if they do not have a dev environment).
 - Finally, if any automatic ReleasePlans have been created by the user in the workspace, it will create a Release CR signalling intent to release the tested content, to be carried out by the [release-service](./release-service.md).
 
 The diagram below shows the interaction of the integration service and other services.
@@ -36,7 +35,6 @@ The [Integration Service](./integration-service.md) is dependent on the followin
   - Provides the facility to create
     - Snapshots defining sets of Builds to test
     - Environment to test the Application on
-    - SnapshotEnvironmentBindings to have the Snapshot of the Application deployed to a specific Environment
 - [Hybrid Application Service](./hybrid-application-service.md)
   - Provides the Application and Component model. Integration Service updates the pullspec reference on the Component CR when a component passes its required testing.
 - [Release Service](./release-service.md)
@@ -77,7 +75,6 @@ Below are the list of CRs that the integration service is responsible for intera
 | Snapshot | Post Component build PipelineRun completes.  | Used as the source input for the test gate pipeline |
 | PipelineRuns | Post Snapshot creation  | To test the Snapshot  |
 | Release | Post PipelineRun if there is a ReleasePlan for the Application, if the auto-release flag is set on the ReleasePlan | To signal to the Release Service to automatically push the Snapshot to the Production Environment |
-| SnapshotEnvironmentBinding | When deploying the Snapshot to an Environment | Create a new SnapshotEnvironmentBinding for the Dev/Stage Environment if a matching SnapshotEnvironmentBinding doesn’t already exist |
 
 ### READ
 
@@ -91,7 +88,6 @@ Below are the list of CRs that the integration service is responsible for intera
 
 | Custom Resource | When? | Why? |
 |---|---|---|
-| SnapshotEnvironmentBinding | Post Test PipelineRun | To promote the Snapshot to the next Environment (Dev/Stage) |
 | Snapshot | Post Test PipelineRun | To mark the snapshot validated so that it can be promoted to the next environment |
 | Component | Post Test PipelineRun | To update the Component with the image spec, in order to update the global candidates list |
 
@@ -136,7 +132,7 @@ Following the [annotation guidelines](https://docs.google.com/document/d/1gyXM3p
 “appstudio.openshift.io/component":      “<component name>”
 “appstudio.openshift.io/application":    “<Application name>”
 ```
-The Integration service will copy the annotations and labels from the Build PipelineRun and append those to the Test PipelineRuns for traceability across the system per [Labels and Annotations for AppStudio pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#) and [AppStudio builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#)
+The Integration service will copy the annotations and labels from the Build PipelineRun and append those to the Test PipelineRuns for traceability across the system per [Labels and Annotations for Konflux pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#) and [Konflux builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#)
 
 The "test.appstudio.openshift.io/optional" Label provides users an option whether the result of a pipelineRun created according to the IntegrationTestScenario will be taken into account when determining if the Snapshot has passed all required testing. In another word, the label is used to specify if an IntegrationTestScenario is allowed to fail. If the label is not defined in an IntegrationTestScenario, integration service will consider it as "false".
 ```
@@ -156,7 +152,7 @@ The Integration service will provide Tekton workspaces to the individual Pipelin
 
 #### Secrets
 
-The Integration service needs secrets mounted so that the `Environment Provisioner` Task running in the workspace has the correct permissions to create AppStudio Application Environments resources within the Applications/Component’s namespace.
+The Integration service needs secrets mounted so that the `Environment Provisioner` Task running in the workspace has the correct permissions to create Konflux Application Environments resources within the Applications/Component’s namespace.
 
 ## Detailed Workflow
 1. Watch for Build PipelineRuns of `type: build`
@@ -191,23 +187,21 @@ The Integration service needs secrets mounted so that the `Environment Provision
 9. Compare new Snapshot from step 8 to step 3
     - If determined the same, proceed to step 10
     - If determined not the same, proceed to step 14
-10. Update the spec.Snapshot of SnapshotEnvironmentBinding(s) for lowest environments with the `<snapshot name>`
-11. Query ReleasePlan `spec.application` for the specific application in question
+10. Query ReleasePlan `spec.application` for the specific application in question
     - Check the auto-release flag on the ReleasePlan too
     - If ReleasePlan for Application found proceed to step 12
     - If ReleasePlan for Application NOT found proceed to step 13
-12. Create a Release with the `spec.ReleasPlan` and `spec.Snapshot`
-13. Done - Repeat from Step 1 again
-14. If not the same, repeat step 4
+11. Create a Release with the `spec.ReleasPlan` and `spec.Snapshot`
+12. Done - Repeat from Step 1 again
+13. If not the same, repeat step 4
     - Assign the same annotations except
         Test: composite
         Snapshot: name from step 8
     - Pass in the Snapshot name as a parameter
-15. Watch the PipelineRun of `test: composite` and `snapshot: <snapshot name>`
+14. Watch the PipelineRun of `test: composite` and `snapshot: <snapshot name>`
     - When PipelineRuns complete
         - If all PipelineRuns passed, mark the Snapshot as validated by setting its status condition HACBSTestsSucceeded as true
-16. Repeat step 10
-17. Repeat step 11-13
+15. Repeat step 11-12
 
 ### Image extraction details
 
@@ -228,10 +222,10 @@ Integration service is getting specific information about the image that's being
 
 ## Appendix
 
-- [AppStudio Promotion & Environment API](https://docs.google.com/document/d/14LaXAmQEW73kIr3a6TvPswT-zSdBsuaaxLF77HJ3gX4/edit#)
+- [Konflux Promotion & Environment API](https://docs.google.com/document/d/14LaXAmQEW73kIr3a6TvPswT-zSdBsuaaxLF77HJ3gX4/edit#)
 - [v3 - Environment API draft: Component-scoped with native Snapshots](https://docs.google.com/document/d/1-_rWLgALd5pdSlqNNcQ5FSrD00fZb0l_exU-_FiL68o/edit#heading=h.vf66svd4o6xr)
-- [AppStudio builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#)
-- [Labels and Annotations for AppStudio pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#)
+- [Konflux builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#)
+- [Labels and Annotations for Konflux pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#)
 - [Implementation design and rules for pipeline customization](https://docs.google.com/document/d/1PXkpFHKrnq1Sg1giTgeXdYzNVf7CTRgwowykr7YPM2I/edit#)
 
 
