@@ -1,6 +1,6 @@
 # 33. Provisioning Clusters for Integration Tests
 
-Date: 2024-04-09
+Date: 2024-05-20
 
 ## Status
 
@@ -31,7 +31,6 @@ The problem of provisioning test resources/environments can be broken down into 
     * Cloud provider credentials (AWS, Azure, GCP, IBM cloud, etc.)
     * OpenShift image pull secrets
     * OpenShift SSH public/private keypairs
-    * OIDC configuration (e.g. an AWS S3 bucket)
     * Registered public domains (e.g. in AWS Route53)
 4. How does the end user request resources from an integration `Pipeline`?
 
@@ -106,7 +105,7 @@ flowchart TD
 
   subgraph member [member cluster]
     subgraph tenant
-      TaskRun
+      StepActions
     end
   end
 
@@ -116,10 +115,6 @@ flowchart TD
       kubeconfig
     end
     
-    subgraph local-cluster [local-cluster Namespace]
-      OIDCProviderS3Secret
-    end
-
     subgraph caas [caas Namespace]
       CaaS
       ClusterTemplate
@@ -144,8 +139,8 @@ flowchart TD
 
   end
 
-  TaskRun --> |creates| ClusterTemplateInstance
-  TaskRun --> |reads| kubeconfig
+  StepActions --> |create| ClusterTemplateInstance
+  StepActions --> |read| kubeconfig
   ClusterTemplateInstance --> |references| ClusterTemplate
   ClusterTemplate --> |references| ApplicationSet
   ApplicationSet --> |references| HelmChart
@@ -208,10 +203,10 @@ tier by default.
 sandbox-cli promote-user <username> <tier-name>
 ```
 
-### Tekton Tasks
+### Tekton StepActions
 
 Provisioning will take place inside a Tekton PipelineRun and, more specifically, from utility
-Task(s) committed to the [tekton-tools] repo that will handle the process of:
+StepAction(s) that will handle the process of:
 
 * Creating the `ClusterTemplateInstance` on the remote cluster using the service account token
   corresponding to the provisioned `SpaceRequest`.
@@ -231,7 +226,7 @@ Task(s) committed to the [tekton-tools] repo that will handle the process of:
   on the new cluster(s).
 * A new point of dependency on Kubesaw is introduced.`NSTemplateTiers` and `SpaceRequests` will be
   used to grant tenants access to namespaces on the new management cluster(s).
-* New Tekton Task(s) for creating `ClusterTemplateInstances` will be created that can be added to
+* New Tekton StepAction(s) for creating `ClusterTemplateInstances` will be implemented that can be added to
   a `Pipeline` with minimal effort.
 * Konflux admins will be responsible for maintaining `ClusterTemplates` and the necessary secrets
   that accompany them. Contributions by other community members or Konflux users will be welcome.
