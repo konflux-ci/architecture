@@ -9,9 +9,9 @@ The Integration service uses the pipeline, snapshot, and environment controllers
 
 ### Goals
 
+- The Integration service should be able to update one component image at a time in order to test and deploy individual component builds.
 - The Integration service need to be able to deploy a specific set of images to an environment and record the results of integration testing.
 - Given a specific set of images, Integration service should be able to tell if they passed application validation tests.
-- The Integration service should be able to update one component image at a time in order to test and deploy individual component builds.
 - The Integration service should have a capability to automatically promote sets of passed images.
 - To be SLSA compliant, Integration service should also be able to tell what version of the build and test pipelines were used to create each component image.
 
@@ -36,7 +36,7 @@ The [Integration Service](./integration-service.md) is dependent on the followin
     - Snapshots defining sets of Builds to test
     - Environment to test the Application on
 - [Hybrid Application Service](./hybrid-application-service.md)
-  - Provides the Application and Component model. Integration Service updates the pullspec reference on the Component CR when a component passes its required testing.
+  - Provides the Application and Component model. Integration Service updates the pullspec reference on the Component CR when a snapshot is created for the built image.
 - [Release Service](./release-service.md)
   - Provides the ReleasePlan that will be used to determine if integration-service should create a Release
 - [Enterprise Contract Service](./enterprise-contract.md)
@@ -49,7 +49,7 @@ The [Integration Service](./integration-service.md) is dependent on the followin
 
 **Composite Pipeline** - This is the pipeline run that runs if two or more Components have completed and passed their Component pipeline concurrently so that they should be tested together.
 
-**Global Candidate List** - The list of all Component digest that have passed individual component testing. This can be retrieved from the Application to see what Components it is made of and then querying each of the Components `spec.containerImage`.
+**Global Candidate List** - The list of all Component digest that is updated after snapshot is created for an image built by build pipelineRun. This can be retrieved from the Application to see what Components it is made of and then querying each of the Components `spec.containerImage`.
 
 **Snapshot** -  The custom resource that contains the list of all Components of an Application with their Component Image digests. Once created, the list of Components with their images is immutable. The Integration service updates the status of the resource to reflect the testing outcome.
 
@@ -89,7 +89,7 @@ Below are the list of CRs that the integration service is responsible for intera
 | Custom Resource | When? | Why? |
 |---|---|---|
 | Snapshot | Post Test PipelineRun | To mark the snapshot validated so that it can be promoted to the next environment |
-| Component | Post Test PipelineRun | To update the Component with the image spec, in order to update the global candidates list |
+| Component | Post Build PipelineRun | To update the Component with the image spec, in order to update the global candidates list |
 
 ### WATCH
 
@@ -142,10 +142,6 @@ The label will be copied to the subsequent Test PipelineRuns.
 
 The `test.appstudio.openshift.io/kind` annotation is an optional annotation that can be used to filter on the kinds of `IntegrationTestScenario`s. The first recognized kind is the `enterprise-contract`. It will be copied to the `PipelineRun`s resulting from the `IntegrationTestScenario`.
 
-#### Workspace
-
-The Integration service will provide Tekton workspaces to the individual PipelineRuns to supply additional resources required for testing, such as secure credentials for accessing test Environments.
-
 #### Persistent Volume
 
  A persistent volume that the pipeline can store test artifacts generated from the test execution.
@@ -162,7 +158,8 @@ The Integration service needs secrets mounted so that the `Environment Provision
 3. Create a Snapshot
     - Populate the `spec.components` list with the component name and the `spec.containerImage` with information from Step 1 and 2, replacing the container image for the built component with the one from the build PipelineRun
     - If a component does not have a container image associated with it then the component will not be added to the snapshot
-4. Create PipelineRuns for each IntegrationTestScenario
+4. Update the Component's `spec.containerImage` field, which updates the Global Candidate List.
+5. Create PipelineRuns for each IntegrationTestScenario
     - Fetch the IntegrationTestScenario for the application/component to get the Tekton Bundle and Environment information
     - Assign annotations of
         ```
@@ -173,13 +170,12 @@ The Integration service needs secrets mounted so that the `Environment Provision
         ```
     - Pass in the Snapshot json representation as a parameter
     - Optional: Create the ephemeral Environment if the IntegrationTestScenario specifies one. After the Environment is ready, link it to the pipelineRun and start it
-5. Watch the PipelineRun of `test: component` and `component: <component name>`
+6. Watch the PipelineRun of `test: component` and `component: <component name>`
     - When all required PipelineRuns complete
         - Check if all the required PipelineRuns associated with the snapshot have passed successfully
         - If all required PipelineRuns passed, mark the Snapshot as validated by setting its status condition `HACBSTestsSucceeded` as true
         - If not all required PipelineRuns passed, mark the Snapshot as not validated by setting its status condition `HACBSTestsSucceeded` as false, end the Integration testing process
     - Note: Users are allowed to mark an Integration Test Scenario as optional. In this case results of testing are ignored for the optional scenario and don't block further processing of the Snapshot.
-6. Update the Component `spec.containerImage`
 7. Query the Application and find all of its components
     - For each Component extract the `spec.containerImage`
 8. Prepare a new Snapshot
