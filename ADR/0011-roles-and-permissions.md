@@ -25,6 +25,7 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 | Contributor   | Workspace               | Access to namespaces that backs workspace                                   |
 |               | Application             | appstudio.redhat.com      | get, list, watch                                | applications
 |               | Component               | appstudio.redhat.com      | get, list, watch                                | components, componentdetectionqueries
+|               | ImageRepository         | appstudio.redhat.com      | get, list, watch                                | imagerepositories
 |               | Environment             | appstudio.redhat.com      | get, list, watch                                | promotionruns, snapshotenvironmentbindings, snapshots, environments
 |               | DeploymentTarget        | appstudio.redhat.com      | get, list, watch                                | deploymenttargets
 |               | DeploymentTargetClaim   | appstudio.redhat.com      | get, list, watch                                | deploymenttargetclaims
@@ -45,6 +46,7 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 | Maintainer    | Workspace               | Access to namespaces that backs workspace                                   |
 |               | Application             | appstudio.redhat.com      | get, list, watch, create, update, patch         | applications
 |               | Component               | appstudio.redhat.com      | get, list, watch, create, update, patch         | components, componentdetectionqueries
+|               | ImageRepository         | appstudio.redhat.com      | get, list, watch, create, update, patch         | imagerepositories
 |               | Environment             | appstudio.redhat.com      | get, list, watch                                | promotionruns, snapshotenvironmentbindings, snapshots, environments
 |               | DeploymentTarget        | appstudio.redhat.com      | get, list, watch                                | deploymenttargets
 |               | DeploymentTargetClaim   | appstudio.redhat.com      | get, list, watch                                | deploymenttargetclaims
@@ -65,6 +67,7 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 | Admin         | Workspace               | Access to namespaces that backs workspace                                   |
 |               | Application             | appstudio.redhat.com      | get, list, watch, create, update, patch, delete, deletecollection | applications
 |               | Component               | appstudio.redhat.com      | get, list, watch, create, update, patch, delete, deletecollection | components, componentdetectionqueries
+|               | ImageRepository         | appstudio.redhat.com      | get, list, watch, create, update, patch, delete, deletecollection | imagerepositories
 |               | Environment             | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | promotionruns, snapshotenvironmentbindings, snapshots, environments
 |               | DeploymentTarget        | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | deploymenttargets
 |               | DeploymentTargetClaim   | appstudio.redhat.com      | get, list, watch, create, update, patch, delete | deploymenttargetclaims
