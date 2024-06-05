@@ -1,6 +1,6 @@
-# 33. Provisioning Clusters for Integration Tests
+# 35. Provisioning Clusters for Integration Tests
 
-Date: 2024-05-20
+Date: 2024-06-05
 
 ## Status
 
@@ -85,7 +85,7 @@ This is merely hypothetical, however.
 
 ### Cluster Provisioning
 
-We will use the ([CaaS]) Operator to orchestrate the process of provisioning OpenShift clusters.
+We will use the [CaaS] Operator to orchestrate the process of provisioning OpenShift clusters.
 Users will create `ClusterTemplateInstances` (CTI) via a curated Tekton task executed as part of an
 integration `PipelineRun`. The CTI will be deployed to a new management cluster separate from the
 member cluster. Each CTI must reference one of the `ClusterTemplates` maintained by Konflux admins.
