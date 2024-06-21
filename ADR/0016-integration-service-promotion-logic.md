@@ -5,7 +5,8 @@
 
 ## Status
 
-Superceded by [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)
+Superseded by [ADR 32. Decoupling Deployment](0032-decoupling-deployment.html)
+Superseded by [ADR 36. Integration service promotes components to GCL immediately after builds complete](0036-integration-service-promotes-to-GCL-immediately.html)
 
 ## Context
 
