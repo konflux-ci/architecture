@@ -5,7 +5,7 @@ Date Accepted: 2023-02-14
 
 ## Status
 
-Accepted
+Superseded by [ADR 36. Integration service promotes components to GCL immediately after builds complete](0036-integration-service-promotes-to-GCL-immediately.html)
 
 ## Context
 
