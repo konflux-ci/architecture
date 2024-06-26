@@ -118,8 +118,7 @@ these resources.
 
 Each service that makes up Konflux is further explained in its own document.
 
-- [Hybrid Application Service](./hybrid-application-service.md) - A workflow system that manages
-  the definition of the users' Application and Components.
+- [Hybrid Application Service](./hybrid-application-service.md) - A workflow system that runs the validation webhooks for Applications and Components
 - [Build Service](./build-service.md) - A workflow system that manages the build pipeline definition
   for users' Components.
 - [Image Controller](./image-controller.md) - A subsystem of the build-service that manages the

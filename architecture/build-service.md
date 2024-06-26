@@ -12,8 +12,6 @@ The Build Service is composed of controllers that create and configure build pip
 The Build Service is dependent on the following services:
 - [Pipeline Service](./pipeline-service.md)
   - Pipeline execution, Pipeline logging
-- [Hybrid Application Service](./hybrid-application-service.md)
-  - Provides Component CR with annotations and `.status.devfile` which is used for PipelineRun configuration.
 - [Image Controller](./image-controller.md)
   - Generation of a container image repository and robot account for Component CR which is used by PipelineRun
 

@@ -36,7 +36,7 @@ The [Integration Service](./integration-service.md) is dependent on the followin
     - Snapshots defining sets of Builds to test
     - Environment to test the Application on
 - [Hybrid Application Service](./hybrid-application-service.md)
-  - Provides the Application and Component model. Integration Service updates the pullspec reference on the Component CR when a snapshot is created for the built image.
+  - Validates the Application and Component CRs. Integration Service updates the pullspec reference on the Component CR when a snapshot is created for the built image.
 - [Release Service](./release-service.md)
   - Provides the ReleasePlan that will be used to determine if integration-service should create a Release
 - [Enterprise Contract Service](./enterprise-contract.md)
