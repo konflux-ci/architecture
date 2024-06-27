@@ -73,27 +73,11 @@ these resources.
   the user to construct and provide [Snapshots] to test or release deliberate combinations of
   OCI artifacts. [Snapshots] are immutable. For a user to "modify" a [Snapshot], they need to create
   a new [Snapshot] based on an old [Snapshot]. Old [Snapshots] are garbage collected if not bound to
-  other resources like a [SnapshotEnvironmentBinding] or a [Release].
+  other resources like a [Release].
 - An [IntegrationTestScenario] represents a test that should be run against new [Snapshots] that
   belong to a particular [Application]. It is owned by an [Application]. The user provides
   tekton pipelines that test their application and registers them with the system by creating
   [IntegrationTestScenarios].
-- An [Environment] represents a destination that [application-service] and the [gitops-service] can
-  deploy to. Multiple [Applications] in the same workspace can deploy to the same
-  [Environment]. An [Environment] may be long lived (like the `development` [Environment] provided
-  by the system as part of the initialization of a user's workspace) or may be short-lived and
-  ephemeral (like the temporary [Environments] created by the [integration-service] as a part of its
-  test execution processes).
-- A [DeploymentTargetClaim] represents a request to provision a new deployment target. An
-  [Environment] is backed by a [DeploymentTargetClaim]. The [DeploymentTargetClaim] causes new
-  deployment targets to be provisioned which are represented by [DeploymentTargets] that get bound
-  to it. These are typically created and destroyed by the [integration-service] as a part of its
-  test execution processes.
-- A [SnapshotEnvironmentBinding] represents a request to deploy a particular set of OCI artifacts
-  (represented by a [Snapshot]) to a particular location (represented by an [Environment]).
-  A [SnapshotEnvironmentBinding] is owned by an [Application]. The [integration-service promotes
-  OCI artifacts] by updating the [SnapshotEnvironmentBinding] associated with an [Environment]. The
-  [SnapshotEnvironmentBinding] is generally long-lived.
 - A [ReleasePlan] represents a release pipeline that can be used to release a [Snapshot] to some
   destination, depending on the implementation of the release pipeline. A [ReleasePlan] is owned by
   an [Application]. It can operate in two modes, one which executes a "tenant" release pipeline in
@@ -129,8 +113,6 @@ Each service that makes up Konflux is further explained in its own document.
   users' tests and promotion in response to completing builds.
 - [Release Service](./release-service.md) - A workflow service that manages execution of privileged
   pipelines to release user content to protected destinations.
-- [GitOps Service](./gitops-service.md) - A foundational service providing deployment of user
-  applications.
 - [Pipeline Service](./pipeline-service.md) - A foundational service providing Pipeline APIs and secure supply
   chain capabilities to other services
 - [Service Provider Integration](./service-provider-integration.md) - A foundational service
@@ -161,16 +143,8 @@ Each service that makes up Konflux is further explained in its own document.
 [Applications]: ../ref/application-environment-api.md#application
 [Component]: ../ref/application-environment-api.md#component
 [Components]: ../ref/application-environment-api.md#component
-[Environment]: ../ref/application-environment-api.md#environment
-[Environments]: ../ref/application-environment-api.md#environment
 [Snapshot]: ../ref/application-environment-api.md#snapshot
 [Snapshots]: ../ref/application-environment-api.md#snapshot
-[SnapshotEnvironmentBinding]: ../ref/application-environment-api.md#snapshotenvironmentbinding
-[SnapshotEnvironmentBindings]: ../ref/application-environment-api.md#snapshotenvironmentbinding
-[DeploymentTarget]: ../ref/application-environment-api.md#deploymenttarget
-[DeploymentTargets]: ../ref/application-environment-api.md#deploymenttarget
-[DeploymentTargetClaim]: ../ref/application-environment-api.md#deploymenttargetclaim
-[DeploymentTargetClaims]: ../ref/application-environment-api.md#deploymenttargetclaim
 [Release]: ../ref/release-service.html#release
 [Releases]: ../ref/release-service.html#release
 [ReleasePlan]: ../ref/release-service.html#releaseplan
