@@ -11,7 +11,7 @@ The Multi Platform Controller has no understanding of the build pipeline logic. 
 
 - It must have the `build.appstudio.redhat.com/multi-platform-required` label
 - It must mount a secret with the name `multi-platform-ssh-$(context.taskRun.name)`
-- It must have a parameter called `ARCH` which specifies the required platformitecture
+- It must have a parameter called `PLATFORM` which specifies the required platform
 
 If these conditions are met the controller will reconcile on the task and attempt to provision a virtual machine for the task. If it is successful it will create  secret (`multi-platform-ssh-$(context.taskRun.name)`) with the following entries:
 
