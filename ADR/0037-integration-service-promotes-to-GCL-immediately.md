@@ -11,6 +11,10 @@ Supersedes:
 - [ADR 15. The Two-phase Architecture of the Integration Service](0015-integration-service-two-phase-architecture.html)
 - [ADR 16. Integration Service Promotion Logic](0016-integration-service-promotion-logic.html)
 
+Superseded by:
+
+- [ADR 38. Integration service removes composite snapshots and logic around them](0038-integration-service-composite-removal.html)
+
 ## Context
 
 In the initial implementation of the Integration Service, when a single component image is built, the
