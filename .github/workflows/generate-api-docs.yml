@@ -80,6 +80,12 @@ jobs:
           path: crd-temp/internal-services
           repository: redhat-appstudio/internal-services
 
+      - name: Checkout Image Controller API
+        uses: actions/checkout@v3
+        with:
+          path: crd-temp/image-controller
+          repository: konflux-ci/image-controller
+
       - name: Install crd-ref-docs
         uses: supplypike/setup-bin@v1
         with:
@@ -116,6 +122,9 @@ jobs:
 
       - name: Generate Internal Services API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/internal-services.md --renderer=markdown --source-path=crd-temp/internal-services/api/v1alpha1/
+
+      - name: Generate Image Controller API docs
+        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/image-controller.md --renderer=markdown --source-path=crd-temp/image-controller/api/v1alpha1/
 
       - name: Upload generated docs
         uses: actions/upload-artifact@v3
