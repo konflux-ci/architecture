@@ -70,7 +70,7 @@ While our automation process will ensure that component teams are keeping their 
 
 #### End of Life Base Images (EOL)
 
-Component teams should be aware of the lifecycle policy for their base images by referring to the RedHat [Product Lifecycle page](https://access.redhat.com/product-life-cycles/update_policies).   Any base image version that is within 3 months of retiring must be updated to the latest patched major release. This should be supported by the [deprecated-base-image](https://github.com/redhat-appstudio/build-definitions/blob/main/task/deprecated-image-check/0.2/deprecated-image-check.yaml#L11-L12) check in the PAC pipeline.
+Component teams should be aware of the lifecycle policy for their base images by referring to the RedHat [Product Lifecycle page](https://access.redhat.com/product-life-cycles/update_policies).   Any base image version that is within 3 months of retiring must be updated to the latest patched major release. This should be supported by the [deprecated-base-image](https://github.com/konflux-ci/build-definitions/blob/main/task/deprecated-image-check/0.2/deprecated-image-check.yaml#L11-L12) check in the PAC pipeline.
 
 ***
 #### Exception Process
