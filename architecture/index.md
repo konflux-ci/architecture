@@ -19,7 +19,7 @@ Konflux is a platform for building integrated software that streamlines, consoli
 - Build artifacts once with enough data to determine suitability for releasing.
 - Build artifacts once that can be released to multiple locations, multiple use cases.
 - Specify builds and their dependencies entirely from git and not from transient state of the build system. Employ tools like [renovate](https://docs.renovatebot.com/) to manage dependency updates.
-- Build semantic reproducible artifacts. Any configuration which has the potential to affect the semantic functionality of a build should be source controlled and associated with the produced artifact (via the provenance, for example).
+- Build semantically reproducible artifacts. Any configuration which has the potential to affect the semantic functionality of a build should be recorded in the provenance and source controlled whenever possible.
 - Be extensible. Provide opinionated [build pipelines](https://github.com/redhat-appstudio/build-definitions/) and [release pipelines](https://github.com/redhat-appstudio/release-service-catalog), but let users extend those and create their own.
 - "Shift left" the decisions for releasing into PRs; you should be able to release artifacts from a PR as soon as it is merged.
 - Just in time scaling: In contrast to “just in case” scaling. The system should be able to scale without capacity reserved ahead of time.
