@@ -17,30 +17,21 @@ on the cluster in a database for long term storage.
 Unlike Tekton Results, KubeArchive does not provide its own component to watch resources in the cluster. Instead it uses
 [`ApiServerSource` from Knative Eventing](https://knative.dev/docs/eventing/sources/apiserversource) to listen to
 resource specified on the cluster and create [Cloudevents](https://cloudevents.io) that contain the definition of the
-object on the cluster that has changed. KubeArchive subscribes to these Cloudevents from `ApiServerSource` which allows
-it to be notified of state changes for resources on the cluster.
+object on the cluster that has changed.
 
-In addition to `ApiServerSource`, Knative Eventing also provides
-[`Brokers`](https://knative.dev/docs/eventing/brokers) and [`Channels`](https://knative.dev/docs/eventing/channels) to
-allow for persistence storage of Cloudevents.
-[Both `Brokers` and `Channels` provide ways handle Cloudevent delivery failure](https://knative.dev/docs/eventing/event-delivery).
-Additionally, `Brokers` use [`Triggers`](https://knative.dev/docs/eventing/triggers) provide a way to subscribe to and
-filter events, so that a Cloudevent consumer can specify the types of Cloudevents that it wants to receive.
+Integration with KubeArchive will mean that Knative-Eventing will be installed as well. This may lead to a desire from
+Konflux developers to take advantage of the features of Knative-Eventing.
 
 ## Decision
 
-To enable a smooth integration with KubeArchive in the future, Konflux will install Knative Eventing in Konflux Clusters.
-Knative Eventing can be installed on a cluster by running the following command
-
-```bash
-kubectl apply -f https://github.com/knative/eventing/releases/download/knative-v1.14.3/eventing-core.yaml`
-```
+Konflux developers can use functionality provided by Knative-Eventing to provide new functionality for components of
+Konflux or improve performance/maintainability of existing functionality of Konflux components.
 
 ## Consequences
 
-Konflux will install Knative Eventing. This will enable smooth integration with KubeArchive if and when Konflux decides
-to. This will require the Konflux installation process to be modified to include the installation of Knative Eventing.
-This will give Konflux Services access to the features that are provided by Knative Eventing. Such services may decide
-to use ApiServerSource to watch resources they are interested in, instead of writing their own watcher logic, for
-example. Konflux Services may also decide to publish their own Cloudevents, that other services may decide to subscribe
-to, when particular events occur. This may lead to further ADR(s) to decide how Knative Eventing should be used.
+As Konflux learn about and take advantage of Knative-Eventing, duplicated Cloudevents infrastructure may appear. This
+may require a centralization and standardization of the CloudEvents pipeline. As Konflux starts to generate more
+Cloudevents, it may become difficult to find which CloudEvents relate to what action in Konflux. Naming conventions may
+become necessary for Cloudevents as well as Cloudevent extensions (headers provided in a cloudevent that are not part of
+the Cloudevents standard) used by Konflux to make data and event discovery easier. Guidelines may also be necessary for
+when and how Cloudevents should be used.
