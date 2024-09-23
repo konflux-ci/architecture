@@ -5,12 +5,12 @@
 
 The Integration Service is composed of controllers that facilitate automated testing of content produced by the build pipelines. It is mainly responsible for integration testing capabilities.
 
-The Integration service uses the pipeline, snapshot, and environment controllers to watch for Component builds, trigger and manage testing Tekton Pipelines, and create releases based on the testing outcome(s).
+The Integration service uses the pipeline, snapshot, and component controllers to watch for Component builds, trigger and manage testing Tekton Pipelines, and create releases based on the testing outcome(s).
 
 ### Goals
 
 - The Integration service should be able to update one component image at a time in order to test and deploy individual component builds.
-- The Integration service need to be able to deploy a specific set of images to an environment and record the results of integration testing.
+- The Integration service need to be able to test a specific set of images and record the results of integration testing.
 - Given a specific set of images, Integration service should be able to tell if they passed application validation tests.
 - The Integration service should have a capability to automatically promote sets of passed images.
 - To be SLSA compliant, Integration service should also be able to tell what version of the build and test pipelines were used to create each component image.
@@ -18,9 +18,9 @@ The Integration service uses the pipeline, snapshot, and environment controllers
 ### High Level Workflow
 
 - When a build pipeline completes, Integration service creates a Snapshot CR representing a new collection of components that should be tested together.
-- When Integration Service sees a new Snapshot CR (created either by itself or by a user), it coordinates deployment of the application for testing. It does this by creating new “ephemeral” Konflux Environment CRs which trigger the GitOps Service to provision the ephemeral test environment.
-- After the environment is ready and the application snapshot has been deployed to it, Integration Service tests and validates the application according to user-provided configuration. It does this by executing Tekton PipelineRuns against the ephemeral test Environment.
-- Finally, if any automatic ReleasePlans have been created by the user in the workspace, it will create a Release CR signalling intent to release the tested content, to be carried out by the [release-service](./release-service.md).
+- When Integration Service sees a new Snapshot CR (created either by itself or by a user), it coordinates testing of that Snapshot.
+- Integration Service tests and validates the application according to user-provided configuration. It does this by executing Tekton PipelineRuns based on user-defined Integration Test Scenarios.
+- When all the required test Tekton PipelineRuns have passed and if any automatic ReleasePlans have been created by the user in the workspace, it will create a Release CR signalling intent to release the tested content, to be carried out by the [release-service](./release-service.md).
 
 The diagram below shows the interaction of the integration service and other services.
 
@@ -31,10 +31,6 @@ The diagram below shows the interaction of the integration service and other ser
 The [Integration Service](./integration-service.md) is dependent on the following services:
 - [Pipeline Service](./pipeline-service.md)
   - Pipeline execution, Pipeline logging
-- [GitOps Service](./gitops-service.md)
-  - Provides the facility to create
-    - Snapshots defining sets of Builds to test
-    - Environment to test the Application on
 - [Hybrid Application Service](./hybrid-application-service.md)
   - Validates the Application and Component CRs. Integration Service updates the pullspec reference on the Component CR when a snapshot is created for the built image.
 - [Release Service](./release-service.md)
@@ -54,8 +50,6 @@ The [Integration Service](./integration-service.md) is dependent on the followin
 **Snapshot** -  The custom resource that contains the list of all Components of an Application with their Component Image digests. Once created, the list of Components with their images is immutable. The Integration service updates the status of the resource to reflect the testing outcome.
 
 **IntegrationTestScenario** - The custom resource that describes separate PipelineRuns that are supposed to be run by the snapshot controller. The IntegrationTestScenarios can be marked as optional, in which case they will not be taken into account when determining if the Snapshot has passed testing. Any number of IntegrationTestScenarios can be set by the user and also the user can specify the contexts where they will be applied (Component or Composite stage - or both).
-
-**Ephemeral Environment** - The ephemeral copy of an existing environment that is created by the Integration service for use during a specific Integration pipeline run.
 
 **SLSA** - [SLSA](http://slsa.dev/) is a new PSSC initiative. Current goal is to reach [SLSA](http://slsa.dev/) level 4 or above for all services.
 
@@ -81,7 +75,7 @@ Below are the list of CRs that the integration service is responsible for intera
 | Custom Resources | When? | Why? |
 |---|---|---|
 | Application & Component | Before creating the Snapshots | To know which ImageSpecs to use in the Snapshot |
-| IntegrationTestScenario | Before creating the Component/Composite PipelineRun(s) | To get the information for the PipelineRun - which Tekton bundles and Environments will be used |
+| IntegrationTestScenario | Before creating the Component/Composite PipelineRun(s) | To get the information for the PipelineRun |
 | ReleasePlan | Before creating the Release | To signal the Release Service for next environment promotion (prod) |
 
 ### UPDATE
@@ -99,8 +93,7 @@ Below are the list of CRs that the integration service is responsible for intera
 | PipelineRun | Post Component PipelineRun | Check the result of all Component PipelineRuns and mark the linked Snapshot as it either passed all tests or failed them |
 | PipelineRun | Post Composite PipelineRun | Check the result of all Composite PipelineRuns and mark the linked Snapshot as it either passed all tests or failed them |
 | Snapshot | Upon Snapshot creation | Check the Snapshot details and start running Integration PipelineRuns for it |
-| Snapshot | Upon Snapshot status being updated as passed all tests | Follow up on the global candidate list state to possibly create the Composite Snapshot. Otherwise check ReleasePlan and create a Release. Update SnapshotEnvironmentBindings if the Dev/Stage Environments exist |
-| SnapshotEnvironmentBinding (To be implemented) | Upon the Snapshot being deployed to the ephemeral Environment | Start the Integration PipelineRun to run tests on the Snapshot that was deployed to the ephemeral Environment |
+| Snapshot | Upon Snapshot status being updated as passed all tests | Follow up on the global candidate list state to possibly create the Composite Snapshot. Otherwise check ReleasePlan and create a Release.|
 
 ### Pipeline
 
@@ -142,14 +135,6 @@ The label will be copied to the subsequent Test PipelineRuns.
 
 The `test.appstudio.openshift.io/kind` annotation is an optional annotation that can be used to filter on the kinds of `IntegrationTestScenario`s. The first recognized kind is the `enterprise-contract`. It will be copied to the `PipelineRun`s resulting from the `IntegrationTestScenario`.
 
-#### Persistent Volume
-
- A persistent volume that the pipeline can store test artifacts generated from the test execution.
-
-#### Secrets
-
-The Integration service needs secrets mounted so that the `Environment Provisioner` Task running in the workspace has the correct permissions to create Konflux Application Environments resources within the Applications/Component’s namespace.
-
 ## Detailed Workflow
 1. Watch for Build PipelineRuns of `type: build`
     - Extract  Component Name, Application Name, and Image from pipeline annotations
@@ -160,7 +145,7 @@ The Integration service needs secrets mounted so that the `Environment Provision
     - If a component does not have a container image associated with it then the component will not be added to the snapshot
 4. Update the Component's `spec.containerImage` field, which updates the Global Candidate List.
 5. Create PipelineRuns for each IntegrationTestScenario
-    - Fetch the IntegrationTestScenario for the application/component to get the Tekton Bundle and Environment information
+    - Fetch the IntegrationTestScenario for the application/component to get the Tekton reference information
     - Assign annotations of
         ```
         "test.appstudio.openshift.io/test":   component
@@ -169,7 +154,6 @@ The Integration service needs secrets mounted so that the `Environment Provision
         “test.appstudio.openshift.io/application":   “<Application name>”
         ```
     - Pass in the Snapshot json representation as a parameter
-    - Optional: Create the ephemeral Environment if the IntegrationTestScenario specifies one. After the Environment is ready, link it to the pipelineRun and start it
 6. Watch the PipelineRun of `test: component` and `component: <component name>`
     - When all required PipelineRuns complete
         - Check if all the required PipelineRuns associated with the snapshot have passed successfully
@@ -219,7 +203,6 @@ Integration service is getting specific information about the image that's being
 ## Appendix
 
 - [Konflux Promotion & Environment API](https://docs.google.com/document/d/14LaXAmQEW73kIr3a6TvPswT-zSdBsuaaxLF77HJ3gX4/edit#)
-- [v3 - Environment API draft: Component-scoped with native Snapshots](https://docs.google.com/document/d/1-_rWLgALd5pdSlqNNcQ5FSrD00fZb0l_exU-_FiL68o/edit#heading=h.vf66svd4o6xr)
 - [Konflux builds and tests PRs](https://docs.google.com/document/d/113XTplEWRM63aIzk7WwgLruUBu2O7xVy-Zd_U6yjYr0/edit#)
 - [Labels and Annotations for Konflux pipelines](https://docs.google.com/document/d/1fJq4LDakLfcAPvOOoxxZNWJ_cuQ1ew9jfBjWa-fEGLE/edit#)
 - [Implementation design and rules for pipeline customization](https://docs.google.com/document/d/1PXkpFHKrnq1Sg1giTgeXdYzNVf7CTRgwowykr7YPM2I/edit#)
