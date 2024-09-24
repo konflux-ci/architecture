@@ -60,7 +60,7 @@ wizard will be available to any user that has permissions to create namespaces.
 when he/she logins for the first time.
 
 6. Konflux won't be opinionated about the mechanism for initializing/maintaining namespaces with
-supporting resources such as ResourceQuota and LimitRange. Konflux will differ
+supporting resources such as ResourceQuota and LimitRange. Konflux will defer
 this responsibility to other tools which are specialized in this task such as 
 (but not limited to) [Kyverno](https://kyverno.io/policies/best-practices/add-ns-quota/add-ns-quota/) and [ArgoCD](https://github.com/konflux-ci/namespace-generator).
 
