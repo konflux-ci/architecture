@@ -94,7 +94,9 @@ the Konflux developers will have more attention for developing features related 
 
 2. Operating Konflux will become easier for users who already familiar with Kubernetes built in resources such as namespaces.
 
-3. Konflux operators can use their preferred way to manage namespaces on their clusters.
+3. Konflux operators (people who run Konflux) can use their preferred way to manage namespaces on their clusters without the need to learn about a new concept (they
+might already use tools such as `ArgoCD`, `Kyverno`, `Gatekeepr`), or
+writing code for extending the Workspace abstraction.
 
 4. Konflux integrates with other open source cloud native tools, which can improve Konflux
 fit in the the cloud native apps ecosystem.
