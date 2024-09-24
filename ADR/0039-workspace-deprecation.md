@@ -92,7 +92,7 @@ should be explored and Konflux should integrate with them.
 1. By removing the Workspace abstraction, and delegating namespace management tasks to other open source tools,
 the Konflux developers will have more attention for developing features related to to Konflux' core mission.
 
-2. Operating Konflux will become easier for users who already familiar with Kubernetes concepts.
+2. Operating Konflux will become easier for users who already familiar with Kubernetes built in resources such as namespaces.
 
 3. Konflux operators can use their preferred way to manage namespaces on their clusters.
 
