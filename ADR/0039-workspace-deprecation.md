@@ -47,39 +47,43 @@ on the Workspace abstraction, and is deployable on vanilla Kubernetes.
 directly for providing a place for users to run their pipelines and store their configurations
 and secrets.
 
-2. We will stop using the term Workspace, and start to use the term Namespace.
+2. Konflux won't provide its own policy engine for enforcing policies related to
+creating/deleting namespaces. It will instead recommend user to use existing open source projects
+such as [Kyverno](https://kyverno.io/docs/introduction/) and [Gatekeeper](https://open-policy-agent.github.io/gatekeeper/website/docs/) for this task.
 
-3. The Konflux UI will expose a wizard for creating a new namespace. This
+3. We will stop using the term Workspace, and start to use the term Namespace.
+
+4. The Konflux UI will expose a wizard for creating a new namespace. This
 wizard will be available to any user that has permissions to create namespaces.
 
-4. Konflux will provide an optional automation for creating a namespace for a user
+5. Konflux will provide an optional automation for creating a namespace for a user
 when he/she logins for the first time.
 
-5. Konflux won't be opinionated about the mechanism for initializing/maintaining namespaces with
+6. Konflux won't be opinionated about the mechanism for initializing/maintaining namespaces with
 supporting resources such as ResourceQuota and LimitRange. Konflux will differ
 this responsibility to other tools which are specialized in this task such as 
 (but not limited to) [Kyverno](https://kyverno.io/policies/best-practices/add-ns-quota/add-ns-quota/) and [ArgoCD](https://github.com/konflux-ci/namespace-generator).
 
-6. Konflux will provide a thin [backend service](https://github.com/konflux-ci/workspace-manager) for listing the namespaces where the user has at least view access
+7. Konflux will provide a thin [backend service](https://github.com/konflux-ci/workspace-manager) for listing the namespaces where the user has at least view access
 to the Konflux CRDs. This list will be used by the namespace switcher in the UI.
 This is required since the Kubernetes API doesn't let the user to list a subset
 of namespace. The user gets permissions to list all namespace or none.
 
-7. Konflux will provide ClusterRoles that will grant permissions to the Konflux
+8. Konflux will provide ClusterRoles that will grant permissions to the Konflux
 and Tekton CRDs. Those will be (aggregated)[https://github.com/konflux-ci/konflux-ci/issues/440] to the built-in Kubernetes roles (`view`, `edit`, `admin`).
 
-8. Public viewer access will be provided by assigning the `view` role (see above) to the
+9. Public viewer access will be provided by assigning the `view` role (see above) to the
 `system:authenticated` built-in group that contains all the authenticated users.
 
-9. Same as Kubernetes, Konflux won't have a resource for representing a user. Instead,
+10. Same as Kubernetes, Konflux won't have a resource for representing a user. Instead,
 it will use external Identity providers.
 
-9. Konflux won't provide a way for creating a ephemeral namespaces. It will differ this
+11. Konflux won't provide a way for creating a ephemeral namespaces. It will differ this
 task to another tool.
 
-10. The `join the waitlist` button will be removed from the Konflux UI.
+12. The `join the waitlist` button will be removed from the Konflux UI.
 
-11. Konflux won't provide a transparent multi-cluster deployment.
+13. Konflux won't provide a transparent multi-cluster deployment.
 If required, existing open source projects that handle multi-cluster deployments
 should be explored and Konflux should integrate with them.
 
