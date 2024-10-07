@@ -61,7 +61,7 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 |               | *Service Access*        | appstudio.redhat.com      | get, list, watch, create, update, patch         | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests, spiaccesstokendataupdates
 |               | *Remote Secrets*        | appstudio.redhat.com      | get, list, watch                                | remotesecrets
 |               | Build Service           | appstudio.redhat.com      | get, list, watch, create                        | buildpipelineselectors
-|               | Project Controller      | projctl.konflux.dev       | get, list, watch, create, update, patch, delete | projects, projectdevelopmentstreams, projectdevelopmentstreamtemplates
+|               | Project Controller      | projctl.konflux.dev       | get, list, watch, create, update, patch         | projects, projectdevelopmentstreams, projectdevelopmentstreamtemplates
 |               | *Configs*               |                           | get, list, watch                                | configmaps
 |               | *Secrets*               |                           |                                                 | secrets
 |               | Add User                |
