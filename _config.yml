@@ -12,17 +12,21 @@ navigation:
     sublist:
     - name: Application and Environment API
       link: /architecture/ref/application-environment-api.html
-    - name: Service Provider (SPI)
-      link: /architecture/ref/service-provider.html
-    - name: GitOps Service
-      link: /architecture/ref/gitops.html
+    # - name: Service Provider (SPI)
+    #   link: /architecture/ref/service-provider.html
+    # - name: GitOps Service
+    #   link: /architecture/ref/gitops.html
     - name: Build Service
       link: /architecture/ref/build-service.html
-    - name: JVM Build Service
-      link: /architecture/ref/jvm-build-service.html
+    - name: Image Controller
+      link: /architecture/ref/image-controller.html
+    # - name: JVM Build Service
+    #   link: /architecture/ref/jvm-build-service.html
     - name: Integration Service
       link: /architecture/ref/integration-service.html
-    - name: Release Service
-      link: /architecture/ref/release-service.html
     - name: Enterprise Contract
       link: /architecture/ref/enterprise-contract.html
+    - name: Release Service
+      link: /architecture/ref/release-service.html
+    - name: Internal Services
+      link: /architecture/ref/internal-services.html
