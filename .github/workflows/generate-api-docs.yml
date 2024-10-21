@@ -24,25 +24,19 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: crd-temp/application-api
-          repository: redhat-appstudio/application-api
-
-      - name: Checkout Build Service API
-        uses: actions/checkout@v3
-        with:
-          path: crd-temp/build-service
-          repository: redhat-appstudio/build-service
+          repository: konflux-ci/application-api
 
       - name: Checkout Integration Service API
         uses: actions/checkout@v3
         with:
           path: crd-temp/integration-service
-          repository: redhat-appstudio/integration-service
+          repository: konflux-ci/integration-service
 
       - name: Checkout Release Service API
         uses: actions/checkout@v3
         with:
           path: crd-temp/release-service
-          repository: redhat-appstudio/release-service
+          repository: konflux-ci/release-service
 
       - name: Checkout Enterprise Contract API
         uses: actions/checkout@v3
@@ -54,7 +48,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: crd-temp/internal-services
-          repository: redhat-appstudio/internal-services
+          repository: konflux-ci/internal-services
 
       - name: Checkout Image Controller API
         uses: actions/checkout@v3
@@ -71,9 +65,6 @@ jobs:
 
       - name: Generate application and environment API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/application-environment-api.md --renderer=markdown --source-path=crd-temp/application-api/api/v1alpha1
-
-      - name: Generate Build Service API docs
-        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/build-service.md --renderer=markdown --source-path=crd-temp/build-service/api/v1alpha1/
 
       - name: Generate Image Controller API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/image-controller.md --renderer=markdown --source-path=crd-temp/image-controller/api/v1alpha1/
