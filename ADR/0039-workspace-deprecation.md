@@ -12,9 +12,6 @@ The purpose of this ADR is to revisit the workspace concept, understand the purp
 of it, and offer an alternative implementation based on native Kubernetes APIs
 and other successful cloud native open source projects.
 
-We inherited the "workspace" concept from our early days when we expected to be integrated with the [KCP] project. Long ago (over a year at the time of this writing), we decided to remove [KCP] from the architecture of the Konflux project.
-
-In order to support multi-cluster deployment, [kubesaw] was used instead of KCP.
 
 Today, Workspaces are an important concept in the Konflux user experience. The user onboards into a workspace of their own. A team member of theirs may add them to a team workspace. As a platform administrator, if you hear about a user having trouble, you'll ask them what workspace they're working in.
 
