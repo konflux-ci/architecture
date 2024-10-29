@@ -124,7 +124,7 @@ The CycloneDX metadata.tools sub attributes that we are mostly interested in are
 
 #### Merging SPDX
 ##### Packages
-Packages of two SPDX documents can be merged together as a concatenation of two lists. In cycloneDX component elements can have only a single purl attribute, therefore component elements representing packages with the same name and version but with different purl have to be stored as multiple elements. CycloneDX package elements can bear multiple purls. Therefore multiple cycloneDX components can be squashed together into single SPDX package element with purls concatenated into a single list. Following rules are applied to packages merging process:
+Packages of two SPDX documents can be merged together as a concatenation of two lists. In cycloneDX component elements can have only a single purl attribute, therefore component elements representing packages with the same name and version but with different purl have to be stored as multiple elements. SPDX package elements can bear multiple purls. Therefore multiple cycloneDX components can be squashed together into single SPDX package element with purls concatenated into a single list. Following rules are applied to packages merging process:
 - Packages with the same package name and versionInfo are squashed into single package element
 - Package with the same package name and versionInfo set to None (or empty) is squashed with package with the same name and non-empty versionInfo
 NOTE: packages cannot be merged together based on SPDXID attribute as there’s no specification in the spdx standard on how SPDXID should be calculated. Individual tools can calculate it differently while still passing condition to make it unique across the whole document.
