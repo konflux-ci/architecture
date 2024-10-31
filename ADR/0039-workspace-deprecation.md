@@ -53,7 +53,7 @@ such as [Kyverno](https://kyverno.io/docs/introduction/) and [Gatekeeper](https:
 3. We will stop using the term Workspace, and start to use the term Namespace.
 
 4. The Konflux UI will expose a wizard for creating a new namespace. This
-wizard will be available to any user that has permissions to create namespaces.
+wizard will be visible to any user that has permissions to create namespaces.
 
 5. Konflux won't be opinionated about the mechanism for initializing/maintaining namespaces with
 supporting resources such as ResourceQuota and LimitRange. Konflux will defer
