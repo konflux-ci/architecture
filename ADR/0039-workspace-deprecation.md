@@ -2,9 +2,11 @@
 
 Some of the text was taken from - https://github.com/konflux-ci/architecture/pull/187
 
+* Date: 2024-09-22
+
 ## Status
 
-WiP
+Accepted
 
 ## Context
 
@@ -53,34 +55,31 @@ such as [Kyverno](https://kyverno.io/docs/introduction/) and [Gatekeeper](https:
 4. The Konflux UI will expose a wizard for creating a new namespace. This
 wizard will be available to any user that has permissions to create namespaces.
 
-5. Konflux will provide an optional automation for creating a namespace for a user
-when he/she logins for the first time.
-
-6. Konflux won't be opinionated about the mechanism for initializing/maintaining namespaces with
+5. Konflux won't be opinionated about the mechanism for initializing/maintaining namespaces with
 supporting resources such as ResourceQuota and LimitRange. Konflux will defer
 this responsibility to other tools which are specialized in this task such as 
 (but not limited to) [Kyverno](https://kyverno.io/policies/best-practices/add-ns-quota/add-ns-quota/) and [ArgoCD](https://github.com/konflux-ci/namespace-generator).
 
-7. Konflux will provide a thin [backend service](https://github.com/konflux-ci/workspace-manager) for listing the namespaces where the user has at least view access
+6. Konflux will provide a thin [backend service](https://github.com/konflux-ci/workspace-manager) for listing the namespaces where the user has at least view access
 to the Konflux CRDs. This list will be used by the namespace switcher in the UI.
 This is required since the Kubernetes API doesn't let the user to list a subset
 of namespace. The user gets permissions to list all namespace or none.
 
-8. Konflux will provide ClusterRoles that will grant permissions to the Konflux
+7. Konflux will provide ClusterRoles that will grant permissions to the Konflux
 and Tekton CRDs. Those will be (aggregated)[https://github.com/konflux-ci/konflux-ci/issues/440] to the built-in Kubernetes roles (`view`, `edit`, `admin`).
 
-9. Public viewer access will be provided by assigning the `view` role (see above) to the
+8. Public viewer access will be provided by assigning the `view` role (see above) to the
 `system:authenticated` built-in group that contains all the authenticated users.
 
-10. Same as Kubernetes, Konflux won't have a resource for representing a user. Instead,
+9. Same as Kubernetes, Konflux won't have a resource for representing a user. Instead,
 it will use external Identity providers.
 
-11. Konflux won't provide a way for creating a ephemeral namespaces. It will defer this
+10. Konflux won't provide a way for creating a ephemeral namespaces. It will defer this
 task to another tool.
 
-12. The `join the waitlist` button will be removed from the Konflux UI.
+11. The `join the waitlist` button will be removed from the Konflux UI.
 
-13. Konflux won't provide a transparent multi-cluster deployment.
+12. Konflux won't provide a transparent multi-cluster deployment.
 If required, existing open source projects that handle multi-cluster deployments
 should be explored and Konflux should integrate with them.
 
