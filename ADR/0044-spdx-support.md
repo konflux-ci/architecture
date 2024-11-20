@@ -187,13 +187,13 @@ So we remove `SPDXRef-DocumentRoot-Directory-.` package and add new virtual pack
   ...
   "packages": [
       {
-        "name": "container-registry.com/my-org/my-image:latest",
-        "SPDXID": "SPDXRef-DocumentRoot-Image-container-registry.com/my-org/my-image:latest",
-        "versionInfo": "sha256:9ac75c1a392429b4a087971cdf9190ec42a854a169b6835bc9e25eecaf851258",
+        "name": "my-image",
+        "SPDXID": "SPDXRef-image",
+        "versionInfo": "latest",
         ...
         "checksums": [
             {
-                "algorithm": "SHA256",
+                "algorithm": "SHA-256",
                 "checksumValue": "9ac75c1a392429b4a087971cdf9190ec42a854a169b6835bc9e25eecaf851258"
             }
         ],
@@ -202,7 +202,7 @@ So we remove `SPDXRef-DocumentRoot-Directory-.` package and add new virtual pack
             {
                 "referenceCategory": "PACKAGE-MANAGER",
                 "referenceType": "purl",
-                "referenceLocator": "pkg:oci/container-registry.com/my-org/my-image@sha256:9ac75c1a392429b4a087971cdf9190ec42a854a169b6835bc9e25eecaf851258"
+                "referenceLocator": "pkg:oci/my-image@sha256:9ac75c1a392429b4a087971cdf9190ec42a854a169b6835bc9e25eecaf851258?repository_url=container-registry.com/my-org/my-image"
             }
         ],
         "primaryPackagePurpose": "CONTAINER"
