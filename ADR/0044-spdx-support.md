@@ -89,42 +89,45 @@ Following CycloneDX to SPDX attributes are converted as 1:1 as they represent th
 
 #### Component.purl
 CycloneDX (version 1.5) supports only a single purl attribute per component. SPDX doesn’t have a direct attribute, but instead every package includes an externalRefs array which describes all external references for the package. There are defined reference categories and types. For PURL, category PACKAGE-MANAGER and type purl is used. The purl itself will be stored as referenceLocator
-
+```
 | CycloneDX Attribute          | SPDX Attribute                                                |
 |------------------------------|---------------------------------------------------------------|
 | component.purl = `<PURL>`    | package.externalRefs = [{referenceCategory:”PACKAGE-MANAGER”, |
 |                              |                          referenceType:purl,                  |
 |                              |                          referenceLocator: `<PURL>`           |
 |                              |                          }]                                   |
-
+```
 
 #### Component.properties
 CycloneDX components properties describe mapping of string:string properties for given component. SPDX component doesn’t have anything similar to cyclonedx properties. SPDX Package annotations are the only attribute where custom data can be stored and the only “customizable” field where there is comment which is a simple string. Due to that fact, cycloneDX property in format of {“name”: <string>, “value”: <string>} is encoded into json string. There can be also annotations produced by other tools. Therefore to be able to tell annotation comment is json encoded, annotator should ends with string “:jsonencoded”
 
+```
 | CycloneDX Attribute                       | SPDX Attribute                              |
 |-------------------------------------------|---------------------------------------------|
 | components.properties = [                 | package.annotations = [                     |
-|   {“name”: …, “value”: …}                 |   {..., annotator: "`<tool>`:jsonencoded”     |
+|   {“name”: …, “value”: …}                 |   {..., annotator: "`<tool>`:jsonencoded”   |
 | ]                                         | ]                                           |
-
+```
 
 #### Formulations
 CycloneDX formulations describe how the container was manufactured. In SPDX, Relationship elements can be used for the same purpose. All elements in SPDX have SPDXID attribute which is an element identifier unique in the whole SBOM document. Relationship element describes relation between two elements using their SPDXID and relationship type. Relationship type BUILD_TOOL_OF can be used to express the relationship of packages which were used to build the container.
 
+```
 | CycloneDX Attribute             | SPDX Attribute                                             |
 |---------------------------------|------------------------------------------------------------|
 | Formulations.components = [{}]  | Relationships = [                                          |
 |                                 |     {                                                      |
-|                                 |          spdxElementId = `<DOCUMENT-ID>`,             |
+|                                 |          spdxElementId = `<DOCUMENT-ID>`,                  |
 |                                 |          relationshipType=DESCRIBES,                       |
-|                                 |          relatedSpdxElement=`<ROOT-PACKAGE>`,        |
+|                                 |          relatedSpdxElement=`<ROOT-PACKAGE>`,              |
 |                                 |     },                                                     |
 |                                 |     {                                                      |
 |                                 |          spdxElementId = `<A-BUILDER-IMAGE-ID>`,           |
 |                                 |          relationshipType=BUILD_TOOL_OF,                   |
-|                                 |          relatedSpdxElement=`<ROOT-PACKAGE>`         |
+|                                 |          relatedSpdxElement=`<ROOT-PACKAGE>`               |
 |                                 |     }                                                      |
 |                                 | ]                                                          |
+```
 
 *Explanation: Root document `DESCRIBES` `ROOT-PACKAGE` element which represents the container itself. `BUILDER-IMAGE-ID` represents the builder image which was used to build the container. The relationship type `BUILD_TOOL_OF` is used to express that the builder image was used to build the container image.*
 
@@ -136,7 +139,9 @@ The CycloneDX metadata.tools sub attributes that we are mostly interested in are
 | Metadata.tools = [{“vendor”: “X”, “name”: “Y”] | CreationInfo.creators = [“Tool: Y”]  |
 
 #### Metadata.component
-Metadata component describes component which is the component which whole SBOM is related to. For example If SBOM describes internal components and dependencies of a container image, this component should represent the container image itself. In SPDX, a package which is equivalent to this component is root package (see [root-packages](#root-packages) to have idea how syft handles this package). This package is in relationship `SPDXRef-ROOT` `DESCRIBES` `SPDXRef-RootPackage`. If there's no cycloneDX metadata.component attribute, SPDX SBOM already includes this "root package" and shouldn't be changed. If there is metadata.component attribute, existing root package should be replaced with the new one representing the SBOM document. All SPDX IDs in relationships refering to the old root package should be replaced with SPDX ID of the new root package. Example:
+Metadata component describes component which is the component which whole SBOM is related to. For example If SBOM describes internal components and dependencies of a container image, this component should represent the container image itself. In SPDX, a package which is equivalent to this component is root package (see [root-packages](#root-packages) to have idea how syft handles this package). This package is in relationship `SPDXRef-ROOT` `DESCRIBES` `SPDXRef-RootPackage`.
+
+Example:
 We run syft/cachi2 on source directory of a project which should be build into container. Generated SBOM contains
 ```jsonc
 {
@@ -181,7 +186,7 @@ We run syft/cachi2 on source directory of a project which should be build into c
 And we want that to express that SBOM is actually generated for a container image not for source directory.
 So we remove `SPDXRef-DocumentRoot-Directory-.` package and add new virtual package representing the container image. And replace SPDX ID in relationships with ID of the new package. New SBOM should look like this:
 
-```json
+```jsonc
 {
   "SPDXID": "SPDXRef-DOCUMENT",
   ...
@@ -247,6 +252,7 @@ SPDX Root document typically contains a package representing source used for gen
 Relations of two documents needs to be merged together into single graph in a way which keeps the graph structure of the original graph of the main document (into which other document will be merged to). Once packages are merged together, relationships of the second document must be cleared off relations which refer to packages not included in the merged package list. SpdxElementId and relatedSpdxElement point to root document id of the second document should be replaced with root document id of the main document. Root package element id in the second documents needs to be replaced with root package element id of the main document.
 Example:
 
+```
 --------------------------------------------------------------------------------
 | DOC 1                     | DOC 2                    | Merged document        |
 ----------------------------|--------------------------|------------------------|
@@ -261,7 +267,7 @@ Example:
 |     root1 contains p2     |   root2 contains p3      |   root1 contains p1    |
 |                           |                          |   root1 contains p2    |
 |                           |                          |   root1 contains p3    |
-
+```
 
 ## Syft specific sbom details
 ### Root packages
