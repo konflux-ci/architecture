@@ -138,10 +138,10 @@ The CycloneDX metadata.tools sub attributes that we are mostly interested in are
 #### Metadata.component
 Metadata component describes component which is the component which whole SBOM is related to. For example If SBOM describes internal components and dependencies of a container image, this component should represent the container image itself. In SPDX, a package which is equivalent to this component is root package (see [root-packages](#root-packages) to have idea how syft handles this package). This package is in relationship `SPDXRef-ROOT` `DESCRIBES` `SPDXRef-RootPackage`. If there's no cycloneDX metadata.component attribute, SPDX SBOM already includes this "root package" and shouldn't be changed. If there is metadata.component attribute, existing root package should be replaced with the new one representing the SBOM document. All SPDX IDs in relationships refering to the old root package should be replaced with SPDX ID of the new root package. Example:
 We run syft/cachi2 on source directory of a project which should be build into container. Generated SBOM contains
-```json
+```jsonc
 {
   "SPDXID": "SPDXRef-DOCUMENT",
-  ...
+  // ...
   "packages": [
       {
         "name": ".",
