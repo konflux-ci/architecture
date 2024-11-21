@@ -51,14 +51,17 @@ CycloneDX (1.5) is structured document in json format with following structure (
 SPDX (2.3) is structured document in json format with following structure(not full specification):
 - Document
     - name
+    - documentNamespace
     - SPDXID
     - creationInfo
-        - Creators
+        - creators
             - `List<String>`
+        - created
     - packages
         - `List<Packages>`
             - SPDXID
             - name
+            - downloadLocation
             - versionInfo
             - externalRefs
                 - `List<ExternalRef>`
@@ -99,14 +102,14 @@ CycloneDX (version 1.5) supports only a single purl attribute per component. SPD
 ```
 
 #### Component.properties
-CycloneDX components properties describe mapping of string:string properties for given component. SPDX component doesn’t have anything similar to cyclonedx properties. SPDX Package annotations are the only attribute where custom data can be stored and the only “customizable” field where there is comment which is a simple string. Due to that fact, cycloneDX property in format of {“name”: <string>, “value”: <string>} is encoded into json string. There can be also annotations produced by other tools. Therefore to be able to tell annotation comment is json encoded, annotator should ends with string “:jsonencoded”
+CycloneDX components properties describe mapping of string:string properties for given component. SPDX component doesn’t have anything similar to cyclonedx properties. SPDX Package annotations are the only attribute where custom data can be stored and the only “customizable” field where there is comment which is a simple string. Due to that fact, cycloneDX property in format of {“name”: <string>, “value”: <string>} is encoded into json string. There can be also annotations produced by other tools. Therefore to be able to tell annotation comment is json encoded, annotator should ends with string “:jsonencoded”. To indicate annotator was a tool, prefix “Tool:" has to be included in the field.
 
 ```
-| CycloneDX Attribute                       | SPDX Attribute                              |
-|-------------------------------------------|---------------------------------------------|
-| components.properties = [                 | package.annotations = [                     |
-|   {“name”: …, “value”: …}                 |   {..., annotator: "`<tool>`:jsonencoded”   |
-| ]                                         | ]                                           |
+| CycloneDX Attribute                       | SPDX Attribute                                 |
+|-------------------------------------------|------------------------------------------------|
+| components.properties = [                 | package.annotations = [                        |
+|   {“name”: …, “value”: …}                 |   {..., annotator: "`Tool:<tool>`:jsonencoded” |
+| ]                                         | ]                                              |
 ```
 
 #### Formulations
@@ -236,6 +239,20 @@ So we remove `SPDXRef-DocumentRoot-Directory-.` package and add new virtual pack
   ]
 }
 ```
+
+#### SPDX specific attributes
+
+There are SPDX attributes which are required to be present in the document, however there's
+no cycloneDX equivalent for them. These attributes are:
+
+##### Document.documentNamespace
+
+documentNamespace is URI which provides way how locate the document or reference it other documents. When creating SPDX document locally via syft or cachi2, this attribute has no meaning
+as it's not clear yet how the document will be published. Therefore it's set to `NOASSERTION`.
+However when the document is copied to a container. It would make sense to provide a link to the document container
+
+##### Package.downloadLocation
+downloadLocation is URI which provides way how to download the package. When creating SPDX document locally via syft, this information is not available. Also syft doesn't provide anything to this field. Therefore it's set to `NOASSERTION`.
 
 
 #### Merging SPDX
