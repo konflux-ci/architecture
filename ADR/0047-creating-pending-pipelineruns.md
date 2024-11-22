@@ -21,9 +21,9 @@ When many pipelines are triggered across multiple namespaces, there is also an i
 We will use idea of creating pipeline runs in pending state and having a standalone controller that would implement any custom logic on when to start each pending pipeline:
 
 1. We add `.spec.status: "PipelineRunPending"` to pipeline run YAMLs.
-1. We will implement controller, that will contain code that will decide when to start (by just nulling `.spec.status` field - then Pipelines Controller takes over) what pipeline run. Some possibilities come to mind:
-   1. Controller will keep an eye on current number of concurrently running pipeline runs in the cluster (using Prometheus metric `avg(tekton_pipelines_controller_running_pipelineruns)`), and if that is below given threshold, it starts the pipeline run(s).
-   1. If pipeline run have `prsstarter.example.com/mpc_platforms: linux/arm64,linux/ppc64le,linux/s390x` annotation, controller checks if MPC have free capacity (using max for the pool and Prometheus metric `multi_platform_controller_running_tasks`) for mentioned platforms and if so, will start it.
+2. We will implement controller, that will contain code that will decide when to start (by just nulling `.spec.status` field - then Pipelines Controller takes over) what pipeline run. Some possibilities come to mind:
+   * Controller will keep an eye on current number of concurrently running pipeline runs in the cluster (using Prometheus metric `avg(tekton_pipelines_controller_running_pipelineruns)`), and if that is below given threshold, it starts the pipeline run(s).
+   * If pipeline run have `prsstarter.example.com/mpc_platforms: linux/arm64,linux/ppc64le,linux/s390x` annotation, controller checks if MPC have free capacity (using max for the pool and Prometheus metric `multi_platform_controller_running_tasks`) for mentioned platforms and if so, will start it.
 
 ## Consequences
 
