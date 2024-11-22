@@ -8,15 +8,13 @@ Accepted
 
 ## Context
 
-There is a frequent use case amongst Konflux users when triggering large amount of builds: sometimes users do not care how quickly the pipeline run will finish, but they want it to finish eventually.
-Now what happens is that part of the pipeline runs started in this big bulk is blocked by unavailable resources (e.g. namespace memory limit quotas or MPC pool size).
-Because of how Tekton works, no matter what these pipeline runs are considered running (even if their pods are waiting for resources) and so eventually timeout setting strikes.
+When pipelines start, the time is immediately being taken away from the configured timeout (even if their pods are waiting for resources). While this behavior is likely sufficient when fewer concurrent pipelines are running, timeouts are more likely to be exceeded when bulk builds are triggered (i.e. a Renovate job updating common dependencies). While the speed at which a pipeline completes is important, a delayed and completed pipeline will likely finish quicker than an immediately and timeout-killed pipeline. Futhermore, having multiple pipelines running at the same time may starve other concurrent pipelines from acquiring the necessary resources resulting in fewer completed pipelines.
 
 So say you started 300 pipeline runs on Friday evening and you expect to see 300 new images by Monday morning.
 You have resource quota for 20 concurrent builds, so 20 builds get started, when they finish 20 more and so on.
 But because all 300 pipeline runs started (from Tekton point of view) when they were created, after few iterations all the remaining pipeline runs will be cancelled (due to a timeout).
 
-Another use case for what we are proposing is protecting cluster (e.g. etcd) from spikes of running lots of concurrent pipeline runs.
+When many pipelines are triggered across multiple namespaces, there is also an increased load on etcd which may degrade the cluster's overall performance.
 
 ## Decision
 
