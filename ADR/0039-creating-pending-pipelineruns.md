@@ -12,9 +12,9 @@ There is a frequent use case amongst Konflux users when triggering large amount 
 Now what happens is that part of the pipeline runs started in this big bulk is blocked by unavailable resources (e.g. namespace memory limit quotas or MPC pool size).
 Because of how Tekton works, no matter what these pipeline runs are considered running (even if their pods are waiting for resources) and so eventually timeout setting strikes.
 
-So say you started 300 pipeline runs at Fry evening and you expect to see 300 new images at Mon morning.
+So say you started 300 pipeline runs on Friday evening and you expect to see 300 new images by Monday morning.
 You have resource quota for 20 concurrent builds, so 20 builds get started, when they finish 20 more and so on.
-But because all 300 pipeline runs started (from Tekton point of view) when they were created, after few iterations all the remaining pipeline runs will be cancelled (as timeouted).
+But because all 300 pipeline runs started (from Tekton point of view) when they were created, after few iterations all the remaining pipeline runs will be cancelled (due to a timeout).
 
 Another use case for what we are proposing is protecting cluster (e.g. etcd) from spikes of running lots of concurrent pipeline runs.
 
