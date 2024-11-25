@@ -243,8 +243,7 @@ no cycloneDX equivalent for them. These attributes are:
 ##### Document.documentNamespace
 
 documentNamespace is URI which provides way how locate the document or reference it other documents. When creating SPDX document locally via syft or cachi2, this attribute has no meaning
-as it's not clear yet how the document will be published. Therefore it's set to `NOASSERTION`.
-However when the document is copied to a container. It would make sense to provide a link to the document container
+as it's not clear yet how the document will be published. But as stated in the SPDX specification, it should be unique. At later stages when it's clear where the sbom document will be published it would make sense to change this to a link to the container containing the sbom. URI itself doesn't need to be neccesarilly accessible
 
 ##### Package.downloadLocation
 downloadLocation is URI which provides way how to download the package. This is not always available, and it's not clear if it's useful. Therefore it's set to `NOASSERTION`.
