@@ -120,11 +120,6 @@ CycloneDX formulations describe how the container was manufactured. In SPDX, Rel
 |---------------------------------|------------------------------------------------------------|
 | Formulations.components = [{}]  | Relationships = [                                          |
 |                                 |     {                                                      |
-|                                 |          spdxElementId = `<DOCUMENT-ID>`,                  |
-|                                 |          relationshipType=DESCRIBES,                       |
-|                                 |          relatedSpdxElement=`<ROOT-PACKAGE>`,              |
-|                                 |     },                                                     |
-|                                 |     {                                                      |
 |                                 |          spdxElementId = `<A-BUILDER-IMAGE-ID>`,           |
 |                                 |          relationshipType=BUILD_TOOL_OF,                   |
 |                                 |          relatedSpdxElement=`<ROOT-PACKAGE>`               |
