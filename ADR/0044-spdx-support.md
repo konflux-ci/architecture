@@ -108,7 +108,7 @@ CycloneDX components properties describe mapping of string:string properties for
 | CycloneDX Attribute                       | SPDX Attribute                                 |
 |-------------------------------------------|------------------------------------------------|
 | components.properties = [                 | package.annotations = [                        |
-|   {“name”: …, “value”: …}                 |   {..., annotator: "`Tool:<tool>`:jsonencoded” |
+|   {“name”: …, “value”: …}                 |   {..., annotator: "`Tool: <tool>`:jsonencoded” |
 | ]                                         | ]                                              |
 ```
 
