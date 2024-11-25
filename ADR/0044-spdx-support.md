@@ -252,7 +252,7 @@ as it's not clear yet how the document will be published. Therefore it's set to 
 However when the document is copied to a container. It would make sense to provide a link to the document container
 
 ##### Package.downloadLocation
-downloadLocation is URI which provides way how to download the package. When creating SPDX document locally via syft, this information is not available. Also syft doesn't provide anything to this field. Therefore it's set to `NOASSERTION`.
+downloadLocation is URI which provides way how to download the package. This is not always available, and it's not clear if it's useful. Therefore it's set to `NOASSERTION`.
 
 
 #### Merging SPDX
