@@ -58,7 +58,14 @@ This is what was happening:
 * at 2024-11-20 14:04:57,309, we noticed MPC freed the capacity for s390x
 * at 2024-11-20 14:04:59,660 pipeline run `my-comp-2-on-push-...` was started, no luck for `my-comp-3-on-push-...` though
 
-Currently this is POC code only and besides lots of other things, we know about these issues that would need to happen:
+Code used in this example is here: [prs-controller.py](https://gitlab.cee.redhat.com/jhutar/mystoneinst/-/blob/main/prs-controller.py?ref_type=heads)
+
+### Shortcomings
+
+As of today this approach with creating pipeline run in Pending state hijack some PaC behavior, making, for example, the GitHub checks being updated only once the pipeline run finishes.
+Probably, this could be improved on Tekton side.
+
+Currently this POC code in example section is very bare bones. Besides lots of other things, we know about these issues that would need to be fixed to make it possible:
 
 * [KFLUXBUGS-1474](https://issues.redhat.com/browse/KFLUXBUGS-1474) - metric `multi_platform_controller_running_tasks` can give negative numbers
 * [KFLUXINFRA-1062](https://issues.redhat.com/browse/KFLUXINFRA-1062) - MPC metric showing pool size for individual platforms
