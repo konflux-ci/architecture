@@ -45,10 +45,10 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 |               | Add User                |
 |               | User group (with SSO)   |
 | Maintainer    | Workspace               | Access to namespaces that backs workspace                                   |
-|               | Application             | appstudio.redhat.com      | get, list, watch, create, update, patch         | applications
+|               | Application             | appstudio.redhat.com      | get, list, watch, create, update, patch         | applications, snapshots
 |               | Component               | appstudio.redhat.com      | get, list, watch, create, update, patch         | components, componentdetectionqueries
 |               | ImageRepository         | appstudio.redhat.com      | get, list, watch, create, update, patch         | imagerepositories
-|               | Environment             | appstudio.redhat.com      | get, list, watch                                | promotionruns, snapshotenvironmentbindings, snapshots, environments
+|               | Environment             | appstudio.redhat.com      | get, list, watch                                | promotionruns, snapshotenvironmentbindings, environments
 |               | DeploymentTarget        | appstudio.redhat.com      | get, list, watch                                | deploymenttargets
 |               | DeploymentTargetClaim   | appstudio.redhat.com      | get, list, watch                                | deploymenttargetclaims
 |               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                                | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
