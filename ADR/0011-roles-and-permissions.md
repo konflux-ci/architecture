@@ -44,6 +44,7 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 |               | *Secrets*               |                           |                                                 | secrets
 |               | Add User                |
 |               | User group (with SSO)   |
+|               | CronJob                 | batch                     | get, list, watch                                | cronjobs, jobs
 | Maintainer    | Workspace               | Access to namespaces that backs workspace                                   |
 |               | Application             | appstudio.redhat.com      | get, list, watch, create, update, patch         | applications, snapshots
 |               | Component               | appstudio.redhat.com      | get, list, watch, create, update, patch         | components, componentdetectionqueries
@@ -66,6 +67,7 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 |               | *Secrets*               |                           |                                                 | secrets
 |               | Add User                |
 |               | User group (with SSO)   |
+|               | CronJob                 | batch                     | get, list, watch, create, update, patch         | cronjobs, jobs
 | Admin         | Workspace               | Access to namespaces that backs workspace                                   |
 |               | Application             | appstudio.redhat.com      | get, list, watch, create, update, patch, delete, deletecollection | applications
 |               | Component               | appstudio.redhat.com      | get, list, watch, create, update, patch, delete, deletecollection | components, componentdetectionqueries
@@ -91,6 +93,7 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 |               | SpaceBindingRequest    | toolchain.dev.openshift.com      | get, list, watch, create, update, patch, delete | spacebindingrequests
 |               | Add User                |
 |               | User group (with SSO)   |
+|               | CronJob                 | batch                     | get, list, watch, create, update, patch, delete | cronjobs, jobs
 
 
 ## Consequences
