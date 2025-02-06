@@ -45,7 +45,7 @@ The [Integration Service](./integration-service.md) is dependent on the followin
 
 **Composite Pipeline** - This is the pipeline run that runs if two or more Components have completed and passed their Component pipeline concurrently so that they should be tested together.
 
-**Global Candidate List** - The list of all Component digest that is updated after snapshot is created for an image built by build pipelineRun. This can be retrieved from the Application to see what Components it is made of and then querying each of the Components `spec.containerImage`.
+**Global Candidate List** - The list of all Component digest that is updated after snapshot is created for an image built by build pipelineRun. This can be retrieved from the Application to see what Components it is made of and then querying each of the Components `Status.LastPromotedImage`.
 
 **Snapshot** -  The custom resource that contains the list of all Components of an Application with their Component Image digests. Once created, the list of Components with their images is immutable. The Integration service updates the status of the resource to reflect the testing outcome.
 
@@ -139,11 +139,11 @@ The `test.appstudio.openshift.io/kind` annotation is an optional annotation that
 1. Watch for Build PipelineRuns of `type: build`
     - Extract  Component Name, Application Name, and Image from pipeline annotations
 2. Query the Application
-    - for each Component extract the `spec.containerImage`
+    - for each Component extract the `Status.LastPromotedImage`
 3. Create a Snapshot
-    - Populate the `spec.components` list with the component name and the `spec.containerImage` with information from Step 1 and 2, replacing the container image for the built component with the one from the build PipelineRun
+    - Populate the `spec.components` list with the component name and the `Status.LastPromotedImage` with information from Step 1 and 2, replacing the container image for the built component with the one from the build PipelineRun
     - If a component does not have a container image associated with it then the component will not be added to the snapshot
-4. Update the Component's `spec.containerImage` field, which updates the Global Candidate List.
+4. Update the Component's `Status.LastPromotedImage` field, which updates the Global Candidate List.
 5. Create PipelineRuns for each IntegrationTestScenario
     - Fetch the IntegrationTestScenario for the application/component to get the Tekton reference information
     - Assign annotations of
@@ -161,9 +161,9 @@ The `test.appstudio.openshift.io/kind` annotation is an optional annotation that
         - If not all required PipelineRuns passed, mark the Snapshot as not validated by setting its status condition `HACBSTestsSucceeded` as false, end the Integration testing process
     - Note: Users are allowed to mark an Integration Test Scenario as optional. In this case results of testing are ignored for the optional scenario and don't block further processing of the Snapshot.
 7. Query the Application and find all of its components
-    - For each Component extract the `spec.containerImage`
+    - For each Component extract the `Status.LastPromotedImage`
 8. Prepare a new Snapshot
-    - Populate the `spec.components` list and the `spec.containerImage` with information from Step 5.
+    - Populate the `spec.components` list and the `Status.LastPromotedImage` with information from Step 5.
 9. Compare new Snapshot from step 8 to step 3
     - If determined the same, proceed to step 10
     - If determined not the same, proceed to step 14
