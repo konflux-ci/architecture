@@ -94,7 +94,9 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 |               | Add User                |
 |               | User group (with SSO)   |
 |               | CronJob                 | batch                     | get, list, watch, create, update, patch, delete | cronjobs, jobs
-
+|               | RoleBinding             | rbac.authorization.k8s.io | get, list, create, update, patch, delete        | rolebindings, roles
+|               | ServiceAccount          |                           | get, list, create, update, patch, delete        | serviceaccounts
+|               | Token                   |                           | create                                          | serviceaccounts/token
 
 ## Consequences
 
