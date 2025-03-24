@@ -82,7 +82,7 @@ jobs:
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/internal-services.md --renderer=markdown --source-path=crd-temp/internal-services/api/v1alpha1/
 
       - name: Upload generated docs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: api-docs
           path: ref/
