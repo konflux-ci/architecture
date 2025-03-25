@@ -6,3 +6,12 @@
 # @redhat-appstudio/book-publishers will be requested for
 # review when someone opens a pull request.
 *       @redhat-appstudio/book-publishers
+
+/architecture/build-service.md              @konflux-ci/build-maintainers
+/architecture/enterprise-contract.md        @konflux-ci/ec
+/architecture/hybrid-application-console.md @konflux-ci/konflux-ui
+/architecture/image-controller.md           @konflux-ci/build-maintainers
+/architecture/internal-services.md          @konflux-ci/release-service-maintainers
+/architecture/multi-platform-controller.md  @konflux-ci/infrastructure
+/architecture/release-service.md            @konflux-ci/release-service-maintainers
+/architecture/integration-service.md        @konflux-ci/integration-service-maintainers
