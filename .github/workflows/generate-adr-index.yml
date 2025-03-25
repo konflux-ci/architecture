@@ -24,7 +24,7 @@ jobs:
         working-directory: ./ADR
 
       - name: Upload generated index
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: adr-index
           path: ADR/
