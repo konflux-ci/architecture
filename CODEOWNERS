@@ -3,7 +3,7 @@
 
 # These owners will be the default owners for everything in
 # the repo. Unless a later match takes precedence,
-# @redhat-appstudio/book-publishers will be requested for
+# @konflux-ci/book-publishers will be requested for
 # review when someone opens a pull request.
 *       @konflux-ci/book-publishers
 
