@@ -5,7 +5,7 @@
 # the repo. Unless a later match takes precedence,
 # @redhat-appstudio/book-publishers will be requested for
 # review when someone opens a pull request.
-*       @redhat-appstudio/book-publishers
+*       @konflux-ci/book-publishers
 
 /architecture/build-service.md              @konflux-ci/build-maintainers
 /architecture/enterprise-contract.md        @konflux-ci/ec
