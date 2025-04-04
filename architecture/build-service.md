@@ -3,9 +3,9 @@
 
 ## Overview
 
-The Build Service is composed of controllers that create and configure build pipelines. The main input for the Build Service is a Component CR managed by the [Hybrid Application Service (HAS)](hybrid-application-service.md).
+The Build Service is composed of controllers that create and configure build pipelines. The main input for the Build Service is a Component CR managed by the Konflux UI or created manually via `kubectl`.
 
-![](../diagrams/build-service/build-service.drawio.svg)
+![](../diagrams/build-service/build-service-diagram.svg)
 
 ### Dependencies
 
@@ -19,170 +19,117 @@ The Build Service is dependent on the following services:
 
 The Build Service contains these controllers:
 - Component Build Controller
-  - Monitors Component CRs and creates PipelineRuns - directly or via [Pipelines As Code (PaC)](https://pipelinesascode.com) provided by Pipeline Service.
+  - Monitors Component CRs and creates PipelineRun definitions which will be used by [Pipelines As Code (PaC)](https://pipelinesascode.com) provided by Pipeline Service.
 - PaC PipelineRun Pruner Controller
-  - Deletes PipelineRuns managed by Pipelines As Code for Components that were deleted.
-- Git Tekton Resources Renovater
-  - Provides updates for the .tekton directory in the user repository which has been created by Component Build Controller in Custom Mode.
+  - Deletes PipelineRuns for Components that were deleted.
+- Component dependency update (nudging) controller
+  - Monitors push PipelineRuns and based on set relationships runs renovate which updates
+    SHA for image from PipelineRun in user's repository.
 
 ### Component Build Controller
 
-Component Build Controller is managed by Component CR changes. It's using Component CR annotations and `.status.devfile` for selecting a mode and configuration of the PipelineRuns.
+Component Build Controller is managed by Component CR changes (creation or update).
+It's using Component CR annotations and configuration of the PipelineRuns.
 
 #### Modes
+The prerequisite is to have installed GitHub App which is used by the Build Service in the user's repository, or have gitlab/github secret created for usage via webhook
+([creating GitLab secrets](https://konflux.pages.redhat.com/docs/users/building/creating-secrets.html#gitlab-source-secret)).
 
-Component Build Controller is working in two modes:
-- Default Mode
-  - Mode where PipelineRuns are created **directly** by the Build Service.
-- Custom Mode
-  - Integrates with Pipelines As Code, the Component Build Controller creates PipelineRuns definitions in the user code repository.
-  - The prerequisite is to have installed GitHub App which is used by the Build Service in the user's repository.
+Component Build Controller is working in multiple ways based on a request annotation `build.appstudio.openshift.io/request`:
+- PaC provision, annotation value `configure-pac` (default when request annotation isn't set)
+    - Sets up webhook if GitHub App isn't used.
+    - Integrates with Pipelines As Code, creates PipelineRun definitions in the user code repository.
+- PaC provision without MR creation, annotation value `configure-pac-no-mr`
+    - Sets up webhook if GitHub App isn't used.
+    - Integrates with Pipelines As Code, doesn't create PipelineRun definitions in the user code repository.
+- PaC unprovision, annotation value `unconfigure-pac`
+    - Removes webhook created during provisioning if GitHub App wasn't used.
+    - Creates PR removing PipelineRuns definitions from the user code repository.
+- Trigger PaC build, annotation value `trigger-pac-build`
+    - Re-runs push pipeline runs (used for re-running failed push pipelines).
 
-Default mode:
-1. Wait until the component has `.status.devfile` set
-1. Get data from `.status.devfile` and use them for creating PipelineRun
-1. Set annotation on the component - `appstudio.openshift.io/component-initial-build: processed`
+All those requests first wait for `.spec.containerImage` to be set, either manually or
+by image-controller via
+[ImageRepository CR](https://github.com/konflux-ci/architecture/blob/main/architecture/image-controller.md#to-create-an-image-repository-for-a-component-apply-this-yaml-code).
 
-Delete annotation `appstudio.openshift.io/component-initial-build` on Component to retrigger PipelineRun in Default mode.
+PaC provision:
+1. Sets up webhook in the respository if GitHub App isn't used.
+1. Creates or reuses Repository CR (Component CR is set as the owner).
+1. Creates merge request in the user code repository with PipelineRun definitions.
+1. Sets `build.appstudio.openshift.io/status` annotation with either error, or state `enabled` and merge request link.
+1. Sets finalizer `pac.component.appstudio.openshift.io/finalizer`.
+1. Removes `build.appstudio.openshift.io/request` annotation.
 
-For the selection of Custom mode the Component CR must have set annotation `appstudio.openshift.io/pac-provision` to `request`.
+PaC provision without MR creation:
+1. Sets up webhook in the repository if GitHub App isn't used.
+1. Creates or reuses Repository CR (Component CR is set as the owner).
+1. Doesn't create merge request in the user code repository with PipelineRun definitions, that is up to user.
+1. Sets `build.appstudio.openshift.io/status` annotation with either error, or state `enabled`.
+1. Sets finalizer `pac.component.appstudio.openshift.io/finalizer`.
+1. Removes `build.appstudio.openshift.io/request` annotation.
 
-Custom Mode:
-1. Wait until the component has `.status.devfile` set
-1. Get data from `.status.devfile`, use them for creating `.tekton` folder in the user's repository and create Repository CR so that Pipelines as Code is configured to monitor the user's repository.
-1. Change the value of `appstudio.openshift.io/pac-provision` annotation to `done` in case the previous step was successful, in case of an issue the annotation is set to `error` and annotation `appstudio.openshift.io/pac-provision-error` with more details about the error is added.
+PaC unprovision:
+1. Removes finalizer `pac.component.appstudio.openshift.io/finalizer`.
+1. Removes webhook from repository if GitHub App isn't used and the repository isn't used in another component.
+1. Creates merge request in the user code repository removing PipelineRun definitions.
+1. Sets `build.appstudio.openshift.io/status` annotation with either error, or state `disabled` and merge request link.
+1. Removes `build.appstudio.openshift.io/request` annotation.
+
+Trigger PaC build:
+1. Triggers push pipeline via PaC incoming webhook, requires pipeline run name to be the same as it was named during provisioning `$COMPONENT_NAME-on-push`.
+1. Sets `build.appstudio.openshift.io/status` annotation when error occures.
+1. Removes `build.appstudio.openshift.io/request` annotation.
 
 #### PipelineRun selection
+Available and default pipelines are in the config map present on the cluster in controller's namespace
+[build pipelines config](https://github.com/redhat-appstudio/infra-deployments/blob/main/components/build-service/base/build-pipeline-config/build-pipeline-config.yaml).
 
-The Build Service owns [BuildPipelineSelector CRD](https://redhat-appstudio.github.io/architecture/ref/build-service.html#buildpipelineselector) which defines which PipelineRun to select for the Component CR. By default global BuildPipelineSelector `build-pipeline-selector` in `build-service` namespace is used. BuildPipelineSelector CR contains selectors, the first matching selector is used for the Component CR. The list of selectors can be extended by creating BuildPipelineSelector CR with the same name as the Application CR in the user's namespace. This will ensure that it is applied to Component CRs under the corresponding Application CR. The list of selectors can be also extended for the whole user namespace by creating BuildPipelineSelector CR named `build-pipeline-selector` in the user's namespace.
+Build pipeline is selected based on `build.appstudio.openshift.io/pipeline` annotation,
+when annotation is missing, annotation with default pipeline (based on config map) will be added.
 
-Selectors are processed in this order:
-- BuildPipelineSelector CR with the same name as Application CR in the user's namespace
-- BuildPipelineSelector CR named `build-pipeline-selector` in the user's namespace
-- BuildPipelineSelector CR named `build-pipeline-selector` in `build-service` namespace
+Annotation value is json in string eg. `'{"name":"docker-build","bundle":"latest"}`.
+Name is the name of the pipeline, and the bundle is either `latest` which will use the tag from config map
+or specific tag for the bundle (used mostly for testing).
 
-If there is no match then the default pipeline hardcoded in the Build Service is used.
+When specified pipeline doesn't exist in config map, it will result with error.
 
-Example of BuildPipelineSelector:
-```yaml
-apiVersion: appstudio.redhat.com/v1alpha1
-kind: BuildPipelineSelector
-metadata:
-  name: build-pipeline-selector
-  namespace: my-tenant
-spec:
-  selectors:
-  - name: my-component
-    pipelineRef:
-      resolver: bundles
-      params:
-      - name: bundle
-        value: quay.io/my-user/my-bundle:v1.0
-      - name: name
-        value: my-bundle
-      - name: kind
-        value: pipeline
-    pipelineParams:
-    - name: test
-      value: fbc
-    when:
-      language: java
-      componentName: my-component
-      projectType: springboot
-  - name: Label section
-    pipelineRef:
-      resolver: bundles
-      params:
-      - name: bundle
-        value: quay.io/my-user/my-bundle:v1.0
-      - name: name
-        value: labelled
-      - name: kind
-        value: pipeline
-    when:
-      labels:
-        mylabel: test
-  - name: Docker build
-    pipelineRef:
-      resolver: bundles
-      params:
-      - name: bundle
-        value: quay.io/redhat-appstudio-tekton-catalog/pipeline-docker-build:3649b8ca452e7f97e016310fccdfb815e4c0aa7e
-      - name: name
-        value: docker-build
-      - name: kind
-        value: pipeline
-    when:
-      dockerfile: true
-  - name: NodeJS
-    pipelineRef:
-      resolver: bundles
-      params:
-      - name: bundle
-        value: quay.io/redhat-appstudio-tekton-catalog/pipeline-nodejs-builder:3649b8ca452e7f97e016310fccdfb815e4c0aa7e
-      - name: name
-        value: nodejs-builder
-      - name: kind
-        value: pipeline
-    when:
-      language: nodejs,node
-  - name: Fallback
-    pipelineRef:
-      resolver: bundles
-      params:
-      - name: bundle
-        value: quay.io/my-user/my-fallback:v1.0
-      - name: name
-        value: fallback
-      - name: kind
-        value: pipeline
-```
-
-In the example the first selector will match only when the component CR name is `my-component` and it's defined in the devfile or detected with `language: java` and `projectType: springboot` if all requests are matching then PipelineRun is generated based on `pipelineRef` and pipelineRun parameters are set to pipelineParams. If any of `when` condition does not match then it's checking the next selector. The `Fallback` sector does not contain `when` so it will be processed in case previous selectors do not match.
-
-`when` element could contain:
-- language
-  - Name of language from devfile .metadata.language, multiple languages can be defined: `java,nodejs,node`
-- componentName
-  - Name of Component CR
-- projectType
-  - projectType from devfile .metadata.projectType, can contain multiple values separated by a comma.
-- dockerfile
-  - if the Docker file is defined in generated devfile. Boolean value.
-- annotations
-  - match by Component CR annotations, expects map.
-- labels
-  - match by Component CR labels, expects map.
-
+#### PipelineRun parameters
 There are a few parameters that are set in PipelineRun created by the Build Service:
-- git-url - taken from Component CR's spec.source.gitSource.url
-- revision - taken from Component CR's spec.source.gitSource.revision when it's defined, otherwise it's using the default branch of the git repository
-- output-image - generated by the Build Service the image repository is taken from Component CR's.
-  - for Default mode, the tag is `initial-build-$TIMESTAMP-$RANDOM_NUMBER"`
-  - for Custom mode, the tag is `{{ revision }}` which is evaluated by Pipelines As Code to commit SHA.
-- docker-file - path to Dockerfile, only used when dockerfile is detected in Component's devfile
-- path-context - context path for docker build, only used when dockerfile is detected in Component's devfile
-- skip-checks - set to 'true' when Component contains annotation `skip-initial-checks: true`. This parameter is handled in pipelines so that when it's set to 'true' then testing task are skipped.
+- git-url - set to `'{{source_url}}'` (evaluated by PaC to git url)
+- revision - set to `'{{revision}}'` (evaluated by PaC to git commit SHA)
+- output-image - taken from Component CR's `spec.containerImage`,
+  for push pipeline appended tag `:{{revision}}`
+  and for pull pipeline appended tag `:on-pr-{{revision}}`
+- image-expires-after - set only for pull pipelines, value hadcoded in the code or from ENV variable `IMAGE_TAG_ON_PR_EXPIRATION`
+- dockerfile - path to Dockerfile, taken from Component CR's `spec.source.git.dockerfileUrl`,
+  default is `Dockerfile`
+- path-context - path to subdirectory with context, when used taken from Component CR's `spec.source.git.context`
+
+Additionally in [build pipelines config](https://github.com/redhat-appstudio/infra-deployments/blob/main/components/build-service/base/build-pipeline-config/build-pipeline-config.yaml)
+pipelines may have specified `additional-params` which will be added with default values from pipeline itself.
 
 ### PaC PipelineRun Pruner Controller
-
-In Default mode the PipelineRuns are connected to Component CR using OwnerRef, which handles the deletion of the PipelineRun CR when Component CR is deleted.
-
-In Custom mode the PipelineRuns creation is handled by Pipelines as Code and there is no cleanup of the PipelineRuns when the Repository CR which manages the git repository is deleted.
-
 The purpose of the PaC PipelineRun Pruner Controller is to remove the PipelineRun CRs created for Component CR which is being deleted.
 
-### Git Tekton Resources Renovater
+It will remove all PipelineRuns based on `appstudio.openshift.io/component` label in PipelineRun.
 
-In Custom mode the PipelineRun definition is created in the user's git repository under `.tekton` folder, this file is generated by Component Build Controller during Component CR creation. Git Tekton Resources Renovater is taking care of updating content of `.tekton` folder during the lifetime of the Component CR.
+### Component dependency update controller (nudging)
+Monitors push PipelineRuns and based on defined relationships runs renovate,
+which updates SHA for the image produced by PipelineRun in user's repository.
 
-Git Tekton Resources Renovater triggers the creation of Job CRs when BuildPipelineSelector `build-pipeline-selector` in `build-service` namespace is updated.
+Relationships can be set in a Component CR via `spec.build-nudges-ref` (list of components to be nudged)
 
-Workflow:
-1. Get repositories installed for the GitHub Application matching to Components CRs and get tokens to access them.
-1. Split the workload into multiple jobs where each job:
-    - Runs [renovate](https://www.mend.io/free-developer-tools/renovate/) for 20 GitHub users/organizations.
+1. When PipelineRun is for a component which has set `spec.build-nudges-ref`, it will add finalizer to it
+`build.appstudio.openshift.io/build-nudge-finalizer`.
+1. It will wait for PipelineRun to successfully finish.
+1. When PipelineRun successfully finishes, it will run renovate on user's repositories
+   (for components specified in `spec.build-nudges-ref`),
+   updating files with SHA of the image which was built by PipelineRun.
+1. Renovate will create merge request in user's repository if it finds matches.
+1. Removes `build.appstudio.openshift.io/build-nudge-finalizer` finalizer from PipelineRun.
 
-Renovate config is scoped only to `.tekton` folder.
+Default files which will be nudged are: `.*Dockerfile.*, .*.yaml, .*Containerfile.*`.
 
-When a new version of the task bundle or pipeline bundle is detected then a new pull-request is created in the user repository.
+Users can modify list via:
+- `build.appstudio.openshift.io/build-nudge-files` annotation in push PipelineRun definition.
+- [custom nudging config map](https://konflux.pages.redhat.com/docs/users/building/component-nudges.html#customizing-nudging-prs) with `fileMatch` (takes precedence over annotation).
