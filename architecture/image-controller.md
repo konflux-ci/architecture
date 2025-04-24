@@ -1,19 +1,34 @@
 # Image Controller
 
 # Overview
-Image controller sets up and manages container image repositories for an application's components. This enables greater component isolation within Konflux where each component has its own image repository and secret for pushing images built via Konflux.
+Image controller sets up and manages container image repositories in configured quay.io organization.
+It works either for general purpose image repository or [Component](https://konflux-ci.dev/architecture/ref/application-environment-api.html#component)-specific image repository.
 
-The image controller can perform three actions on image repositories by working together with [Component](https://konflux-ci.dev/architecture/ref/application-environment-api.html#component)-specific ImageRepository custom resource.
+The image controller can perform multiple actions with use of ImageRepository custom resources.
 
-- **Setup image repository**: Image controller creates an image repository for the Component CR in a remote image registry as well as a robot account which is specific to that repository for image push. A Kubernetes Secret object is also created with that robot account token in order to make it available for build PipelineRun.
+- **Setup image repository**: create an image repository and a robot accounts
+  which are specific to that repository for image push and pull.
+  A Kubernetes Secret objects are also created with push and pull robot account tokens,
+  in order to make it available for build PipelineRun via service account.
 
-- **Modify visibility**: Image controller is able to switch an image repository's visibility between public and private.
+- **Modify repository visibility**: switch an image repository's visibility between public and private.
 
-- **Cleanup**: When a Component CR is requested to be deleted, image controller will remove component's image repository and robot account from the remote registry. The Kubernetes Secret will be removed along with the Component CR eventually due to the ownership established between them.
+- **Rotating credentials for repository**: rotate repository credentials, and update relevant secrets.
+
+- **Verify and fix secrets linked to ServiceAccount**: verify and fix linking of secrets to ServiceAccount.
+
+- **Cleanup**: When a Component CR is requested to be deleted, image controller will remove
+  component's image repository (Component owns ImageRepository) and robot account from the remote registry
+  (it is possible to skip repository removal).
+  The Kubernetes Secret will be removed along with the Component CR eventually due to the
+  ownership established between them (ImageRepository owns Secret).
 
 # Dependencies
 
-Image controller does not depend on other Konflux services, but a remote image registry. Konflux services are able to use the resources prepared by image controller, e.g. Build Service makes the Secret available to every build PipelineRun of a component for image push.
+Image controller does not depend on other Konflux services, but a remote image registry.
+Konflux services are able to use the resources prepared by image controller,
+e.g. ServiceAccount with linked Secrets is available to every build PipelineRun of a component
+for pushing image.
 
 # Interface
 
@@ -21,34 +36,123 @@ Image controller does not depend on other Konflux services, but a remote image r
 
 The ImageRepository CR is the interface to interact with image controller to create and manage image repositories in a registry.
 
-To create an image repository for a Component, apply this YAML code:
-
+### To create an general purpose image repository, apply this YAML code:
 ```yaml
 apiVersion: appstudio.redhat.com/v1alpha1
 kind: ImageRepository
 metadata:
     name: imagerepository-for-component-sample
     namespace: test-ns
+```
+As a result, a public image repository `quay.io/my-org/test-ns/imagerepository-for-component-sample`
+will be created, based on `$DEFAULT_REGISTRY_ORG/$USER_NAMESPACE/$IMAGE_REPOSITORY_NAME`.
+- DEFAULT_REGISTRY_ORG - is taken from quay secret in the cluster
+- USER_NAMESPACE - is taken from ImageRepository `.metadata.namespace`
+- IMAGE_REPOSITORY_NAME - is taken from ImageRepository `.metadata.name`
+
+Two robot accounts and corresponding Kubernetes Secrets for push and pull are created.
+
+### To create an image repository for a Component, apply this YAML code:
+```yaml
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: ImageRepository
+metadata:
+    name: imagerepository-for-component-sample
+    namespace: test-ns
+    annotations:
+        image-controller.appstudio.redhat.com/update-component-image: 'true'
     labels:
         appstudio.redhat.com/component: my-component
         appstudio.redhat.com/application: my-app
 ```
+As a result, a public image repository `quay.io/my-org/test-ns/my-component` will be created,
+based on `$DEFAULT_REGISTRY_ORG/$USER_NAMESPACE/$COMPONENT_NAME`.
+- DEFAULT_REGISTRY_ORG - is taken from quay secret in the cluster
+- USER_NAMESPACE - is taken from ImageRepository `.metadata.namespace`
+- COMPONENT_NAME - is taken from Component `.metadata.name`
 
-By default, a public image repository is created, and two robot accounts and corresponding Kubernetes Secret objects are created for pull and push individually. All these artifacts information are recorded in the `.status` field.
+Two robot accounts and corresponding Kubernetes Secrets for push and pull are created.
 
+Annotation `image-controller.appstudio.redhat.com/update-component-image` is required when using
+ImageRepository with Component, as it will set Component's `spec.containerImage` allowing
+Build service controller to continue.
+
+### User defined repository name
+One may request custom image repository name by setting `spec.image.name` field upon
+the ImageRepository object creation, but it will always be prepended by
+`$DEFAULT_REGISTRY_ORG/$USER_NAMESPACE`.
+
+e.g. when `spec.image.name` is set to `my-repository` final repository url will be
+`$DEFAULT_REGISTRY_ORG/$USER_NAMESPACE/my-repository`.
+
+Note, it's not possible to change image repository name after creation.
+Any changes to the field will be reverted by the operator.
+
+### Setting quay.io notifications
+Notifications can be set with:
+```yaml
+spec:
+  notifications:
+  - config:
+      url: https://bombino.api.redhat.com/v1/sbom/quay/push
+    event: repo_push
+    method: webhook
+    title: SBOM-event-to-Bombino
+```
+
+### Changing repository visibility
+By default, a public image repository is created.
 To change the image repository visibility, set `public` or `private` to `.spec.image.visibility`.
 
-To regenerate pull and push token, set `true` to `.spec.credentials.regenerate-token`
+### Credentials rotation for repository
+To regenerate tokens push and pull, set `true` to `.spec.credentials.regenerate-token`, it will also re-create secrets.
 
-To verify if secrets are linked to the ServiceAccount correctly and have a fix if necessary, set `true` to `.spec.credentials.verify-linking`.
+After token rotation, the `spec.credentials.regenerate-token` section will be deleted and
+`status.credentials.generationTimestamp` updated.
 
-`.status` field includes various information about an image repository:
+### Verify and fix secrets linked to ServiceAccount
+- It will link secret to service account if link is missing.
+- It will remove duplicate links of secret in service account.
+- It will remove secret from imagePullSecrets in service account.
 
-- `.status.credentials` includes pull and push Secrets names.
-- `.status.image` includes the repository URL and current visiblity.
+To perform verification and fix, set `true` to `.spec.credentials.verify-linking`.
+
+After verification, the `spec.credentials.verify-linking` section will be deleted.
+
+### Skip repository deletion
+By default, if the ImageRepository resource is deleted, the repository it created in registry
+will get deleted as well.
+
+In order to skip the removal of the repository, set `true` to `image-controller.appstudio.redhat.com/skip-repository-deletion` annotation.
+
+### Status explanation
+ImageRepository CR has `.status` which includes all final information about an image repository:
+
+```yaml
+status:
+  credentials:
+    generationTimestamp: '2025-03-21T14:28:59Z'
+    pull-robot-account: test_pull
+    pull-secret: imagerepository-for-test-image-pull
+    push-robot-account: test_push
+    push-secret: imagerepository-for-test-image-push
+  image:
+    url: quay.io/redhat-user-workloads/test-tenant/test
+    visibility: public
+  notifications:
+    - title: SBOM-event-to-Bombino
+      uuid: aaaaa-......
+  state: ready
+```
+- `.status.credentials` includes info about credentials.
+  - `generationTimestamp` timestamp from when credentials were updated.
+  - `pull-robot-account` robot account name in configured registry organization with read permissions to the repository
+  - `pull-secret` Secret of `dockerconfigjson` type that contains image repository pull robot account token with read permissions.
+  - `push-robot-account`robot account name in configured registry organization with write permissions to the repository
+  - `push-secret`  Secret of `dockerconfigjson` type that contains image repository push robot account token with write permissions.
+- `.status.image` includes the full repository URL and current visibility.
+- `.status.notification` shows info about notifications.
 - `.status.state` shows whether image controller responded last operation request successfully or not.
-
-For more detailed information of the functionalities, please refer to konflux-ci/image-controller [project document](https://github.com/konflux-ci/image-controller/?tab=readme-ov-file#readme).
 
 ## Legacy interaction via Component annotations
 
