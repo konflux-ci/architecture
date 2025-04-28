@@ -39,12 +39,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Download generated API docs
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: api-docs
           path: ref/
       - name: Download generated ADR index
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: adr-index
           path: ADR/
