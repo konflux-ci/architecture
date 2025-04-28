@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout docs repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Generate ADR header
         run: echo "# Architecture Decision Records (ADRs)" > index.md

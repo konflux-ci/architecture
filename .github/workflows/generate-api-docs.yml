@@ -17,41 +17,41 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Checkout docs repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Application and Environment API
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: crd-temp/application-api
           repository: konflux-ci/application-api
 
       - name: Checkout Integration Service API
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: crd-temp/integration-service
           repository: konflux-ci/integration-service
 
       - name: Checkout Release Service API
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: crd-temp/release-service
           repository: konflux-ci/release-service
 
       - name: Checkout Enterprise Contract API
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: crd-temp/enterprise-contract-controller
           repository: enterprise-contract/enterprise-contract-controller
 
       - name: Checkout Internal Services API
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: crd-temp/internal-services
           repository: konflux-ci/internal-services
 
       - name: Checkout Image Controller API
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: crd-temp/image-controller
           repository: konflux-ci/image-controller
