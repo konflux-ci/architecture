@@ -14,6 +14,7 @@ Konflux is using Kubernetes as the control plane for managing its resources. We 
 We will use the built-in Kubernetes RBAC system for Konflux's role and permissions management, and map the following roles to specific permissions, as described in the table below:
 
 ### Roles
+**Viewer:** Members who are mainly interested into CI results.
 **Contributor:** Members who interact with the workspace mostly through pull requests.
 **Maintainer:** Members who manage the workspace without access to sensitive or destructive actions.
 **Admin:** Members who have full access to the workspace including sensitive and destruction actions.
@@ -22,6 +23,29 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 
 |     Role      | Permissions             | API Groups                | Verbs                                           | Resources
 |---------------|-------------------------|---------------------------|-------------------------------------------------|----------------------------------------------------------------------
+| Viewer        | Workspace               | Access to namespaces that backs workspace                                   |
+|               | Application             | appstudio.redhat.com      | get, list, watch                                | applications
+|               | Component               | appstudio.redhat.com      | get, list, watch                                | components, componentdetectionqueries
+|               | ImageRepository         | appstudio.redhat.com      | get, list, watch                                | imagerepositories
+|               | Environment             | appstudio.redhat.com      | get, list, watch                                | promotionruns, snapshotenvironmentbindings, snapshots, environments
+|               | DeploymentTarget        | appstudio.redhat.com      | get, list, watch                                | deploymenttargets
+|               | DeploymentTargetClaim   | appstudio.redhat.com      | get, list, watch                                | deploymenttargetclaims
+|               | *GitOps*                | managed-gitops.redhat.com | get, list, watch                                | gitopsdeployments, gitopsdeploymentmanagedenvironments, gitopsdeploymentrepositorycredentials, gitopsdeploymentsyncruns
+|               | PipelineRun             | tekton.dev                | get, list, watch                                | pipelineruns
+|               | Pipeline Results        | results.tekton.dev        | get, list                                       | results, records, logs
+|               | IntegrationTestScenario | appstudio.redhat.com      | get, list, watch                                | integrationtestscenarios
+|               | Enterprise contract     | appstudio.redhat.com      | get, list, watch                                | enterprisecontractpolicies
+|               | *Release Service*       | appstudio.redhat.com      | get, list, watch                                | releases, releaseplans, releaseplanadmissions
+|               | *JVM Build Service*     | jvmbuildservice.io        | get, list, watch                                | jbsconfigs, artifactbuilds
+|               | *Service Access*        | appstudio.redhat.com      | get, list, watch                                | spiaccesstokenbindings, spiaccesschecks, spiaccesstokens, spifilecontentrequests
+|               | *Remote Secrets*        | appstudio.redhat.com      | get, list, watch                                | remotesecrets
+|               | Build Service           | appstudio.redhat.com      | get, list, watch                                | buildpipelineselectors
+|               | Project Controller      | projctl.konflux.dev       | get, list, watch                                | projects, projectdevelopmentstreams, projectdevelopmentstreamtemplates
+|               | *Configs*               |                           | get, list, watch                                | configmaps
+|               | *Secrets*               |                           |                                                 | secrets
+|               | Add User                |
+|               | User group (with SSO)   |
+|               | CronJob                 | batch                     | get, list, watch                                | cronjobs, jobs
 | Contributor   | Workspace               | Access to namespaces that backs workspace                                   |
 |               | Application             | appstudio.redhat.com      | get, list, watch                                | applications
 |               | Component               | appstudio.redhat.com      | get, list, watch                                | components, componentdetectionqueries
