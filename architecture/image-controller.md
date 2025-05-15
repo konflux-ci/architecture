@@ -30,6 +30,17 @@ Konflux services are able to use the resources prepared by image controller,
 e.g. ServiceAccount with linked Secrets is available to every build PipelineRun of a component
 for pushing image.
 
+## Controllers
+
+The Image Controller contains these controllers:
+- Image controller
+  - Monitors ImageRepository CRs and creates image repository, robot accounts and
+    links secret to service accounts.
+- Application controller
+  - Monitors Application CRs, creates application specific service account `$APPLICATION_NAME-pull`
+    and links there (to both `secrets` and `imagePullSecrets` sections) all pull secrets from
+    all Components in the Application.
+
 # Interface
 
 ## ImageRepository CR
@@ -72,6 +83,12 @@ based on `$DEFAULT_REGISTRY_ORG/$USER_NAMESPACE/$COMPONENT_NAME`.
 - COMPONENT_NAME - is taken from Component `.metadata.name`
 
 Two robot accounts and corresponding Kubernetes Secrets for push and pull are created.
+
+It will also link push secret to component specific service account `build-pipeline-$COMPONENT_NAME`
+used for build pipelines (`secrets` section).
+
+And it will also link pull secret to application specific service account `$APPLICATION_NAME-pull`
+(to both `secrets` and `imagePullSecrets` sections).
 
 Annotation `image-controller.appstudio.redhat.com/update-component-image` is required when using
 ImageRepository with Component, as it will set Component's `spec.containerImage` allowing

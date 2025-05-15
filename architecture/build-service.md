@@ -52,6 +52,9 @@ All those requests first wait for `.spec.containerImage` to be set, either manua
 by image-controller via
 [ImageRepository CR](https://github.com/konflux-ci/architecture/blob/main/architecture/image-controller.md#to-create-an-image-repository-for-a-component-apply-this-yaml-code).
 
+Controller will also create component specific service account `build-pipeline-$COMPONENT_NAME`
+used for build pipelines.
+
 PaC provision:
 1. Sets up webhook in the respository if GitHub App isn't used.
 1. Creates or reuses Repository CR (Component CR is set as the owner).
