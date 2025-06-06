@@ -66,6 +66,7 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 |               | Project Controller      | projctl.konflux.dev       | get, list, watch                                | projects, projectdevelopmentstreams, projectdevelopmentstreamtemplates
 |               | *Configs*               |                           | get, list, watch                                | configmaps
 |               | *Secrets*               |                           |                                                 | secrets
+|               | Pulp Access Controller  | pulp.konflux-ci.dev       | get, list, watch                                | pulpaccessrequests
 |               | Add User                |
 |               | User group (with SSO)   |
 |               | CronJob                 | batch                     | get, list, watch                                | cronjobs, jobs
@@ -89,6 +90,7 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 |               | Project Controller      | projctl.konflux.dev       | get, list, watch, create, update, patch         | projects, projectdevelopmentstreams, projectdevelopmentstreamtemplates
 |               | *Configs*               |                           | get, list, watch                                | configmaps
 |               | *Secrets*               |                           |                                                 | secrets
+|               | Pulp Access Controller  | pulp.konflux-ci.dev       | get, list, watch, create, update, patch         | pulpaccessrequests
 |               | Add User                |
 |               | User group (with SSO)   |
 |               | CronJob                 | batch                     | get, list, watch, create, update, patch         | cronjobs, jobs
@@ -114,6 +116,7 @@ We will use the built-in Kubernetes RBAC system for Konflux's role and permissio
 |               | *Configs*               |                           | get, list, watch, create, update, patch, delete | configmaps
 |               | *Secrets*               |                           | get, list, watch, create, update, patch, delete | secrets
 |               | *Exec to pods*          |                           | create                                          | pods/exec
+|               | Pulp Access Controller  | pulp.konflux-ci.dev       | get, list, watch, create, update, patch         | pulpaccessrequests
 |               | SpaceBindingRequest    | toolchain.dev.openshift.com      | get, list, watch, create, update, patch, delete | spacebindingrequests
 |               | Add User                |
 |               | User group (with SSO)   |
