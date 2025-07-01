@@ -47,31 +47,42 @@ Konflux is a platform for building integrated software that streamlines, consoli
 
 ## System Context
 
-This diagram shows the main actors and external systems that interact with Konflux.
+This block diagram shows the main actors and external systems that interact with Konflux.
 
 ```mermaid
-C4Context
-    System_Boundary(konflux, "Konflux Platform") {
-      Boundary(b1, "tenant") {
-        Person(user, "Developer/User", "Uses Konflux to build, test, and release software")
-        System_Ext(gh, "GitHub / GitLab", "Source code hosting")
-        System_Ext(reg, "OCI Registry", "Stores built images and metadata")
-        System(tenant, "Tenant namespace", "Builds and tests software")
-      }
-      Boundary(b2, "managed") {
-        Person(sre, "SRE/Release Engineer", "Controls release destinations and policies")
-        System_Ext(ext, "External endpoints", "Downstream destinations")
-        System(managed, "Managed namespace", "Releases software")
-      }
+block-beta
+    columns 2
+    Tenant["Tenant Namespace"]
+    Managed["Managed Namespace"]
+
+    User["Developer/User"]
+    SRE["SRE/Release Engineer"]
+    Git["GitHub / GitLab"]
+    OCI["OCI Registry"]
+    Ext["External endpoints"]
+    TenantNS["Tenant namespace"]
+    ManagedNS["Managed namespace"]
+
+    Tenant {
+      User
+      TenantNS
+      Git
+      OCI
     }
-    Rel(user, tenant, "Uses")
-    Rel(user, gh, "Owns")
-    Rel(sre, managed, "Admins")
-    Rel(sre, ext, "Owns")
-    Rel(tenant, gh, "Fetches, updates")
-    Rel(tenant, reg, "Pushes")
-    Rel(managed, reg, "Pulls from")
-    Rel(managed, ext, "Releases to")
+    Managed {
+      SRE
+      ManagedNS
+      Ext
+    }
+
+    User --> TenantNS : Uses
+    User --> Git : Owns
+    SRE --> ManagedNS : Admins
+    SRE --> Ext : Owns
+    TenantNS --> Git : Fetches, updates
+    TenantNS --> OCI : Pushes
+    ManagedNS --> OCI : Pulls from
+    ManagedNS --> Ext : Releases to
 ```
 
 The diagram below shows the services that make up Konflux and their API resources.
@@ -127,32 +138,32 @@ these resources.
 
 ## Service (Component) Context
 
-This diagram shows the major subsystems and their interactions within Konflux.
+This block diagram shows the major subsystems and their interactions within Konflux.
 
 ```mermaid
-C4Container
-    System_Boundary(konflux, "Konflux") {
-      Container(ui, "Hybrid Application Console", "React/TypeScript", "Unified UI")
-      Container(build, "Build Service", "Go", "Manages build pipelines")
-      Container(image, "Image Controller", "Go", "Manages image repositories")
-      Container(integration, "Integration Service", "Go", "Manages integration tests and snapshots")
-      Container(release, "Release Service", "Go", "Manages release pipelines")
-      Container(pac, "Pipelines As Code (PAC)", "Go", "Provides CI APIs")
-      Container(pipeline, "Pipeline Service", "Go", "Provides Tekton APIs")
-      Container(ec, "Conforma", "Go", "Enforces release policies")
-      Container(internal, "Internal Services", "Go", "Manages internal access")
-    }
-    Rel(ui, build, "Configures/monitors builds")
-    Rel(build, image, "Requests image repos")
-    Rel(build, pac, "Configures webhook")
-    Rel(pac, pipeline, "Triggers pipelines")
-    Rel(ui, build, "Configures/monitors tests")
-    Rel(integration, pipeline, "Triggers test pipelines")
-    Rel(integration, release, "Triggers releases")
-    Rel(ui, build, "Configures/monitors releases")
-    Rel(release, pipeline, "Triggers release pipelines")
-    Rel(release, ec, "Validates policies")
-    Rel(release, internal, "Initiates private actions")
+block-beta
+    columns 3
+    UI["Hybrid Application Console"]
+    Build["Build Service"]
+    Image["Image Controller"]
+    Integration["Integration Service"]
+    Release["Release Service"]
+    PAC["Pipelines As Code (PAC)"]
+    Pipeline["Pipeline Service"]
+    EC["Conforma"]
+    Internal["Internal Services"]
+
+    UI --> Build : Configures/monitors builds
+    Build --> Image : Requests image repos
+    Build --> PAC : Configures webhook
+    PAC --> Pipeline : Triggers pipelines
+    UI --> Build : Configures/monitors tests
+    Integration --> Pipeline : Triggers test pipelines
+    Integration --> Release : Triggers releases
+    UI --> Build : Configures/monitors releases
+    Release --> Pipeline : Triggers release pipelines
+    Release --> EC : Validates policies
+    Release --> Internal : Initiates private actions
 ```
 
 Each service that makes up Konflux is further explained in its own document.
