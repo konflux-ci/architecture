@@ -22,15 +22,15 @@ Konflux is a platform for building integrated software that streamlines, consoli
 - Build semantically reproducible artifacts. Any configuration which has the potential to affect the semantic functionality of a build should be recorded in the provenance and source controlled whenever possible.
 - Be extensible. Provide opinionated [build pipelines](https://github.com/redhat-appstudio/build-definitions/) and [release pipelines](https://github.com/redhat-appstudio/release-service-catalog), but let users extend those and create their own.
 - "Shift left" the decisions for releasing into PRs; you should be able to release artifacts from a PR as soon as it is merged.
-- Just in time scaling: In contrast to “just in case” scaling. The system should be able to scale without capacity reserved ahead of time.
+- Just in time scaling: In contrast to "just in case" scaling. The system should be able to scale without capacity reserved ahead of time.
 - Static stability: the overall system continues to work when a dependency is impaired.
 - Enhancements to the pipelines (the extensible elements of the system) should be rolled out in such a way that individual users can control **when** they accept the update to their workspaces, their processes. Use policy to drive eventual compliance.
-- Each subservice can fulfill its primary use cases independently, without relying on other systems’ availability. An exception to this is the tekton [pipeline service] which provides foundational APIs on which [build-service], [integration-service], and [release-service] depend.
+- Each subservice can fulfill its primary use cases independently, without relying on other systems' availability. An exception to this is the tekton [pipeline service] which provides foundational APIs on which [build-service], [integration-service], and [release-service] depend.
 - Each sub-service owns its data and logic.
 - Communication among services and participants is always asynchronous.
 - Each sub-service is owned by one team. Ownership does not mean that only one team can change the code, but the owning team has the final decision.
 - Minimize shared resources among sub-services.
-- Participants: onboarding new participants, the flexibility to satisfy the technology preferences of a heterogeneous set of participants. Think of this as the ability to easily create an ecosystem and the ability to support that ecosystem’s heterogeneous needs.
+- Participants: onboarding new participants, the flexibility to satisfy the technology preferences of a heterogeneous set of participants. Think of this as the ability to easily create an ecosystem and the ability to support that ecosystem's heterogeneous needs.
 - Security, Privacy, and Governance: Sensitive data is protected by fine-grained access control
 
 ## Architecture Constraints
@@ -45,7 +45,30 @@ Konflux is a platform for building integrated software that streamlines, consoli
 
 > :bulb: Adding new functionality usually looks like either adding a new **controller** or adding a new **tekton task**.
 
-## Application Context
+## System Context
+
+This diagram shows the main actors and external systems that interact with Konflux.
+
+```mermaid
+C4Context
+    Person(user, "Developer/User", "Uses Konflux to build, test, and release software")
+    Person(sre, "SRE/Release Engineer", "Controls release destinations and policies")
+    System_Boundary(konflux, "Konflux Platform") {
+      System(tenant, "Tenant namespace", "Builds and tests software")
+      System(managed, "Managed namespace", "Releases software")
+    }
+    System_Ext(gh, "GitHub / GitLab", "Source code hosting")
+    System_Ext(reg, "OCI Registry", "Stores built images and metadata")
+    System_Ext(ext, "External endpoints", "Downstream destinations")
+    Rel(user, tenant, "Uses")
+    Rel(user, gh, "Owns")
+    Rel(sre, managed, "Admins")
+    Rel(sre, ext, "Owns")
+    Rel(tenant, gh, "Fetches, updates")
+    Rel(tenant, reg, "Pushes")
+    Rel(managed, reg, "Pulls from")
+    Rel(managed, ext, "Releases to")
+```
 
 The diagram below shows the services that make up Konflux and their API resources.
 
@@ -100,6 +123,34 @@ these resources.
 
 ## Service (Component) Context
 
+This diagram shows the major subsystems and their interactions within Konflux.
+
+```mermaid
+C4Container
+    System_Boundary(konflux, "Konflux") {
+      Container(ui, "Hybrid Application Console", "React/TypeScript", "Unified UI")
+      Container(build, "Build Service", "Go", "Manages build pipelines")
+      Container(image, "Image Controller", "Go", "Manages image repositories")
+      Container(integration, "Integration Service", "Go", "Manages integration tests and snapshots")
+      Container(release, "Release Service", "Go", "Manages release pipelines")
+      Container(pac, "Pipelines As Code (PAC)", "Go", "Provides CI APIs")
+      Container(pipeline, "Pipeline Service", "Go", "Provides Tekton APIs")
+      Container(ec, "Conforma", "Go", "Enforces release policies")
+      Container(internal, "Internal Services", "Go", "Manages internal access")
+    }
+    Rel(ui, build, "Configures/monitors builds")
+    Rel(build, image, "Requests image repos")
+    Rel(build, pac, "Configures webhook")
+    Rel(pac, pipeline, "Triggers pipelines")
+    Rel(ui, build, "Configures/monitors tests")
+    Rel(integration, pipeline, "Triggers test pipelines")
+    Rel(integration, release, "Triggers releases")
+    Rel(ui, build, "Configures/monitors releases")
+    Rel(release, pipeline, "Triggers release pipelines")
+    Rel(release, ec, "Validates policies")
+    Rel(release, internal, "Initiates private actions")
+```
+
 Each service that makes up Konflux is further explained in its own document.
 
 - [Hybrid Application Service](./hybrid-application-service.md) - A workflow system that runs the validation webhooks for Applications and Components
@@ -113,8 +164,39 @@ Each service that makes up Konflux is further explained in its own document.
   pipelines to release user content to protected destinations.
 - [Pipeline Service](./pipeline-service.md) - A foundational service providing Pipeline APIs and secure supply
   chain capabilities to other services
-- [Enterprise Contract](./enterprise-contract.md) - A specialized subsystem responsible for the
+- [Conforma](./enterprise-contract.md) - A specialized subsystem responsible for the
   definition and enforcement of policies related to how OCI artifacts are built and tested.
+
+## Data Flow View
+This diagram shows the flow of configuration when a user sets up their tenant namespace.
+
+```mermaid
+flowchart TD
+    A[User] --> B[UI]
+    B --> C[Build Service]
+    C --> D[Pipelines as Code]
+    C --> E[Image Controller]
+    E --> F[OCI Registry]
+    B --> G[Integration Service]
+    B --> H[Release Service]
+```
+
+This diagram shows the flow of source code, build artifacts, and metadata through the main subsystems.
+
+```mermaid
+flowchart TD
+    A[Source Code Commit] --> B[Pipelines as Code (PaC)]
+    B --> C[Pipeline Service]
+    C --> D[OCI Registry]
+    C --> E[Integration Service]
+    E --> D
+    E --> F[Release Service]
+    D --> F
+    F --> H[Conforma]
+    G --> I[SBOMs, Attestations, Signatures]
+```
+
+---
 
 ## API References
 
