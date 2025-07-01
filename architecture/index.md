@@ -51,15 +51,19 @@ This diagram shows the main actors and external systems that interact with Konfl
 
 ```mermaid
 C4Context
-    Person(user, "Developer/User", "Uses Konflux to build, test, and release software")
-    Person(sre, "SRE/Release Engineer", "Controls release destinations and policies")
     System_Boundary(konflux, "Konflux Platform") {
-      System(tenant, "Tenant namespace", "Builds and tests software")
-      System(managed, "Managed namespace", "Releases software")
+      Boundary(b1, "tenant") {
+        Person(user, "Developer/User", "Uses Konflux to build, test, and release software")
+        System_Ext(gh, "GitHub / GitLab", "Source code hosting")
+        System_Ext(reg, "OCI Registry", "Stores built images and metadata")
+        System(tenant, "Tenant namespace", "Builds and tests software")
+      }
+      Boundary(b2, "managed") {
+        Person(sre, "SRE/Release Engineer", "Controls release destinations and policies")
+        System_Ext(ext, "External endpoints", "Downstream destinations")
+        System(managed, "Managed namespace", "Releases software")
+      }
     }
-    System_Ext(gh, "GitHub / GitLab", "Source code hosting")
-    System_Ext(reg, "OCI Registry", "Stores built images and metadata")
-    System_Ext(ext, "External endpoints", "Downstream destinations")
     Rel(user, tenant, "Uses")
     Rel(user, gh, "Owns")
     Rel(sre, managed, "Admins")
