@@ -1,3 +1,0 @@
-# GitOps Service
-
-
