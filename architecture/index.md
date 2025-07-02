@@ -107,16 +107,12 @@ Each service that makes up Konflux is further explained in its own document.
   for users' Components.
 - [Image Controller](./image-controller.md) - A subsystem of the build-service that manages the
   creation and access rights to OCI repositories.
-- [Java Rebuilds Service](./jvm-build-service.md) - A subsystem of the build-service that manages
-  the rebuild of binary java jars pulled from maven central for an improved degree of provenance.
 - [Integration Service](./integration-service.md) - A workflow service that manages execution of
   users' tests and promotion in response to completing builds.
 - [Release Service](./release-service.md) - A workflow service that manages execution of privileged
   pipelines to release user content to protected destinations.
 - [Pipeline Service](./pipeline-service.md) - A foundational service providing Pipeline APIs and secure supply
   chain capabilities to other services
-- [Service Provider Integration](./service-provider-integration.md) - A foundational service
-  providing user secret management to other services.
 - [Enterprise Contract](./enterprise-contract.md) - A specialized subsystem responsible for the
   definition and enforcement of policies related to how OCI artifacts are built and tested.
 
@@ -125,8 +121,6 @@ Each service that makes up Konflux is further explained in its own document.
 ### Developer Services
 
 - [Application and Environment API](../ref/application-environment-api.md)
-- [Service Provider](../ref/service-provider.md)
-- [GitOps Service](../ref/gitops.md):
 
 ### Naming Conventions
 
