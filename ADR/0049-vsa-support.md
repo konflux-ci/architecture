@@ -34,6 +34,8 @@ Conforma checks.
 
 ## Consequences
 
+### Impacts
+
 - Conforma policy [packages](https://conforma.dev/docs/policy/authoring.html#_package_annotations)
   provide metadata that associates a set of rules with a VSA [verification level](https://slsa.dev/spec/v1.1/verification_summary#fields).
   - Rules that validate SLSA build levels MUST indicate the appropriate [SlsaResult](https://slsa.dev/spec/v1.1/verification_summary#emslsaresult-stringem)
@@ -55,3 +57,13 @@ Conforma checks.
   - Detect if a VSA has been produced for a given artifact(s) (on Rekor or a well-known OCI repository).
   - Determine if the VSA was produced by a trusted verifier.
   - Use the VSA's verification levels to determine if an artifact satistfies the release policy.
+
+### Alternatives Considered
+
+We are working with the in-toto community to adopt this concept more broadly ("simple verification
+attestation"). The conversation is active with a [proposed specification](https://github.com/in-toto/attestation/pull/470).
+The proposal has the notion of a "verified property", which generalizes the SLSA `verifiedLevels`
+idea. These may be easier to generate from Conforma rules and policies.
+
+If the proposal is accepted, this ADR should be reconsidered to use the more general simple/summary
+attestation format.
