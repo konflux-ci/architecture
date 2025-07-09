@@ -123,6 +123,20 @@ Each service that makes up Konflux is further explained in its own document.
 - [Enterprise Contract](./enterprise-contract.md) - A specialized subsystem responsible for the
   definition and enforcement of policies related to how OCI artifacts are built and tested.
 
+## Data Flow
+
+When a commit lands on a tracked branch in a user's git repository, the following happens in the sytem.
+
+- The source repository fires a webhook which is received by the the Pipelines as Code (PaC) webhook receiver (part of [Pipeline Service]).
+- PaC starts a build [PipelineRun] in the tenant namespace, following the definition in the `.tekton/` directory.
+- Depending on the user's configuration in their `.tekton/` directory, this build [PipelineRun] clones the repository, securely prefetches dependencies, builds the image, generates an SBOM from the list of prefetched depdencies, pushes the image and the SBOM to the OCI registry, and performs a number of scans and checks on the image and its sources. The results of the scans and other intermediary [trusted artifacts] are also pushed to the OCI registry.
+- In response to the completion of the build [PipelineRun], the tekton chains controller (part of [Pipeline Service]) captures the state of the build [Pipeline Run], generates an SLSA provenance attestation, signs it, and pushes it to the OCI registry, referring to the image.
+- In response to the completion of the build [PipelineRun], the [Integration Service] responds and constructs a [Snapshot] containing the new image for the given [Component] as well as the latest known good builds of the other components in the [Application]. The Snapshot is a list of references to the OCI pullspecs of the built artifacts.
+- In response to the creation of the [Snapshot], the [Integration Service] consults any [IntegrationTestScenarios] defined in the tenant namespace and creates test [PipelineRuns] to execute tests against the [Snapshot] for each one.
+- In response to the completion of the test [PipelineRuns], the [Integration Service] consults any [ReleasePlans] defined in the tenant namespace and creates a [Release] for each one.
+- In response to the creation of the [Release], the [Release Service] creates release [PipelineRuns] in the tenant namespace if tenant release pipelines are defined on the [ReleasePlan] or it creates release [PipelineRunsn the managed namespace if it can find a matching [ReleasePlanAdmission] in the managed namespace for the [ReleasePlan] in the tenant namespace.
+- The release pipeline in the managed namespace invokes the [Enterprise Contract] cli to verify that the build's SLSA provenance attestation passes the policy configured on the [ReleasePlanAdmission]. If it does, the release pipeline releases the content by copying it to production registries or to remote APIs as configured by the [ReleasePlanAdmission].
+
 ## API References
 
 ### Developer Services
