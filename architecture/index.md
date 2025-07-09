@@ -44,6 +44,60 @@ Konflux is a platform for building integrated software that streamlines, consoli
 
 ## Application Context
 
+```mermaid
+graph TD
+    subgraph tenant[Tenant Namespace]
+        App[Application] --> Comp["Component(s)"]
+        App --> Snap["Snapshot(s)"]
+        App --> ITS["IntegrationTestScenario(s)"]
+        App --> RP["ReleasePlan(s)"]
+
+        Comp -- builds --> Snap
+        ITS -- tests --> Snap
+        Snap -- triggers --> Release["Release(s)"]
+        RP -- defines release for --> Release
+
+        Release -- initiates --> PR["PipelineRun(s) (Tenant)"]
+    end
+
+    subgraph managed[Managed Namespace]
+        RPA["ReleasePlanAdmission(s)"]
+        ECP["EnterpriseContractPolicy(s)"]
+
+        Release -- initiates --> PRM["PipelineRun(s) (Managed)"]
+        RPA -- accepts release from --> RP
+        PRM -- enforces policy via --> ECP
+    end
+
+    style App fill:#f9f,stroke:#333,stroke-width:2px
+    style Comp fill:#f9f,stroke:#333,stroke-width:2px
+    style Snap fill:#ccf,stroke:#333,stroke-width:2px
+    style ITS fill:#f9f,stroke:#333,stroke-width:2px
+    style RP fill:#f9f,stroke:#333,stroke-width:2px
+    style Release fill:#ccf,stroke:#333,stroke-width:2px
+    style PR fill:#eee,stroke:#333,stroke-width:1px
+    style RPA fill:#f9f,stroke:#333,stroke-width:2px
+    style ECP fill:#f9f,stroke:#333,stroke-width:2px
+    style PRM fill:#eee,stroke:#333,stroke-width:1px
+
+    classDef controlPlane fill:#f9f,stroke:#333,stroke-width:2px;
+    class App,Comp,ITS,RP,RPA,ECP controlPlane;
+
+    classDef dataPlane fill:#ccf,stroke:#333,stroke-width:2px;
+    class Snap,Release dataPlane;
+
+    classDef tekton fill:#eee,stroke:#333,stroke-width:1px;
+    class PR,PRM tekton;
+
+    click App href "https://redhat-appstudio.github.io/docs/api-references/application-environment-api/#application" "Application API Reference"
+    click Comp href "https://redhat-appstudio.github.io/docs/api-references/application-environment-api/#component" "Component API Reference"
+    click Snap href "https://redhat-appstudio.github.io/docs/api-references/application-environment-api/#snapshot" "Snapshot API Reference"
+    click ITS href "https://redhat-appstudio.github.io/docs/api-references/integration-service/#integrationtestscenario" "IntegrationTestScenario API Reference"
+    click Release href "https://redhat-appstudio.github.io/docs/api-references/release-service/#release" "Release API Reference"
+    click RP href "https://redhat-appstudio.github.io/docs/api-references/release-service/#releaseplan" "ReleasePlan API Reference"
+    click RPA href "https://redhat-appstudio.github.io/docs/api-references/release-service/#releaseplanadmission" "ReleasePlanAdmission API Reference"
+```
+
 - An [Application] represents a functionally coherent set of [Components] that should be built,
   tested, and released together. The user provides and names their [Applications]. They are
   generally long-lived and don't change much after they are created.
@@ -107,6 +161,47 @@ Regarding tenant resources and managed resources.
 
 ## Service (Component) Context
 
+```mermaid
+graph TD
+    subgraph Konflux Services
+        HAS[Hybrid Application Service]
+        BS[Build Service]
+        IC[Image Controller]
+        IS[Integration Service]
+        RS[Release Service]
+        PS[Pipeline Service]
+        EC[Enterprise Contract]
+    end
+
+    HAS -- Manages Applications & Components --> KubeAPI[Kubernetes API Server]
+    BS -- Manages Build Pipelines --> PS
+    IC -- Manages OCI Repos & Access --> BS
+    IS -- Manages Tests & Promotion --> PS
+    IS -- Creates Snapshots & Releases --> KubeAPI
+    RS -- Manages Release Pipelines --> PS
+    RS -- Creates Releases --> KubeAPI
+    PS -- Provides Foundational APIs (Tekton) --> KubeAPI
+    EC -- Defines & Enforces Policies --> KubeAPI
+
+    style HAS fill:#add8e6,stroke:#333,stroke-width:2px;
+    style BS fill:#add8e6,stroke:#333,stroke-width:2px;
+    style IC fill:#add8e6,stroke:#333,stroke-width:2px;
+    style IS fill:#add8e6,stroke:#333,stroke-width:2px;
+    style RS fill:#add8e6,stroke:#333,stroke-width:2px;
+    style PS fill:#add8e6,stroke:#333,stroke-width:2px;
+    style EC fill:#add8e6,stroke:#333,stroke-width:2px;
+    style KubeAPI fill:#f0e68c,stroke:#333,stroke-width:2px;
+
+    click HAS href "https://github.com/redhat-appstudio/application-service" "Hybrid Application Service"
+    click BS href "https://github.com/redhat-appstudio/build-service" "Build Service"
+    click IC href "https://github.com/redhat-appstudio/image-controller" "Image Controller"
+    click IS href "https://github.com/redhat-appstudio/integration-service" "Integration Service"
+    click RS href "https://github.com/redhat-appstudio/release-service" "Release Service"
+    click PS href "https://github.com/redhat-appstudio/pipeline-service" "Pipeline Service"
+    click EC href "https://github.com/redhat-appstudio/enterprise-contract" "Enterprise Contract"
+    click KubeAPI href "https://kubernetes.io/docs/concepts/architecture/controller/" "Kubernetes API Server (Controllers)"
+```
+
 Each service that makes up Konflux is further explained in its own document.
 
 - [Hybrid Application Service](./hybrid-application-service.md) - A workflow system that runs the validation webhooks for Applications and Components
@@ -124,6 +219,49 @@ Each service that makes up Konflux is further explained in its own document.
   definition and enforcement of policies related to how OCI artifacts are built and tested.
 
 ## Data Flow
+
+```mermaid
+sequenceDiagram
+    participant GR as Git Repository
+    participant PW as PaC Webhook Receiver (Pipeline Service)
+    participant TNP as Tenant Namespace
+    participant PS as Pipeline Service
+    participant IS as Integration Service
+    participant REG as OCI Registry
+    participant RS as Release Service
+    participant MNP as Managed Namespace
+    participant EC as Enterprise Contract
+    participant Prod as Production Destination
+
+    GR->>PW: Webhook (commit lands)
+    PW->>TNP: Starts Build PipelineRun
+    activate TNP
+    TNP->>REG: Clones repo, builds image, pushes image/SBOM/scan results/attestations
+    TNP->>PS: Build PipelineRun completes
+    deactivate TNP
+    PS->>REG: Generates/signs SLSA provenance, pushes to OCI Registry
+    PS-->>IS: Notifies Build PipelineRun completion
+    activate IS
+    IS->>TNP: Constructs/creates Snapshot (contains new image & other components)
+    activate TNP
+    IS->>TNP: Creates Test PipelineRuns (based on IntegrationTestScenarios)
+    activate TNP
+    TNP->>IS: Test PipelineRuns complete
+    deactivate TNP
+    IS->>TNP: Creates Release (if automated release or user-triggered)
+    deactivate TNP
+    deactivate IS
+    TNP->>RS: Notifies Release creation
+    activate RS
+    RS->>TNP: Creates Tenant Release PipelineRun (if tenant RP)
+    RS->>MNP: OR Creates Managed Release PipelineRun (if matching RPA)
+    activate MNP
+    MNP->>EC: Managed Release PipelineRun invokes Enterprise Contract CLI
+    EC-->>MNP: Verifies SLSA provenance attestation against policy
+    MNP->>Prod: Copies content to Production Registry/APIs (if policy passes)
+    deactivate MNP
+    deactivate RS
+```
 
 When a commit lands on a tracked branch in a user's git repository, the following happens in the sytem.
 
