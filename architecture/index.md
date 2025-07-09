@@ -1,17 +1,15 @@
 # Konflux
 
 ## Overview
+
 Konflux is a platform for building integrated software that streamlines, consolidates, and secures the development lifecycle.
 
-
 ### Goals
+
+- Build component artifacts from source.
 - Compose software that consists of multiple components, from multiple repositories.
-- Provide transparency on the software supply chain, including both what makes up the software and how it was built.
+- Provide transparency on the software supply chain of artifacts: what makes up the software and how was it built.
 - Provide a way for software teams to release to destinations under the control of their SRE or release engineering team(s).
-- Rapid bootstrapping of new software projects
-- Support both existing and new projects
-- Provide APIs to manage your software lifecycle
-- Provide a surface for partners to integrate, add value
 - Provide a unified user interface across the entire process
 
 ## Architecture Goals
@@ -22,7 +20,7 @@ Konflux is a platform for building integrated software that streamlines, consoli
 - Build semantically reproducible artifacts. Any configuration which has the potential to affect the semantic functionality of a build should be recorded in the provenance and source controlled whenever possible.
 - Be extensible. Provide opinionated [build pipelines](https://github.com/redhat-appstudio/build-definitions/) and [release pipelines](https://github.com/redhat-appstudio/release-service-catalog), but let users extend those and create their own.
 - "Shift left" the decisions for releasing into PRs; you should be able to release artifacts from a PR as soon as it is merged.
-- Just in time scaling: In contrast to “just in case” scaling. The system should be able to scale without capacity reserved ahead of time.
+- Scale without capacity reserved ahead of time.
 - Static stability: the overall system continues to work when a dependency is impaired.
 - Enhancements to the pipelines (the extensible elements of the system) should be rolled out in such a way that individual users can control **when** they accept the update to their namespaces, their processes. Use policy to drive eventual compliance.
 - Each subservice can fulfill its primary use cases independently, without relying on other systems’ availability. An exception to this is the tekton [pipeline service] which provides foundational APIs on which [build-service], [integration-service], and [release-service] depend.
@@ -30,7 +28,6 @@ Konflux is a platform for building integrated software that streamlines, consoli
 - Communication among services and participants is always asynchronous.
 - Each sub-service is owned by one team. Ownership does not mean that only one team can change the code, but the owning team has the final decision.
 - Minimize shared resources among sub-services.
-- Participants: onboarding new participants, the flexibility to satisfy the technology preferences of a heterogeneous set of participants. Think of this as the ability to easily create an ecosystem and the ability to support that ecosystem’s heterogeneous needs.
 - Security, Privacy, and Governance: Sensitive data is protected by fine-grained access control
 
 ## Architecture Constraints
@@ -46,18 +43,6 @@ Konflux is a platform for building integrated software that streamlines, consoli
 > :bulb: Adding new functionality usually looks like either adding a new **controller** or adding a new **tekton task**.
 
 ## Application Context
-
-The diagram below shows the services that make up Konflux and their API resources.
-
-![](../diagrams/konflux.drawio.svg)
-
-API resources in the first row (Application, Component) should primarilly be thought of as
-control-plane resources. Users supply these resources to indicate to the system what they want it to
-do.
-
-API resources in the second row (PipelineRun, Snapshot) should primarilly be thought of as
-data-plane resources. The system responds to user requests by creating and managing the lifecycle of
-these resources.
 
 - An [Application] represents a functionally coherent set of [Components] that should be built,
   tested, and released together. The user provides and names their [Applications]. They are
@@ -97,6 +82,28 @@ these resources.
   [Releases] for every [Snapshot] that successfully passes its post-merge testing. If that flag is
   set to false, then the user is expected to create new a [Release] manually, associated with
   [Snapshot] selected by the user manually.
+
+The system's API resources can be categorized in two primary ways: as either
+control-plane or data-plane resources and as either tenant resources or managed
+resources.
+
+Regarding control-plane and data-plane:
+
+- Control plane resources are resources that users supply to indicate to the
+  system what they want it to do. Examples are [Application], [Component],
+  [IntegrationTestScenario], [ReleasePlan], and [ReleasePlanAdmission].
+- Data plane resources are resources primarilly created and managed by the
+  system in response to user requests. Examples are [PipelineRun], [Snapshot],
+  and [Release].
+
+Regarding tenant resources and managed resources.
+
+- Tenant resources are resources that appear in [tenant namespaces]. Examples
+  are [Application], [Component], [IntegrationTestScenario], [ReleasePlan],
+  [Snapshot], and [Release].
+- Managed resources are resources that appear in [managed namespaces]. Examples
+  are [ReleasePlanAdmission] and [EnterpriseContractPolicy].
+- Tekton [PipelineRuns], as a foundational piece, appear in both tenant and managed namespaces.
 
 ## Service (Component) Context
 
