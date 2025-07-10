@@ -13,10 +13,8 @@ graph TD
     end
     BPR -- pushes images to --> QIO
     IC -- manages --> QIO
-    MPC -- manages VMs --> AWS
-    MPC -- manages VMs --> IBM
-    BPR -- SSHes to --> AWS
-    BPR -- SSHes to --> IBM
+    MPC -- manages VMs --> clouds
+    BPR -- SSHes to --> clouds
 
     subgraph tenant[Tenant Namespace]
         App[Application] --> Comp["Component(s)"]
