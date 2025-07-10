@@ -35,8 +35,12 @@ graph TD
         RPA -- accepts release from --> RP
         PRM -- enforces policy via --> ECP
         PRM -- creates --> IRR["InternalRequest"]
-        IRR -- watched by --> ISC["Internal Services Controller (on another cluster)"]
-        ISC -- performs actions in --> EXT["External Network Zone"]
+    end
+
+    subgraph external[External Network Cluster]
+        ISC["Internal Services Controller"]
+        ISC -- watches --> IRR
+        ISC -- performs actions on --> EXT["External Network Resources"]
     end
 
     style App fill:#f9f,stroke:#333,stroke-width:2px
