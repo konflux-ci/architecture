@@ -49,7 +49,7 @@ graph TD
 
     subgraph external[External Network Cluster]
         ISC["Internal Services Controller"]
-        ISC -- watches --> IRR
+        IRR -- watched by --> ISC
         ISC -- performs actions on --> EXT["External Network Resources"]
     end
 
