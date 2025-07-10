@@ -27,8 +27,14 @@ graph TD
     end
 
     QIO["quay.io tenant repositories"]
+    AWS["AWS Public Cloud"]
+    IBM["IBM Public Cloud"]
     BPR -- pushes images to --> QIO
     IC -- manages --> QIO
+    MPC -- manages VMs --> AWS
+    MPC -- manages VMs --> IBM
+    BPR -- SSHes to --> AWS
+    BPR -- SSHes to --> IBM
 
     subgraph managed[Managed Namespace]
         RPA["ReleasePlanAdmission(s)"]
