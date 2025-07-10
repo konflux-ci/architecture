@@ -193,30 +193,44 @@ graph TD
     style KubeAPI fill:#f0e68c,stroke:#333,stroke-width:2px;
 
     click HAS href "https://github.com/redhat-appstudio/application-service" "Hybrid Application Service"
-    click BS href "https://github.com/redhat-appstudio/build-service" "Build Service"
-    click IC href "https://github.com/redhat-appstudio/image-controller" "Image Controller"
-    click IS href "https://github.com/redhat-appstudio/integration-service" "Integration Service"
-    click RS href "https://github.com/redhat-appstudio/release-service" "Release Service"
-    click PS href "https://github.com/redhat-appstudio/pipeline-service" "Pipeline Service"
-    click EC href "https://github.com/redhat-appstudio/enterprise-contract" "Enterprise Contract"
+    click BS href "https://github.com/redhat-appstudio/core/build-service.md" "Build Service"
+    click IC href "https://github.com/redhat-appstudio/add-ons/image-controller.md" "Image Controller"
+    click IS href "https://github.com/redhat-appstudio/core/integration-service.md" "Integration Service"
+    click RS href "https://github.com/redhat-appstudio/core/release-service.md" "Release Service"
+    click PS href "https://github.com/redhat-appstudio/core/pipeline-service.md" "Pipeline Service"
+    click EC href "https://github.com/redhat-appstudio/core/enterprise-contract.md" "Enterprise Contract"
     click KubeAPI href "https://kubernetes.io/docs/concepts/architecture/controller/" "Kubernetes API Server (Controllers)"
 ```
 
 Each service that makes up Konflux is further explained in its own document.
 
-- [Hybrid Application Service](./hybrid-application-service.md) - A workflow system that runs the validation webhooks for Applications and Components
-- [Build Service](./build-service.md) - A workflow system that manages the build pipeline definition
+### Konflux Core Services
+
+These services make up the core of Konflux and are all required for a working system.
+
+- [Hybrid Application Service](./core/hybrid-application-service.md) - A workflow system that runs the validation webhooks for Applications and Components
+- [Build Service](./core/build-service.md) - A workflow system that manages the build pipeline definition
   for users' Components.
-- [Image Controller](./image-controller.md) - A subsystem of the build-service that manages the
-  creation and access rights to OCI repositories.
-- [Integration Service](./integration-service.md) - A workflow service that manages execution of
+- [Integration Service](./core/integration-service.md) - A workflow service that manages execution of
   users' tests and promotion in response to completing builds.
-- [Release Service](./release-service.md) - A workflow service that manages execution of privileged
+- [Release Service](./core/release-service.md) - A workflow service that manages execution of privileged
   pipelines to release user content to protected destinations.
-- [Pipeline Service](./pipeline-service.md) - A foundational service providing Pipeline APIs and secure supply
+- [Pipeline Service](./core/pipeline-service.md) - A foundational service providing Pipeline APIs and secure supply
   chain capabilities to other services
-- [Enterprise Contract](./enterprise-contract.md) - A specialized subsystem responsible for the
+- [Enterprise Contract](./core/enterprise-contract.md) - A specialized subsystem responsible for the
   definition and enforcement of policies related to how OCI artifacts are built and tested.
+
+### Konflux Add-Ons
+
+These are optional services that, when installed, provide some additional capability.
+
+- [Image Controller](./add-ons/image-controller.md) - A subsystem of the build-service that manages the
+  creation and access rights to OCI repositories.
+- [Multi Platform Controller](./add-ons/multi-platform-controller.md) - A
+  subsystem that manages public cloud resources to make multi-platform VMs
+  available to build pipelines.
+- [Internal Services Controller](./add-ons/internal-services.md) - A
+  subsystem that facilitates access to resources across network boundaries.
 
 ## Data Flow
 
@@ -286,12 +300,12 @@ When a commit lands on a tracked branch in a user's git repository, the followin
 - [Namespace Metadata](../ADR/adr-0010-namespace-metadata)
 
 [integration-service promotes OCI artifacts]: ../ADR/0016-integration-service-promotion-logic.md
-[application-service]: ./hybrid-application-service.md
-[pipeline-service]: ./pipeline-service.md
+[application-service]: ./core/hybrid-application-service.md
+[pipeline-service]: ./core/pipeline-service.md
 [gitops-service]: ./gitops-service.md
-[build-service]: ./build-service.md
-[integration-service]: ./integration-service.md
-[release-service]: ./release-service.md
+[build-service]: ./core/build-service.md
+[integration-service]: ./core/integration-service.md
+[release-service]: ./core/release-service.md
 [Application]: ../ref/application-environment-api.md#application
 [Applications]: ../ref/application-environment-api.md#application
 [Component]: ../ref/application-environment-api.md#component

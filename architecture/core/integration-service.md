@@ -31,7 +31,7 @@ The diagram below shows the interaction of the integration service and other ser
 The [Integration Service](./integration-service.md) is dependent on the following services:
 - [Pipeline Service](./pipeline-service.md)
   - Pipeline execution, Pipeline logging
-- [Hybrid Application Service](./hybrid-application-service.md)
+- [Hybrid Application Service](./core/hybrid-application-service.md)
   - Validates the Application and Component CRs. Integration Service updates the pullspec reference on the Component CR when a snapshot is created for the built image.
 - [Release Service](./release-service.md)
   - Provides the ReleasePlan that will be used to determine if integration-service should create a Release
