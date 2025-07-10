@@ -6,6 +6,16 @@ Konflux subsystems are divided into two categories: **core** and **add-ons**. Th
 
 ```mermaid
 graph TD
+    QIO["quay.io tenant repositories"]
+    AWS["AWS Public Cloud"]
+    IBM["IBM Public Cloud"]
+    BPR -- pushes images to --> QIO
+    IC -- manages --> QIO
+    MPC -- manages VMs --> AWS
+    MPC -- manages VMs --> IBM
+    BPR -- SSHes to --> AWS
+    BPR -- SSHes to --> IBM
+
     subgraph tenant[Tenant Namespace]
         App[Application] --> Comp["Component(s)"]
         App --> ITS["IntegrationTestScenario(s)"]
@@ -25,16 +35,6 @@ graph TD
         BPR -- triggers multi-arch provisioning --> MPC["Multi-Platform Controller"]
         MPC -- provisions VMs for --> BPR
     end
-
-    QIO["quay.io tenant repositories"]
-    AWS["AWS Public Cloud"]
-    IBM["IBM Public Cloud"]
-    BPR -- pushes images to --> QIO
-    IC -- manages --> QIO
-    MPC -- manages VMs --> AWS
-    MPC -- manages VMs --> IBM
-    BPR -- SSHes to --> AWS
-    BPR -- SSHes to --> IBM
 
     subgraph managed[Managed Namespace]
         RPA["ReleasePlanAdmission(s)"]
