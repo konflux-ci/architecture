@@ -222,7 +222,7 @@ These services make up the core of Konflux and are all required for a working sy
 
 ### Konflux Add-Ons
 
-These are optional services that, when installed, provide some additional capability.
+The [konflux add-ons](./add-ons/index.md) are optional services that, when installed, provide some additional capability.
 
 - [Image Controller](./add-ons/image-controller.md) - A subsystem of the build-service that manages the
   creation and access rights to OCI repositories.
