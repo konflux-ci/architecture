@@ -25,8 +25,8 @@ graph TD
         BPR -- produces --> Snap["Snapshot"]
         ITS -- defines --> TPR["Test PipelineRun(s)"]
         Snap -- triggers --> TPR
-        TPR -- triggers --> Release["Release(s)"]
-        RP -- defines release for --> Release
+        RP -- defines release for --> Release["Release(s)"]
+        TPR -- triggers --> Release
 
         Release -- initiates --> PR["Release PipelineRun(s) (Tenant)"]
         Comp -- defines --> IR["ImageRepository"]
