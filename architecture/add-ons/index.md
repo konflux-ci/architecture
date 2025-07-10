@@ -22,10 +22,13 @@ graph TD
         Comp -- defines --> IR["ImageRepository"]
         IR -- managed by --> IC["Image Controller"]
         IC -- injects push secrets --> BPR
-        BPR -- pushes images to quay.io --> QIO["quay.io"]
         BPR -- triggers multi-arch provisioning --> MPC["Multi-Platform Controller"]
         MPC -- provisions VMs for --> BPR
     end
+
+    QIO["quay.io tenant repositories"]
+    BPR -- pushes images to --> QIO
+    IC -- manages --> QIO
 
     subgraph managed[Managed Namespace]
         RPA["ReleasePlanAdmission(s)"]
