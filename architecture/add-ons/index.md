@@ -41,7 +41,8 @@ graph TD
         ECP["EnterpriseContractPolicy(s)"]
 
         Release -- initiates --> PRM["Release PipelineRun(s) (Managed)"]
-        RPA -- accepts release from --> RP
+        RP -- matched to --> RPA
+        RPA -- parameterizes --> PRM
         PRM -- enforces policy via --> ECP
         PRM -- creates --> IRR["InternalRequest"]
     end

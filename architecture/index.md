@@ -65,8 +65,9 @@ graph TD
         RPA["ReleasePlanAdmission(s)"]
         ECP["EnterpriseContractPolicy(s)"]
 
+        RP -- matched to --> RPA
+        RPA -- parameterizes --> PRM
         Release -- initiates --> PRM["Release PipelineRun(s) (Managed)"]
-        RPA -- accepts release from --> RP
         PRM -- enforces policy via --> ECP
     end
 
@@ -183,6 +184,7 @@ graph TD
     RS -- Creates Releases --> KubeAPI
     PS -- Provides Foundational APIs (Tekton) --> KubeAPI
     EC -- Defines & Enforces Policies --> KubeAPI
+    RP -- matched to --> RPA
 
     style HAS fill:#add8e6,stroke:#333,stroke-width:2px;
     style BS fill:#add8e6,stroke:#333,stroke-width:2px;
