@@ -169,7 +169,6 @@ graph TD
     subgraph Konflux Services
         HAS[Hybrid Application Service]
         BS[Build Service]
-        IC[Image Controller]
         IS[Integration Service]
         RS[Release Service]
         PS[Pipeline Service]
@@ -178,7 +177,6 @@ graph TD
 
     HAS -- Manages Applications & Components --> KubeAPI[Kubernetes API Server]
     BS -- Manages Build Pipelines --> PS
-    IC -- Manages OCI Repos & Access --> BS
     IS -- Manages Tests & Promotion --> PS
     IS -- Creates Snapshots & Releases --> KubeAPI
     RS -- Manages Release Pipelines --> PS
@@ -197,7 +195,6 @@ graph TD
 
     click HAS href "https://github.com/redhat-appstudio/application-service" "Hybrid Application Service"
     click BS href "https://github.com/redhat-appstudio/core/build-service.md" "Build Service"
-    click IC href "https://github.com/redhat-appstudio/add-ons/image-controller.md" "Image Controller"
     click IS href "https://github.com/redhat-appstudio/core/integration-service.md" "Integration Service"
     click RS href "https://github.com/redhat-appstudio/core/release-service.md" "Release Service"
     click PS href "https://github.com/redhat-appstudio/core/pipeline-service.md" "Pipeline Service"
