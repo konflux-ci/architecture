@@ -7,8 +7,10 @@ Konflux subsystems are divided into two categories: **core** and **add-ons**. Th
 ```mermaid
 graph TD
     QIO["quay.io tenant repositories"]
-    AWS["AWS Public Cloud"]
-    IBM["IBM Public Cloud"]
+    subgraph clouds[Public Clouds]
+        AWS["AWS Public Cloud"]
+        IBM["IBM Public Cloud"]
+    end
     BPR -- pushes images to --> QIO
     IC -- manages --> QIO
     MPC -- manages VMs --> AWS
