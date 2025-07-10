@@ -95,20 +95,38 @@ graph TD
         ISC[Internal Services Controller]
     end
 
-    IC -- Manages ImageRepository for Component --> KubeAPI[Kubernetes API Server]
-    IC -- Injects push secrets --> TenantNS[Tenant Namespace]
-    MPC -- Provisions multi-arch VMs for builds --> CloudAPIs[Public Cloud APIs]
-    MPC -- Watches Build PipelineRuns --> KubeAPI
-    ISC -- Watches InternalRequest in Managed Namespace --> KubeAPI
+    subgraph quayio[quay.io]
+        OCI[OCI Repositories]
+    end
+
+    subgraph cloudapis[Public Cloud APIs]
+        AWS[AWS]
+        IBM[IBM Cloud]
+    end
+
+    subgraph kubeapi[Kubernetes API Server]
+        TW[Tenant Workspace]
+        MW[Managed Workspace]
+    end
+
+    IC -- Manages repositories --> OCI
+    IC -- Watches ImageRepository --> TW
+    IC -- Injects push secrets --> TW
+    MPC -- Provisions multi-arch VMs for builds --> cloudapis
+    MPC -- Watches Build PipelineRuns --> TW
+    ISC -- Watches InternalRequest in Managed Namespace --> MW
     ISC -- Performs actions in --> EXT[External Network Zone]
 
     style IC fill:#add8e6,stroke:#333,stroke-width:2px;
     style MPC fill:#add8e6,stroke:#333,stroke-width:2px;
     style ISC fill:#add8e6,stroke:#333,stroke-width:2px;
-    style KubeAPI fill:#f0e68c,stroke:#333,stroke-width:2px;
-    style TenantNS fill:#fff,stroke:#333,stroke-width:1px;
-    style CloudAPIs fill:#fff,stroke:#333,stroke-width:1px;
+    style kubeapi fill:#f0e68c,stroke:#333,stroke-width:2px;
+    style TW fill:#f0e68c,stroke:#333,stroke-width:2px;
+    style MW fill:#f0e68c,stroke:#333,stroke-width:2px;
+    style AWS fill:#fff,stroke:#333,stroke-width:1px;
+    style IBM fill:#fff,stroke:#333,stroke-width:1px;
     style EXT fill:#fff,stroke:#333,stroke-width:1px;
+    style OCI fill:#fff,stroke:#333,stroke-width:1px;
 ```
 
 ### Image Controller

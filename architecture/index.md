@@ -167,40 +167,81 @@ Regarding tenant resources and managed resources.
 
 ```mermaid
 graph TD
+    subgraph aws[AWS]
+        PG[Postgres Database]
+    end
+
+    subgraph registry[OCI Registry]
+        OCI[Container Images & Attestations]
+    end
+
+    subgraph scm[SCM System]
+        SCM[Git Repositories]
+    end
+
     subgraph Konflux Services
         HAS[Hybrid Application Service]
         BS[Build Service]
         IS[Integration Service]
         RS[Release Service]
-        PS[Pipeline Service]
-        EC[Enterprise Contract]
+        subgraph PS[Pipeline Service]
+            TP[Tekton Pipelines]
+            PAC["Pipelines as Code (PaC)"]
+            TC[Tekton Chains]
+            TR[Tekton Results]
+        end
     end
 
-    HAS -- Manages Applications & Components --> KubeAPI[Kubernetes API Server]
-    BS -- Manages Build Pipelines --> PS
-    IS -- Manages Tests & Promotion --> PS
-    IS -- Creates Snapshots & Releases --> KubeAPI
-    RS -- Manages Release Pipelines --> PS
-    RS -- Creates Releases --> KubeAPI
-    PS -- Provides Foundational APIs (Tekton) --> KubeAPI
-    EC -- Defines & Enforces Policies --> KubeAPI
-    RP -- matched to --> RPA
+    subgraph kubeapi[Kubernetes API Server]
+        App[Application]
+        Comp[Component]
+        Snap[Snapshot]
+        ITS[IntegrationTestScenario]
+        RPA[ReleasePlanAdmission]
+        RP[ReleasePlan]
+        Release[Release]
+        PR[PipelineRun]
+    end
+
+    HAS -- Manages --> App
+    HAS -- Manages --> Comp
+    BS -.-> Comp
+    BS -.-> PR
+    IS -.-> App
+    IS -- Manages --> ITS
+    IS -- Manages --> Snap
+    IS -.-> PR
+    RS -.-> PR
+    RS -- Manages --> RPA
+    RS -- Manages --> RP
+    RS -- Manages --> Release
+    TP -- Provides --> PR
+    SCM -- Sends Webhooks --> PAC
+    TC -- Signs & Attests --> OCI
+    TC -- Watches --> TP
+    TR -- Stores Results --> PG
+    TR -- Watches --> TP
 
     style HAS fill:#add8e6,stroke:#333,stroke-width:2px;
     style BS fill:#add8e6,stroke:#333,stroke-width:2px;
-    style IC fill:#add8e6,stroke:#333,stroke-width:2px;
     style IS fill:#add8e6,stroke:#333,stroke-width:2px;
     style RS fill:#add8e6,stroke:#333,stroke-width:2px;
     style PS fill:#add8e6,stroke:#333,stroke-width:2px;
-    style EC fill:#add8e6,stroke:#333,stroke-width:2px;
-    style KubeAPI fill:#f0e68c,stroke:#333,stroke-width:2px;
+    style TP fill:#add8e6,stroke:#333,stroke-width:2px;
+    style PAC fill:#add8e6,stroke:#333,stroke-width:2px;
+    style TC fill:#add8e6,stroke:#333,stroke-width:2px;
+    style TR fill:#add8e6,stroke:#333,stroke-width:2px;
+    style kubeapi fill:#f0e68c,stroke:#333,stroke-width:2px;
+    style PR fill:#f0e68c,stroke:#333,stroke-width:2px;
+    style PG fill:#fff,stroke:#333,stroke-width:1px;
+    style OCI fill:#fff,stroke:#333,stroke-width:1px;
+    style SCM fill:#fff,stroke:#333,stroke-width:1px;
 
     click HAS href "https://github.com/redhat-appstudio/application-service" "Hybrid Application Service"
     click BS href "https://github.com/redhat-appstudio/core/build-service.md" "Build Service"
     click IS href "https://github.com/redhat-appstudio/core/integration-service.md" "Integration Service"
     click RS href "https://github.com/redhat-appstudio/core/release-service.md" "Release Service"
     click PS href "https://github.com/redhat-appstudio/core/pipeline-service.md" "Pipeline Service"
-    click EC href "https://github.com/redhat-appstudio/core/enterprise-contract.md" "Enterprise Contract"
     click KubeAPI href "https://kubernetes.io/docs/concepts/architecture/controller/" "Kubernetes API Server (Controllers)"
 ```
 
