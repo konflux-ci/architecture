@@ -48,23 +48,24 @@ Konflux is a platform for building integrated software that streamlines, consoli
 graph TD
     subgraph tenant[Tenant Namespace]
         App[Application] --> Comp["Component(s)"]
-        App --> Snap["Snapshot(s)"]
         App --> ITS["IntegrationTestScenario(s)"]
         App --> RP["ReleasePlan(s)"]
 
-        Comp -- builds --> Snap
-        ITS -- tests --> Snap
-        Snap -- triggers --> Release["Release(s)"]
+        Comp -- defines --> BPR["Build PipelineRun(s)"]
+        BPR -- produces --> Snap["Snapshot"]
+        ITS -- defines --> TPR["Test PipelineRun(s)"]
+        Snap -- triggers --> TPR
+        TPR -- triggers --> Release["Release(s)"]
         RP -- defines release for --> Release
 
-        Release -- initiates --> PR["PipelineRun(s) (Tenant)"]
+        Release -- initiates --> PR["Release PipelineRun(s) (Tenant)"]
     end
 
     subgraph managed[Managed Namespace]
         RPA["ReleasePlanAdmission(s)"]
         ECP["EnterpriseContractPolicy(s)"]
 
-        Release -- initiates --> PRM["PipelineRun(s) (Managed)"]
+        Release -- initiates --> PRM["Release PipelineRun(s) (Managed)"]
         RPA -- accepts release from --> RP
         PRM -- enforces policy via --> ECP
     end
@@ -76,9 +77,11 @@ graph TD
     style RP fill:#f9f,stroke:#333,stroke-width:2px
     style Release fill:#ccf,stroke:#333,stroke-width:2px
     style PR fill:#eee,stroke:#333,stroke-width:1px
+    style PRM fill:#eee,stroke:#333,stroke-width:1px
+    style BPR fill:#eee,stroke:#333,stroke-width:1px
+    style TPR fill:#eee,stroke:#333,stroke-width:1px
     style RPA fill:#f9f,stroke:#333,stroke-width:2px
     style ECP fill:#f9f,stroke:#333,stroke-width:2px
-    style PRM fill:#eee,stroke:#333,stroke-width:1px
 
     classDef controlPlane fill:#f9f,stroke:#333,stroke-width:2px;
     class App,Comp,ITS,RP,RPA,ECP controlPlane;
@@ -87,7 +90,7 @@ graph TD
     class Snap,Release dataPlane;
 
     classDef tekton fill:#eee,stroke:#333,stroke-width:1px;
-    class PR,PRM tekton;
+    class PR,PRM,BPR,TPR tekton;
 
     click App href "https://redhat-appstudio.github.io/docs/api-references/application-environment-api/#application" "Application API Reference"
     click Comp href "https://redhat-appstudio.github.io/docs/api-references/application-environment-api/#component" "Component API Reference"
