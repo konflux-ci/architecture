@@ -79,14 +79,14 @@ VS Code was chosen as the primary IDE target because:
 
 
 **GitOps Flow:**
-1. Developer opens repo in VS Code
-2. Launches Konflux plugin
-3. **If first time**: Uses wizard to register repo with Tenant Registration Service (declares namespace name, configures ArgoCD)
-4. Uses wizard to configure new component/build
-5. Plugin generates YAML and commits to Git
-6. Developer pushes PR
-7. CI runs lightweight schema validation (should pass if plugin was used)
-8. **After merge**: ArgoCD automatically syncs changes to the namespace
+1. Developer creates an empty git repo with Github, Gitlab, etc.
+4. **If first time**: Uses wizard to register repo with Tenant Registration Service (declares namespace name, configures ArgoCD)
+5. Developer opens repo in VS Code
+3. Launches Konflux plugin and uses wizard to configure new component/build
+3. populate git repo with Konflux configuration
+6. Plugin generates YAML and commits to Git
+7. Developer pushes code
+9. ArgoCD automatically syncs changes to the namespace
 
 ### Multi-Repo GitOps Model & Tenant Registration Service
 
@@ -96,7 +96,7 @@ Konflux will introduce a new **Tenant Registration Service** API that manages th
 **Tenant Model:**
 - **Tenant Definition**: A tenant is equivalent to a Kubernetes namespace
 - **1:1 Mapping**: Each GitOps repository maps to exactly one Kubernetes namespace
-- **Namespace Declaration**: The namespace name is declared within the GitOps repo itself and is immutable after registration
+- **Namespace Declaration**: The namespace name is a parameter to the registration service. Once the repo is registered, the namespace it is immutable.
 - **Registration Immutability**: Re-registering the same repo is rejected to prevent namespace conflicts
 
 **Resource Scope:**
