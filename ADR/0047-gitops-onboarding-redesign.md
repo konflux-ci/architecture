@@ -108,11 +108,11 @@ Konflux will introduce a new **Tenant Registration Service** API that manages th
 
 **Registration Process:**
 1. Team registers GitOps repo via VS Code plugin, CLI (`konflux register`), or UI
-2. Tenant Registration Service validates the repo and reads the declared namespace name
-3. Service provisions the new Kubernetes namespace matching the declared name
-4. Service runs initial validation on repo contents
-5. Service configures ArgoCD to monitor the repo for continuous deployment
-6. ArgoCD continuously syncs changes from the repo to the namespace
+2. at registration time the desired namespace name is provided to (UI | API)
+3. Tenant Registration Service validates the repo and reads the declared namespace name
+4. Service provisions the new requested Kubernetes namespace
+6. Service configures ArgoCD to monitor the repo for continuous deployment
+7. ArgoCD continuously syncs changes from the repo to the namespace
 
 **ArgoCD as New Core Service:**
 Konflux does not currently run ArgoCD, so this will be introduced as a new core service to handle continuous GitOps synchronization. The Tenant Registration Service is used only once per repo for initial setup, while ArgoCD handles all ongoing deployment activities.
