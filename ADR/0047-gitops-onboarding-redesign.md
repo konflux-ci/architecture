@@ -177,7 +177,6 @@ graph TD
 **Preserve:**
 - Dashboard
 - Build and release logs
-- Observability / metrics
 - Operational actions: triggering builds/tests, starting manual releases, pipeline management
 
 **Remove/Demote:**
