@@ -19,7 +19,10 @@ Currently, Konflux offers two distinct onboarding paths that create friction and
 - Requires manually authoring YAML across multiple files
 - Validation happens during GitLab CI runs, creating tension between Konflux and GitLab CI workflows
 - Secrets must still be created via UI, breaking the GitOps flow
-- Onboarding is slow and often requires multiple failed PRs to converge due to trial-and-error approach
+- Onboarding requires manual creation of complex yaml objects
+- Merge conflicts are more likely in monorepos, increasing time to onboard
+- CI is not under control of the namespace owner
+- Users are forced to use a specific git forge that might be different than the one their apps live in
 
 ### Current Pain Points
 1. **Fragmented experience**: Developers must context-switch between UI and GitOps approaches
@@ -44,7 +47,7 @@ Redesign the onboarding experience to converge UI and GitOps into a single coher
 ### Core Shift
 - **Replace UI configuration** with a VS Code plugin for onboarding and editing
 - **Use local schema validation**, linting, and previews to reduce onboarding errors
-- **Use Git as the single source of truth** for applications and components
+- **Use Git as the single source of truth** for applications, components, integration test scenarios, releasePlans and RBAC
 - **Preserve the UI for non-configuration activities** including:
   - Monitoring and observability: logs, build inspection, viewing metrics, dashboards
   - Operational actions: triggering builds/tests, starting manual releases, pipeline management
@@ -82,11 +85,10 @@ VS Code was chosen as the primary IDE target because:
 1. Developer creates an empty git repo with Github, Gitlab, etc.
 4. **If first time**: Uses wizard to register repo with Tenant Registration Service (declares namespace name, configures ArgoCD)
 5. Developer opens repo in VS Code
-3. Launches Konflux plugin and uses wizard to configure new component/build
-3. populate git repo with Konflux configuration
-6. Plugin generates YAML and commits to Git
-7. Developer pushes code
-9. ArgoCD automatically syncs changes to the namespace
+3. Launches Konflux plugin and uses it to configure new components, tests, releasePlans
+6. Plugin generates YAML objects in repo
+7. Developer commits and pushes code (optionally via PR, with CI,reviews etc.)
+9. ArgoCD automatically syncs merged changes to the namespace
 
 ### Multi-Repo GitOps Model & Tenant Registration Service
 
