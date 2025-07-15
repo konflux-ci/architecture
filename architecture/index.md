@@ -300,6 +300,7 @@ graph TD
         quay[Quay.io]
         jira[Jira]
         vms[Vulnerability Management System]
+        awskms[AWS KMS]
         prod_repos["Production Repositories"]
         ext_svc[External Services]
         trustify[Trustify]
@@ -316,12 +317,13 @@ graph TD
     r -- "(7) Initiates" --> rpr
     rpr -- "(8) Update" --> jira
     rpr -- "(9) Check CVEs" --> vms
-    rpr -- "(10) Push content" --> prod_repos
+    rpr -- "(10) Sign with cosign" --> awskms
+    rpr -- "(11) Push content" --> prod_repos
     rpr -- "creates" --> ir
-    ir -- "(11) Triggers action" --> ext_svc
-    rpr -- "(12) Push SBOM" --> trustify
-    rpr -- "(13) Populate metadata" --> pyxis
-    rpr -- "(14) Populate advisory feed" --> advisory_feed
+    ir -- "(12) Triggers action" --> ext_svc
+    rpr -- "(13) Push SBOM" --> trustify
+    rpr -- "(14) Populate metadata" --> pyxis
+    rpr -- "(15) Populate advisory feed" --> advisory_feed
 ```
 
 When a commit lands on a tracked branch in a user's git repository, a series of network requests are made to external services. The following diagram illustrates the sequence of these requests.
@@ -335,11 +337,12 @@ When a commit lands on a tracked branch in a user's git repository, a series of 
 7.  A `Release` resource in the tenant namespace initiates a `Release PipelineRun` in the managed namespace.
 8.  The release pipeline in the managed namespace may update a **Jira** ticket to reflect the status of the release.
 9.  The release pipeline checks the CVE status in a **Vulnerability Management System**.
-10. The release pipeline pushes content to **Production Repositories**.
-11. The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **External Services** (like an RPM repository, or other internal systems) to complete the release process.
-12. The release pipeline pushes the SBOM to **Trustify** for analysis.
-13. The release pipeline populates metadata in **Pyxis**.
-14. The release pipeline populates the **Advisory Feed**.
+10. The release pipeline makes a request to **AWS KMS** to sign the release with `cosign`.
+11. The release pipeline pushes content to **Production Repositories**.
+12. The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **External Services** (like an RPM repository, or other internal systems) to complete the release process.
+13. The release pipeline pushes the SBOM to **Trustify** for analysis.
+14. The release pipeline populates metadata in **Pyxis**.
+15. The release pipeline populates the **Advisory Feed**.
 
 ## API References
 
