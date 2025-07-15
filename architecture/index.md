@@ -278,7 +278,7 @@ The [konflux add-ons](./add-ons/index.md) are optional services that, when insta
 ## Data Flow
 
 ```mermaid
-graph TD
+graph LR
     subgraph tn[Tenant Namespace]
         direction TB
         bpr["Build PipelineRun"]
@@ -289,10 +289,6 @@ graph TD
         direction TB
         rpr["Release PipelineRun"]
         ir["InternalRequest"]
-    end
-
-    subgraph int_net[Internal Network]
-        ins[Internal Network Services]
     end
 
     subgraph ext[External Network]
@@ -309,6 +305,10 @@ graph TD
         trustify[Trustify]
         pyxis[Pyxis]
         advisory_feed[Advisory Feed]
+    end
+
+    subgraph int_net[Internal Network]
+        ins[Internal Network Services]
     end
 
     bpr -- "(1) Fetch source" --> git
