@@ -295,19 +295,33 @@ graph TD
         git[Git Repository]
         upstream_repos["Upstream Repositories"]
         clouds[Public Clouds]
+        coverity[Coverity License Server]
+        snyk[Snyk]
         quay[Quay.io]
         jira[Jira]
+        vms[Vulnerability Management System]
+        prod_repos["Production Repositories"]
         ext_svc[External Services]
+        trustify[Trustify]
+        pyxis[Pyxis]
+        advisory_feed[Advisory Feed]
     end
 
     bpr -- "(1) Fetch source" --> git
     bpr -- "(2) Prefetch dependencies" --> upstream_repos
     bpr -- "(3) Provision VMs" --> clouds
     bpr -- "(4) Push image" --> quay
-    r -- "(5) Initiates" --> rpr
-    rpr -- "(6) Update" --> jira
+    bpr -- "(5) Check license" --> coverity
+    bpr -- "(6) Request SAST scan" --> snyk
+    r -- "(7) Initiates" --> rpr
+    rpr -- "(8) Update" --> jira
+    rpr -- "(9) Check CVEs" --> vms
+    rpr -- "(10) Push content" --> prod_repos
     rpr -- "creates" --> ir
-    ir -- "(7) Triggers action" --> ext_svc
+    ir -- "(11) Triggers action" --> ext_svc
+    rpr -- "(12) Push SBOM" --> trustify
+    rpr -- "(13) Populate metadata" --> pyxis
+    rpr -- "(14) Populate advisory feed" --> advisory_feed
 ```
 
 When a commit lands on a tracked branch in a user's git repository, a series of network requests are made to external services. The following diagram illustrates the sequence of these requests.
@@ -316,9 +330,16 @@ When a commit lands on a tracked branch in a user's git repository, a series of 
 2.  The build pipeline prefetches dependencies from **Upstream Repositories** like pypi, rubygems, and npmjs.org.
 3.  If multi-platform builds are configured, the build pipeline may make requests to **Public Clouds** (like AWS or IBM Cloud) to provision virtual machines.
 4.  The build pipeline pushes the built container image and its associated artifacts (like SBOMs) to **Quay.io** or another OCI registry.
-5.  A `Release` resource in the tenant namespace initiates a `Release PipelineRun` in the managed namespace.
-6.  The release pipeline in the managed namespace may update a **Jira** ticket to reflect the status of the release.
-7.  The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **External Services** (like an RPM repository, or other internal systems) to complete the release process.
+5.  The build pipeline may check with a **Coverity License Server** to validate dependencies.
+6.  The build pipeline requests a SAST scan from **Snyk**.
+7.  A `Release` resource in the tenant namespace initiates a `Release PipelineRun` in the managed namespace.
+8.  The release pipeline in the managed namespace may update a **Jira** ticket to reflect the status of the release.
+9.  The release pipeline checks the CVE status in a **Vulnerability Management System**.
+10. The release pipeline pushes content to **Production Repositories**.
+11. The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **External Services** (like an RPM repository, or other internal systems) to complete the release process.
+12. The release pipeline pushes the SBOM to **Trustify** for analysis.
+13. The release pipeline populates metadata in **Pyxis**.
+14. The release pipeline populates the **Advisory Feed**.
 
 ## API References
 
