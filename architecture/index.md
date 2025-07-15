@@ -317,8 +317,8 @@ graph TD
     r -- "(7) Initiates" --> rpr
     rpr -- "(8) Update" --> jira
     rpr -- "(9) Check CVEs" --> vms
-    rpr -- "(10) Sign with cosign" --> awskms
-    rpr -- "(11) Push content" --> prod_repos
+    rpr -- "(10) Push content" --> prod_repos
+    rpr -- "(11) Sign with cosign" --> awskms
     rpr -- "creates" --> ir
     ir -- "(12) Triggers action" --> ext_svc
     rpr -- "(13) Push SBOM" --> trustify
@@ -337,8 +337,8 @@ When a commit lands on a tracked branch in a user's git repository, a series of 
 7.  A `Release` resource in the tenant namespace initiates a `Release PipelineRun` in the managed namespace.
 8.  The release pipeline in the managed namespace may update a **Jira** ticket to reflect the status of the release.
 9.  The release pipeline checks the CVE status in a **Vulnerability Management System**.
-10. The release pipeline makes a request to **AWS KMS** to sign the release with `cosign`.
-11. The release pipeline pushes content to **Production Repositories**.
+10. The release pipeline pushes content to **Production Repositories**.
+11. The release pipeline makes a request to **AWS KMS** to sign the release with `cosign`.
 12. The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **External Services** (like an RPM repository, or other internal systems) to complete the release process.
 13. The release pipeline pushes the SBOM to **Trustify** for analysis.
 14. The release pipeline populates metadata in **Pyxis**.
