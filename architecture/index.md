@@ -295,13 +295,13 @@ graph LR
         git[Git Repository]
         upstream_repos["Upstream Repositories"]
         clouds[Public Clouds]
+        quay[Quay.io]
         coverity[Coverity License Server]
         snyk[Snyk]
-        quay[Quay.io]
         jira[Jira]
         vms[Vulnerability Management System]
-        awskms[AWS KMS]
         prod_repos["Production Repositories"]
+        awskms[AWS KMS]
         trustify[Trustify]
         pyxis[Pyxis]
         advisory_feed[Advisory Feed]
@@ -333,11 +333,11 @@ When a commit lands on a tracked branch in a user's git repository, a series of 
 
 1.  The build pipeline in the tenant namespace fetches source code from a **Git Repository**.
 2.  The build pipeline prefetches dependencies from **Upstream Repositories** like pypi, rubygems, and npmjs.org.
-3.  If multi-platform builds are configured, the build pipeline may make requests to **Public Clouds** (like AWS or IBM Cloud) to provision virtual machines.
+3.  If multi-platform builds are configured, the build pipeline will ssh to virtual machines in **Public Clouds** (like AWS or IBM Cloud), provisioned by the multi-platform controller.
 4.  The build pipeline pushes the built container image and its associated artifacts (like SBOMs) to **Quay.io** or another OCI registry.
-5.  The build pipeline may check with a **Coverity License Server** to validate dependencies.
+5.  The build pipeline checks with a **Coverity License Server** to validate dependencies.
 6.  The build pipeline requests a SAST scan from **Snyk**.
-7.  A `Release` resource in the tenant namespace initiates a `Release PipelineRun` in the managed namespace.
+7.  A `Release` resource in the tenant namespace initiates a release `PipelineRun` in the managed namespace.
 8.  The release pipeline in the managed namespace may update a **Jira** ticket to reflect the status of the release.
 9.  The release pipeline checks the CVE status in a **Vulnerability Management System**.
 10. The release pipeline pushes content to **Production Repositories**.
