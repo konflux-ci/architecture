@@ -278,59 +278,47 @@ The [konflux add-ons](./add-ons/index.md) are optional services that, when insta
 ## Data Flow
 
 ```mermaid
-sequenceDiagram
-    participant GR as Git Repository
-    participant PW as PaC Webhook Receiver (Pipeline Service)
-    participant TNP as Tenant Namespace
-    participant PS as Pipeline Service
-    participant IS as Integration Service
-    participant REG as OCI Registry
-    participant RS as Release Service
-    participant MNP as Managed Namespace
-    participant EC as Enterprise Contract
-    participant Prod as Production Destination
+graph TD
+    subgraph tn[Tenant Namespace]
+        direction TB
+        bpr["Build PipelineRun"]
+        r["Release"]
+    end
 
-    GR->>PW: Webhook (commit lands)
-    PW->>TNP: Starts Build PipelineRun
-    activate TNP
-    TNP->>REG: Clones repo, builds image, pushes image/SBOM/scan results/attestations
-    TNP->>PS: Build PipelineRun completes
-    deactivate TNP
-    PS->>REG: Generates/signs SLSA provenance, pushes to OCI Registry
-    PS-->>IS: Notifies Build PipelineRun completion
-    activate IS
-    IS->>TNP: Constructs/creates Snapshot (contains new image & other components)
-    activate TNP
-    IS->>TNP: Creates Test PipelineRuns (based on IntegrationTestScenarios)
-    activate TNP
-    TNP->>IS: Test PipelineRuns complete
-    deactivate TNP
-    IS->>TNP: Creates Release (if automated release or user-triggered)
-    deactivate TNP
-    deactivate IS
-    TNP->>RS: Notifies Release creation
-    activate RS
-    RS->>TNP: Creates Tenant Release PipelineRun (if tenant RP)
-    RS->>MNP: OR Creates Managed Release PipelineRun (if matching RPA)
-    activate MNP
-    MNP->>EC: Managed Release PipelineRun invokes Enterprise Contract CLI
-    EC-->>MNP: Verifies SLSA provenance attestation against policy
-    MNP->>Prod: Copies content to Production Registry/APIs (if policy passes)
-    deactivate MNP
-    deactivate RS
+    subgraph mn[Managed Namespace]
+        direction TB
+        rpr["Release PipelineRun"]
+        ir["InternalRequest"]
+    end
+
+    subgraph ext[External Network]
+        git[Git Repository]
+        upstream_repos["Upstream Repositories"]
+        clouds[Public Clouds]
+        quay[Quay.io]
+        jira[Jira]
+        ext_svc[External Services]
+    end
+
+    bpr -- "1. Fetch source" --> git
+    bpr -- "2. Prefetch dependencies" --> upstream_repos
+    bpr -- "3. Provision VMs" --> clouds
+    bpr -- "4. Push image" --> quay
+    r -- "5. Initiates" --> rpr
+    rpr -- "6. Update" --> jira
+    rpr -- "creates" --> ir
+    ir -- "7. Triggers action" --> ext_svc
 ```
 
-When a commit lands on a tracked branch in a user's git repository, the following happens in the sytem.
+When a commit lands on a tracked branch in a user's git repository, a series of network requests are made to external services. The following diagram illustrates the sequence of these requests.
 
-- The source repository fires a webhook which is received by the the Pipelines as Code (PaC) webhook receiver (part of [Pipeline Service]).
-- PaC starts a build [PipelineRun] in the tenant namespace, following the definition in the `.tekton/` directory.
-- Depending on the user's configuration in their `.tekton/` directory, this build [PipelineRun] clones the repository, securely prefetches dependencies, builds the image, generates an SBOM from the list of prefetched depdencies, pushes the image and the SBOM to the OCI registry, and performs a number of scans and checks on the image and its sources. The results of the scans and other intermediary [trusted artifacts](../ADR/0036-trusted-artifacts.md) are also pushed to the OCI registry.
-- In response to the completion of the build [PipelineRun], the tekton chains controller (part of [Pipeline Service]) captures the state of the build [Pipeline Run], generates an SLSA provenance attestation, signs it, and pushes it to the OCI registry, referring to the image.
-- In response to the completion of the build [PipelineRun], the [Integration Service] responds and constructs a [Snapshot] containing the new image for the given [Component] as well as the latest known good builds of the other components in the [Application]. The Snapshot is a list of references to the OCI pullspecs of the built artifacts.
-- In response to the creation of the [Snapshot], the [Integration Service] consults any [IntegrationTestScenarios] defined in the tenant namespace and creates test [PipelineRuns] to execute tests against the [Snapshot] for each one.
-- In response to the completion of the test [PipelineRuns], the [Integration Service] consults any [ReleasePlans] defined in the tenant namespace and creates a [Release] for each one.
-- In response to the creation of the [Release], the [Release Service] creates release [PipelineRuns] in the tenant namespace if tenant release pipelines are defined on the [ReleasePlan] or it creates release [PipelineRunsn the managed namespace if it can find a matching [ReleasePlanAdmission] in the managed namespace for the [ReleasePlan] in the tenant namespace.
-- The release pipeline in the managed namespace invokes the [Enterprise Contract] cli to verify that the build's SLSA provenance attestation passes the policy configured on the [ReleasePlanAdmission]. If it does, the release pipeline releases the content by copying it to production registries or to remote APIs as configured by the [ReleasePlanAdmission].
+1.  The build pipeline in the tenant namespace fetches source code from a **Git Repository**.
+2.  The build pipeline prefetches dependencies from **Upstream Repositories** like pypi, rubygems, and npmjs.org.
+3.  If multi-platform builds are configured, the build pipeline may make requests to **Public Clouds** (like AWS or IBM Cloud) to provision virtual machines.
+4.  The build pipeline pushes the built container image and its associated artifacts (like SBOMs) to **Quay.io** or another OCI registry.
+5.  A `Release` resource in the tenant namespace initiates a `Release PipelineRun` in the managed namespace.
+6.  The release pipeline in the managed namespace may update a **Jira** ticket to reflect the status of the release.
+7.  The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **External Services** (like an RPM repository, or other internal systems) to complete the release process.
 
 ## API References
 
