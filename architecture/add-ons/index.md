@@ -32,11 +32,17 @@ graph TD
 
         Release -- initiates --> PR["Release PipelineRun(s) (Tenant)"]
         Comp -- defines --> IR["ImageRepository"]
-        IR -- managed by --> IC["Image Controller"]
-        IC -- injects push secrets --> BPR
-        BPR -- triggers multi-arch provisioning --> MPC["Multi-Platform Controller"]
-        MPC -- provisions VMs for --> BPR
     end
+
+    subgraph addons[Add-on Namespaces]
+        IC["Image Controller"]
+        MPC["Multi-Platform Controller"]
+    end
+
+    IR -- managed by --> IC
+    IC -- injects push secrets --> BPR
+    BPR -- triggers multi-arch provisioning --> MPC
+    MPC -- provisions VMs for --> BPR
 
     subgraph managed[Managed Namespace]
         RPA["ReleasePlanAdmission(s)"]
