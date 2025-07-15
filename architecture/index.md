@@ -300,10 +300,10 @@ graph TD
         ext_svc[External Services]
     end
 
-    bpr -- "1. Fetch source" --> git
-    bpr -- "2. Prefetch dependencies" --> upstream_repos
-    bpr -- "3. Provision VMs" --> clouds
-    bpr -- "4. Push image" --> quay
+    bpr -- "(1) Fetch source" --> git
+    bpr -- "(2) Prefetch dependencies" --> upstream_repos
+    bpr -- "(3) Provision VMs" --> clouds
+    bpr -- "(4) Push image" --> quay
     r -- "5. Initiates" --> rpr
     rpr -- "6. Update" --> jira
     rpr -- "creates" --> ir
