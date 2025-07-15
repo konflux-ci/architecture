@@ -289,26 +289,27 @@ graph LR
         direction TB
         rpr["Release PipelineRun"]
         ir["InternalRequest"]
+        ecp["EnterpriseContractPolicy"]
+    end
+
+    subgraph int_net[Internal Network]
+        ins[Internal Network Services]
     end
 
     subgraph ext[External Network]
         git[Git Repository]
         upstream_repos["Upstream Repositories"]
         clouds[Public Clouds]
-        quay[Quay.io]
         coverity[Coverity License Server]
         snyk[Snyk]
+        quay[Quay.io]
         jira[Jira]
         vms[Vulnerability Management System]
-        prod_repos["Production Repositories"]
         awskms[AWS KMS]
+        prod_repos["Production Repositories"]
         trustify[Trustify]
         pyxis[Pyxis]
         advisory_feed[Advisory Feed]
-    end
-
-    subgraph int_net[Internal Network]
-        ins[Internal Network Services]
     end
 
     bpr -- "(1) Fetch source" --> git
@@ -318,34 +319,38 @@ graph LR
     bpr -- "(5) Check license" --> coverity
     bpr -- "(6) Request SAST scan" --> snyk
     r -- "(7) Initiates" --> rpr
-    rpr -- "(8) Update" --> jira
-    rpr -- "(9) Check CVEs" --> vms
-    rpr -- "(10) Push content" --> prod_repos
-    rpr -- "(11) Sign with cosign" --> awskms
+    rpr -- "(8) Pull content from Quay" --> quay
+    rpr -- "(9) Conforma check" --> ecp
+    rpr -- "(10) Check CVEs" --> vms
+    rpr -- "(11) Push content" --> prod_repos
+    rpr -- "(12) Update" --> jira
+    rpr -- "(13) Sign with cosign" --> awskms
     rpr -- "creates" --> ir
-    ir -- "(12) Triggers action" --> ins
-    rpr -- "(13) Push SBOM" --> trustify
-    rpr -- "(14) Populate metadata" --> pyxis
-    rpr -- "(15) Populate advisory feed" --> advisory_feed
+    ir -- "(14) Triggers action" --> ins
+    rpr -- "(15) Push SBOM" --> trustify
+    rpr -- "(16) Populate metadata" --> pyxis
+    rpr -- "(17) Populate advisory feed" --> advisory_feed
 ```
 
 When a commit lands on a tracked branch in a user's git repository, a series of network requests are made to external services. The following diagram illustrates the sequence of these requests.
 
 1.  The build pipeline in the tenant namespace fetches source code from a **Git Repository**.
 2.  The build pipeline prefetches dependencies from **Upstream Repositories** like pypi, rubygems, and npmjs.org.
-3.  If multi-platform builds are configured, the build pipeline will ssh to virtual machines in **Public Clouds** (like AWS or IBM Cloud), provisioned by the multi-platform controller.
+3.  If multi-platform builds are configured, the build pipeline may make requests to **Public Clouds** (like AWS or IBM Cloud) to provision virtual machines.
 4.  The build pipeline pushes the built container image and its associated artifacts (like SBOMs) to **Quay.io** or another OCI registry.
-5.  The build pipeline checks with a **Coverity License Server** to validate dependencies.
+5.  The build pipeline may check with a **Coverity License Server** to validate dependencies.
 6.  The build pipeline requests a SAST scan from **Snyk**.
-7.  A `Release` resource in the tenant namespace initiates a release `PipelineRun` in the managed namespace.
-8.  The release pipeline in the managed namespace may update a **Jira** ticket to reflect the status of the release.
-9.  The release pipeline checks the CVE status in a **Vulnerability Management System**.
-10. The release pipeline pushes content to **Production Repositories**.
-11. The release pipeline makes a request to **AWS KMS** to sign the release with `cosign`.
-12. The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **Internal Network Services** (like an RPM repository, or other internal systems) to complete the release process.
-13. The release pipeline pushes the SBOM to **Trustify** for analysis.
-14. The release pipeline populates metadata in **Pyxis**.
-15. The release pipeline populates the **Advisory Feed**.
+7.  A `Release` resource in the tenant namespace initiates a `Release PipelineRun` in the managed namespace.
+8.  The release pipeline pulls the content, attestations, and SBOMs from **Quay.io**.
+9.  A conforma check compares the attestations against an **EnterpriseContractPolicy**.
+10. The release pipeline checks the CVE status in a **Vulnerability Management System**.
+11. The release pipeline pushes content to **Production Repositories**.
+12. The release pipeline in the managed namespace may update a **Jira** ticket to reflect the status of the release.
+13. The release pipeline makes a request to **AWS KMS** to sign the release with `cosign`.
+14. The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **Internal Network Services** (like an RPM repository, or other internal systems) to complete the release process.
+15. The release pipeline pushes the SBOM to **Trustify** for analysis.
+16. The release pipeline populates metadata in **Pyxis**.
+17. The release pipeline populates the **Advisory Feed**.
 
 ## API References
 
