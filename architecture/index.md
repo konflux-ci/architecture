@@ -304,10 +304,10 @@ graph TD
     bpr -- "(2) Prefetch dependencies" --> upstream_repos
     bpr -- "(3) Provision VMs" --> clouds
     bpr -- "(4) Push image" --> quay
-    r -- "5. Initiates" --> rpr
-    rpr -- "6. Update" --> jira
+    r -- "(5) Initiates" --> rpr
+    rpr -- "(6) Update" --> jira
     rpr -- "creates" --> ir
-    ir -- "7. Triggers action" --> ext_svc
+    ir -- "(7) Triggers action" --> ext_svc
 ```
 
 When a commit lands on a tracked branch in a user's git repository, a series of network requests are made to external services. The following diagram illustrates the sequence of these requests.
