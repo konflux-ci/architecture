@@ -73,12 +73,12 @@ graph TD
     style TPR fill:#eee,stroke:#333,stroke-width:1px
     style RPA fill:#f9f,stroke:#333,stroke-width:2px
     style ECP fill:#f9f,stroke:#333,stroke-width:2px
-    style IC fill:#add8e6,stroke:#333,stroke-width:2px
+    style IC fill:#ffb74d,stroke:#333,stroke-width:2px
     style QIO fill:#fff,stroke:#333,stroke-width:1px
-    style MPC fill:#add8e6,stroke:#333,stroke-width:2px
+    style MPC fill:#ffb74d,stroke:#333,stroke-width:2px
     style IR fill:#fff,stroke:#333,stroke-width:1px
     style IRR fill:#fff,stroke:#333,stroke-width:1px
-    style ISC fill:#add8e6,stroke:#333,stroke-width:2px
+    style ISC fill:#ffb74d,stroke:#333,stroke-width:2px
     style EXT fill:#fff,stroke:#333,stroke-width:1px
 
     classDef controlPlane fill:#f9f,stroke:#333,stroke-width:2px;
@@ -123,9 +123,9 @@ graph TD
     ISC -- Watches InternalRequest in Managed Namespace --> MW
     ISC -- Performs actions in --> EXT[External Network Zone]
 
-    style IC fill:#add8e6,stroke:#333,stroke-width:2px;
-    style MPC fill:#add8e6,stroke:#333,stroke-width:2px;
-    style ISC fill:#add8e6,stroke:#333,stroke-width:2px;
+    style IC fill:#ffb74d,stroke:#333,stroke-width:2px;
+    style MPC fill:#ffb74d,stroke:#333,stroke-width:2px;
+    style ISC fill:#ffb74d,stroke:#333,stroke-width:2px;
     style kubeapi fill:#f0e68c,stroke:#333,stroke-width:2px;
     style TW fill:#f0e68c,stroke:#333,stroke-width:2px;
     style MW fill:#f0e68c,stroke:#333,stroke-width:2px;
