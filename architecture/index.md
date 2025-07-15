@@ -347,8 +347,8 @@ When a commit lands on a tracked branch in a user's git repository, a series of 
 11. The release pipeline pushes content to **Production Repositories**.
 12. The release pipeline in the managed namespace may update a **Jira** ticket to reflect the status of the release.
 13. The release pipeline makes a request to **AWS KMS** to sign the release with `cosign`.
-14. The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **Internal Network Services** (like an RPM repository, or other internal systems) to complete the release process.
-15. The release pipeline pushes the SBOM to **Trustify** for analysis.
+14. The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **Internal Network Services** (like a signing server, message bus, or other internal systems) to complete the release process.
+15. The release pipeline pushes the SBOM to **Trustify** for vulnerability management.
 16. The release pipeline populates metadata in **Pyxis**.
 17. The release pipeline populates the **Advisory Feed**.
 
