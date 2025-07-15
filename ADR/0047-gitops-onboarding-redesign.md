@@ -248,6 +248,10 @@ No open questions at this time.
 
 **Note**: Once the GitOps approach is implemented, the UI-based onboarding will be completely deprecated with no fallback option. This decision prioritizes streamlining to a single onboarding flow to minimize maintenance overhead and deliver the best user outcomes.
 
+### Migration from UI to GitOps
+
+To support migration from the current UI-based approach to GitOps, a CLI tool will be provided that enables tenant administrators to export their existing namespace configurations to a local GitOps repository structure. The tool will accept a namespace as input and generate the required YAML objects (applications, components, integration test scenarios, release plans, and RBAC configurations) in the local folder structure expected by the GitOps workflow. This allows existing UI users to bootstrap their GitOps repositories with their current configurations and then transition to the new Git-centric workflow without recreating their entire setup from scratch.
+
 ## Security Implications
 
 A critical security consideration in any GitOps implementation is ensuring that the GitOps sync process cannot create arbitrary resources beyond what a namespace administrator would normally be permitted to create. Without proper constraints, GitOps operators could potentially be exploited to escalate privileges or deploy unauthorized resources.
