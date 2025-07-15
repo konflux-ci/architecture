@@ -291,6 +291,10 @@ graph TD
         ir["InternalRequest"]
     end
 
+    subgraph int_net[Internal Network]
+        ins[Internal Network Services]
+    end
+
     subgraph ext[External Network]
         git[Git Repository]
         upstream_repos["Upstream Repositories"]
@@ -302,7 +306,6 @@ graph TD
         vms[Vulnerability Management System]
         awskms[AWS KMS]
         prod_repos["Production Repositories"]
-        ext_svc[External Services]
         trustify[Trustify]
         pyxis[Pyxis]
         advisory_feed[Advisory Feed]
@@ -320,7 +323,7 @@ graph TD
     rpr -- "(10) Push content" --> prod_repos
     rpr -- "(11) Sign with cosign" --> awskms
     rpr -- "creates" --> ir
-    ir -- "(12) Triggers action" --> ext_svc
+    ir -- "(12) Triggers action" --> ins
     rpr -- "(13) Push SBOM" --> trustify
     rpr -- "(14) Populate metadata" --> pyxis
     rpr -- "(15) Populate advisory feed" --> advisory_feed
@@ -339,7 +342,7 @@ When a commit lands on a tracked branch in a user's git repository, a series of 
 9.  The release pipeline checks the CVE status in a **Vulnerability Management System**.
 10. The release pipeline pushes content to **Production Repositories**.
 11. The release pipeline makes a request to **AWS KMS** to sign the release with `cosign`.
-12. The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **External Services** (like an RPM repository, or other internal systems) to complete the release process.
+12. The release pipeline in the managed namespace may create an `InternalRequest` which is observed by a controller that interacts with other **Internal Network Services** (like an RPM repository, or other internal systems) to complete the release process.
 13. The release pipeline pushes the SBOM to **Trustify** for analysis.
 14. The release pipeline populates metadata in **Pyxis**.
 15. The release pipeline populates the **Advisory Feed**.
