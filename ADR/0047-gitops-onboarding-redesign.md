@@ -46,14 +46,14 @@ Redesign the onboarding experience to converge UI and GitOps into a single coher
 **Chosen approach** replaces both current flows with a unified Git-centric solution that preserves GitOps benefits while providing the usability improvements users expect.
 
 ### Core Shift
-- **Replace UI configuration** with a VS Code plugin for onboarding and editing
-- **Use local schema validation**, linting, and previews to reduce onboarding errors
-- **Use Git as the single source of truth** for applications, components, integration test scenarios, releasePlans and RBAC
+- **Deprecate ability to configure tenant resources via the UI** Users will configure resources directly via Kubernetes or via Gitops
+- **Promot use of Git as the single source of truth** for applications, components, integration test scenarios, releasePlans and RBAC in production environments
 - **Preserve the UI for non-configuration activities** including:
   - Monitoring and observability: logs, build inspection, viewing metrics, dashboards
   - Operational actions: triggering builds/tests, starting manual releases, pipeline management
   - Any other runtime actions that don't involve declarative resource configuration
 - **Commit to single onboarding flow**: UI-based onboarding will be completely deprecated with no fallback option to minimize maintenance overhead and deliver optimal user outcomes
+- **Maintain ease of use and excellent user experience** by providing aVS Code plugin that delivers forms based configuration of validation of tenant resources
 
 ### IDE Selection Rationale
 VS Code was chosen as the primary IDE target because:
