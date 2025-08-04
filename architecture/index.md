@@ -71,26 +71,26 @@ graph TD
         PRM -- enforces policy via --> ECP
     end
 
-    style App fill:#f9f,stroke:#333,stroke-width:2px
-    style Comp fill:#f9f,stroke:#333,stroke-width:2px
-    style Snap fill:#ccf,stroke:#333,stroke-width:2px
-    style ITS fill:#f9f,stroke:#333,stroke-width:2px
-    style RP fill:#f9f,stroke:#333,stroke-width:2px
-    style Release fill:#ccf,stroke:#333,stroke-width:2px
-    style PR fill:#eee,stroke:#333,stroke-width:1px
-    style PRM fill:#eee,stroke:#333,stroke-width:1px
-    style BPR fill:#eee,stroke:#333,stroke-width:1px
-    style TPR fill:#eee,stroke:#333,stroke-width:1px
-    style RPA fill:#f9f,stroke:#333,stroke-width:2px
-    style ECP fill:#f9f,stroke:#333,stroke-width:2px
+    style App fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    style Comp fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    style Snap fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000000
+    style ITS fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    style RP fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    style Release fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000000
+    style PR fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style PRM fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style BPR fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style TPR fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style RPA fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    style ECP fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
 
-    classDef controlPlane fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef controlPlane fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000;
     class App,Comp,ITS,RP,RPA,ECP controlPlane;
 
-    classDef dataPlane fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef dataPlane fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000000;
     class Snap,Release dataPlane;
 
-    classDef tekton fill:#eee,stroke:#333,stroke-width:1px;
+    classDef tekton fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000;
     class PR,PRM,BPR,TPR tekton;
 
     click App href "https://redhat-appstudio.github.io/docs/api-references/application-environment-api/#application" "Application API Reference"
@@ -222,20 +222,28 @@ graph TD
     TR -- Stores Results --> PG
     TR -- Watches --> TP
 
-    style HAS fill:#add8e6,stroke:#333,stroke-width:2px;
-    style BS fill:#add8e6,stroke:#333,stroke-width:2px;
-    style IS fill:#add8e6,stroke:#333,stroke-width:2px;
-    style RS fill:#add8e6,stroke:#333,stroke-width:2px;
-    style PS fill:#add8e6,stroke:#333,stroke-width:2px;
-    style TP fill:#add8e6,stroke:#333,stroke-width:2px;
-    style PAC fill:#add8e6,stroke:#333,stroke-width:2px;
-    style TC fill:#add8e6,stroke:#333,stroke-width:2px;
-    style TR fill:#add8e6,stroke:#333,stroke-width:2px;
-    style kubeapi fill:#f0e68c,stroke:#333,stroke-width:2px;
-    style PR fill:#f0e68c,stroke:#333,stroke-width:2px;
-    style PG fill:#fff,stroke:#333,stroke-width:1px;
-    style OCI fill:#fff,stroke:#333,stroke-width:1px;
-    style SCM fill:#fff,stroke:#333,stroke-width:1px;
+    style HAS fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000;
+    style BS fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000;
+    style IS fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000;
+    style RS fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000;
+    style PS fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000;
+    style TP fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000;
+    style PAC fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000;
+    style TC fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000;
+    style TR fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000;
+    style EC fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000000;
+    style kubeapi fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000000;
+    style App fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
+    style Comp fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
+    style Snap fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
+    style ITS fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
+    style RPA fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
+    style RP fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
+    style Release fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
+    style PR fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
+    style PG fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px,color:#000000;
+    style OCI fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000;
+    style SCM fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000;
 
     click HAS href "https://github.com/redhat-appstudio/application-service" "Hybrid Application Service"
     click BS href "https://github.com/redhat-appstudio/core/build-service.md" "Build Service"

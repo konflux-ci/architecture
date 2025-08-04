@@ -61,33 +61,35 @@ graph TD
         ISC -- performs actions on --> EXT["External Network Resources"]
     end
 
-    style App fill:#f9f,stroke:#333,stroke-width:2px
-    style Comp fill:#f9f,stroke:#333,stroke-width:2px
-    style Snap fill:#ccf,stroke:#333,stroke-width:2px
-    style ITS fill:#f9f,stroke:#333,stroke-width:2px
-    style RP fill:#f9f,stroke:#333,stroke-width:2px
-    style Release fill:#ccf,stroke:#333,stroke-width:2px
-    style PR fill:#eee,stroke:#333,stroke-width:1px
-    style PRM fill:#eee,stroke:#333,stroke-width:1px
-    style BPR fill:#eee,stroke:#333,stroke-width:1px
-    style TPR fill:#eee,stroke:#333,stroke-width:1px
-    style RPA fill:#f9f,stroke:#333,stroke-width:2px
-    style ECP fill:#f9f,stroke:#333,stroke-width:2px
-    style IC fill:#ffb74d,stroke:#333,stroke-width:2px
-    style QIO fill:#fff,stroke:#333,stroke-width:1px
-    style MPC fill:#ffb74d,stroke:#333,stroke-width:2px
-    style IR fill:#fff,stroke:#333,stroke-width:1px
-    style IRR fill:#fff,stroke:#333,stroke-width:1px
-    style ISC fill:#ffb74d,stroke:#333,stroke-width:2px
-    style EXT fill:#fff,stroke:#333,stroke-width:1px
+    style App fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    style Comp fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    style Snap fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000000
+    style ITS fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    style RP fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    style Release fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000000
+    style PR fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style PRM fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style BPR fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style TPR fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style RPA fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    style ECP fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    style IC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000
+    style QIO fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style MPC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000
+    style IR fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style IRR fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style ISC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000
+    style EXT fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
+    style AWS fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px,color:#000000
+    style IBM fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px,color:#000000
 
-    classDef controlPlane fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef controlPlane fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000;
     class App,Comp,ITS,RP,RPA,ECP,IC,MPC,ISC controlPlane;
 
-    classDef dataPlane fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef dataPlane fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000000;
     class Snap,Release dataPlane;
 
-    classDef tekton fill:#eee,stroke:#333,stroke-width:1px;
+    classDef tekton fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000;
     class PR,PRM,BPR,TPR tekton;
 ```
 
@@ -123,16 +125,16 @@ graph TD
     ISC -- Watches InternalRequest in Managed Namespace --> MW
     ISC -- Performs actions in --> EXT[External Network Zone]
 
-    style IC fill:#ffb74d,stroke:#333,stroke-width:2px;
-    style MPC fill:#ffb74d,stroke:#333,stroke-width:2px;
-    style ISC fill:#ffb74d,stroke:#333,stroke-width:2px;
-    style kubeapi fill:#f0e68c,stroke:#333,stroke-width:2px;
-    style TW fill:#f0e68c,stroke:#333,stroke-width:2px;
-    style MW fill:#f0e68c,stroke:#333,stroke-width:2px;
-    style AWS fill:#fff,stroke:#333,stroke-width:1px;
-    style IBM fill:#fff,stroke:#333,stroke-width:1px;
-    style EXT fill:#fff,stroke:#333,stroke-width:1px;
-    style OCI fill:#fff,stroke:#333,stroke-width:1px;
+    style IC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
+    style MPC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
+    style ISC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
+    style kubeapi fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000000;
+    style TW fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
+    style MW fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
+    style AWS fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px,color:#000000;
+    style IBM fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px,color:#000000;
+    style EXT fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000;
+    style OCI fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000;
 ```
 
 ### Image Controller
