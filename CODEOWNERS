@@ -7,20 +7,20 @@
 # review when someone opens a pull request.
 *       @konflux-ci/book-publishers
 
-/architecture/build-service.md              @konflux-ci/build-maintainers
+/architecture/core/build-service.md              @konflux-ci/build-maintainers
 /diagrams/build-service			    @konflux-ci/build-maintainers
-/architecture/image-controller.md           @konflux-ci/build-maintainers
+/architecture/add-ons/image-controller.md           @konflux-ci/build-maintainers
 
-/architecture/enterprise-contract.md        @konflux-ci/ec
+/architecture/core/enterprise-contract.md        @konflux-ci/ec
 
-/architecture/hybrid-application-console.md @konflux-ci/konflux-ui
+/architecture/core/hybrid-application-console.md @konflux-ci/konflux-ui
 
-/architecture/multi-platform-controller.md  @konflux-ci/infrastructure
+/architecture/add-ons/multi-platform-controller.md  @konflux-ci/infrastructure
 
-/architecture/internal-services.md          @konflux-ci/release-service-maintainers
-/architecture/release-service.md            @konflux-ci/release-service-maintainers
+/architecture/add-ons/internal-services.md          @konflux-ci/release-service-maintainers
+/architecture/core/release-service.md            @konflux-ci/release-service-maintainers
 /diagrams/internal-services                 @konflux-ci/release-service-maintainers
 /diagrams/release-service                   @konflux-ci/release-service-maintainers
 
-/architecture/integration-service.md        @konflux-ci/integration-service-maintainers
+/architecture/core/integration-service.md        @konflux-ci/integration-service-maintainers
 /diagrams/integration-service  		    @konflux-ci/integration-service-maintainers
