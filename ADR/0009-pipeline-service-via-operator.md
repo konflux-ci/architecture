@@ -39,7 +39,7 @@ the OSP CRDs. The following changes are specific to RHTAP:
   to prune `PipelineRun` and `TaskRun` data off cluster, thereby ensuring data
   is archived before removal.
 - Direct Pipelines as Code to use a URL pattern that displays the `PipelineRun`
-  or `TaskRun` info from the Hybrid Application Console (HAC). This ensures
+  or `TaskRun` info from the Konflux UI. This ensures
   end users do not need access to the underlying compute cluster(s).
 - The Pipelines as Code application name must match the GitHub Application name, so that users understand which GitHubApplication is responsible for triggering the pipelines.
 - The GitHub Application secret value, deployed using an ExternalSecret.

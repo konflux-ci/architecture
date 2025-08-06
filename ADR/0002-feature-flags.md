@@ -124,7 +124,7 @@ can know that the [integration-service] features of HACBS are enabled in the wor
 
 Originally drafted in a [google document](https://docs.google.com/document/d/1KcXWZ8VGUg_iR0RjdGuDYedP8ZW63XCgF26KZUNgpeQ/edit)
 
-[hac]: ../architecture/hybrid-application-console.md
+[hac]: ../architecture/core/konflux-ui.md
 [hac-dev]: https://github.com/openshift/hac-dev
 [has]: ../architecture/application-service.md
 [build-service]: ../architecture/build-service.md

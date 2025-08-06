@@ -10,9 +10,9 @@ The Build Service is composed of controllers that create and configure build pip
 ### Dependencies
 
 The Build Service is dependent on the following services:
-- [Pipeline Service](./pipeline-service.md)
+- [Pipeline Service](./core/pipeline-service.md)
   - Pipeline execution, Pipeline logging
-- [Image Controller](./image-controller.md)
+- [Image Controller](./add-ons/image-controller.md)
   - Generation of a container image repository and robot account for Component CR which is used by PipelineRun
 
 ## Controllers
@@ -50,7 +50,7 @@ Component Build Controller is working in multiple ways based on a request annota
 
 All those requests first wait for `.spec.containerImage` to be set, either manually or
 by image-controller via
-[ImageRepository CR](https://github.com/konflux-ci/architecture/blob/main/architecture/image-controller.md#to-create-an-image-repository-for-a-component-apply-this-yaml-code).
+[ImageRepository CR](https://github.com/konflux-ci/architecture/blob/main/architecture/add-ons/image-controller.md#to-create-an-image-repository-for-a-component-apply-this-yaml-code).
 
 Controller will also create component specific service account `build-pipeline-$COMPONENT_NAME`
 used for build pipelines.

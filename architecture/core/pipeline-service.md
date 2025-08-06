@@ -34,7 +34,7 @@ notable configurations:
 - The pruner (provided by the Pipelines operator) will be disabled in favor of
   pruning via Tekton Results.
 - Pipelines as Code will link the results of pipeline tasks to an appropriate
-  [Hybrid Application Console (HAC)](./hybrid-application-console.md) URL.
+  [Konflux UI](./core/konflux-ui.md) URL.
 
 ## Architecture
 

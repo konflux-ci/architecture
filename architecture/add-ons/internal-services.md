@@ -13,7 +13,7 @@ The results and outcome of the pipeline are added as an update to the custom res
 
 ## System Context
 
-The diagram below shows the interaction of the internal services controller and the [Release Service](./release-service.md) and shows the flow of custom resources
+The diagram below shows the interaction of the internal services controller and the [Release Service](./core/release-service.md) and shows the flow of custom resources
 
 ![](../diagrams/internal-services/internal-services-controller-overview.jpg)
 
