@@ -8,6 +8,9 @@ Some of the text was taken from - https://github.com/konflux-ci/architecture/pul
 
 Implemented
 
+
+Supersedes [ADR 31. Sprayproxy](0031-sprayproxy.html)
+
 ## Context
 
 The purpose of this ADR is to revisit the workspace concept, understand the purpose
