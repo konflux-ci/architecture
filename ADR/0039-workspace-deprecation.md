@@ -6,7 +6,7 @@ Some of the text was taken from - https://github.com/konflux-ci/architecture/pul
 
 ## Status
 
-Accepted
+Implemented
 
 ## Context
 
