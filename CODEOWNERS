@@ -7,6 +7,8 @@
 # review when someone opens a pull request.
 *       @konflux-ci/book-publishers
 
+/ADR/ 						@konflux-ci/konflux-governance-committee
+
 /architecture/core/build-service.md              @konflux-ci/build-maintainers
 /diagrams/build-service			    @konflux-ci/build-maintainers
 /architecture/add-ons/image-controller.md           @konflux-ci/build-maintainers
