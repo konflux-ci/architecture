@@ -1,0 +1,91 @@
+name: Preview Jekyll Site
+
+on:
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to preview'
+        required: true
+        default: 'main'
+        type: string
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "preview-${{ github.head_ref || github.ref_name }}"
+  cancel-in-progress: true
+
+jobs:
+  generate-api-docs:
+    uses: ./.github/workflows/generate-api-docs.yml
+    secrets: inherit
+
+  generate-adr-index:
+    uses: ./.github/workflows/generate-adr-index.yml
+    secrets: inherit
+
+  # Build job
+  build:
+    needs:
+      - generate-api-docs
+      - generate-adr-index
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Download generated API docs
+        uses: actions/download-artifact@v4
+        with:
+          name: api-docs
+          path: ref/
+          
+      - name: Download generated ADR index
+        uses: actions/download-artifact@v4
+        with:
+          name: adr-index
+          path: ADR/
+          
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          
+      - name: Install Jekyll dependencies
+        run: |
+          bundle install
+          echo "✅ Jekyll dependencies installed"
+          
+      - name: Build Jekyll site
+        run: |
+          echo "🔨 Building Jekyll site..."
+          bundle exec jekyll build --destination ./_site
+          echo "✅ Site built successfully"
+          
+      - name: Upload preview artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+  ### Github-pages "preview" feature is alpha and doesn't seem to work.
+  ### Deploy to preview environment
+  ##deploy-preview:
+  ##  environment:
+  ##    name: preview
+  ##    url: ${{ steps.deployment.outputs.page_url }}
+  ##  runs-on: ubuntu-latest
+  ##  needs: build
+  ##  steps:
+  ##    - name: Deploy to preview
+  ##      id: deployment
+  ##      uses: actions/deploy-pages@v4
+  ##      with:
+  ##        preview: true 
