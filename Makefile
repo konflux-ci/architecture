@@ -31,7 +31,6 @@ serve: install
 
 # Main lint target - runs all validation
 lint: lint-mermaid lint-adr-status lint-eleventy-headers
-	@echo "✅ All linting completed successfully"
 
 # Mermaid diagram validation
 lint-mermaid: install-mermaid-cli
