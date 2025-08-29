@@ -1,0 +1,65 @@
+---
+description: Commit rules for cursor
+alwaysApply: true
+---
+
+# Commit Rules for Cursor
+
+## Commit Message Format
+
+Every commit message created by Cursor must include:
+
+1. **DCO Signoff**: The Developer Certificate of Origin signoff line at the bottom
+2. **Assisted-by Line**: Indication that the commit was assisted by Cursor
+
+Every commit message created by cursor should include:
+
+3. Conventional-commits style type prefix with an emoji of your choice.
+
+## Required Format
+
+```
+<emoji> <type>(<scope>): <description>
+
+<commit message body>
+
+Signed-off-by: <git author name> <git author email>
+Assisted-by: Cursor
+```
+
+## Example
+
+```
+🚀 feat(tools): Add Mermaid diagram validation with Makefile and hack scripts
+
+- Add Makefile with targets for linting, validation, and development tasks
+- Create hack/ directory with individual scripts for each target
+- Refactor architecture documentation organization
+- Enhance Mermaid diagrams with improved readability
+
+Signed-off-by: John Doe <john.doe@example.com>
+Assisted-by: Cursor
+```
+
+## Conventional Commit Types & Emojis
+
+- **feat**: 🚀 New features
+- **fix**: 🐛 Bug fixes  
+- **docs**: 📚 Documentation changes
+- **style**: 💅 Code style/formatting changes
+- **refactor**: 🔧 Code refactoring
+- **test**: 🧪 Adding or updating tests
+- **chore**: 🛠️ Maintenance tasks, dependencies, etc.
+- **perf**: ⚡ Performance improvements
+- **ci**: 🔄 CI/CD changes
+- **build**: 📦 Build system changes
+- **revert**: ↩️ Reverting previous commits
+
+## Implementation Notes
+
+- The DCO signoff must use the currently registered git author
+- The "Assisted-by: Cursor" line must always be present
+- Both lines should be at the very bottom of the commit message
+- Use `git config user.name` and `git config user.email` to get current author info
+- Always include an appropriate emoji and conventional commit type
+- Use descriptive scope when applicable (e.g., `feat(tools)`, `fix(docs)`) 

@@ -1,0 +1,49 @@
+---
+description: General rules for cursor
+alwaysApply: true
+---
+
+# Cursor Rules for Konflux Architecture Repository
+
+## Commit Message Rules
+
+See [commit-rules.mdc](commit-rules.mdc).
+
+## General Guidelines
+
+1. **Incremental Changes**: Make small, testable changes
+2. **User Feedback**: Incorporate user feedback and iterate on solutions
+3. **Error Handling**: Provide clear error messages and debugging information
+4. **Documentation**: Keep architecture documentation up-to-date 
+
+## Code Quality Rules
+
+Run tests locally with `make`.
+
+1. **Test-Driven Development**: Write tests first, then implement code
+2. **Run Tests**: Always run tests after making incremental changes
+3. **Validation**: Use `make lint` to validate Mermaid diagrams before committing
+4. **Documentation**: Update relevant documentation when changing architecture
+
+## File Organization Rules
+
+1. **Core Services**: Place in `architecture/core/`
+2. **Add-on Services**: Place in `architecture/add-ons/`
+3. **Scripts**: Place in `hack/` directory
+4. **Links**: Always update internal markdown links when moving files
+
+## ADR (Architecture Decision Record) Rules
+
+1. **Community Standards**: Always consult [Konflux Community ADRs](https://github.com/konflux-ci/community/blob/main/ADRs.md) before making changes to the `ADR/` directory
+2. **Format Compliance**: Follow the established ADR template and numbering conventions
+3. **Review Process**: Ensure ADRs align with community governance and decision-making processes
+4. **Cross-Reference**: Update related ADRs when making architectural changes that affect multiple decisions
+
+## Mermaid Diagram Rules
+
+If and only if your change needs a diagram, use `mermaid` syntax.
+
+1. **Readability**: Ensure diagrams work in both GitHub light and dark modes
+2. **Text Color**: Use `color:#000000` for all text elements
+3. **Validation**: Always run `make lint-mermaid` before committing diagrams
+4. **Structure**: Use clear, logical relationships and proper subgraphs
