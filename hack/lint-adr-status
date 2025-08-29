@@ -1,0 +1,106 @@
+#!/bin/bash
+
+# lint-adr-status - Lint ADR statuses for all ADR files
+#
+# This script iterates over all ADR markdown files and checks their status
+# by running the get-adr-status.sh script on each one.
+#
+# Exit codes:
+#   0 - All ADRs have valid statuses
+#   1 - One or more ADRs have invalid statuses or errors
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+UTIL_DIR="$SCRIPT_DIR/util"
+
+# Function to print error messages
+error() {
+    echo -e "${RED}ERROR:${NC} $1" >&2
+}
+
+# Function to print success messages
+success() {
+    echo -e "${GREEN}SUCCESS:${NC} $1"
+}
+
+# Function to print info messages
+info() {
+    echo -e "${BLUE}INFO:${NC} $1"
+}
+
+# Function to print warning messages
+warning() {
+    echo -e "${YELLOW}WARNING:${NC} $1"
+}
+
+# Check if get-adr-status.sh script exists
+if [[ ! -f "$UTIL_DIR/get-adr-status.sh" ]]; then
+    error "get-adr-status.sh script not found in $UTIL_DIR"
+    exit 1
+fi
+
+# Make sure the script is executable
+if [[ ! -x "$UTIL_DIR/get-adr-status.sh" ]]; then
+    error "get-adr-status.sh script is not executable"
+    exit 1
+fi
+
+# Find all ADR markdown files
+adr_files=()
+while IFS= read -r -d '' file; do
+    adr_files+=("$file")
+done < <(find ADR/ -name "*.md" -type f -print0 | sort -z)
+
+if [[ ${#adr_files[@]} -eq 0 ]]; then
+    warning "No ADR markdown files found in ADR/ directory"
+    exit 0
+fi
+
+info "Found ${#adr_files[@]} ADR files to check"
+
+# Track errors
+errors=0
+total_files=${#adr_files[@]}
+
+echo "Checking ADR statuses..."
+echo "========================"
+
+# Process each ADR file
+for file in "${adr_files[@]}"; do
+    # Extract just the filename for display
+    filename=$(basename "$file")
+    
+    # Print filename without newline
+    echo -n "$filename: "
+    
+    # Get the status using our utility script
+    if status=$("$UTIL_DIR/get-adr-status.sh" "$file" 2>&1); then
+        # Success - print status in green
+        echo -e "${GREEN}$status${NC}"
+    else
+        # Error - print error message in red
+        echo -e "${RED}ERROR${NC}"
+        error "Failed to get status for $file: $status"
+        ((errors++))
+    fi
+done
+
+echo "========================"
+
+# Summary
+if [[ $errors -eq 0 ]]; then
+    success "All $total_files ADR files have valid statuses"
+    exit 0
+else
+    error "$errors out of $total_files ADR files have status issues"
+    exit 1
+fi 
