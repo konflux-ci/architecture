@@ -4,7 +4,9 @@ Date: 2022-06-17
 
 ## Status
 
-Accepted
+Implemented
+
+**Amended**, August, 2025: new process and template are documented in [konflux-ci/community//ADRs.md](https://github.com/konflux-ci/community/blob/main/ADRs.md).
 
 ## Context
 
