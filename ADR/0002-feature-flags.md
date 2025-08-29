@@ -4,7 +4,13 @@ Date: 2022-06-01
 
 ## Status
 
-Accepted
+**Replaced**
+
+This document was written when the project was based on [KCP](https://www.kcp.io/). In time, we decided to move off of KCP to kubesaw (undocumented decision), and then later off of kubesaw entirely ([ADR 39](0039-workspace-deprecation.html)).
+
+While some of the logic in context of this document still applies today -- feature flags would be useful to configure the behavior of controllers and their interactions -- the mechanism for doing so needs rethinking. If we introduce such a mechanism in the future, it should appear in its own ADR cross-linked with this one.
+
+It is preserved here for historical purposes.
 
 ## Context
 
