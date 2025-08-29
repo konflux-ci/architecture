@@ -1,0 +1,27 @@
+name: Lint and Validate
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  lint:
+    name: Run Linting and Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        
+    - name: Run make lint
+      run: |
+        echo "🔧 Running make lint..."
+        aa-exec --profile=chrome make lint
+        echo "✅ make lint completed successfully"
