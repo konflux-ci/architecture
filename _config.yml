@@ -6,6 +6,7 @@ color-scheme: auto
 # Jekyll plugins
 plugins:
   - jekyll-mermaid
+  - jekyll-redirect-from
 
 # Mermaid configuration
 mermaid:
