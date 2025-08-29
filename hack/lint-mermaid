@@ -6,16 +6,16 @@ set -e
 echo "🔍 Validating Mermaid diagrams in markdown files..."
 
 find . -name "*.md" -type f | while read file; do
-    if grep -q "```mermaid" "$file"; then
-        echo "  Validating $file"
-        grep -A 1000 "```mermaid" "$file" | grep -B 1000 "```" | sed '1d;$d' | $HOME/.local/bin/mmdc --dry-run > /dev/null 2>&1
+    echo "  Validating $file"
+    for diagram in $(./hack/util/extract-codefences $file mermaid); do
+	echo -n "$diagram" | base64 -d | "$HOME/.local/bin/mmdc" -i - --output /tmp/scratch.svg > /dev/null
         if [ $? -eq 0 ]; then
             echo "    ✅ Valid"
         else
             echo "    ❌ Invalid Mermaid syntax in $file"
             exit 1
         fi
-    fi
+    done
 done
 
-echo "✅ All Mermaid diagrams are valid" 
+echo "✅ All Mermaid diagrams are valid"
