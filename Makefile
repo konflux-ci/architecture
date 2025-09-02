@@ -22,7 +22,7 @@ install:
 
 # Build the site
 build: install
-	@./hack/generate-adr-index
+	@./hack/util/generate-adr-table > ADR/index.md
 	npm run build
 
 # Serve the site with live reload

@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Map status to emoji
+get_status_emoji() {
+	case "$1" in
+		Proposed) echo "📝" ;;
+		Withdrawn) echo "❌" ;;
+		Deferred) echo "⏸️" ;;
+		Accepted) echo "✅" ;;
+		Implementable) echo "🚧" ;;
+		Implemented) echo "✔️" ;;
+		Replaced) echo "🔄" ;;
+		*) echo "" ;;
+	esac
+}
+
+cat << EOF
+---
+title: Architecture Decision Records
+eleventyNavigation:
+  key: Architecture Decision Records
+  order: 3
+  url: /architecture/ADR/
+toc: true
+---
+
+# Architecture Decision Records
+
+An Architecture Decision Record (ADR) is a document that captures an important architectural decision made along with its context and consequences.
+
+EOF
+
+echo "| ADR | Status | Created | Updated |"
+echo "| --- | --- | --- | --- |"
+for adr in ADR/*.md; do
+	title=$(head -1 "${adr}");
+	status=$(hack/util/get-adr-status "${adr}")
+	emoji=$(get_status_emoji "$status")
+	created=$(git log --follow --format=%ad --date short "${adr}" | tail -1)
+	updated=$(git log --follow --format=%ad --date short "${adr}" | head -1)
+	echo "|[${title:2}](./${adr#ADR/})|$emoji $status|$created|$updated|"
+done
