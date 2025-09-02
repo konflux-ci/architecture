@@ -16,8 +16,7 @@ jobs:
         working-directory: ./ADR
 
       - name: Generate ADR list
-        run: for adr in *.md; do title=$(head -1 $adr); echo "* [${title:2}](./$adr)" >> index.md; done
-        working-directory: ./ADR
+        run: ./hack/util/generate-adr-table >> ./ADR/index.md
 
       - name: Delete self-reference to index.md
         run: sed -i '/index.md/d' index.md

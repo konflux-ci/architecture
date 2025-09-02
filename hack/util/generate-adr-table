@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo "| ADR | Status | Created | Updated |"
+echo "| --- | --- | --- | --- |"
+for adr in ADR/*.md; do
+	title=$(head -1 "${adr}");
+	status=$(hack/util/get-adr-status "${adr}")
+	created=$(git log --follow --format=%ad --date short "${adr}" | tail -1)
+	updated=$(git log --follow --format=%ad --date short "${adr}" | head -1)
+	echo "|[${title:2}](./${adr#ADR/})|$status|$created|$updated|"
+done
