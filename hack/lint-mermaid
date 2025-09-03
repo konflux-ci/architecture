@@ -1,0 +1,21 @@
+#!/bin/bash
+# Validate Mermaid diagrams in markdown files
+
+set -e
+
+echo "🔍 Validating Mermaid diagrams in markdown files..."
+
+find . -name "*.md" -type f | while read file; do
+    echo "  Validating $file"
+    for diagram in $(./hack/util/extract-codefences $file mermaid); do
+	echo -n "$diagram" | base64 -d | "$HOME/.local/bin/mmdc" -i - --output /tmp/scratch.svg > /dev/null
+        if [ $? -eq 0 ]; then
+            echo "    ✅ Valid"
+        else
+            echo "    ❌ Invalid Mermaid syntax in $file"
+            exit 1
+        fi
+    done
+done
+
+echo "✅ All Mermaid diagrams are valid"

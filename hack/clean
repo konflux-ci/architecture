@@ -1,0 +1,11 @@
+#!/bin/bash
+# Clean up generated files
+
+set -e
+
+echo "🧹 Cleaning up generated files..."
+
+find . -name "*.svg" -type f -delete 2>/dev/null || true
+find . -name "*.png" -type f -delete 2>/dev/null || true
+
+echo "✅ Cleanup completed" 

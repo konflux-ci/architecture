@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# Extracts and base64 encodes code blocks from a markdown file.
+#
+# This script reads a markdown file and prints the base64 encoded content of
+# each code block. It can optionally filter for blocks of a specific language.
+#
+# Usage:
+#   ./hack/util/extract-codefences <markdown_file> [language]
+#
+# Arguments:
+#   <markdown_file>  The path to the input markdown file.
+#   [language]       Optional. The language identifier to filter for (e.g., "bash").
+#                    If omitted, all code blocks will be extracted.
+#
+# Output:
+#   For each matching code block, a single line of base64 encoded text is
+#   printed to standard output.
+
+set -euo pipefail
+
+# --- Argument Validation ---
+if [[ $# -lt 1 || $# -gt 2 ]]; then
+    echo "Usage: $0 <markdown_file> [language]" >&2
+    exit 1
+fi
+
+readonly MARKDOWN_FILE="$1"
+readonly LANGUAGE="${2:-}" # Defaults to empty if not provided
+
+if [[ ! -f "$MARKDOWN_FILE" ]]; then
+    echo "Error: File not found: '$MARKDOWN_FILE'" >&2
+    exit 1
+fi
+
+# --- Main Logic ---
+# We process the file line-by-line, keeping track of whether we are "in" a
+# code block that matches the specified language.
+
+in_matching_block=0
+block_content=""
+
+while IFS= read -r line || [[ -n "$line" ]]; do
+    # Check if the current line is a code fence (starts with ```)
+    if [[ "$line" =~ ^\`\`\` ]]; then
+        if (( in_matching_block )); then
+            # --- This is a CLOSING fence for a block we have been capturing ---
+            # Print the collected content, base64 encoded on a single line.
+            # `printf` is used to avoid adding a trailing newline to the content
+            # before it gets piped to base64.
+            printf "%s" "$block_content" | base64 -w 0
+            echo # Appends a newline to separate the base64 outputs
+
+            # Reset state for the next potential block
+            in_matching_block=0
+            block_content=""
+        else
+            # --- This is an OPENING fence ---
+            # Extract the language identifier (the first word after ```)
+            fence_lang=$(echo "${line:3}" | awk '{print $1}')
+
+            # If no language filter was provided, OR if the fence language
+            # matches the filter, we start capturing.
+            if [[ -z "$LANGUAGE" || "$fence_lang" == "$LANGUAGE" ]]; then
+                in_matching_block=1
+            fi
+        fi
+    elif (( in_matching_block )); then
+        # --- This is a line inside a matching block ---
+        # Append the line's content and a newline character to our buffer.
+        block_content+="$line"$'\n'
+    fi
+done < "$MARKDOWN_FILE"
+
+# After the loop, if we're still "in a block", the markdown is malformed.
+if (( in_matching_block )); then
+    echo "Error: Markdown file appears to have an unclosed code block." >&2
+    exit 1
+fi

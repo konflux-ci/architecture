@@ -93,13 +93,13 @@ graph TD
     classDef tekton fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000;
     class PR,PRM,BPR,TPR tekton;
 
-    click App href      "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-application" "Application API Reference"
-    click Comp href     "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-component" "Component API Reference"
-    click Snap href     "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-snapshot" "Snapshot API Reference"
-    click ITS href      "https://konflux-ci.dev/docs/reference/kube-apis/integration-service/#k8s-api-github-com-konflux-ci-integration-service-api-v1alpha1-integrationtestscenario" "IntegrationTestScenario API Reference"
-    click Release href  "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-release" "Release API Reference"
-    click RP href       "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-releaseplan" "ReleasePlan API Reference"
-    click RPA href      "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-releaseplanadmission" "ReleasePlanAdmission API Reference"
+    click App "Application API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-application"
+    click Comp "Component API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-component"
+    click Snap "Snapshot API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-snapshot"
+    click ITS "IntegrationTestScenario API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/integration-service/#k8s-api-github-com-konflux-ci-integration-service-api-v1alpha1-integrationtestscenario"
+    click Release "Release API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-release"
+    click RP "ReleasePlan API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-releaseplan"
+    click RPA "ReleasePlanAdmission API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-releaseplanadmission"
 ```
 
 - An [Application] represents a functionally coherent set of [Components] that should be built,
@@ -245,20 +245,20 @@ graph TD
     style OCI fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000;
     style SCM fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000;
 
-    click HAS href "https://github.com/redhat-appstudio/application-service" "Hybrid Application Service"
-    click BS href "https://github.com/redhat-appstudio/core/build-service.md" "Build Service"
-    click IS href "https://github.com/redhat-appstudio/core/integration-service.md" "Integration Service"
-    click RS href "https://github.com/redhat-appstudio/core/release-service.md" "Release Service"
-    click PS href "https://github.com/redhat-appstudio/core/pipeline-service.md" "Pipeline Service"
-    click KubeAPI href "https://kubernetes.io/docs/concepts/architecture/controller/" "Kubernetes API Server (Controllers)"
+    click HAS "Hybrid Application Service" "https://github.com/redhat-appstudio/application-service"
+    click BS "Build Service" "https://github.com/redhat-appstudio/core/build-service.md"
+    click IS "Integration Service" "https://github.com/redhat-appstudio/core/integration-service.md"
+    click RS "Release Service" "https://github.com/redhat-appstudio/core/release-service.md"
+    click PS "Pipeline Service" "https://github.com/redhat-appstudio/core/pipeline-service.md"
+    click KubeAPI "Kubernetes API Server (Controllers)" "https://kubernetes.io/docs/concepts/architecture/controller/"
 
-    click App href      "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-application" "Application API Reference"
-    click Comp href     "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-component" "Component API Reference"
-    click Snap href     "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-snapshot" "Snapshot API Reference"
-    click ITS href      "https://konflux-ci.dev/docs/reference/kube-apis/integration-service/#k8s-api-github-com-konflux-ci-integration-service-api-v1alpha1-integrationtestscenario" "IntegrationTestScenario API Reference"
-    click Release href  "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-release" "Release API Reference"
-    click RP href       "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-releaseplan" "ReleasePlan API Reference"
-    click RPA href      "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-releaseplanadmission" "ReleasePlanAdmission API Reference"
+    click App "Application API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-application"
+    click Comp "Component API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-component"
+    click Snap "Snapshot API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-snapshot"
+    click ITS "IntegrationTestScenario API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/integration-service/#k8s-api-github-com-konflux-ci-integration-service-api-v1alpha1-integrationtestscenario"
+    click Release "Release API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-release"
+    click RP "ReleasePlan API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-releaseplan"
+    click RPA "ReleasePlanAdmission API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-releaseplanadmission"
 ```
 
 Each service that makes up Konflux is further explained in its own document.

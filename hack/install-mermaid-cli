@@ -1,0 +1,16 @@
+#!/bin/bash
+# Install Mermaid CLI locally to user's home directory
+
+set -e
+
+echo "🔧 Checking Mermaid CLI installation..."
+
+if [ ! -f "$HOME/.local/bin/mmdc" ]; then
+    echo "  Installing Mermaid CLI to $HOME/.local/bin..."
+    mkdir -p "$HOME/.local/bin"
+    npm install -g @mermaid-js/mermaid-cli --prefix $HOME/.local
+    echo "  ✅ Mermaid CLI installed to $HOME/.local/bin/mmdc"
+    echo "  📝 Note: You may need to add $HOME/.local/bin to your PATH"
+else
+    echo "  ✅ Mermaid CLI already installed at $HOME/.local/bin/mmdc"
+fi 
