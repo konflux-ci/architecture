@@ -16,6 +16,11 @@ See [commit-rules.mdc](commit-rules.mdc).
 3. **Error Handling**: Provide clear error messages and debugging information
 4. **Documentation**: Keep architecture documentation up-to-date 
 
+## Language Style Guidelines
+
+1. **Be direct**: Use clear, specific, and factual language. Avoid exaggerated, sensational, or vague descriptions.
+2. **Be plain**: Avoid "hype words" in language style and "nothingburger" statements.
+
 ## Code Quality Rules
 
 Run tests locally with `make`.
