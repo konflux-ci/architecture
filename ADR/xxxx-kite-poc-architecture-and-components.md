@@ -217,6 +217,127 @@ flowchart LR
 - **Logging**: Structured logging with configurable levels and formats
 - **Metrics**: Support for metrics collection (when enabled)
 
+## Requirements Alignment
+This section demonstrates how KITE's architecture addresses the [specified project requirements](https://docs.google.com/document/d/1HbNCqbrpfOi1MR7oYoaUTINIu5rAQ_bVy1NJCnDqYzM/edit?tab=t.0#heading=h.nk0gqur98cd3).
+
+### Dashboard with issues
+
+**Requirement**: Dashboard with issues, an issue groups one or multiple events that have the same cause or are otherwise connected.
+
+- **Implementation**: Issues Dashboard provides centralized view (TODO), powered by KITE
+- **Grouping Logic**: Issues are grouped by scope objects (namespace, resource type, resource name) preventing duplicates
+- **Real-time Updates**: Dashboard reflects current issue states as they're created, updated, and resolved
+
+### Scope Support
+**Requirement**:
+
+- Scope:
+  - Workspace/Namespace
+  - Application
+  - Component
+  - PipelineRun
+
+**Implementation**:
+
+- Database schema includes flexible scope objects with `resourceType`, `resourceName`, `resourceNamespace`
+- Controllers can monitor any Kubernetes resource type
+- Extensible scope model supports future scope types
+
+### Filtering and Search Capabilities
+**Requirement**:
+
+- User can filter out issues based on their:
+  - Issue type (failed releases, failed builds, MintMaker fails)
+  - Severity (warning, error/fail, information)
+  - Scope (which components or applications we care about)
+  - Issue being connected to development pipelines or releasable/production content.
+
+**Implementation**:
+
+- REST API supports comprehensive filtering parameters
+- Search functionality across issue titles and descriptions
+- Scope-based filtering enables component/application-specific views
+
+
+### Debugging and Links Support
+
+**Requirement**: Users can get through the links in the issue to the logs or other information needed to debug and resolve the problem
+
+**Implementation**:
+
+- Issue model includes `links` array for pipeline logs, dashboards, etc.
+- Controllers and webhooks can add relevant debugging URLs
+- Structured link storage with titles and descriptions for context
+
+
+### Extensibility
+
+**Requirement**: Dashboard must be easily extendable, especially when it comes to adding new issue types.
+
+**Implementation**:
+
+- **Controller Framework**: Bridge Operator pattern allows easy addition of new resource monitors
+- **Webhook System**: Custom webhook endpoints can be added without code changes
+- **API Design**: RESTful API structure supports extension without breaking changes
+- **Database Schema**: Flexible issue and scope models support new issue types
+
+### Issue Types and Automatic Resolution
+
+**Requirements**:
+
+- I want issues to be automatically resolved if the underlying problem is solved.
+- I want to see issues for:
+  - Failed integration tests
+  - Failed builds (PR and Push)
+  - Special filtering for MintMaker PRs
+  - Show due dates when they exist
+  - Show migration information when it exists
+  - Failed releases (both tenant and managed)
+  - Failed pipeline runs (even catastrophic failures when the pipeline does not run at all)
+  - MintMaker / Dependency management issues
+
+**Implementation**:
+
+- **Build Failures**: Custom/PipelineRun controller detects failed builds, resolves on successful runs
+- **Integration Test Failures**: Custom controller(s) can be added for integration test monitoring
+- **Release Failures**: Custom controllers can be added to monitor release failures
+- **MintMaker Issues**: Webhook endpoints and/or custom controlelrs can be configured for dependency management failures
+- **Tekton Task Updates**: Controllers can monitor task definitions and create issue records on pending updates
+
+### Deployment and integration
+
+**Requirements**:
+
+- The project is developed as a Kubernetes native project independent of the Konflux community.
+- The dashboard is optional for a Konflux deployment (a Konflux add-on).
+
+**Implementation**:
+
+- **Kubernetes Native**: All components deployed as standard K8s resources
+- **Add-on Architecture**: This is designed to be standalone and extend Konflux
+
+### API Access for External Tools
+
+**Requirement**: Provide an API so external CI tools (for example RHEL on GitLab) can query issues related to a particular pipeline run.
+
+**Implementation**:
+
+- RESTful API with comprehensive filtering by resource type, name, namespace
+- Query endpoints support pipeline run identification
+- JSON responses suitable for programmatic consumption
+
+
+### Error Handling and Debugging
+
+**Requirement**: UI should reflect backend API errors where they are happening for easier debugging
+
+**Implementation**:
+
+- Structured error responses from backend API
+- HTTP status codes and error messages can be propagated to dashboard (dashboard still TODO)
+- Logging framework captures detailed error information
+- Health check endpoints for monitoring KITE component statuses
+
 ## Consequences
 
 ### Positive
