@@ -228,7 +228,7 @@ flowchart LR
 
 ### Negative
 
-- **Complexity**: Additional infrastructure component (PostgreSQL) to manage
+- **Complexity**: Additional infrastructure component (PostgreSQL, Stand-alone API, additional controllers) to manage
 - **Dependencies**: System requires external database availability
 - **Cost**: Additional resources needed for database hosting and management
 - **Network**: Additional network hops between operator and backend
