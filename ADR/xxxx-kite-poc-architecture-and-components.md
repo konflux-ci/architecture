@@ -301,7 +301,7 @@ This section demonstrates how KITE's architecture addresses the [specified proje
 - **Build Failures**: Custom/PipelineRun controller detects failed builds, resolves on successful runs
 - **Integration Test Failures**: Custom controller(s) can be added for integration test monitoring
 - **Release Failures**: Custom controllers can be added to monitor release failures
-- **MintMaker Issues**: Webhook endpoints and/or custom controlelrs can be configured for dependency management failures
+- **MintMaker Issues**: Webhook endpoints and/or custom controllers can be configured for dependency management failures
 - **Tekton Task Updates**: Controllers can monitor task definitions and create issue records on pending updates
 
 ### Deployment and integration
