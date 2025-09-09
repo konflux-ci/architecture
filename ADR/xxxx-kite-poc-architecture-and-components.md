@@ -224,7 +224,7 @@ This section demonstrates how KITE's architecture addresses the [specified proje
 
 **Requirement**: Dashboard with issues, an issue groups one or multiple events that have the same cause or are otherwise connected.
 
-- **Implementation**: Issues Dashboard provides centralized view (TODO), powered by KITE
+- **Implementation**: Issues Dashboard provides centralized view (UI TODO)
 - **Grouping Logic**: Issues are grouped by scope objects (namespace, resource type, resource name) preventing duplicates
 - **Real-time Updates**: Dashboard reflects current issue states as they're created, updated, and resolved
 
@@ -334,7 +334,7 @@ This section demonstrates how KITE's architecture addresses the [specified proje
 **Implementation**:
 
 - Structured error responses from backend API
-- HTTP status codes and error messages can be propagated to dashboard (dashboard still TODO)
+- HTTP status codes and error messages can be propagated to dashboard (UI TODO)
 - Logging framework captures detailed error information
 - Health check endpoints for monitoring KITE component statuses
 
