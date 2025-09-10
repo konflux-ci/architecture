@@ -57,3 +57,36 @@ decommissioning the old model once the migration is complete.
 * Partial decoupling: This should give us some progress towards decoupling, but
   the Snapshot resource will remain a common resource referenced by both
   integration service and release service.
+
+## Roadmap
+
+At the time of this writing, we have a low level of detail about the particular spec of the
+new Component API and the Group API. The following is an ordered roadmap of
+activities to move that forwards.
+
+* The build team designs and implements a new component object with component branches.
+* The build team updates the build service so it supports components with the branches.
+* The build team updates the documentation to mention components with component branches.
+* The UI team adds support for the new components with components into branches into the UI.
+  * The old model stays the primary model for the UI. Users can switch to the UI for the new model by toggling options in the UI.
+* The MintMaker team updates MintMaker so it provides dependency management for the new components.
+* The feature owner announces the new model as a tech preview to the users.
+* The integration team designs and implements a new group object.
+* The integration team updates the Snapshot creation to also support creating snapshots from groups.
+* The integration team updates the integration service so it supports integration testing for groups and group snapshots.
+* The integration team updates documentation to mention groups.
+* The UI team adds support for the groups into the UI.
+  * Features *Status Reporting* and *Run Visualization* do not block changes to releases.
+* The feature owner announces Groups to the users.
+* The release team updates the release service so it supports releases of groups and group snapshots.
+* The feature owner announces the ability to release group-based snapshots to the users.
+* Konflux implores the users to start migrating to the new model.
+* The UI team makes the new model the primary one for the Konflux UI.
+* The old component/application model is decommissioned.
+  * The build and integration teams automatically migrate existing users that are using the old model to the new one.
+    * The build team is responsible for migration of the components.
+    * The integration team is responsible for migration of the groups-applications.
+  * The feature owner deletes the documentation connected to the old mode.
+  * The UI team removes the support for the old model from the UI.
+  * The build and integration teams  remove CDR connected to the old model from clusters.
+  * Konflux teams responsible for the Konflux services and functionality remove support for the old mode.
