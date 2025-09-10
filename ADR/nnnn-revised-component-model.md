@@ -5,6 +5,11 @@
 Proposed
 [//]: # (One of: Proposed, Withdrawn, Deferred, Accepted, Implementable, Implemented, Replaced)
 
+## References
+
+* [Konflux Community Call, 2025-03-11](https://www.youtube.com/watch?v=IwNFRNjRC_Q)
+* [Konflux Community Call, 2025-03-25](https://www.youtube.com/watch?v=VwzDbUH_vjU)
+
 ## Context
 
 The existing application and component model in Konflux presents several
