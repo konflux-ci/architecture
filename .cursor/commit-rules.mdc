@@ -1,9 +1,12 @@
 ---
-description: Commit rules for cursor
-alwaysApply: true
+description: Rules for formatting commit messages
+alwaysApply: false
 ---
+# Commit Message Formatting Rules
 
-# Commit Rules for Cursor
+**When to apply**: When generating commit messages or discussing commit practices
+
+**Description**: Rules for formatting commit messages
 
 ## Commit Message Format
 
