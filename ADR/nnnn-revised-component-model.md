@@ -62,6 +62,10 @@ decommissioning the old model once the migration is complete.
 * Partial decoupling: This should give us some progress towards decoupling, but
   the Snapshot resource will remain a common resource referenced by both
   integration service and release service.
+* Nudging: The "nudging" feature will need design changes. There is some idea
+  to nudge the same component branch (by name) across components with ability
+  to configure/override the behavior - but at this time not yet clearly
+  defined.
 
 ## Roadmap
 
