@@ -19,6 +19,8 @@
 
 /architecture/add-ons/multi-platform-controller.md  @konflux-ci/infrastructure
 
+/architecture/add-ons/mintmaker.md          	    @konflux-ci/mintmaker-maintainers
+
 /architecture/add-ons/internal-services.md          @konflux-ci/release-service-maintainers
 /architecture/core/release-service.md            @konflux-ci/release-service-maintainers
 /diagrams/internal-services                 @konflux-ci/release-service-maintainers
