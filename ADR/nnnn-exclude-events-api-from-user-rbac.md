@@ -31,3 +31,11 @@ We will exclude the Kubernetes `events` API from all Konflux user RBAC roles.
 **Neutral:**
 - This aligns with the principle of least privilege for user-facing roles
 - System administrators and operators can still access events through their elevated permissions
+- Some add-ons like [MPC], [ProjectController], and [MintMaker] do not have explicit APIs where
+  users can observe their behavior in a `.status` field. Some users have learned to depend on
+  the events API to troubleshoot. Those projects may need to grow status APIs to communicate
+  their behavior.
+
+[MPC]: ../architecture/add-ons/multi-platform-controller.md
+[ProjectController]: ../architecture/add-ons/project-controller.md
+[MintMaker]: ../architecture/add-ons/mintmaker.md
