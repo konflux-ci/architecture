@@ -28,3 +28,5 @@
 
 /architecture/core/integration-service.md        @konflux-ci/integration-service-maintainers
 /diagrams/integration-service  		    @konflux-ci/integration-service-maintainers
+
+/architecture/add-ons/project-controller.md  @konflux-ci/vanguard @ifireball
