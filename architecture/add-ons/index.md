@@ -163,7 +163,7 @@ The [Internal Services Controller] has a single resource, the `InternalRequest`,
 
 ### MintMaker
 
-The [MintMaker] automates dependency updates for Konflux components using Renovate. It introduces the `DependencyUpdateCheck` custom resource that triggers dependency scanning across Components, creating Tekton PipelineRuns to execute Renovate scans and generate pull requests with dependency updates.
+The [MintMaker] automates dependency updates for Konflux components using Renovate. It introduces the `DependencyUpdateCheck` custom resource that triggers dependency scanning across Components, creating Tekton PipelineRuns to execute Renovate scans and generate pull requests with dependency updates. The Tekton PipelineRuns execute in a system mintmaker namespace, not in Component namespace.
 
 [Image Controller]: ./image-controller.md
 [Multi-Platform Controller]: ./multi-platform-controller.md
