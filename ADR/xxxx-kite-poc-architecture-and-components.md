@@ -12,6 +12,121 @@ The [Konflux Issue Tracking Engine](https://github.com/konflux-ci/kite) (KITE) i
 
 It prevents duplicate issue records, automates issue creation and resolution, and powers the **Issues Dashboard** where teams can view and manage disruptions.
 
+## Concrete Uses Cases and User Workflows
+## Why Konflux Issues Dashboard vs External Issue Trackers
+
+The Konflux Issues Dashboard serves a fundamentally different purpose from traditional issue tracking systems like Jira. Rather than replacing external issue management, it acts as an **operational monitoring dashboard**, similar to a car dashboard that alerts you to immediate mechanical problems that need attention *now*, not planning or project management issues.
+
+## Primary Use Cases
+**1. Developer Morning Check-in Workflow**
+
+**Scenario**: A developer is managing 8 components across 3 different applications.
+
+**Current Problem**:
+- That developer must manually check each component's build and test pipelinerun statuses across multiple views.
+- Each view only displays information related to a specific application or component. This leads to more time spent gathering data.
+
+
+**With Issues Dashboard**:
+- The developer opens the Konflux Issues Dashboard
+- They have a summary of all existing issues related to their applications, components, etc
+- Rather than having to dig through each issue individually across multiple views and then decide what to work on first, issues can be filtered by severity.
+  - This allows them to work on critical issues first, potentially unblocking them from moving forward.
+
+**Value**:
+- Time saved (e.g. 5-30 minutes daily)
+- Immediate awareness of all blocking issues
+
+
+**2. Cross-Component Failure Correlation**
+
+**Scenario**: A developer notices that his application is failing but doesn't realize it's related to a shared library issue affecting multiple teams.
+
+**Current Problem**: Multiple teams independently debug the same root cause, wasting collective hours.
+
+**With Issues Dashboard**:
+- Single issue: "Shared library v2.1 causing build failures"
+- **Scope**: Components affected by the same issue can fall under the same [scope](https://github.com/konflux-ci/kite/blob/main/packages/backend/docs/Webhooks.md#issue-grouping-with-scope-objects).
+- **Grouping**: By grouping the issues, multiple teams are alerted of the same error, preventing separate debugging efforts.
+**Auto-resolution**: When the library is fixed, all related issues can be [resolved automatically](https://github.com/konflux-ci/kite/blob/main/packages/backend/docs/Webhooks.md#automatic-issue-resolution-via-custom-webhooks) because of the shared scope.
+
+**3. User Support Rotation**
+
+**Scenario**: I am an associate on a Konflux Support rotation. A user complains that their application won't build and they don't know why
+
+**Current Problem**:
+- Depending on the supporting associates skill set, they may or may not have the knowledge of how to investigate such issues.
+  - Querying a Konflux cluster and checking the logs for a failing pipelinerun can require multiple skills that are out of reach for a supporting associate.
+- The user might have to navigate through multiple views in order to get a clear picture of what could be the cause.
+- A power user capable of investigating logs for a CR on a Konflux cluster still needs to figure out where to check.
+
+**With Issues Dashboard**:
+- A non-technical associate can point to the Issues Dashboard and point them towards three issues related to failed builds.
+  - Each issue has logs to those builds, allowing for deeper investigation.
+- A power-user associate can use the [KITE CLI tool](https://github.com/konflux-ci/kite/tree/main/packages/cli) to quickly check if any existing issue records exist in the namespace(s) the user has access to.
+  - The CLI tool reports three build failures in namespace `team-gamma`, with logs for each failure.
+
+**Value**:
+- Non-technical support associates can leverage the issues dashboard to quickly show them what is happening where and why.
+- Power-user support associates can quickly find the information they need using the CLI tool, getting them closer to where deeper analysis is needed.
+- Regular users also have access to these tools, potentially reducing the amount of support tickets filed.
+
+**4. Security Vulnerability Response**
+
+**Scenario**: A critical CVE is discovered in a widely-used dependency (e.g. a container base image, Python package, or RPM package) that affects multiple components across different teams.
+
+**Current Problem**:
+- Teams are unaware that MintMaker's automated security updates are failing.
+- MintMaker runs Renovate to automatically create PRs/MRs with `[SECURITY]` tags for CVE fixes, but when these fail due to authentication issues, dependency conflicts, or breaking changes, there's no centralized visibility.
+- Teams only discover the security exposure during manual audits, security scans, or after incidents occur.
+
+**With Issues Dashboard**:
+```
+- Issue: "[SECURITY] Critical CVE-2024-1234 in base image - MintMaker updates failing"
+- Severity: Critical
+- Affected Scope: 15 components across 6 namespaces
+- Failure Details:
+  • 4 components: GitLab Renovate token expired in namespace secrets
+  • 7 components: Container registry authentication failed
+  • 3 components: Dependency version conflicts preventing clean updates
+  • 1 component: Repository lacks required GitHub App installation
+- Direct Links:
+  • Failed Renovate execution logs for each component
+  • CVE vulnerability details and severity assessment
+  • Registry credential setup instructions
+  • Dependency conflict resolution guide
+```
+
+**Resolution Workflow**:
+1. **Immediate Alert**: All affected teams see the security issue in their dashboard when MintMaker detects failures
+2. **Targeted Remediation**: Teams can address specific failure causes (refresh tokens, fix registry auth, resolve conflicts)
+3. **Progress Tracking**: As MintMaker successfully creates security PRs for each component and those PRs get merged, the issue scope automatically shrinks
+4. **Auto-Resolution**: Issue resolves completely when all components have successful security updates merged
+
+**Key Value**:
+- Instead of X teams independently discovering a critical security vulnerability days or weeks later through security scanners, all teams are immediately aware with specific remediation steps.
+- Security teams can also track organization-wide CVE remediation progress in real-time, meeting compliance requirements more effectively.
+
+## Why This Can't Be Replaced by Jira
+1. **Real-time Pipeline Integration**: Records of issues related to failed pipelineruns are created/resolved automatically based on pipeline state changes.
+2. **(Potentially) Zero Manual Overhead**: Once teams are integrated, no humans are needed to create, categorize or close issues.
+3. **Temporal Context**: Issues exist only while problems exist, no stale issue cleanup should be needed.
+4. **Operational Focus**: The Issues Dashboard shows "what is broken right now" not "what work needs to be done"
+5. **Cross-team Correlation**: The Issues Dashboard has the ability to group related failures across components and applications, informing multiple teams (if applicable).
+
+## Common Concerns
+**Why not use existing issue trackers?**
+- External trackers excel at project management and planning
+- They're poor at real-time operational alerting and resolution
+- Manual overhead of creating/closing issues
+- Cross-namespace issue correlation requires K8s-native understanding
+
+**Isn't this just another monitoring tool?**
+- The Issues Dashboard complements monitoring by focusing on actionable development items
+- The context provided by the dashboard aims to be developer-friendly (failed builds, test failures, dependency problems)
+
+This dashboard fills the gaps between low-level monitoring alerts and high-level project management. It gives developers a single pane view for "what needs my immediate attention to keep shipping software".
+
 
 ## Architecture Overview
 
