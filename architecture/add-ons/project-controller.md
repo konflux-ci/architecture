@@ -146,22 +146,6 @@ The Project Controller supports templating for the following Konflux resource ty
    - Creates resources with proper ownership relationships
    - Sets up cross-references between generated resources
 
-## Status and Conditions
-
-The `ProjectDevelopmentStream` resource includes status conditions:
-
-- **TemplateApplied**: Indicates whether the template was successfully applied
-  - `Success`: Template applied successfully
-  - `TemplateNotFound`: Referenced template not found
-  - `VariableError`: Error in variable resolution
-  - `ResourceError`: Error creating resources
-  - `ProcessingError`: General processing error
-- **TemplateGenerated**: Indicates template processing status
-  - `Success`: Template processed successfully
-  - `TemplateError`: Error in template syntax
-  - `VariableValidationFailed`: Variable validation failed
-  - `ResourceValidationFailed`: Resource validation failed
-
 ## Known Limitations
 
 - **Template Drift**: Resources modified after creation are not automatically aligned with templates unless the controller restarts or parent resources are modified
