@@ -19,7 +19,7 @@ MintMaker depends on:
 - Konflux [Application API](https://konflux-ci.dev/docs/reference/kube-apis/application-api/) for discovering Components
 - Tekton Pipelines for executing Renovate scans
 - GitHub or GitLab for repository access
-- Container image registries for pulling base images and pushing updated dependencies
+- Package and container registries (e.g., crates.io, npm, PyPI, Quay.io) for discovering dependency updates
 
 ## Controllers
 
