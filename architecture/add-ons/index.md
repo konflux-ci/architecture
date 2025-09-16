@@ -37,6 +37,7 @@ graph TD
     subgraph addons[Add-on Namespaces]
         IC["Image Controller"]
         MPC["Multi-Platform Controller"]
+        MM["MintMaker"]
     end
 
     IR -- managed by --> IC
@@ -84,7 +85,7 @@ graph TD
     style IBM fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px,color:#000000
 
     classDef controlPlane fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000;
-    class App,Comp,ITS,RP,RPA,ECP,IC,MPC,ISC controlPlane;
+    class App,Comp,ITS,RP,RPA,ECP,IC,MPC,ISC,MM controlPlane;
 
     classDef dataPlane fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000000;
     class Snap,Release dataPlane;
@@ -110,6 +111,7 @@ graph TD
         IC[Image Controller]
         MPC[Multi-Platform Controller]
         ISC[Internal Services Controller]
+        MM[MintMaker]
     end
 
     subgraph quayio[quay.io]
@@ -137,6 +139,7 @@ graph TD
     style IC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
     style MPC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
     style ISC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
+    style MM fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
     style kubeapi fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000000;
     style TW fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
     style MW fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
@@ -156,8 +159,13 @@ The [Multi-Platform Controller] has no explicit resources of its own, but it rea
 
 ### Internal Services Controller
 
-The [Internal Services Controller] has a single resource, the `InternalRequest`, that is created in the managed namespace by the managed release pipeline run. An Internal Services Controller running on a different cluster watches for those and reconciles them to perform actions in another network zone. 
+The [Internal Services Controller] has a single resource, the `InternalRequest`, that is created in the managed namespace by the managed release pipeline run. An Internal Services Controller running on a different cluster watches for those and reconciles them to perform actions in another network zone.
+
+### MintMaker
+
+The [MintMaker] automates dependency updates for Konflux components using Renovate. It introduces the `DependencyUpdateCheck` custom resource that triggers dependency scanning across Components, creating Tekton PipelineRuns to execute Renovate scans and generate pull requests with dependency updates. The Tekton PipelineRuns execute in a system mintmaker namespace, not in Component namespace.
 
 [Image Controller]: ./image-controller.md
 [Multi-Platform Controller]: ./multi-platform-controller.md
 [Internal Services Controller]: ./internal-services.md
+[MintMaker]: ./mintmaker.md
