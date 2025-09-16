@@ -1,0 +1,46 @@
+<!-- Mermaid.js for rendering diagrams -->
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.esm.min.mjs';
+  
+  // Configure Mermaid
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    securityLevel: 'strict',
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true
+    },
+    themeVariables: {
+      darkMode: false,
+      primaryColor: '#4a148c',
+      primaryTextColor: '#000000',
+      primaryBorderColor: '#4a148c',
+      lineColor: '#424242',
+      secondaryColor: '#01579b',
+      tertiaryColor: '#e65100'
+    }
+  });
+  
+  // Initialize Mermaid
+  mermaid.init();
+</script>
+
+<!-- Fallback for older browsers -->
+<script>
+  // Check if ES modules are supported
+  if (!window.mermaid) {
+    // Load Mermaid from CDN as fallback
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js';
+    script.onload = function() {
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'default',
+        securityLevel: 'strict'
+      });
+      mermaid.init();
+    };
+    document.head.appendChild(script);
+  }
+</script> 
