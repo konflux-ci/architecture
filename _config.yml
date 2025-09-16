@@ -2,6 +2,21 @@ remote_theme: vaibhavvikas/jekyll-theme-minimalistic
 title: Architecture Of Konflux
 description: Technical documents about the Managed Developer Platform
 color-scheme: auto
+
+# Jekyll plugins
+plugins:
+  - jekyll-mermaid
+
+# Mermaid configuration
+mermaid:
+  # Mermaid version to use
+  version: "10.6.1"
+  # Theme (light, dark, or default)
+  theme: "default"
+  # Enable security features
+  securityLevel: "strict"
+  # Start counting from 1
+  startOnLoad: true
 navigation:
   - name: Technical Overview Document
     link: /architecture/architecture/index.html
