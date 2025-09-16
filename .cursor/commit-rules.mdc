@@ -1,0 +1,85 @@
+---
+description: Rules for formatting commit messages
+alwaysApply: false
+---
+# Commit Message Formatting Rules
+
+**When to apply**: When generating commit messages or discussing commit practices
+
+**Description**: Rules for formatting commit messages
+
+## Commit Message Format
+
+Every commit message created by Cursor must include:
+
+1. **DCO Signoff**: The Developer Certificate of Origin signoff line at the bottom
+2. **Assisted-by Line**: Indication that the commit was assisted by Cursor
+
+Every commit message created by cursor should include:
+
+3. Conventional-commits style type prefix with an emoji of your choice.
+
+## Required Format
+
+```
+<emoji> <type>(<scope>): <description>
+
+<commit message body>
+
+Signed-off-by: <git author name> <git author email>
+Assisted-by: Cursor
+```
+
+## Required Footers
+
+### Signed-off-by
+- Always include: `Signed-off-by: <git author name> <git author email>`
+- Get name and email using this priority order:
+  1. Environment variables: `$GIT_AUTHOR_NAME` and `$GIT_AUTHOR_EMAIL`
+  2. Git config: `git config user.name` and `git config user.email`
+  3. If neither configured, ask user to provide details
+- Common in dev containers: environment variables are preferred method
+
+### Assisted-by
+- Always include: `Assisted-by: <model-name> (via Cursor)`
+- Format examples:
+  - `Assisted-by: Claude-3.5-Sonnet (via Cursor)`
+  - `Assisted-by: Gemini (via Cursor)`
+- Use the actual model name being used for the commit message generation
+
+## Example
+
+```
+🚀 feat(tools): Add Mermaid diagram validation with Makefile and hack scripts
+
+- Add Makefile with targets for linting, validation, and development tasks
+- Create hack/ directory with individual scripts for each target
+- Refactor architecture documentation organization
+- Enhance Mermaid diagrams with improved readability
+
+Signed-off-by: John Doe <john.doe@example.com>
+Assisted-by: Claude-3.5-Sonnet (via Cursor)
+```
+
+## Conventional Commit Types & Emojis
+
+- **feat**: 🚀 New features
+- **fix**: 🐛 Bug fixes  
+- **docs**: 📚 Documentation changes
+- **style**: 💅 Code style/formatting changes
+- **refactor**: 🔧 Code refactoring
+- **test**: 🧪 Adding or updating tests
+- **chore**: 🛠️ Maintenance tasks, dependencies, etc.
+- **perf**: ⚡ Performance improvements
+- **ci**: 🔄 CI/CD changes
+- **build**: 📦 Build system changes
+- **revert**: ↩️ Reverting previous commits
+
+## Implementation Notes
+
+- The DCO signoff must use the currently registered git author
+- The "Assisted-by: Model (via Cursor)" line must always be present
+- Both lines should be at the very bottom of the commit message
+- Use `git config user.name` and `git config user.email` to get current author info
+- Always include an appropriate emoji and conventional commit type
+- Use descriptive scope when applicable (e.g., `feat(tools)`, `fix(docs)`) 
