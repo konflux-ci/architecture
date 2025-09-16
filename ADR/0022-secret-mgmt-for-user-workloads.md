@@ -33,7 +33,7 @@ Relates to:
 
 #### Architecture
 
-![](../diagrams/secret-mgmt.excalidraw.svg)
+![](../diagrams/ADR-0022/secret-mgmt.excalidraw.svg)
 TODO update diagram
 
 The proposed solution is to create a new Kubernetes Custom Resource (CR) called `RemoteSecret`. It serves as a representation of the Kubernetes Secret that is stored in permanent storage, which is also referred to as `SecretStorage`. This Custom Resource includes references to targets, like Kubernetes namespaces, that may also contain the required data to connect to a remote Kubernetes. To perform an upload to permanent storage, a temporary **Upload Secret** is utilized, which is represented as a regular Kubernetes Secret with special labels and annotations that the SPI controller recognizes. Different `SecretStorage` implementations, like AWS Secret Manager or HashiCorp Vault, can be used. It is simpler to create the RemoteSecret first and then use the linked **Upload Secret** to upload secret data. However, in simple cases, the **Upload Secret**  can be used to perform both uploading and the creation of RemoteSecret in a single action. It's worth noting that the **Upload Secret** is not a core component of the framework, but rather a convenient way of creating secrets. In the future, it is possible that new methods of uploading SecretData to RemoteSecret may be added.
