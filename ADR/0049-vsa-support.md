@@ -8,30 +8,38 @@ Proposed
 
 ## Context
 
-We are facing several challenges with our current approach to Enterprise Contract (EC) verification
-and SDL checks:
+We are facing several challenges with our current approach to Conforma verification and software
+development lifecycle (SDL) checks:
 
-1. **Release-time EC verification performance**: Running EC at release time requires checking a
-   large number of attestations, with each attestation invoking several potentially complex Rego
-   policy checks. We have multiple examples of Konflux applications with over 100 components - to
-   check these at scale requires significant amounts of memory and compute.
+1. **Release-time Conforma verification performance**: Running Conforma at release time requires
+   checking a large number of attestations, with each attestation invoking several potentially
+   complex Rego policy checks. We have multiple examples of Konflux applications with over 100
+   components - to check these at scale requires significant amounts of memory and compute.
 2. **Pipeline arrangement limitations**: Currently we have to run all SDL checks in the build
    pipeline, which limits our options on how to arrange pipelines and prevents us from potentially
    moving some checks into integration tests. See [ADR 48](https://github.com/konflux-ci/architecture/pull/229).
-3. **Redundant verification of unchanged artifacts**: Pre-merge EC checks for large snapshots often
-   include one freshly built image plus a number of images that haven't changed, yet we redo the EC
-   check on all images.
-4. **Scalability concerns**: As our applications grow in complexity (like OpenShift snapshots), the
-   current approach becomes increasingly inefficient.
+3. **Redundant verification of unchanged artifacts**: Pre-merge Conforma checks for large snapshots
+   often include one freshly built image plus a number of images that haven't changed, yet we redo
+   the Conforma check on all images.
 5. **Release externally-built artifacts**: Our current policies for release pipelines assume
    artifacts were built using a sanctioned Konflux Tekton pipeline. This inhibits ingestion and
    release of artifacts from external (but trusted) systems that do not execute builds with Tekton.
    Ex: and artifact produced from a trusted Jenkins instance, or Java artifacts built using
    [Project Newcastle](https://github.com/project-ncl).
 
+A "[summary attestation](https://docs.google.com/presentation/d/1feaRK72-_uE8EUNJ6GGIM0iUuvMsJqY69rj3Uhbb4-M/edit?usp=sharing&resourcekey=0-qd3NpNHhCR7Y7fXFWQcLzw)"
+can address these issues in the following manner:
+
+- Document the policy that was used to verify an attestation at a point in time.
+- Document the policy checks that were executed and passed.
+- Allow Conforma to verify attestations by checking for the presence/absence of a policy check in
+  the summary attestation. This should perform faster than a deeper inspection of the attestation
+  and related artifacts.
+- Allow Conforma to verify attestations in a general manner from a non-Konflux (or Tekton) system.
+
 ## Decision
 
-We will adopt Verification Summary Attestations ([VSAs](https://slsa.dev/spec/v1.1/verification_summary))
+We will adopt SLSA Verification Summary Attestations ([VSAs](https://slsa.dev/spec/v1.1/verification_summary))
 for recording SDL policy check results. These VSAs will be used as the input to release pipeline
 Conforma checks.
 
