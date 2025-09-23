@@ -41,8 +41,8 @@ jobs:
       - name: Checkout Enterprise Contract API
         uses: actions/checkout@v4
         with:
-          path: crd-temp/enterprise-contract-controller
-          repository: enterprise-contract/enterprise-contract-controller
+          path: crd-temp/crds
+          repository: conforma/crds
 
       - name: Checkout Internal Services API
         uses: actions/checkout@v4
@@ -76,7 +76,7 @@ jobs:
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/release-service.md --renderer=markdown --source-path=crd-temp/release-service/api/v1alpha1/
 
       - name: Generate Enterprise Contract API docs
-        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/enterprise-contract.md --renderer=markdown --source-path=crd-temp/enterprise-contract-controller/api/v1alpha1/
+        run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/enterprise-contract.md --renderer=markdown --source-path=crd-temp/crds/api/v1alpha1/
 
       - name: Generate Internal Services API docs
         run: crd-ref-docs --log-level=ERROR --config=ref/config.yaml --output-path=ref/internal-services.md --renderer=markdown --source-path=crd-temp/internal-services/api/v1alpha1/
