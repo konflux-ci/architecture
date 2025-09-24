@@ -77,7 +77,7 @@ includes the public key required to verify signatures, the list of policy
 and data sources, and any other required configuration.
 
 You can view the source code for the ECP CRD
-[here](https://github.com/enterprise-contract/enterprise-contract-controller) and
+[here](https://github.com/conforma/crds) and
 see its documentation [here](https://enterprise-contract.github.io/ecc/main/).
 See also the related
 [API Reference](https://redhat-appstudio.github.io/architecture/ref/enterprise-contract.html)
