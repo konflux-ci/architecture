@@ -1,0 +1,41 @@
+/* Mermaid diagram styling for Konflux Architecture site */
+
+.mermaid {
+  text-align: center;
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .mermaid {
+    background-color: #2d3748;
+    border-color: #4a5568;
+  }
+}
+
+/* Ensure diagrams are responsive */
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Center diagram containers */
+.mermaid-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+/* Print-friendly styling */
+@media print {
+  .mermaid {
+    page-break-inside: avoid;
+    background-color: white !important;
+    border: 1px solid #ccc !important;
+  }
+} 
