@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Redirecting... - {{ site.title }}</title>
+    <meta name="description" content="Redirecting to Architecture Overview">
+    
+    <!-- Automatic redirect after 3 seconds -->
+    <meta http-equiv="refresh" content="3;url={{ page.redirect.to }}">
+    
+    <!-- Include Mermaid support -->
+    {% include mermaid.html %}
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: #f8f9fa;
+            color: #333;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #4a148c;
+            margin-bottom: 20px;
+        }
+        
+        .redirect-info {
+            background-color: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 4px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .redirect-link {
+            display: inline-block;
+            background-color: #4a148c;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .redirect-link:hover {
+            background-color: #6a1b9a;
+        }
+        
+        .countdown {
+            font-size: 1.2em;
+            color: #666;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4a148c;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1a1a1a;
+                color: #e0e0e0;
+            }
+            
+            .container {
+                background-color: #2d2d2d;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            }
+            
+            .redirect-info {
+                background-color: #1a237e;
+                border-color: #3f51b5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Redirecting...</h1>
+        
+        <div class="redirect-info">
+            <p>You are being redirected to 
+		<a href="{{ page.redirect.to }}" class="redirect-link">
+		    {{ page.redirect.to }}
+		</a>
+        </div>
+        
+        <div class="spinner"></div>
+        
+        <p style="margin-top: 30px; font-size: 0.9em; color: #666;">
+            <em>If you are not redirected automatically, click the link above.</em>
+        </p>
+    </div>
+    
+    <script>
+	window.location.href = '{{ page.redirect.to }}';
+    </script>
+</body>
+</html> 
