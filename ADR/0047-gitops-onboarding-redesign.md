@@ -53,7 +53,7 @@ Redesign the onboarding experience to converge UI and GitOps into a single coher
   - Operational actions: triggering builds/tests, starting manual releases, pipeline management
   - Any other runtime actions that don't involve declarative resource configuration
 - **Commit to single onboarding flow**: UI-based onboarding will be completely deprecated with no fallback option to minimize maintenance overhead and deliver optimal user outcomes
-- **Maintain ease of use and excellent user experience** by providing aVS Code plugin that delivers forms based configuration of validation of tenant resources
+- **Maintain ease of use and excellent user experience** by providing a VS Code plugin that delivers forms based configuration of validation of tenant resources
 
 ### IDE Selection Rationale
 VS Code was chosen as the primary IDE target because:
