@@ -47,7 +47,7 @@ Redesign the onboarding experience to converge UI and GitOps into a single coher
 
 ### Core Shift
 - **Deprecate ability to configure tenant resources via the UI** Users will configure resources directly via Kubernetes or via Gitops
-- **Promot use of Git as the single source of truth** for applications, components, integration test scenarios, releasePlans and RBAC in production environments
+- **Promote use of Git as the single source of truth** for applications, components, integration test scenarios, releasePlans and RBAC in production environments
 - **Preserve the UI for non-configuration activities** including:
   - Monitoring and observability: logs, build inspection, viewing metrics, dashboards
   - Operational actions: triggering builds/tests, starting manual releases, pipeline management
