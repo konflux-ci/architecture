@@ -6,6 +6,8 @@ Date: 2023-01-10
 
 Accepted
 
+Relates to [NN. Exclude Kubernetes Events API from User RBAC Roles](nnnn-nnnn-exclude-events-api-from-user-rbac.md)
+
 ## Context
 Konflux is using Kubernetes as the control plane for managing its resources. We require a system for managing user roles and permissions in this context. We have defined the following roles for our project: "Contributor", "Maintainer", and "Admin". We need to map these roles to specific permissions in the Kubernetes RBAC system, in terms of API groups, verbs, and resources.
 
