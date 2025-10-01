@@ -11,14 +11,12 @@ Proposed
 Currently, Konflux offers two distinct onboarding paths that create friction and complexity for developers:
 
 ### UI Onboarding
-- Very easy to use with good validation and feedback
-- Handles secrets, build config, environments through web interface
+- easy to use with good validation and feedback
 - Provides immediate feedback but doesn't align with GitOps principles
 
 ### GitOps Onboarding
 - Requires manually authoring YAML across multiple files
 - Validation happens during GitLab CI runs, creating tension between Konflux and GitLab CI workflows
-- Secrets must still be created via UI, breaking the GitOps flow
 - Onboarding requires manual creation of complex yaml objects
 - Merge conflicts are more likely in monorepos, increasing time to onboard
 - CI is not under control of the namespace owner
@@ -187,10 +185,11 @@ graph TD
 ### UI Changes
 
 **Preserve:**
-- Dashboard
-- Build and release logs
-- Operational actions: triggering builds/tests, starting manual releases, pipeline management
-- page which tells the users to install the github application. 
+- dashboard
+- build and release logs
+- operational actions: triggering builds/tests, starting manual releases, pipeline management
+- secrets management; secrets need to be managed via UI unless ESO is used (outside the scope of this ADR)
+- the current page which instructsusers to install the Github application. 
 
 **Remove/Demote:**
 - UI forms for configuring components, applications, and other declarative resources
