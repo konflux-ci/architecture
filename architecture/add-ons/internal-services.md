@@ -1,3 +1,12 @@
+---
+title: Internal Services Controller
+eleventyNavigation:
+  key: Internal Services Controller
+  parent: Add-ons
+  order: 3
+toc: true
+---
+
 # Internal Services
 
 ## Overview

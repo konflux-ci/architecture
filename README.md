@@ -5,9 +5,9 @@ User documentation is out of scope.
 
 ## Guide to Sections
 
-### The Technical Overview Document
+### The Overview Document
 
-[/architecture](./architecture/index.md) folder hosts the technical overview document. This document represents the latest state of agreed technical and architectural decisions. See [contributing](#contributing) on how to propose changes.
+[/architecture](./architecture/index.md) folder hosts the overview document. This document represents the latest state of agreed technical and architectural decisions. See [contributing](#contributing) on how to propose changes.
 
 [/ref](./ref/index.md) folder hosts the API references for all the related services. These API references are generated during publish flow.
 

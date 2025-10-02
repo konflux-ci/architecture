@@ -1,3 +1,12 @@
+---
+title: Hybrid Application Service
+eleventyNavigation:
+  key: Hybrid Application Service
+  parent: Core Services
+  order: 1
+toc: true
+---
+
 # Hybrid Application Service (HAS)
 
 Hybrid Application Service (HAS) is a component within Konflux that provides Kubernetes webhooks for Application and Component resources

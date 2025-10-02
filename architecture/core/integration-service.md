@@ -1,3 +1,12 @@
+---
+title: Integration Service
+eleventyNavigation:
+  key: Integration Service
+  parent: Core Services
+  order: 3
+toc: true
+---
+
 # Integration Service
 
 

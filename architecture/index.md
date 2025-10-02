@@ -1,3 +1,11 @@
+---
+title: Overview
+eleventyNavigation:
+  key: Overview
+  order: 2
+toc: true
+---
+
 # Konflux
 
 ## Overview
@@ -368,15 +376,6 @@ When a commit lands on a tracked branch in a user's git repository, a series of 
 16. The release pipeline populates metadata in **Pyxis**.
 17. The release pipeline populates the **Advisory Feed**.
 
-## API References
-
-### Developer Services
-
-- [Application and Environment API](../ref/application-environment-api.md)
-
-### Naming Conventions
-
-- [Namespace Metadata](../ADR/adr-0010-namespace-metadata)
 
 [integration-service promotes OCI artifacts]: ../ADR/0016-integration-service-promotion-logic.md
 [application-service]: ./core/hybrid-application-service.md

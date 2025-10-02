@@ -1,3 +1,14 @@
 **/.export
 .DS_Store
 .idea/
+
+# Node.js
+node_modules/
+
+# Build output
+_site/
+
+# Jekyll (legacy - can be removed after migration)
+.jekyll-cache/
+Gemfile.lock
+ADR/index.md

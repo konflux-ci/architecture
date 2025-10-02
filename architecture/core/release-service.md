@@ -1,3 +1,12 @@
+---
+title: Release Service
+eleventyNavigation:
+  key: Release Service
+  parent: Core Services
+  order: 4
+toc: true
+---
+
 # Release Service
 
 ## Overview

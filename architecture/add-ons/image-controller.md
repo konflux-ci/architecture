@@ -1,3 +1,12 @@
+---
+title: Image Controller
+eleventyNavigation:
+  key: Image Controller
+  parent: Add-ons
+  order: 1
+toc: true
+---
+
 # Image Controller
 
 # Overview
