@@ -1,4 +1,4 @@
-# 47. Exclude Kubernetes Events API from User RBAC Roles
+# 50. Exclude Kubernetes Events API from User RBAC Roles
 
 Date: 2025-09-05
 
