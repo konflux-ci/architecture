@@ -1,3 +1,12 @@
+---
+title: Build Service
+eleventyNavigation:
+  key: Build Service
+  parent: Core Services
+  order: 2
+toc: true
+---
+
 # Build Service
 
 

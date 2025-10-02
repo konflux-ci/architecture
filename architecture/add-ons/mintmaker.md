@@ -1,3 +1,12 @@
+---
+title: Mintmaker
+eleventyNavigation:
+  key: Mintmaker
+  parent: Add-ons
+  order: 4
+toc: true
+---
+
 # MintMaker
 
 ## Overview

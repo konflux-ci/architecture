@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title or "Architecture Of Konflux" }}</title>
+  <meta name="description" content="{{ description or 'Technical documents about the Managed Developer Platform' }}">
+
+  <!-- Basic styling -->
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-text: #333333;
+      --color-link: #0066cc;
+      --color-border: #e0e0e0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: #1a1a1a;
+        --color-text: #e0e0e0;
+        --color-link: #66b3ff;
+        --color-border: #404040;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 250px 1fr 200px;
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    @media (max-width: 1024px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar, .toc-sidebar {
+        display: none;
+      }
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+      line-height: 1.3;
+    }
+
+    a {
+      color: var(--color-link);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      background-color: rgba(0, 0, 0, 0.05);
+      padding: 0.2em 0.4em;
+      border-radius: 3px;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background-color: rgba(0, 0, 0, 0.05);
+      padding: 1em;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1em 0;
+    }
+
+    th, td {
+      border: 1px solid var(--color-border);
+      padding: 0.5em;
+      text-align: left;
+    }
+
+    th {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .mermaid {
+      text-align: center;
+      margin: 2em 0;
+    }
+
+    .sidebar {
+      height: fit-content;
+    }
+
+    .sidebar h2 {
+      font-size: 1.2rem;
+      margin-top: 0;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .sidebar ul ul {
+      padding-left: 1rem;
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    .sidebar li {
+      position: relative;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 0.25rem 0;
+    }
+
+    .sidebar .nav-item-with-children > a {
+      padding-right: 1.5rem;
+    }
+
+    .sidebar .nav-toggle {
+      position: absolute;
+      right: 0;
+      top: 0.25rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--color-text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      padding: 0;
+    }
+
+    .sidebar .nav-toggle:hover {
+      opacity: 0.7;
+    }
+
+    .sidebar .nav-children {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .sidebar .nav-children.expanded {
+      max-height: 1000px;
+      transition: max-height 0.5s ease-in;
+    }
+
+    .toc-sidebar {
+      height: fit-content;
+      font-size: 0.9rem;
+    }
+
+    .toc-sidebar h2 {
+      font-size: 1rem;
+      margin-top: 0;
+    }
+
+    .toc-sidebar ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .toc-sidebar ul ul {
+      padding-left: 1rem;
+    }
+
+    .toc-sidebar a {
+      display: block;
+      padding: 0.2rem 0;
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    header {
+      grid-column: 1 / -1;
+      margin-bottom: 1rem;
+    }
+
+    h2 .header-anchor, h3 .header-anchor, h4 .header-anchor {
+      opacity: 0;
+      margin-right: 0.5rem;
+      text-decoration: none;
+    }
+
+    h2:hover .header-anchor, h3:hover .header-anchor, h4:hover .header-anchor {
+      opacity: 0.5;
+    }
+  </style>
+
+  <!-- Mermaid.js for rendering diagrams -->
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+    // Transform mermaid code blocks into mermaid divs
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('code.language-mermaid').forEach((block) => {
+        const pre = block.parentElement;
+        const div = document.createElement('div');
+        div.className = 'mermaid';
+        div.textContent = block.textContent;
+        pre.replaceWith(div);
+      });
+
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default',
+        securityLevel: 'strict',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true
+        }
+      });
+    });
+  </script>
+
+  <!-- Navigation collapse/expand functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Find all navigation items with children
+      const navItems = document.querySelectorAll('.sidebar li');
+
+      navItems.forEach(item => {
+        const childList = item.querySelector('ul');
+        if (childList) {
+          // Mark this item as having children
+          item.classList.add('nav-item-with-children');
+
+          // Wrap children in a container
+          const childContainer = document.createElement('div');
+          childContainer.className = 'nav-children'; // Start collapsed
+          childList.parentNode.insertBefore(childContainer, childList);
+          childContainer.appendChild(childList);
+
+          // Create toggle button
+          const toggle = document.createElement('button');
+          toggle.className = 'nav-toggle';
+          toggle.innerHTML = '▶';
+          toggle.setAttribute('aria-label', 'Toggle submenu');
+
+          // Insert toggle after the link
+          const link = item.querySelector('a');
+          if (link) {
+            link.parentNode.insertBefore(toggle, link.nextSibling);
+          }
+
+          // Handle toggle click
+          toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const isExpanded = childContainer.classList.contains('expanded');
+
+            if (isExpanded) {
+              // Collapse this section
+              childContainer.classList.remove('expanded');
+              toggle.innerHTML = '▶';
+            } else {
+              // Collapse all other sections at the same level
+              const parent = item.parentElement;
+              const siblings = parent.querySelectorAll(':scope > li > .nav-children.expanded');
+              siblings.forEach(sibling => {
+                if (sibling !== childContainer) {
+                  sibling.classList.remove('expanded');
+                  const siblingToggle = sibling.parentElement.querySelector('.nav-toggle');
+                  if (siblingToggle) siblingToggle.innerHTML = '▶';
+                }
+              });
+
+              // Expand this section
+              childContainer.classList.add('expanded');
+              toggle.innerHTML = '▼';
+            }
+          });
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Architecture Of Konflux</h1>
+      <nav>
+        <a href="/architecture/architecture/">Overview</a> |
+        <a href="/architecture/ADR/">ADRs</a> |
+        <a href="https://konflux-ci.dev/docs/reference/kube-apis/">API References</a>
+      </nav>
+    </header>
+
+    <aside class="sidebar">
+      <h2>Navigation</h2>
+      {{ collections.all | eleventyNavigation | eleventyNavigationToHtml | safe }}
+    </aside>
+
+    <main>
+      {{ content | safe }}
+    </main>
+
+    <aside class="toc-sidebar">
+      {% if toc %}
+      <h2>On This Page</h2>
+      {{ content | toc | safe }}
+      {% endif %}
+    </aside>
+  </div>
+
+  <footer style="text-align: center; padding: 2rem; grid-column: 1 / -1;">
+    <hr>
+    <p><small>Technical documents about the Managed Developer Platform</small></p>
+  </footer>
+</body>
+</html>

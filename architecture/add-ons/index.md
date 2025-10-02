@@ -1,6 +1,15 @@
+---
+title: Add-ons
+eleventyNavigation:
+  key: Add-ons
+  parent: Overview
+  order: 3
+toc: true
+---
+
 # Konflux Add-Ons
 
-Konflux subsystems are divided into two categories: **core** and **add-ons**. The [core subsystems](../index.md) are required for a working system, while add-ons are optional services that provide additional capabilities.
+Konflux subsystems are divided into two categories: **core** and **add-ons**. The [core subsystems](../core/index.md) are required for a working system, while add-ons are optional services that provide additional capabilities.
 
 This document describes the add-on subsystems and how they integrate with the rest of the Konflux platform.
 

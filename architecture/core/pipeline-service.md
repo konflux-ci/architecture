@@ -1,3 +1,12 @@
+---
+title: Pipeline Service
+eleventyNavigation:
+  key: Pipeline Service
+  parent: Core Services
+  order: 5
+toc: true
+---
+
 # Pipeline Service
 
 Pipeline Service provides Tekton APIs and services to RHTAP.

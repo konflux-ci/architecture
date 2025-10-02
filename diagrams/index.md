@@ -1,3 +1,8 @@
+---
+title: Diagrams
+toc: true
+---
+
 # Diagrams
 
 ## System Context

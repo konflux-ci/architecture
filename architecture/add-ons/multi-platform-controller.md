@@ -1,3 +1,12 @@
+---
+title: Multi Platform Controller
+eleventyNavigation:
+  key: Multi Platform Controller
+  parent: Add-ons
+  order: 2
+toc: true
+---
+
 # Multi Platform Controller
 
 

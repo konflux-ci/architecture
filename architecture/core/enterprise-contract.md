@@ -1,3 +1,11 @@
+---
+title: Enterprise Contract
+eleventyNavigation:
+  key: Enterprise Contract
+  parent: Core Services
+  order: 6
+toc: true
+---
 
 Enterprise Contract
 ===================
