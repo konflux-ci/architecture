@@ -1,10 +1,10 @@
-# NN. Exclude Kubernetes Events API from User RBAC Roles
+# 47. Exclude Kubernetes Events API from User RBAC Roles
 
 Date: 2025-09-05
 
 ## Status
 
-Proposed
+Implemented
 
 Relates to [ADR 11. Roles and Permissions](0011-roles-and-permissions.md)
 
