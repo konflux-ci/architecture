@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # Fetch all so we can analyze when files where last changed for generate-adr-table
+          fetch-depth: '0'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
