@@ -4,13 +4,9 @@ Date: 2022-10-20
 
 ## Status
 
----
-
-Accepted
+Implemented
 
 ## Context
-
----
 
 Many organizations, including Red Hat, possess numerous internal services that help productize their software.
 In many cases, these internal services will continue to play a role in the release workflows used in Konflux.
@@ -22,8 +18,6 @@ attack vectors towards an organization's internal networks.
 are **not publicly addressable** in a secure fashion and be able to obtain process status and completion results.
 
 ## Decision
-
----
 
 Use a "controller" running in a private cluster that can watch and reconcile **Request** custom resources in
 one or more workspaces. This will be referred to as the **Internal Service Controller**.
@@ -50,19 +44,13 @@ Using the pattern here, the user organization (called MyOrg) would create a sign
 
 ## Architecture Overview
 
----
-
 ![Interacting with Internal Services](../diagrams/ADR-0003/interacting-with-internal-services.jpg)
 
 ## Open Questions
 
----
-
 * How can internal services controllers control who they accept requests from?
 
 ## Consequences
-
----
 
 * Managed workspaces will require the **Request** custom resource definitions installed.
  * Then custom release pipelines can create CRs for that CRD to make a request to the Internal Service.
@@ -71,13 +59,9 @@ developers to gain the experience.
 
 ## Proof of Concept
 
----
-
 A proof of concept for the **Internal Services Controller** can be found [here](https://github.com/scoheb/internal-services-controller-poc)
 
 ## References
-
----
 
 [KCP]: ../ref/kcp.md
 [release-service]: ../architecture/release-service.md
