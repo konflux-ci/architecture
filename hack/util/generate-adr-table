@@ -33,6 +33,8 @@ EOF
 echo "| ADR | Status | Created | Updated |"
 echo "| --- | --- | --- | --- |"
 for adr in ADR/*.md; do
+	[[ "$adr" == "ADR/index.md" ]] && continue
+	[[ "$adr" == "ADR/0000-adr-template.md" ]] && continue
 	title=$(head -1 "${adr}");
 	status=$(hack/util/get-adr-status "${adr}")
 	emoji=$(get_status_emoji "$status")
