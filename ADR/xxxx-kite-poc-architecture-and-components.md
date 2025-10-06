@@ -8,7 +8,7 @@ Proposed
 
 ## Context
 
-The [Kube Issue Tracking Engine](https://github.com/Kluster-Issue-Tracking-Engine/kite) (KITE) is a proof-of-concept designed to detect, create, and track issues that block application releases in Konflux.
+The [Kluster Issue Tracking Engine](https://github.com/Kluster-Issue-Tracking-Engine/kite) (KITE) is a proof-of-concept designed to detect, create, and track issues that block application releases in Konflux.
 
 It prevents duplicate issue records, automates issue creation and resolution, and powers the **Issues Dashboard** where teams can view and manage disruptions.
 
