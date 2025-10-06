@@ -8,7 +8,7 @@ Proposed
 
 ## Context
 
-The [Kube Issue Tracking Engine](https://github.com/Kube-Issue-Tracking-Engine/kite) (KITE) is a proof-of-concept designed to detect, create, and track issues that block application releases in Konflux.
+The [Kube Issue Tracking Engine](https://github.com/Kluster-Issue-Tracking-Engine/kite) (KITE) is a proof-of-concept designed to detect, create, and track issues that block application releases in Konflux.
 
 It prevents duplicate issue records, automates issue creation and resolution, and powers the **Issues Dashboard** where teams can view and manage disruptions.
 
@@ -46,9 +46,9 @@ The Konflux Issues Dashboard serves a fundamentally different purpose from tradi
 
 **With Issues Dashboard**:
 - Single issue: "Shared library v2.1 causing build failures"
-- **Scope**: Components affected by the same issue can fall under the same [scope](https://github.com/Kube-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/Webhooks.md#issue-grouping-with-scope-objects).
+- **Scope**: Components affected by the same issue can fall under the same [scope](https://github.com/Kluster-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/Webhooks.md#issue-grouping-with-scope-objects).
 - **Grouping**: By grouping the issues, multiple teams are alerted of the same error, preventing separate debugging efforts.
-**Auto-resolution**: When the library is fixed, all related issues can be [resolved automatically](https://github.com/Kube-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/Webhooks.md#automatic-issue-resolution-via-custom-webhooks) because of the shared scope.
+**Auto-resolution**: When the library is fixed, all related issues can be [resolved automatically](https://github.com/Kluster-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/Webhooks.md#automatic-issue-resolution-via-custom-webhooks) because of the shared scope.
 
 **3. User Support Rotation**
 
@@ -63,7 +63,7 @@ The Konflux Issues Dashboard serves a fundamentally different purpose from tradi
 **With Issues Dashboard**:
 - A non-technical associate can point to the Issues Dashboard and point them towards three issues related to failed builds.
   - Each issue has logs to those builds, allowing for deeper investigation.
-- A power-user associate can use the [KITE CLI tool](https://github.com/Kube-Issue-Tracking-Engine/kite/tree/main/packages/cli) to quickly check if any existing issue records exist in the namespace(s) the user has access to.
+- A power-user associate can use the [KITE CLI tool](https://github.com/Kluster-Issue-Tracking-Engine/kite/tree/main/packages/cli) to quickly check if any existing issue records exist in the namespace(s) the user has access to.
   - The CLI tool reports three build failures in namespace `team-gamma`, with logs for each failure.
 
 **Value**:
@@ -186,7 +186,7 @@ We will implement KITE as a distributed system with the following key architectu
 
 ### Bridge Operator Architecture
 
-The **[KITE Bridge Operator](https://github.com/Kube-Issue-Tracking-Engine/kite/tree/main/packages/operator)** implements the "bridge operator" pattern, which connects a Kubernetes environment with external systems not natively managed by Kubernetes.
+The **[KITE Bridge Operator](https://github.com/Kluster-Issue-Tracking-Engine/kite/tree/main/packages/operator)** implements the "bridge operator" pattern, which connects a Kubernetes environment with external systems not natively managed by Kubernetes.
 
 The operator:
 
@@ -199,10 +199,10 @@ The operator runs as a standard Kubernetes controller with cluster-wide permissi
 
 ### KITE Backend Service
 
-The **[KITE Backend](https://github.com/Kube-Issue-Tracking-Engine/kite/tree/main/packages/backend)** is a Go-based REST API service that:
+The **[KITE Backend](https://github.com/Kluster-Issue-Tracking-Engine/kite/tree/main/packages/backend)** is a Go-based REST API service that:
 
-- **Provides API Endpoints**: Offers [REST API](https://github.com/Kube-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/API.md) for creating, updating, and querying issues
-- **Webhook Support**: Includes [specialized webhook endpoints](https://github.com/Kube-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/Webhooks.md) for simplified issue creation/resolution
+- **Provides API Endpoints**: Offers [REST API](https://github.com/Kluster-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/API.md) for creating, updating, and querying issues
+- **Webhook Support**: Includes [specialized webhook endpoints](https://github.com/Kluster-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/Webhooks.md) for simplified issue creation/resolution
 - **Issue Management**: Handles the complete lifecycle of issues (creation, updates, resolution)
 - **Database Integration**: Manages all database operations and data persistence
 - **Namespace isolation**: Issue access is namespace-restricted for isolation and security. (WIP)
@@ -216,13 +216,13 @@ KITE provides two primary integration paths for teams to onboard their services 
 #### Recommended Integration Path
 
 **1. Build Custom Controllers**
-Teams [develop custom controllers](https://github.com/Kube-Issue-Tracking-Engine/kite/blob/main/packages/operator/docs/ControllerDevelopmentGuide.md) for the KITE Bridge Operator that:
+Teams [develop custom controllers](https://github.com/Kluster-Issue-Tracking-Engine/kite/blob/main/packages/operator/docs/ControllerDevelopmentGuide.md) for the KITE Bridge Operator that:
 - **Watch Specific Resources**: Monitor the Kubernetes resources relevant to their services (e.g., Deployments, Jobs, Custom Resources)
 - **Detect State Changes**: Identify success and failure conditions based on their service requirements
 - **Report to Backend**: Send issue creation/resolution events to the KITE backend via API calls
 
 **2. Implement Custom Webhook Endpoints**
-Teams can [develop custom webhook endpoints](https://github.com/Kube-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/Webhooks.md) tailored to their specific events, giving them:
+Teams can [develop custom webhook endpoints](https://github.com/Kluster-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/Webhooks.md) tailored to their specific events, giving them:
 - **Simplified Integration**: Webhooks handle the complexity of issue creation and duplicate checking automatically
 - **Custom Payloads**: Design request payloads that match the team's existing monitoring and alerting systems
 - **Automatic Resolution**: Webhook endpoints can automatically resolve issues when success events are received
@@ -235,7 +235,7 @@ Teams can [develop custom webhook endpoints](https://github.com/Kube-Issue-Track
 
 #### Alternative Integration Approach
 
-For teams that cannot integrate directly with KITE controllers or webhooks, [external service integration](https://github.com/Kube-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/ExternalServiceIntegration.md) is available through:
+For teams that cannot integrate directly with KITE controllers or webhooks, [external service integration](https://github.com/Kluster-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/ExternalServiceIntegration.md) is available through:
 - **Direct API Usage**: Teams can use the standard REST API to create and manage issues programmatically
 
 ### External PostgreSQL Database
@@ -269,7 +269,7 @@ The KITE backend implements several mechanisms to prevent duplicate issues from 
 
 - **Upsert Pattern**: The system always checks for existing issues before creating new ones
 - **Duplicate Detection**: Matches issues based on:
-  - [Resource scope](https://github.com/Kube-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/Webhooks.md#benefits-of-scope-based-grouping) (type, name, namespace)
+  - [Resource scope](https://github.com/Kluster-Issue-Tracking-Engine/kite/blob/main/packages/backend/docs/Webhooks.md#benefits-of-scope-based-grouping) (type, name, namespace)
   - Issue state (Active/Resolved)
 
 ### Automatic Issue Lifecycle Management
@@ -477,4 +477,4 @@ This section demonstrates how KITE's architecture addresses the [specified proje
 - **Integration Points**: API design supports integration with external tools and dashboards
 - **MCP Server Integration**: The REST API architecture enables KITE to serve as an MCP (Model Context Protocol) server:
   - **Real-time Issue Context**: AI assistants could query current cluster issues and their status
-  - **Interactive Troubleshooting**: Enable AI-powered tools (maybe via the [KITE CLI](https://github.com/Kube-Issue-Tracking-Engine/kite/tree/main/packages/cli) tool) to help users understand and resolve issues
+  - **Interactive Troubleshooting**: Enable AI-powered tools (maybe via the [KITE CLI](https://github.com/Kluster-Issue-Tracking-Engine/kite/tree/main/packages/cli) tool) to help users understand and resolve issues
