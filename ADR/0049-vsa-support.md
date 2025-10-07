@@ -43,6 +43,10 @@ We will adopt SLSA Verification Summary Attestations ([VSAs](https://slsa.dev/sp
 for recording SDL policy check results. These VSAs will be used as the input to release pipeline
 Conforma checks.
 
+VSAs must be distributed as a signed OCI artifact. Separate in-toto attestations for this OCI
+artifact are recommended, but not required. Konflux should be agnostic to the manner in which the
+VSA is produced.
+
 ## Consequences
 
 ### Impacts
