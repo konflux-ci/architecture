@@ -1,10 +1,10 @@
-# [TBD]. GitOps Onboarding Redesign
+# 52. GitOps Onboarding Redesign
 
 Date: 2024-12-21
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
