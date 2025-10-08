@@ -62,19 +62,10 @@ Redesign the onboarding experience to converge UI and GitOps into a single coher
 | Konflux UI | Monitoring, runtime insights, and operational actions (non-configuration) | Yes |
 
 
-**GitOps Flow:**
-
-1. Developer creates an empty git repo with Github, Gitlab, etc.
-1. **If first time**: Uses wizard to register repo with Tenant Registration Service (declares namespace name, configures ArgoCD)
-1. Configure Konflux / Kuberenetes objects in gitops repo 
-1. Developer commits and pushes code (optionally via PR, with CI,reviews etc.)
-1. ArgoCD automatically syncs merged changes to the namespace
-1. sync status is reported back to PR, if there was one
-
 ### Multi-Repo GitOps Model & Optional Services
 
 **GitOps Registration Service (Optional):**
-Konflux will optionally provide a **GitOps Registration Service** API that automates the registration and lifecycle of GitOps repositories as first-class tenants. This service is recommended for production deployments but not required for basic Konflux functionality.
+Konflux will optionally provide a **GitOps Registration Service** API that automates the registration and lifecycle of GitOps repositories as first-class tenants. This service is recommended for production deployments but not required for basic Konflux functionality. Using the service will ensure that installation and configuration of ArgoCD will follow secure practices tested by the Konflux team and provide a better user experience.
 
 **GitOps Registration Service Architecture:**
 The GitOps Registration Service will store its data in git and always push to main. A database is added for approval workflow, where approval is captured before pushing the data to main. This approach:
@@ -108,6 +99,7 @@ ArgoCD can be optionally deployed as a continuous GitOps synchronization service
 6. Service configures necessary service account, appProject and impersonation
 7. Registration data is committed to git and pushed to main
 8. ArgoCD continuously syncs changes from the repo to the namespace
+9. sync status is reported back to user PRs
 
 **Manual Process (when not using optional services):**
 1. Team manually creates Kubernetes namespace with desired name
