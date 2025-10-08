@@ -164,23 +164,18 @@ graph TD
 - **No Cross-Namespace Resources**: Each team's resources are isolated within their own namespace
 
 
-### CI/Validation Design
-
-- Introduce a Konflux CLI validator (or GitHub Action) for local + CI use
-- Validates schema, references, build logic statically
-- Optional: CLI lints against live cluster (e.g., available build agents)
 
 ### UI Changes
 
 **Preserve:**
 - dashboard
 - build and release logs
-- operational actions: triggering builds/tests, starting manual releases, pipeline management
+- functions related to data plane resources: triggering builds/tests, starting manual releases, pipeline management, secret rotation, etc.
 - secrets management; secrets need to be managed via UI unless ESO is used (outside the scope of this ADR)
-- the current page which instructsusers to install the Github application. 
+- the current page which instructs users to install the Github application. 
 
 **Remove/Demote:**
-- UI forms for configuring components, applications, and other declarative resources
+- UI forms for configuring components, applications, and other control plane resources
 
 **Add to UI**
 - gitops registration service
@@ -269,17 +264,4 @@ ArgoCD AppProjects provide logical security boundaries that prevent cross-contam
 ## References
 
 No external references at this time. 
-
-
-
-1. Remove VS code from ADR to streamline - can be handled via regular features. Note that work will need to be done to ensure there is a good user experience for gitops, especially for novice users, but that the details are outside the scope of this ADR.
-
-2. gitops registration service should store its data in git and always push to main. A database is added for approval workflow, approval is captured before pushing the data to main. 
-Why?  this requires no reliance on another CI system like github actions, no codeowners file maintenance and eliminates the chance the a PR is changed in a way that compromises the artifacts being generated which link a gitops repo to a namespace while making sure that everything needed to restore the cluster is in source control
-
-3. explicitly say that this ADR does not impact users ability to use kubernetes CLIs like kubectl and oc, or the kubernetes API
-
-4. Call out that some UI functions, for example those which annotate resources to rerun piplines, will continue to function These are 'data plane' attributes. ArgoCD can be configured to ignore certain fields in order to prevent resource thashing and we will need to do this.
-
-we will sync control plane resources / attributes (components, image repositories, releasePlans); we won't sync data plane resources (snapshots, pipelineRuns, releases and certain annotations / fields). Web UI can still exist for data plane resources.
 
