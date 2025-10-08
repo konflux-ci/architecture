@@ -22,13 +22,14 @@ Conforma evaluations.
 
 ### Attestations
 
-Each task will be responsible for generating an attestation in Cosign.
-(https://github.com/in-toto/attestation/blob/main/spec/predicates/vulns_02.md)[vulnerability attestations]
-will be used for security scans rather than `provenance` attestations. Tasks
-will output `ARTIFACT_URI` and `ARTIFACT_DIGEST` which will point to the
-location of the attestation in Quay.  These results will tell Chains to
-generate and sign a SLSA provenance attestation for the task-generated
-attestations.
+Each task will be responsible for generating attestations about the image.
+For example, tasks may generate (https://github.com/in-toto/attestation/blob/main/spec/predicates/vulns_02.md)[vulnerability] or (https://github.com/in-toto/attestation/blob/main/spec/predicates/test-result.md)[test result]
+predicates rather than only depending on the task results being present in
+the generated SLSA provenance. These task-generated attestations will
+need to be created using the referrer's API which can be accomplished using
+cosign with the bundle format. Tasks will expose references to their task-generated
+attestations using `*_ARTIFACT_OUTPUTS` results so that Chains will be able to
+generate and sign a SLSA provenance attestation about the task-generated attestations.
 
 #### Multiple Attestations
 
