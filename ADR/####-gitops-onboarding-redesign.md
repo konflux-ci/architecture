@@ -51,53 +51,40 @@ Redesign the onboarding experience to converge UI and GitOps into a single coher
   - Operational actions: triggering builds/tests, starting manual releases, pipeline management
   - Any other runtime actions that don't involve declarative resource configuration
 - **Commit to single onboarding flow**: UI-based onboarding will be completely deprecated with no fallback option to minimize maintenance overhead and deliver optimal user outcomes
-- **Maintain ease of use and excellent user experience** by providing a VS Code plugin that delivers forms based configuration of validation of tenant resources
-
-### IDE Selection Rationale
-VS Code was chosen as the primary IDE target because:
-- **Wide adoption**: VS Code is extensively used across development teams
-- **Robust plugin ecosystem**: Provides comprehensive APIs for linting, schema validation, and custom tooling
-- **Advanced visualization capabilities**: Plugin system supports rich visualizations and can run full, sandboxed React-based applications within webview windows
-- **Extensibility**: Enables building sophisticated onboarding wizards and configuration interfaces directly within the familiar IDE environment
 
 ### Component Architecture
 
 | Component | Role | Optional |
 |-----------|------|----------|
-| VS Code Plugin | Main interface for onboarding and configuration | Yes |
 | Git Repos | Source of truth for Konflux config | Yes |
 | GitOps Registration Service | API for automated registration of GitOps repos as tenants | **Yes** (recommended) |
 | ArgoCD Service | Continuous GitOps sync and deployment | **Yes** (recommended) |
 | Konflux UI | Monitoring, runtime insights, and operational actions (non-configuration) | Yes |
 
-### VS Code Plugin Design
-
-**Core Features:**
-- Forms and wizards to scaffold and edit YAML objects
-- Built-in schema-aware YAML editor
-- Linting and validation against Konflux schemas
-- Git-aware diff view and PR-ready commit generation
-- Optional: preview pipeline graph / dependency resolution
-
 
 **GitOps Flow:**
 
 1. Developer creates an empty git repo with Github, Gitlab, etc.
-4. **If first time**: Uses wizard to register repo with Tenant Registration Service (declares namespace name, configures ArgoCD)
-5. Developer is prompted by UI to install / open repo in VS Code
-3. Launches Konflux plugin and uses it to configure new components, tests, releasePlans
-6. Plugin generates YAML objects in repo
-7. Developer commits and pushes code (optionally via PR, with CI,reviews etc.)
-9. ArgoCD automatically syncs merged changes to the namespace
-10. sync status is reported back to PR, if there was one
+1. **If first time**: Uses wizard to register repo with Tenant Registration Service (declares namespace name, configures ArgoCD)
+1. Configure Konflux / Kuberenetes objects in gitops repo 
+1. Developer commits and pushes code (optionally via PR, with CI,reviews etc.)
+1. ArgoCD automatically syncs merged changes to the namespace
+1. sync status is reported back to PR, if there was one
 
 ### Multi-Repo GitOps Model & Optional Services
 
 **GitOps Registration Service (Optional):**
 Konflux will optionally provide a **GitOps Registration Service** API that automates the registration and lifecycle of GitOps repositories as first-class tenants. This service is recommended for production deployments but not required for basic Konflux functionality.
 
+**GitOps Registration Service Architecture:**
+The GitOps Registration Service will store its data in git and always push to main. A database is added for approval workflow, where approval is captured before pushing the data to main. This approach:
+- Requires no reliance on another CI system like GitHub Actions
+- Eliminates CODEOWNERS file maintenance overhead
+- Prevents PR modifications that could compromise the artifacts linking a GitOps repo to a namespace
+- Ensures everything needed to restore the cluster is in source control
+
 **ArgoCD Service (Optional):**
-ArgoCD can be optionally deployed as a continuous GitOps synchronization service. While recommended for production use, Konflux can operate without ArgoCD, though this results in reduced automation and requires manual synchronization of GitOps repositories.
+ArgoCD can be optionally deployed as a continuous GitOps synchronization service. While recommended for production use, Konflux can operate without ArgoCD, though this results in reduced automation and requires manual synchronization of GitOps repositories or manual creation of resources using cli (kubectl) or API.
 
 **Impact of Optional Services:**
 - **With both services**: Full automated GitOps experience with continuous deployment and streamlined onboarding
@@ -113,12 +100,14 @@ ArgoCD can be optionally deployed as a continuous GitOps synchronization service
 - **1:many Mapping**: Each GitOps repository maps to 1 or more Kubernetes namespaces
 
 **Registration Process (when using optional services):**
-1. Team registers GitOps repo via VS Code plugin, CLI (`konflux register`), or UI
-2. at registration time the desired namespace name is provided to (UI | API)
+1. Team registers GitOps repo via CLI (`konflux register`) or UI
+2. At registration time the desired namespace name is provided to (UI | API)
 3. GitOps Registration Service validates the repo and the requested namespace
-4. Service provisions the new requested Kubernetes namespace if necessary, or ensures the user has sufficient access to link a new gitops repo to an existing namespace
+4. **Optional approval step**: If approval workflow is enabled, the registration request is stored in the database pending approval
+5. Upon approval (or if no approval required), service provisions the new requested Kubernetes namespace if necessary, or ensures the user has sufficient access to link a new gitops repo to an existing namespace
 6. Service configures necessary service account, appProject and impersonation
-7. ArgoCD continuously syncs changes from the repo to the namespace
+7. Registration data is committed to git and pushed to main
+8. ArgoCD continuously syncs changes from the repo to the namespace
 
 **Manual Process (when not using optional services):**
 1. Team manually creates Kubernetes namespace with desired name
@@ -179,8 +168,7 @@ graph TD
 
 - Introduce a Konflux CLI validator (or GitHub Action) for local + CI use
 - Validates schema, references, build logic statically
-- Same validator embedded in VS Code plugin
-- Optional: Plugin lints against live cluster (e.g., available build agents)
+- Optional: CLI lints against live cluster (e.g., available build agents)
 
 ### UI Changes
 
@@ -195,7 +183,15 @@ graph TD
 - UI forms for configuring components, applications, and other declarative resources
 
 **Add to UI**
-- gitops registration service 
+- gitops registration service
+
+**Kubernetes CLI and API Access:**
+This ADR does not impact users' ability to use Kubernetes CLIs like `kubectl` and `oc`, or the Kubernetes API directly. Users retain full access to standard Kubernetes tooling and can continue to interact with their namespaces using these familiar tools.
+
+**Data Plane vs Control Plane Resources:**
+We will sync control plane resources/attributes (components, image repositories, releasePlans); we won't sync data plane resources (snapshots, pipelineRuns, releases and certain annotations/fields). The Web UI can still exist for data plane resources.
+
+Some UI functions, for example those which annotate resources to rerun pipelines, will continue to function. These are 'data plane' attributes. ArgoCD can be configured to ignore certain fields in order to prevent resource thrashing and we will need to do this. 
 
 
 ## Consequences
@@ -206,7 +202,6 @@ graph TD
 2. **Faster Onboarding**: Local validation reduces time-to-merge for onboarding PRs (enhanced with optional services)
 3. **Clear Tenant Model**: 1:1 mapping between GitOps repos and namespaces provides clear ownership and boundaries
 4. **Improved Team Autonomy**: Multi-repo model allows teams to own their GitOps repositories and corresponding namespaces
-5. **Better IDE Integration**: Leverages familiar VS Code tooling and workflows
 6. **Flexible Deployment Options**: Optional services allow deployment scaling from lightweight setups to full-featured production environments
 7. **Resource Efficiency**: Minimal footprint option suitable for lower-spec machines and testing environments
 8. **Optional GitOps Automation**: When ArgoCD is deployed, provides industry-standard continuous deployment with automatic drift detection and reconciliation
@@ -214,21 +209,19 @@ graph TD
 
 ### Negative Consequences
 
-1. **Tool Dependency**: Requires VS Code and plugin installation for optimal experience
-2. **Learning Curve**: Developers must adapt to new plugin-based workflow
-3. **Development Overhead**: Requires building and maintaining VS Code plugin and optional services
-4. **Manual Operations**: Without optional services, teams must manually manage GitOps operations, reducing automation benefits
+
+4. **Manual Operations**: Without further onboarding experience work, teams must manually manage GitOps operations, reducing automation benefits
 5. **Migration Complexity**: Existing users must migrate from current UI/GitOps hybrid approach
 6. **Configuration Complexity**: Teams must choose between manual setup (simple but limited) vs. optional services (full-featured but more complex)
 
 ### Risks and Mitigations
 
-1. **Plugin Adoption**: Risk of low adoption if plugin is complex or unreliable
-   - Mitigation: Provide CLI fallback and comprehensive documentation
-2. **Schema Validation**: Local validation may diverge from server-side validation
-   - Mitigation: Use same validation logic in plugin and CI
-3. **No Rollback Option**: Once UI-based onboarding is deprecated, there is no fallback to the previous approach
+1. **Schema Validation**: Local validation may diverge from server-side validation
+   - Mitigation: Use same validation logic in CLI and CI
+2. **No Rollback Option**: Once UI-based onboarding is deprecated, there is no fallback to the previous approach
    - Mitigation: Ensure thorough testing and gradual rollout with comprehensive user training and documentation
+3. **User Experience**: GitOps onboarding may be challenging for novice users
+   - Mitigation: Work will be done to ensure good user experience for GitOps, especially for novice users, but the details are outside the scope of this ADR
 
 ### Open Questions
 
@@ -236,11 +229,10 @@ No open questions at this time.
 
 ### Migration Path
 
-1. **Phase 1**: Develop VS Code plugin with local validation
-2. **Phase 2**: Implement optional GitOps Registration Service
-3. **Phase 3**: Implement ArgoCD Service
-4. **Phase 4**: Migration support for existing users
-5. **Phase 5**: Remove deprecated UI configuration components
+1. **Phase 1**: Implement optional GitOps Registration Service
+2. **Phase 2**: Implement ArgoCD Service
+3. **Phase 3**: Migration support for existing users
+4. **Phase 4**: Remove deprecated UI configuration components
 
 **Note**: Teams can choose to deploy Konflux without the optional services for simpler setups, accepting the trade-offs in automation and user experience.
 
@@ -274,7 +266,20 @@ ArgoCD AppProjects provide logical security boundaries that prevent cross-contam
 - [Leveraging ArgoCD in Multi-tenanted Platforms](https://www.cecg.io/blog/multi-tenant-argocd/) - CECG guidance on using ArgoCD AppProjects for tenant autonomy and isolation
 
 
-
 ## References
 
 No external references at this time. 
+
+
+
+1. Remove VS code from ADR to streamline - can be handled via regular features. Note that work will need to be done to ensure there is a good user experience for gitops, especially for novice users, but that the details are outside the scope of this ADR.
+
+2. gitops registration service should store its data in git and always push to main. A database is added for approval workflow, approval is captured before pushing the data to main. 
+Why?  this requires no reliance on another CI system like github actions, no codeowners file maintenance and eliminates the chance the a PR is changed in a way that compromises the artifacts being generated which link a gitops repo to a namespace while making sure that everything needed to restore the cluster is in source control
+
+3. explicitly say that this ADR does not impact users ability to use kubernetes CLIs like kubectl and oc, or the kubernetes API
+
+4. Call out that some UI functions, for example those which annotate resources to rerun piplines, will continue to function These are 'data plane' attributes. ArgoCD can be configured to ignore certain fields in order to prevent resource thashing and we will need to do this.
+
+we will sync control plane resources / attributes (components, image repositories, releasePlans); we won't sync data plane resources (snapshots, pipelineRuns, releases and certain annotations / fields). Web UI can still exist for data plane resources.
+
