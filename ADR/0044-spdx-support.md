@@ -4,7 +4,7 @@ Date: 2024-09-24
 
 ## Status
 
-Accepted
+Implemented
 
 ## Glossary
 * SBOM - Software Bill of Materials
