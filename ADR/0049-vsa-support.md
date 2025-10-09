@@ -1,10 +1,10 @@
-# ADR-0049: Verification Summary Attestations for Release Policies
+# 49. Verification Summary Attestations for Release Policies
 
 Date: 2025-07-02
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
