@@ -1,10 +1,10 @@
-# 40. Konflux should send cloud events all system events.
+# 41. Konflux should send cloud events all system events.
 
 Date: 2024-09-24
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
