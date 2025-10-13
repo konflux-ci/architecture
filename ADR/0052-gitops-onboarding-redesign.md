@@ -150,7 +150,7 @@ graph TD
 - **Optional Registration**: GitOps Registration Service (when available) is used once per repo to create namespace and configure ArgoCD
 - **Optional Continuous Sync**: ArgoCD (when available) continuously propagates changes from repo to namespace
 - **Manual Alternative**: Without optional services, teams manually manage namespace creation and GitOps synchronization
-- **1:1 Mapping**: Each GitOps repo maps to exactly one namespace
+- **1:Many Mapping**: Each GitOps repo can map to many tenant namespaces
 - **Immutable Names**: Namespace names are declared in the repo and cannot change
 - **Single Deployment Target**: All resources from one repo deploy to one namespace
 - **No Cross-Namespace Resources**: Each team's resources are isolated within their own namespace
@@ -187,7 +187,7 @@ Some UI functions, for example those which annotate resources to rerun pipelines
 
 1. **Unified Developer Experience**: Single Git-centric flow eliminates context switching between UI and GitOps
 2. **Faster Onboarding**: Local validation reduces time-to-merge for onboarding PRs (enhanced with optional services)
-3. **Clear Tenant Model**: 1:1 mapping between GitOps repos and namespaces provides clear ownership and boundaries
+3. **Clear Tenant Model**: 1:many mapping between GitOps repos and namespaces provides clear ownership and simplifies management for users
 4. **Improved Team Autonomy**: Multi-repo model allows teams to own their GitOps repositories and corresponding namespaces
 6. **Flexible Deployment Options**: Optional services allow deployment scaling from lightweight setups to full-featured production environments
 7. **Resource Efficiency**: Minimal footprint option suitable for lower-spec machines and testing environments
