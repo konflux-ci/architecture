@@ -6,6 +6,11 @@ Date: 2025-09-30
 
 Proposed
 
+Relates to [ADR 21. Partner Tasks in Build/Test Pipelines](0021-partner-tasks.md).
+The concept of Partner Tasks is no longer relevant after decentralization. The model
+proposed in this ADR provides a flexible way to define the trust in Tasks, which
+could help replace Partner Tasks.
+
 ## Context
 
 Conforma has the concept of [Trusted Tasks]. Konflux policies rely on this concept
