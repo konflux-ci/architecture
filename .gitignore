@@ -11,4 +11,7 @@ _site/
 # Jekyll (legacy - can be removed after migration)
 .jekyll-cache/
 Gemfile.lock
-ADR/index.md
+# ADR/index.md
+
+# AI tools
+.serena/
