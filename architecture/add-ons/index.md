@@ -47,6 +47,7 @@ graph TD
         IC["Image Controller"]
         MPC["Multi-Platform Controller"]
         MM["MintMaker"]
+        PC["Project Controller"]
     end
 
     IR -- managed by --> IC
@@ -94,7 +95,7 @@ graph TD
     style IBM fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px,color:#000000
 
     classDef controlPlane fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000;
-    class App,Comp,ITS,RP,RPA,ECP,IC,MPC,ISC,MM controlPlane;
+    class App,Comp,ITS,RP,RPA,ECP,IC,MPC,ISC,MM,PC controlPlane;
 
     classDef dataPlane fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000000;
     class Snap,Release dataPlane;
@@ -121,6 +122,7 @@ graph TD
         MPC[Multi-Platform Controller]
         ISC[Internal Services Controller]
         MM[MintMaker]
+        PC[Project Controller]
     end
 
     subgraph quayio[quay.io]
@@ -149,6 +151,7 @@ graph TD
     style MPC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
     style ISC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
     style MM fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
+    style PC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
     style kubeapi fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000000;
     style TW fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
     style MW fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
@@ -174,7 +177,12 @@ The [Internal Services Controller] has a single resource, the `InternalRequest`,
 
 The [MintMaker] automates dependency updates for Konflux components using Renovate. It introduces the `DependencyUpdateCheck` custom resource that triggers dependency scanning across Components, creating Tekton PipelineRuns to execute Renovate scans and generate pull requests with dependency updates. The Tekton PipelineRuns execute in a system mintmaker namespace, not in Component namespace.
 
+### Project Controller
+
+The [Project Controller] enables users to manage projects and development streams in Konflux. It provides a templating system for creating multiple similar development streams with consistent resource structures, streamlining the process of setting up complex multi-component applications.
+
 [Image Controller]: ./image-controller.md
 [Multi-Platform Controller]: ./multi-platform-controller.md
 [Internal Services Controller]: ./internal-services.md
 [MintMaker]: ./mintmaker.md
+[Project Controller]: ./project-controller.md
