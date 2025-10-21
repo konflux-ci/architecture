@@ -1,3 +1,12 @@
+---
+title: Project Controller
+eleventyNavigation:
+  key: Project Controller
+  parent: Add-ons
+  order: 2
+toc: true
+---
+
 # Project Controller
 
 ## Overview
