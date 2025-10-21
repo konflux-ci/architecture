@@ -62,7 +62,7 @@ spec:
   - name: versionName
     description: A K8s-compliant name for the version
     defaultValue: "{{hyphenize .version}}"
-  
+
   resources:
   - apiVersion: appstudio.redhat.com/v1alpha1
     kind: Application
@@ -70,7 +70,7 @@ spec:
       name: "cool-app-{{.versionName}}"
     spec:
       displayName: "Cool App {{.version}}"
-  
+
   - apiVersion: appstudio.redhat.com/v1alpha1
     kind: Component
     metadata:
