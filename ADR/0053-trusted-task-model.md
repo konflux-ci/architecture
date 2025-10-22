@@ -1,10 +1,10 @@
-# NN. Trusted Tasks model after build-definitions decentralization
+# 53. Trusted Tasks model after build-definitions decentralization
 
 Date: 2025-09-30
 
 ## Status
 
-Proposed
+Accepted
 
 Relates to [ADR 21. Partner Tasks in Build/Test Pipelines](0021-partner-tasks.md).
 The concept of Partner Tasks is no longer relevant after decentralization. The model
