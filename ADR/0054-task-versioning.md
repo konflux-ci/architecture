@@ -1,10 +1,10 @@
-# NN. Start versioning Tekton Tasks responsibly
+# 54. Start versioning Tekton Tasks responsibly
 
 Date: 2025-10-06
 
 ## Status
 
-Proposed
+Accepted
 
 Relates to
 [ADR NN. Trusted Tasks model after build-definitions decentralization](nnnn-trusted-task-model.md).
