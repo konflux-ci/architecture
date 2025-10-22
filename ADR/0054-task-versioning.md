@@ -7,7 +7,7 @@ Date: 2025-10-06
 Accepted
 
 Relates to
-[ADR NN. Trusted Tasks model after build-definitions decentralization](nnnn-trusted-task-model.md).
+[ADR 53. Trusted Tasks model after build-definitions decentralization](0053-trusted-task-model.md).
 
 ## Context
 
@@ -89,7 +89,7 @@ mechanism for [Trusted Tasks]:
   has made it that far.*
 
 This mechanism is rather clunky and not very flexible. And, for reasons explained
-in [ADR NN](nnnn-trusted-task-model.md), the mechanism will not work after the build-definitions
+in [ADR NN](0053-trusted-task-model.md), the mechanism will not work after the build-definitions
 decentralization.
 
 A more flexible solution would allow the policy author to allow/disallow specific
@@ -162,7 +162,7 @@ In case of breaking changes, the changelog should explain how the user can migra
 ### Extend trusted\_task\_rules mechanism with version-based rules
 
 Extend the mechanism described in [ADR NN. Trusted Tasks model after build-definitions
-decentralization](nnnn-trusted-task-model.md). Give policy authors the ability to
+decentralization](0053-trusted-task-model.md). Give policy authors the ability to
 constrain the acceptable Task versions.
 
 Make it possible to:
@@ -174,7 +174,7 @@ Like most Conforma rules, the Task version rules should support the `effective_o
 concept. A policy author typically will not want to disallow a version range immediately,
 but will want to give users some lead time.
 
-The [Appendix of ADR NN](nnnn-trusted-task-model.md#appendix) illustrates how the
+The [Appendix of ADR NN](0053-trusted-task-model.md#appendix) illustrates how the
 Task version rules could look.
 
 ## Consequences
@@ -196,7 +196,7 @@ exact Task versions when using the git resolver (except by commit revision).
 
 > ℹ️
 > As explained in ADR NN, [git references for decentralized Tasks will not initially
-> be trusted](nnnn-trusted-task-model.md#decentralized-tasks-lose-the-trust-in-their-git-references),
+> be trusted](0053-trusted-task-model.md#decentralized-tasks-lose-the-trust-in-their-git-references),
 > so this is not a big loss. The ADR mentions possible approaches to re-enable trust
 > in git references, one of which could offer a straightforward solution: Development
 > happens in decentralized repos, which don't have to follow the catalog layout.
