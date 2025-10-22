@@ -4,7 +4,9 @@ Date: 2023-03-06
 
 ## Status
 
-Accepted
+Replaced
+
+Effectively superceded by [ADR-0053](./0053-trusted-task-model.md). While that ADR does not describe a whole solution for a "decentralized build-definitions", it establishes the building block needed to declare trust in tasks maintained outside the core repo which gives us a new way to rely on tasks provided by third-parties.
 
 ## Context
 
