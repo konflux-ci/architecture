@@ -11,6 +11,10 @@ The concept of Partner Tasks is no longer relevant after decentralization. The m
 proposed in this ADR provides a flexible way to define the trust in Tasks, which
 could help replace Partner Tasks.
 
+Relates to [ADR 54. Start versioning Tekton Tasks responsibly](0054-task-versioning.md).
+Specifically, the changes proposed in ADR 54 would help replace the [lost Task expiry
+mechanism](#decentralized-tasks-lose-the-automated-expiry-mechanism).
+
 ## Context
 
 Conforma has the concept of [Trusted Tasks]. Konflux policies rely on this concept
@@ -178,9 +182,8 @@ Such a mechanism would be difficult to replicate with the rule-based model.
 
 An alternative automated expiry mechanism could be version based. This ADR does not
 define the mechanism, because the current versioning practices do not allow a
-version based expiry to be effective. This will be addressed, along with the expiry
-mechanism, in a future ADR about Task versioning. The example in the Appendix
-does at least illustrate how the expiry could work.
+version based expiry to be effective. [ADR 54](0054-task-versioning.md) addresses this.
+The example in the Appendix illustrates how the expiry could work.
 
 Note that Conforma also supports [setting Task expiry] manually via the
 `build.appstudio.redhat.com/expires-on` annotation. This will still work.
