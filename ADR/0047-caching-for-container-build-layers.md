@@ -25,7 +25,7 @@ Squid was chosen as the caching proxy for several reasons:
 ### Implementation Details
 
 * **Deployment:** The proxies will be deployed via a configurable Helm chart into a dedicated `proxy` namespace.
-* **Access:** A well-known service endpoint, `http.proxy.svc.cluster.local`, will provide access to the proxy service within the cluster.
+* **Access:** A well-known service endpoint, `squid.caching.svc.cluster.local`, will provide access to the proxy service within the cluster.
 * **TLS Caching:** We will use Squid's `ssl-bump` feature to cache content from TLS-encrypted connections. This requires establishing an internal Certificate Authority (CA) using `cert-manager`. Following the common practice of using separate CAs for separate concerns, the CA will be dedicated to the proxy service. This may be revisited in the future if a service mesh with a shared CA infrastructure (e.g. SPIFFE/SPIRE) is adopted.
 * **Private layer blob caching:** To allow for caching of private images, we will use a custom
 Squid ACL policy to either compartmentalize the cache according to authorization headers or
