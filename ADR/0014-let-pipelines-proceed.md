@@ -51,6 +51,6 @@ for users ([STONE-459]).
   unwritten principle. Documenting it here for posterity, visibility.
 
 [STONE-459]: https://issues.redhat.com/browse/STONE-459
-[Environments]: ../ref/application-environment-api.html#environment
+[Environments]: ../ref/application-environment-api.md#environment
 [ADR-0030]: 0030-tekton-results-naming-convention.html
-[enterprise contract]: ../architecture/enterprise-contract.html
+[enterprise contract]: ../architecture/core/enterprise-contract.md
