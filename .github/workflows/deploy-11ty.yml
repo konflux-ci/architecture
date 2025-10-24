@@ -33,9 +33,6 @@ jobs:
       - name: Build with Eleventy
         run: make build
 
-      - name: Move architecture/ dir
-        run: mv _site/architecture/* _site/.
-
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
