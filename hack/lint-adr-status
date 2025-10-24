@@ -58,7 +58,7 @@ fi
 adr_files=()
 while IFS= read -r -d '' file; do
     adr_files+=("$file")
-done < <(find ADR/ -name "*.md" -type f ! -name "index.md" ! -name "0000-adr-template.md" ! -name "INDEX.md" -print0 | sort -z)
+done < <(find ADR/ -name "*.md" -type f ! -name "index.md" ! -name "0000-adr-template.md" ! -name "quick-reference.md" -print0 | sort -z)
 
 if [[ ${#adr_files[@]} -eq 0 ]]; then
     warning "No ADR markdown files found in ADR/ directory"
