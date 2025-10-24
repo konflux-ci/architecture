@@ -5,12 +5,18 @@ eleventyNavigation:
   parent: Core Services
   order: 5
 toc: true
+local_summary:
+  scope: "Foundational Tekton APIs, Pipelines as Code, Chains (signing), Results (archival)"
+  key_crds: "PipelineRun, TaskRun, Repository (PaC)"
+  depends_on: "None (foundational - all services depend on this)"
+  related_adrs: "ADR-0009 (pipeline service via operator), ADR-0001 (pipeline service phase 1 - superseded), ADR-0036 (trusted artifacts)"
+  key_concepts: "OpenShift Pipelines operator, Tekton Chains (signing/attestations), Tekton Results (archival), appstudio-pipeline ServiceAccount"
 ---
 
 # Pipeline Service
 
-Pipeline Service provides Tekton APIs and services to RHTAP.
-In the initial phase of RHTAP, Pipeline Service will be provided by a stock
+Pipeline Service provides Tekton APIs and services to Konflux.
+In the initial phase of Konflux, Pipeline Service will be provided by a stock
 installation of the OpenShift Pipelines operator.
 This deployed version will be the a candidate build of the OpenShift Pipelines
 operator from a Red Hat build system.
