@@ -59,7 +59,7 @@ Legend:
 * Blue: managed by Pipeline Service
 * Yellow: not managed by Pipeline Service
 
-![Architecture diagram](../diagrams/pipeline-service/architecture.jpg)
+![Architecture diagram](../../diagrams/pipeline-service/architecture.jpg)
 
 ### Tekton Pipelines
 
