@@ -5,3 +5,9 @@ Gemfile.lock
 **/.export
 .DS_Store
 .idea/
+
+local/
+CLAUDE.md
+CONTRIBUTING.md
+README.md
+ADR/quick-reference.md

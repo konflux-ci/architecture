@@ -12,3 +12,8 @@ _site/
 .jekyll-cache/
 Gemfile.lock
 ADR/index.md
+
+local
+
+# AI tools
+.serena/
