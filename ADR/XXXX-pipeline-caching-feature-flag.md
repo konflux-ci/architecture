@@ -1,6 +1,6 @@
 # XXXX. Pipeline Caching Feature Flag Configuration
 
-Date: 2025-01-27
+Date: 2025-10-23
 
 ## Status
 
@@ -37,7 +37,7 @@ Configuration takes effect based on the following precedence (highest to lowest)
 
 ### Implementation Details
 
-* **Pipeline Integration**: The `ENABLE_CACHE_PROXY` parameter will be passed to the pipeline Init task
+* **Pipeline Integration**: The `ENABLE_CACHE_PROXY` parameter will be passed to the pipeline init task
 * **Configuration Resolution**: The init task will read configuration values from the appropriate config maps and resolve the final proxy settings
 * **Environment Variables**: The init task will emit `HTTP_PROXY` and `NO_PROXY` configuration values to be used by the buildah task
 * **Default Values**: If no configuration is found, the system will fall back to default values:
