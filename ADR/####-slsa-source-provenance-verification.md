@@ -48,7 +48,6 @@ We will verify SLSA source provenance through a **chained attestation** approach
    - The task verifies the VSA contents (format, subject matching the commit, etc.)
    - The task pushes the source VSA to the OCI registry as a separate artifact
    - The task exposes the pullspec of the OCI representation of the VSA (digest reference) in its task results using `*_ARTIFACT_OUTPUTS` format
-   - The task records the public key used for verification in its results
 
 3. **Build provenance chain** (via Tekton Chains):
    - Tekton Chains observes the task results containing the source VSA artifact reference
@@ -58,7 +57,7 @@ We will verify SLSA source provenance through a **chained attestation** approach
 4. **Verification in Conforma**:
    - Conforma policies can verify source provenance by checking for the presence of the attestation chain
    - Conforma trusts Tekton Chains' signatures (existing trust root)
-   - Conforma reads the public key from the test attestation (recorded by the verification task) and verifies it matches the expected signer identity for the source repository
+   - Conforma reads the public key from the test attestation's task parameters and verifies it matches the expected signer identity for the source repository
    - Through the chain, Conforma gains transitive trust in the source VSA's signature verification (performed by the task) without needing to re-verify the signature itself
    - This bootstraps trust in source provenance through our existing build-provenance infrastructure
 
@@ -111,12 +110,11 @@ This approach provides several advantages:
    - Verifies source VSA contents (format, subject, etc.)
    - Pushes VSAs to OCI registry
    - Exposes pullspec in `*_ARTIFACT_OUTPUTS` results format
-   - Records the public key used for verification in task results
 
 2. **Conforma policy updates**: Update Enterprise Contract policies to:
    - Detect source provenance attestation chains
    - Verify build provenance attestations about source VSAs
-   - Read the public key from test attestations and verify it matches expected signer identities for source repositories
+   - Read the public key from test attestation task parameters and verify it matches expected signer identities for source repositories
    - Determine if source verification levels meet release requirements
 
 3. **Documentation for source repository owners**:
