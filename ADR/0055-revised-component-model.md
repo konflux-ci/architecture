@@ -45,6 +45,195 @@ The implementation will be phased, starting with the core build team and
 gradually migrating services and users over time, with the final goal of
 decommissioning the old model once the migration is complete.
 
+### Detail of new Component CR spec
+
+```
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Component
+metadata:
+  name: example
+  namespace: example
+
+spec: # Required field
+  # specific actions will be processed and then removed
+  actions:
+    # specify names of component versions to restart the push build for
+    # both can be specified at same time, but eliminate duplicates
+    trigger-push-build: Test
+    trigger-push-builds:
+      - Test
+      - Different pipeline
+
+    # Only for build pipeline configuration PR explicit creation,
+    # otherwise if version exists in the .spec.source.versions
+    # and status doesn't have it, do onboarding without PR.
+    # When create-pipeline-configuration-pr is specified,
+    # at least one of 'all_versions', 'version', 'versions' has to be specified.
+    # 'all_versions' has precedence.
+    # When both 'version' and 'versions' will be specified use all versions from them
+    # but eliminate duplicates.
+    create-pipeline-configuration-pr:
+      # when specified it will do onboarding for all versions and also create PRs
+      all-versions: true
+      # will do onboarding only for specific versions and also create PRs
+      # all_versions has precedence if 'version' or 'versions' specified
+      version: some-verision
+      versions:
+        - version-name1
+        - version-name2
+
+  # when offboarding is performed, cleaning PR will be created based on this
+  # optional, default: false
+  skip-offboarding-pr: true
+
+  # either will be set by IR, or explicitly specified with custom repo, without tag
+  containerImage: quay.io/org/tenant/component
+
+  # Pipeline used for all versions, unless explicitly specified in 'source' for specific version.
+  # Optional. If missing here, it has to be specified in all versions, BUT only if explicit onboarding is required, otherwise neither has to be specified.
+  # pipelines should allow also custom pipelines based on (by name & git resolver) https://issues.redhat.com/browse/KONFLUX-10117
+  # can have specified ONLY either pull-and-push, or both push & pull
+  default-build-pipeline: used only for explicit onboarding
+    # can have specified just one of:  pipelinespec-from-bundle,
+    # pipelineref-by-name, pipelineref-by-git-resolver
+    pull-and-push:
+      # will be used to fetch bundle and fill out PipelineSpec in pipeline runs
+      # name the pipeline is based on build-pipeline-config CM in build-service NS
+      # when 'latest' bundle is specified, bundle image will be used from CM
+      # when bundle is specified to specific image bundle, then that one will be used
+      # and pipeline name will be used to fetch pipeline from that bundle
+      # this is the same how specified pipeline works now
+      # build service does validation if wrong name or bundle is specified
+      pipelinespec-from-bundle:
+        name: docker-build-oci-ta
+        bundle: latest
+
+      # will be used to fill out PipelineRef in pipeline runs to user specific pipeline
+      # such pipeline definition has to be in .tekton
+      # build service doesn't do any validation about correct pipeline name
+      pipelineref-by-name: custom-pipeline
+
+      # will be used to fill out PipelineRef in pipeline runs to user specific pipeline via git resolver, specifying repository with a pipeline definition
+      # build service doesn't do any validation about correct url,revision,PathInRepo
+      pipelineref-by-git-resolver:
+        url: https://github.com/custom-pipelines/pipelines.git
+        revision: main
+        pathInRepo: pipeline/push.yaml
+
+    # can have specified just one of:  pipelinespec-from-bundle,
+    # pipelineref-by-name, pipelineref-by-git-resolver
+    push:
+      pipelinespec-from-bundle:
+        name: docker-build-oci-ta
+        bundle: latest
+      pipelineref-by-name: custom-pipeline
+      pipelineref-by-git-resolver:
+        url: https://github.com/custom-pipelines/pipelines.git
+        revision: main
+        pathInRepo: pipeline/push.yaml
+
+    # can have specified just one of:  pipelinespec-from-bundle,
+    # pipelineref-by-name, pipelineref-by-git-resolver
+    pull:
+      pipelinespec-from-bundle:
+        name: docker-build-oci-ta
+        bundle: latest
+      pipelineref-by-name: custom-pipeline
+      pipelineref-by-git-resolver:
+        url: https://github.com/custom-pipelines/pipelines.git
+        revision: main
+        pathInRepo: pipeline/pull.yaml
+
+  source: Required field
+    # git repo url
+    url: https://github.com/user/repo # prevent modify webhook Required field
+
+    # used for all branches unless explicitly specified per version
+    # optional, default: Dockerfile
+    dockerfileUri: Dockerfile used only for explicit onboarding
+
+    # list of all versions
+    versions: # Required field (but can have also nothing inside in that case it is just empty shell of component, and we have nothing to do)
+      # context (default: "") used only for explicit onboarding
+      # dockerfileUri (default: Dockerfile) used only for explicit onboarding
+      # skip-builds (default: false)
+      # build-nudges-ref optional
+      # pipeline optional, unless 'default-pipeline' not specified, BUT only if explicit onboarding is required used only for explicit onboarding
+
+      - name: Version 1.0 # user defined name for a version
+        revision: ver-1.0 # mandatory (we won't support anymore default branch), protected by webhook
+
+      - name: Test # user defined name for a version
+        revision: test # mandatory (we won't support anymore default branch), protected by webhook
+        context: ./test used only for explicit onboarding
+        dockerfileUri: test.Dockerfile used only for explicit onboarding
+        # when true it will disable builds for a revision
+        # react on change and update Repository CR and than update it in per version status
+        skip-builds: true
+        # nudging refs, both component and branch are mandatory
+        build-nudges-ref: # react on change and add to status in nudged component
+          - component: component1 # mandatory
+            version: test_some # mandatory
+          - component: component2 # mandatory
+            version: test_some2 # mandatory
+
+      - name: Different pipeline # user defined name for a version
+        revision: different_branch # mandatory (we won't support anymore default branch), protected by webhook
+        # different pipeline used for the version than specified in default-build-pipeline
+        build-pipeline: used only for explicit onboarding
+          pull-and-push: # just example, can be also just pull & push
+            pipelinespec-from-bundle: # just example, can be one of pipelinespec-from-bundle, pipelineref-by-name, pipelineref-by-git-resolver
+              name: pipeline_name_in_bundle_image
+              bundle: specific_bundle_image
+
+# status will be updated by build service after onboarding,
+# or in some cases also if something changes in the spec, like:
+# skip-builds, build-nudged-by (but that spec change might be also in different component)
+status:
+  # general error message, not specific to any version (those are in versions)
+  message: Spec.ContainerImage is not set / GitHub App is not installed
+  # name of Repository CR for the component
+  pac-repository: repository-cr-name
+  containerImage: quay.io/org/tenant/component # updated only during onboarding explicit/implicit, if containerImage is modified after onboarding, just do nothing, not even add anything in status.message like we do now
+
+  # all versions which were processed by onboarding (implicit/explicit)
+  # also if version is removed from the spec, offboarding will remove it from the status
+  versions:
+    - name: Version 1.0
+      # onboarding status will be either succeeded or failed (disable won't be there because we will just remove specific version section)
+      onboarding-status: succeeded
+      configuration-merge-url: https://github.com/user/repo/pull/1 # only present if onboarding was successful
+      onboarding-time: 29 May 2024 15:11:16 UTC # only present if onboarding was successful
+      revision: ver-1.0
+      skip-builds: false # updated when skip-builds changes in the spec for the version
+      build-nudged-by: # set when other version/component specifies this version in build-nudges-ref
+        - component: component3
+          version: test_some3
+        - component: component4
+          version: test_some4
+
+    - name: Test
+      onboarding-status: succeeded
+      configuration-merge-url: https://github.com/user/repo/pull/1 # only present if onboarding was successful
+      onboarding-time: 29 May 2024 15:11:16 UTC # only present if onboarding was successful
+      revision: test
+      skip-builds: true # updated when skip-builds changes in the spec for the version
+      build-nudges-ref: # updated when build-nudges-ref changes in the spec for the version
+        - component: component1 # mandatory
+          version: test_some # mandatory
+        - component: component2 # mandatory
+          version: test_some2 # mandatory
+
+    - name: Different pipeline
+      # error occurred during provisioning
+      onboarding-status: failed
+      revision: different_branch
+      # version specific error message
+      message: pipeline for Different pipeline branch doesn't exist
+      skip-builds: false # updated when skip-builds changes in the spec for the version
+
+```
+
 ## Consequences
 
 * Improved Reusability: Component branches can be easily reused across multiple
