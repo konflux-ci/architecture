@@ -1,4 +1,4 @@
-# NN. Revised Component Model
+# 55. Revised Component Model
 
 ## Status
 
@@ -233,6 +233,344 @@ status:
       skip-builds: false # updated when skip-builds changes in the spec for the version
 
 ```
+
+### Component CR Spec Field Reference
+
+* **apiVersion** (string)
+  * Type: string
+  * Value: `appstudio.redhat.com/v1alpha1`
+
+* **kind** (string)
+  * Type: string
+  * Value: `Component`
+
+* **metadata.name** (string)
+  * Type: string
+  * Required field
+
+* **metadata.namespace** (string)
+  * Type: string
+  * Required field
+
+* **spec** (object)
+  * Type: object
+  * Required field
+
+* **spec.actions** (object)
+  * Type: object
+  * Specific actions will be processed and then removed
+
+* **spec.actions.trigger-push-build** (string)
+  * Type: string
+  * Specify name of component version to restart the push build for
+  * Can be specified at same time as trigger-push-builds, but eliminate duplicates
+
+* **spec.actions.trigger-push-builds** (array)
+  * Type: array of strings
+  * Specify names of component versions to restart the push build for
+  * Can be specified at same time as trigger-push-build, but eliminate duplicates
+
+* **spec.actions.create-pipeline-configuration-pr** (object)
+  * Type: object
+  * Only for build pipeline configuration PR explicit creation, otherwise if version exists in .spec.source.versions and status doesn't have it, do onboarding without PR
+  * When create-pipeline-configuration-pr is specified, at least one of 'all-versions', 'version', 'versions' has to be specified
+  * 'all-versions' has precedence
+  * When both 'version' and 'versions' are specified, use 'all-versions' from them but eliminate duplicates
+
+* **spec.actions.create-pipeline-configuration-pr.all-versions** (boolean)
+  * Type: boolean
+  * When specified it will do onboarding for all versions and also create PRs
+
+* **spec.actions.create-pipeline-configuration-pr.version** (string)
+  * Type: string
+  * Will do onboarding only for specific version and also create PR
+  * all-versions has precedence if 'version' or 'versions' specified
+
+* **spec.actions.create-pipeline-configuration-pr.versions** (array)
+  * Type: array of strings
+  * Will do onboarding only for specific versions and also create PRs
+  * all-versions has precedence if 'version' or 'versions' specified
+
+* **spec.skip-offboarding-pr** (boolean)
+  * Type: boolean
+  * When offboarding is performed, cleaning PR will be created based on this
+  * Optional, default: false
+
+* **spec.containerImage** (string)
+  * Type: string
+  * Either will be set by IR, or explicitly specified with custom repo, without tag
+
+* **spec.default-build-pipeline** (object)
+  * Type: object
+  * Pipeline used for all versions, unless explicitly specified in 'source' for specific version
+  * Optional. If missing here, it has to be specified in all versions, BUT only if explicit onboarding is required, otherwise neither has to be specified
+  * Pipelines should allow also custom pipelines based on (by name & git resolver) https://issues.redhat.com/browse/KONFLUX-10117
+  * Can have specified ONLY either pull-and-push, or both push & pull
+  * Used only for explicit onboarding
+
+* **spec.default-build-pipeline.pull-and-push** (object)
+  * Type: object
+  * Can have specified just one of: pipelinespec-from-bundle, pipelineref-by-name, pipelineref-by-git-resolver
+
+* **spec.default-build-pipeline.pull-and-push.pipelinespec-from-bundle** (object)
+  * Type: object
+  * Will be used to fetch bundle and fill out PipelineSpec in pipeline runs
+  * Name the pipeline is based on build-pipeline-config CM in build-service NS
+  * When 'latest' bundle is specified, bundle image will be used from CM
+  * When bundle is specified to specific image bundle, then that one will be used and pipeline name will be used to fetch pipeline from that bundle
+  * This is the same how specified pipeline works now
+  * build-service does validation if wrong name or bundle is specified
+
+* **spec.default-build-pipeline.pull-and-push.pipelinespec-from-bundle.name** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.pull-and-push.pipelinespec-from-bundle.bundle** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.pull-and-push.pipelineref-by-name** (string)
+  * Type: string
+  * Will be used to fill out PipelineRef in pipeline runs to user specific pipeline
+  * Such pipeline definition has to be in .tekton
+  * build-service doesn't do any validation about correct pipeline name
+
+* **spec.default-build-pipeline.pull-and-push.pipelineref-by-git-resolver** (object)
+  * Type: object
+  * Will be used to fill out PipelineRef in pipeline runs to user specific pipeline via git resolver, specifying repository with a pipeline definition
+  * build-service doesn't do any validation about correct url, revision, pathInRepo
+
+* **spec.default-build-pipeline.pull-and-push.pipelineref-by-git-resolver.url** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.pull-and-push.pipelineref-by-git-resolver.revision** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.pull-and-push.pipelineref-by-git-resolver.pathInRepo** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.push** (object)
+  * Type: object
+  * Can have specified just one of: pipelinespec-from-bundle, pipelineref-by-name, pipelineref-by-git-resolver
+
+* **spec.default-build-pipeline.push.pipelinespec-from-bundle** (object)
+  * Type: object
+
+* **spec.default-build-pipeline.push.pipelinespec-from-bundle.name** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.push.pipelinespec-from-bundle.bundle** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.push.pipelineref-by-name** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.push.pipelineref-by-git-resolver** (object)
+  * Type: object
+
+* **spec.default-build-pipeline.push.pipelineref-by-git-resolver.url** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.push.pipelineref-by-git-resolver.revision** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.push.pipelineref-by-git-resolver.pathInRepo** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.pull** (object)
+  * Type: object
+  * Can have specified just one of: pipelinespec-from-bundle, pipelineref-by-name, pipelineref-by-git-resolver
+
+* **spec.default-build-pipeline.pull.pipelinespec-from-bundle** (object)
+  * Type: object
+
+* **spec.default-build-pipeline.pull.pipelinespec-from-bundle.name** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.pull.pipelinespec-from-bundle.bundle** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.pull.pipelineref-by-name** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.pull.pipelineref-by-git-resolver** (object)
+  * Type: object
+
+* **spec.default-build-pipeline.pull.pipelineref-by-git-resolver.url** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.pull.pipelineref-by-git-resolver.revision** (string)
+  * Type: string
+
+* **spec.default-build-pipeline.pull.pipelineref-by-git-resolver.pathInRepo** (string)
+  * Type: string
+
+* **spec.source** (object)
+  * Type: object
+  * Required field
+
+* **spec.source.url** (string)
+  * Type: string
+  * Git repo url
+  * Prevent modify webhook
+  * Required field
+
+* **spec.source.dockerfileUri** (string)
+  * Type: string
+  * Used for all branches unless explicitly specified per version
+  * Optional, default: Dockerfile
+  * Used only for explicit onboarding
+
+* **spec.source.versions** (array)
+  * Type: array of objects
+  * List of all versions
+  * Required field (but can have nothing inside, in that case it is just empty shell of component, and we have nothing to do)
+  * Each version can have: context (default: ""), dockerfileUri (default: Dockerfile), skip-builds (default: false), build-nudges-ref (optional), pipeline (optional, unless 'default-build-pipeline' not specified, BUT only if explicit onboarding is required)
+  * Used only for explicit onboarding
+
+* **spec.source.versions[].name** (string)
+  * Type: string
+  * User defined name for a version
+
+* **spec.source.versions[].revision** (string)
+  * Type: string
+  * Mandatory (we won't support anymore default branch)
+  * Protected by webhook
+
+* **spec.source.versions[].context** (string)
+  * Type: string
+  * Default: "" (empty string)
+  * Used only for explicit onboarding
+
+* **spec.source.versions[].dockerfileUri** (string)
+  * Type: string
+  * Default: Dockerfile
+  * Used only for explicit onboarding
+
+* **spec.source.versions[].skip-builds** (boolean)
+  * Type: boolean
+  * When true it will disable builds for a revision
+  * React on change and update Repository CR and then update it in per version status
+
+* **spec.source.versions[].build-nudges-ref** (array)
+  * Type: array of objects
+  * Nudging refs, both component and version are mandatory
+  * React on change and add to status in nudged component
+
+* **spec.source.versions[].build-nudges-ref[].component** (string)
+  * Type: string
+  * Mandatory
+
+* **spec.source.versions[].build-nudges-ref[].version** (string)
+  * Type: string
+  * Mandatory
+
+* **spec.source.versions[].build-pipeline** (object)
+  * Type: object
+  * Different pipeline used for the version than specified in default-build-pipeline
+  * Used only for explicit onboarding
+
+* **spec.source.versions[].build-pipeline.pull-and-push** (object)
+  * Type: object
+  * Can have specified just one of: pipelinespec-from-bundle, pipelineref-by-name, pipelineref-by-git-resolver
+
+* **spec.source.versions[].build-pipeline.pull-and-push.pipelinespec-from-bundle** (object)
+  * Type: object
+
+* **spec.source.versions[].build-pipeline.pull-and-push.pipelinespec-from-bundle.name** (string)
+  * Type: string
+
+* **spec.source.versions[].build-pipeline.pull-and-push.pipelinespec-from-bundle.bundle** (string)
+  * Type: string
+
+* **spec.source.versions[].build-pipeline.pull-and-push.pipelineref-by-name** (string)
+  * Type: string
+
+* **spec.source.versions[].build-pipeline.pull-and-push.pipelineref-by-git-resolver** (object)
+  * Type: object
+
+* **spec.source.versions[].build-pipeline.pull-and-push.pipelineref-by-git-resolver.url** (string)
+  * Type: string
+
+* **spec.source.versions[].build-pipeline.pull-and-push.pipelineref-by-git-resolver.revision** (string)
+  * Type: string
+
+* **spec.source.versions[].build-pipeline.pull-and-push.pipelineref-by-git-resolver.pathInRepo** (string)
+  * Type: string
+
+* **spec.source.versions[].build-pipeline.push** (object)
+  * Type: object
+
+* **spec.source.versions[].build-pipeline.pull** (object)
+  * Type: object
+
+* **status** (object)
+  * Type: object
+  * Status will be updated by build-service after onboarding, or in some cases also if something changes in the spec, like: skip-builds, build-nudged-by (but that spec change might be also in different component)
+
+* **status.message** (string)
+  * Type: string
+  * General error message, not specific to any version (those are in versions)
+
+* **status.pac-repository** (string)
+  * Type: string
+  * Name of Repository CR for the component
+
+* **status.containerImage** (string)
+  * Type: string
+  * Updated only during onboarding explicit/implicit
+  * If containerImage is modified after onboarding, just do nothing, not even add anything in status.message like we do now
+
+* **status.versions** (array)
+  * Type: array of objects
+  * All versions which were processed by onboarding (implicit/explicit)
+  * If version is removed from the spec, offboarding will remove it from the status
+
+* **status.versions[].name** (string)
+  * Type: string
+
+* **status.versions[].onboarding-status** (string)
+  * Type: string
+  * Onboarding status will be either succeeded or failed (disable won't be there because we will just remove specific version section)
+
+* **status.versions[].configuration-merge-url** (string)
+  * Type: string
+  * Only present if onboarding was successful
+
+* **status.versions[].onboarding-time** (string)
+  * Type: string
+  * Only present if onboarding was successful
+
+* **status.versions[].revision** (string)
+  * Type: string
+
+* **status.versions[].skip-builds** (boolean)
+  * Type: boolean
+  * Updated when skip-builds changes in the spec for the version
+
+* **status.versions[].build-nudged-by** (array)
+  * Type: array of objects
+  * Set when other version/component specifies this version in build-nudges-ref
+
+* **status.versions[].build-nudged-by[].component** (string)
+  * Type: string
+
+* **status.versions[].build-nudged-by[].version** (string)
+  * Type: string
+
+* **status.versions[].build-nudges-ref** (array)
+  * Type: array of objects
+  * Updated when build-nudges-ref changes in the spec for the version
+
+* **status.versions[].build-nudges-ref[].component** (string)
+  * Type: string
+  * Mandatory
+
+* **status.versions[].build-nudges-ref[].version** (string)
+  * Type: string
+  * Mandatory
+
+* **status.versions[].message** (string)
+  * Type: string
+  * Version specific error message
 
 ## Consequences
 
