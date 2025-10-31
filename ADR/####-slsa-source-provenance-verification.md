@@ -57,7 +57,8 @@ We will verify SLSA source provenance through a **chained attestation** approach
 4. **Verification in Conforma**:
    - Conforma policies can verify source provenance by checking for the presence of the attestation chain
    - Conforma trusts Tekton Chains' signatures (existing trust root)
-   - Conforma reads the public key from the test attestation's task parameters and verifies it matches the expected signer identity for the source repository
+   - Conforma verifies trust in the source verification task itself using the Trusted Tasks mechanisms described in [ADR 53](0053-trusted-task-model.md)
+   - Conforma reads the public key from the provenance attestation of the verification task (which includes the task parameters) and verifies it matches the expected signer identity for the source repository
    - Through the chain, Conforma gains transitive trust in the source VSA's signature verification (performed by the task) without needing to re-verify the signature itself
    - This bootstraps trust in source provenance through our existing build-provenance infrastructure
 
@@ -96,8 +97,7 @@ This approach provides several advantages:
 
   **Mitigation**: The movable test pattern from ADR 48 significantly helps with this issue. Because source verification runs as an independent integration test scenario rather than an embedded build task, it can be easily re-run once the source VSA is available. This is much easier than if the verification were embedded in the build pipeline, which would require a complete rebuild.
 
-- **Additional task required**: New verification task must be implemented and maintained (poc in [konflux-ci/build-definitions#2867](https://github.com/konflux-ci/build-definitions/pull/2867))
-- **OCI storage overhead**: Source VSAs are duplicated (git notes + OCI registry)
+- **Additional task required**: New verification task must be implemented and maintained in [konflux-ci/build-definitions](https://github.com/konflux-ci/build-definitions) (poc in [#2867](https://github.com/konflux-ci/build-definitions/pull/2867)); may be relocated to a different repository in the future
 - **Complexity in Conforma**: Policies must understand attestation chains rather than direct attestations
 - **External dependencies**: Requires source repository owners to set up VSA generation automation
 
@@ -122,7 +122,7 @@ This approach provides several advantages:
    - How to store VSAs as git notes
    - What source verification levels mean
 
-4. **ITS Provisioning**: Update Konflux onboarding mechanisms to provision a source verification ITS automatically
+4. **ITS Provisioning**: Konflux deployments that want to adopt source provenance verification across their instance can update their onboarding mechanisms to provision a source verification ITS automatically
 
 ### Future Considerations
 
