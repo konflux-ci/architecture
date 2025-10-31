@@ -1,10 +1,10 @@
-# ####. SLSA Source Provenance Verification
+# 55. SLSA Source Provenance Verification
 
 Date: 2025-10-09
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
