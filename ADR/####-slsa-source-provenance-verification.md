@@ -55,7 +55,7 @@ We will verify SLSA source provenance through a **chained attestation** approach
    - This creates an attestation chain: `Build Provenance → Source VSA → Source Commit`
 
 4. **Verification in Conforma**:
-   - Conforma policies can verify source provenance by checking for the presence of the attestation chain (supporting both tag-based and referrers-based attestation storage)
+   - Conforma policies can verify source provenance by checking for the presence of the attestation chain (using the referrers-based attestation storage)
    - Conforma trusts Tekton Chains' signatures (existing trust root)
    - Conforma verifies trust in the source verification task itself using the Trusted Tasks mechanisms described in [ADR 53](0053-trusted-task-model.md)
    - Conforma reads the public key from the provenance attestation of the verification task (which includes the task parameters) and verifies it matches the expected signer identity for the source repository
