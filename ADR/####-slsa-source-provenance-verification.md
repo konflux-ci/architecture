@@ -126,5 +126,6 @@ This approach provides several advantages:
 
 ### Future Considerations
 
+- **Expected Signer Identities**: We may need to think more deeply about how to efficiently configure the expected signer identities at scale.
 - **Standard VSA format**: As SLSA source track specifications stabilize, we may need to update VSA formats
 - **Multiple source systems**: Different source control systems (GitHub, GitLab, Gitea) may need special support.
