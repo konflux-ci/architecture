@@ -5,6 +5,12 @@ eleventyNavigation:
   parent: Core Services
   order: 6
 toc: true
+local_summary:
+  scope: "Policy enforcement, attestation validation, release gating"
+  key_crds: "EnterpriseContractPolicy"
+  depends_on: "tekton-chains (attestations), release-service (gating)"
+  related_adrs: "ADR-0036 (trusted artifacts), ADR-0044 (SPDX support), ADR-0049 (VSA support)"
+  key_concepts: "Rego policies, Conftest, signature verification, attestation checks, ec-cli, policy sources"
 ---
 
 Enterprise Contract

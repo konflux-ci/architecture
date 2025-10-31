@@ -5,6 +5,12 @@ eleventyNavigation:
   parent: Add-ons
   order: 1
 toc: true
+local_summary:
+  scope: "Image repository setup, robot account management, secret linking to ServiceAccounts"
+  key_crds: "ImageRepository"
+  depends_on: "quay.io (external registry)"
+  related_adrs: "ADR-0004 (out-of-box image repository)"
+  key_concepts: "Push/pull robot accounts, component-specific repositories, visibility management, credential rotation"
 ---
 
 # Image Controller

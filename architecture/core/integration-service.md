@@ -5,6 +5,12 @@ eleventyNavigation:
   parent: Core Services
   order: 3
 toc: true
+local_summary:
+  scope: "Test orchestration, snapshot creation/validation, promotion logic"
+  key_crds: "Snapshot, IntegrationTestScenario, Release"
+  depends_on: "pipeline-service, hybrid-application-service, release-service, enterprise-contract"
+  related_adrs: "ADR-0016 (promotion - superseded), ADR-0037 (GCL promotion), ADR-0038 (composite snapshot removal), ADR-0048 (build-time tests)"
+  key_concepts: "Global Candidate List (GCL), snapshot immutability, component vs composite testing, auto-release"
 ---
 
 # Integration Service
@@ -194,7 +200,7 @@ The `test.appstudio.openshift.io/kind` annotation is an optional annotation that
 
 ### Image extraction details
 
-Integration service is getting specific information about the image that's being built by the RHTAP build pipeline by parsing the expected Tekton results for the pipeline. All of them are required to be present in order to correctly construct a Snapshot.
+Integration service is getting specific information about the image that's being built by the Konflux build pipeline by parsing the expected Tekton results for the pipeline. All of them are required to be present in order to correctly construct a Snapshot.
 
 <ins>Results are following:</ins>
  - IMAGE_URL
