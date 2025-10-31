@@ -133,14 +133,14 @@ Originally drafted in a [google document](https://docs.google.com/document/d/1Kc
 [hac]: ../architecture/core/konflux-ui.md
 [hac-dev]: https://github.com/openshift/hac-dev
 [has]: ../architecture/application-service.md
-[build-service]: ../architecture/build-service.md
-[integration-service]: ../architecture/integration-service.md
+[build-service]: ../architecture/core/build-service.md
+[integration-service]: ../architecture/core/integration-service.md
 [customized pipelines]: https://issues.redhat.com/browse/HACBS-9
 [KCP]: ../ref/kcp.md
 [APIBinding]: ../ref/kcp.md#apibinding
-[Component]: ../ref/application-environment-api.md#component
-[ApplicationSnapshot]: ../ref/application-environment-api.md#applicationsnapshot
-[ApplicationSnapshots]: ref/application-environment-api.md#applicationsnapshot
-[ReleasePlan]: ../ref/release-service.md#releaseplan
-[ReleasePlans]: ../ref/release-service.md#releaseplan
-[IntegrationTestScenario]: ../ref/integration-service.md#integrationtestscenario
+[Component]: https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-component
+[ApplicationSnapshot]: https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-snapshot
+[ApplicationSnapshots]: https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-snapshot
+[ReleasePlan]: https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-releaseplan
+[ReleasePlans]: https://konflux-ci.dev/docs/reference/kube-apis/release-service/#k8s-api-github-com-konflux-ci-release-service-api-v1alpha1-releaseplan
+[IntegrationTestScenario]: https://konflux-ci.dev/docs/reference/kube-apis/integration-service/#k8s-api-github-com-konflux-ci-integration-service-api-v1alpha1-integrationtestscenario
