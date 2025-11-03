@@ -67,18 +67,15 @@ Legend:
 
 Tasks in Konflux build pipelines use Trusted Artifacts to securely share files between tasks (see [ADR-0036](../../ADR/0036-trusted-artifacts.md)). This allows users to include custom Tekton Tasks in build pipelines without jeopardizing build integrity. Trusted Artifacts wrap files into archives stored in OCI registries, with checksums recorded as task results to ensure artifacts are not tampered with between tasks.
 
-#### Partner and Custom Tasks
+#### Task Results Naming Conventions
 
-Konflux supports partner-contributed and custom Tekton Tasks in build/test pipelines (see [ADR-0021](../../ADR/0021-partner-tasks.md)). Tasks are validated through CI checks before being accepted into the [build-definitions repository](https://github.com/konflux-ci/build-definitions). Task results follow standardized naming conventions (see [ADR-0030](../../ADR/0030-tekton-results-naming-convention.md)) including `TEST_OUTPUT` for test-like tasks and `SCAN_OUTPUT` for scan-like tasks.
+Task results follow standardized naming conventions (see [ADR-0030](../../ADR/0030-tekton-results-naming-convention.md)) including `TEST_OUTPUT` for test-like tasks and `SCAN_OUTPUT` for scan-like tasks.
 
-#### appstudio-pipeline Service Account
+#### Pipeline Service Accounts
 
-The service should offer users a service account for running pipelines (see [ADR-0025](../../ADR/0025-appstudio-pipeline-serviceaccount.md)).
-However, the automatic generation of a 'pipeline' service account within namespaces has been disabled in the component because it was found that the permissions granted to that account were overly broad.
+Build Service creates component-specific service accounts named `build-pipeline-<component-name>` for running build pipelines (see [Build Service documentation](./build-service.md#component-reconciliation)). This per-component approach provides better isolation and follows the principle of least privilege.
 
-The Pipeline Service component creates the `appstudio-pipelines-scc` ClusterRole, but does not bind this role to any service account.
-
-The [CodeReadyToolchain](https://github.com/codeready-toolchain) platform (CRT) creates the `appstudio-pipelines-runner` ClusterRole on each tenant/member cluster. It also creates the `appstudio-pipeline` ServiceAccount on every tenant namespace as well as the role bindings for the `appstudio-pipeline` service account within the namespace.
+**Historical Note**: Previously, a shared `appstudio-pipeline` service account was used across all components in a namespace (see [ADR-0025](../../ADR/0025-appstudio-pipeline-serviceaccount.md)). The Pipeline Service component created the `appstudio-pipelines-scc` ClusterRole, and the CodeReadyToolchain platform created the `appstudio-pipelines-runner` ClusterRole and `appstudio-pipeline` ServiceAccount on tenant namespaces. This shared service account approach has been replaced by the current per-component model.
 
 ### Tekton Chains
 
