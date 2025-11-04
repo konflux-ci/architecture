@@ -23,7 +23,7 @@ We will implement a hierarchical feature flag system for controlling pipeline ca
 
 ### Configuration Levels
 
-1. **Pipeline Level**: An `ENABLE_CACHE_PROXY` parameter that can be set in individual pipeline definitions
+1. **Pipeline Level**: An `enable-cache-proxy` parameter that can be set in individual pipeline definitions
 2. **Namespace Level**: An `enable-cache-proxy` value in the `konflux-config` config map in the pipeline's namespace
 3. **Cluster Level**: An `enable-cache-proxy` value in the `cluster-config` config map in the `konflux-info` namespace
 
@@ -35,16 +35,21 @@ Configuration takes effect based on the following precedence (highest to lowest)
 2. Namespace-level configuration (`konflux-config` in pipeline's namespace)
 3. Pipeline-level configuration (`ENABLE_CACHE_PROXY` parameter)
 
+The motivation for this seemingly unintuitive precedence order is to allow for
+overriding the per-pipeline configuration from the namespace or cluster level.
+This serves as a quick "emergency escape hatch" in case of proxy-based failure
+scenarios. See the "Configuration Logic" section below for details.
+
 ### Implementation Details
 
 * **Pipeline Integration**: The `ENABLE_CACHE_PROXY` parameter will be passed to the pipeline init task
 * **Configuration Resolution**: The init task will read configuration values from the appropriate config maps and resolve the final proxy settings
 * **Environment Variables**: The init task will emit `HTTP_PROXY` and `NO_PROXY` configuration values to be used by the buildah task
-* **Default Values**: If no configuration is found, the system will fall back to default values:
-  * `HTTP_PROXY`: `squid.caching.svc.cluster.local:3128`
-  * `NO_PROXY`: *<TBD>*
+* **Default Values**: If no configuration is found, the system will fall back emitting empty values, effectively switching the proxy off.
 * **Configuration Values**: Each level supports `true`, `false`, `""` (empty), `"defer"`, or unset values
-* **Proxy Activation**: The proxy will be enabled if any of the configuration levels is set to `true`, following the precedence order above
+* **Proxy Activation**: The proxy will be enabled if any of the configuration levels is set to `true`, following the precedence order above. The emitted values will be:
+  * `HTTP_PROXY`: `squid.caching.svc.cluster.local:3128`
+  * `NO_PROXY`: *&lt;TBD&gt;*
 
 ### Configuration Logic
 
@@ -53,6 +58,15 @@ The proxy will be enabled if any of these conditions are met (in order of preced
 * Cluster flag is `true`
 * Cluster flag is unset/empty/deferred AND namespace flag is `true`
 * Cluster flag is unset/empty/deferred AND namespace flag is unset/empty/deferred AND pipeline parameter is `true`
+
+What this means in practice is that setting the flag to `false` switches the
+proxy off regardless of the configuration in the lower precedence levels, while
+leaving an unset or empty value (Or explicitly deferring) lets the lower levels
+decide.
+
+The default behavior is a consequence of having the value be unset in all
+levels. That results in the proxy being "off".
+
 
 ## Consequences
 
