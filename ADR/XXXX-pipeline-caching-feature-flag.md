@@ -33,7 +33,7 @@ Configuration takes effect based on the following precedence (highest to lowest)
 
 1. Cluster-level configuration (`cluster-config` in `konflux-info` namespace)
 2. Namespace-level configuration (`konflux-config` in pipeline's namespace)
-3. Pipeline-level configuration (`ENABLE_CACHE_PROXY` parameter)
+3. Pipeline-level configuration (`enable-cache-proxy` parameter)
 
 The motivation for this seemingly unintuitive precedence order is to allow for
 overriding the per-pipeline configuration from the namespace or cluster level.
@@ -42,14 +42,15 @@ scenarios. See the "Configuration Logic" section below for details.
 
 ### Implementation Details
 
-* **Pipeline Integration**: The `ENABLE_CACHE_PROXY` parameter will be passed to the pipeline init task
+* **Pipeline Integration**: The `enable-cache-proxy` parameter will be passed to the pipeline init task
 * **Configuration Resolution**: The init task will read configuration values from the appropriate config maps and resolve the final proxy settings
 * **Environment Variables**: The init task will emit `HTTP_PROXY` and `NO_PROXY` configuration values to be used by the buildah task
 * **Default Values**: If no configuration is found, the system will fall back emitting empty values, effectively switching the proxy off.
 * **Configuration Values**: Each level supports `true`, `false`, `""` (empty), `"defer"`, or unset values
-* **Proxy Activation**: The proxy will be enabled if any of the configuration levels is set to `true`, following the precedence order above. The emitted values will be:
+* **Proxy Activation**: The proxy will be enabled if any of the configuration levels is set to `true`, following the precedence order above. The emitted values for `HTTP_PROXY` and `NO_PROXY` will be read from the `cluster-config` config map, from the `http-proxy` and `no-proxy` keys respectively. If the keys are missing from the config map, the following default values would be had-coded in the init task:
   * `HTTP_PROXY`: `squid.caching.svc.cluster.local:3128`
   * `NO_PROXY`: *&lt;TBD&gt;*
+* **Logging**: The pipeline init task will log the proxy configuration applied to the pipeline run and the reasoning for it being in effect.
 
 ### Configuration Logic
 
@@ -67,11 +68,11 @@ decide.
 The default behavior is a consequence of having the value be unset in all
 levels. That results in the proxy being "off".
 
-
 ## Consequences
 
 * **Improved User Experience**: Users can control proxy usage through simple boolean flags without needing to understand proxy technical details like ports or addresses
 * **Flexible Control**: Three levels of configuration provide appropriate control for different user roles (pipeline authors, namespace administrators, cluster administrators)
+* **User retains ultimate control**: To be effective, the setting here rely on the pipeline being configured in a certain way, namely, on the output values of the "init" task being fed back to the "buildah" task parameters. If they want to, the users may sever this relationship and use a completely different configuration.
 * **GitOps Integration**: Configuration can be managed through GitOps processes using config maps, consistent with other Konflux configuration elements
 * **Implementation Complexity**: The init task becomes more complex as it needs to resolve configuration from multiple sources and apply precedence rules
 * **Configuration Management**: Cluster and namespace administrators need to understand the precedence rules to effectively manage proxy usage
