@@ -5,10 +5,10 @@ eleventyNavigation:
   parent: Core Services
   order: 3
 toc: true
-local_summary:
+overview:
   scope: "Test orchestration, snapshot creation/validation, promotion logic"
   key_crds: "Snapshot, IntegrationTestScenario, Release"
-  depends_on: "pipeline-service, hybrid-application-service, release-service, enterprise-contract"
+  related_services: "pipeline-service, hybrid-application-service, release-service, enterprise-contract"
   related_adrs: "ADR-0016 (promotion - superseded), ADR-0037 (GCL promotion), ADR-0038 (composite snapshot removal), ADR-0048 (build-time tests)"
   key_concepts: "Global Candidate List (GCL), snapshot immutability, component vs composite testing, auto-release"
 ---

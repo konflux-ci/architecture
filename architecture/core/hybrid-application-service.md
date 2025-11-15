@@ -5,10 +5,10 @@ eleventyNavigation:
   parent: Core Services
   order: 1
 toc: true
-local_summary:
+overview:
   scope: "Validation webhooks for Application and Component CRs"
   key_crds: "Application, Component"
-  depends_on: "None (foundational)"
+  related_services: "None (foundational)"
   related_adrs: "ADR-0029 (component dependencies - nudging relationships)"
   key_concepts: "Defaulting webhook (OwnerReference), validation (names/sources), BuildNudgesRef management"
 ---

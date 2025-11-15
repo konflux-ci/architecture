@@ -27,7 +27,7 @@
 ### Loading Process
 
 1. Map feature → 1-2 services (don't read yet)
-2. Read service frontmatter only (start with the first 15 lines) and look at the local_summary to determine if information is relevant
+2. Read service frontmatter only (start with the first 15 lines) and look at the overview to determine if information is relevant
 3. Grep for keywords in service file
 4. Read matched sections only (not entire file)
 5. Search `/ADR/quick-reference.md` for relevant ADRs

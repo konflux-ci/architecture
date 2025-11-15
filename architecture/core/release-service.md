@@ -5,10 +5,10 @@ eleventyNavigation:
   parent: Core Services
   order: 4
 toc: true
-local_summary:
+overview:
   scope: "Release orchestration, privileged pipelines, cross-namespace releases"
   key_crds: "Release, ReleasePlan, ReleasePlanAdmission, ReleaseStrategy"
-  depends_on: "pipeline-service, integration-service, enterprise-contract"
+  related_services: "pipeline-service, integration-service, enterprise-contract"
   related_adrs: "ADR-0024 (release attribution), ADR-0032 (decoupling deployment), ADR-0049 (VSA support)"
   key_concepts: "Development vs Managed workspaces, tenant vs managed pipelines, auto-release flag, enterprise contract gating"
 ---

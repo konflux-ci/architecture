@@ -5,10 +5,10 @@ eleventyNavigation:
   parent: Add-ons
   order: 3
 toc: true
-local_summary:
+overview:
   scope: "Remote cluster polling for executing internal jobs across network boundaries"
   key_crds: "InternalRequest, InternalServicesConfig"
-  depends_on: "pipeline-service (PipelineRuns)"
+  related_services: "pipeline-service (PipelineRuns)"
   related_adrs: "ADR-0003 (interacting with internal services)"
   key_concepts: "Public/remote vs private/internal clusters, polling mechanism, allowlist namespaces, pipeline execution in private network"
 ---

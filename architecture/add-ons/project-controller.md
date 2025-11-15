@@ -5,10 +5,10 @@ eleventyNavigation:
   parent: Add-ons
   order: 3
 toc: true
-local_summary:
+overview:
   scope: "Project and development stream management via templating system"
   key_crds: "Project, ProjectDevelopmentStream, ProjectDevelopmentStreamTemplate"
-  depends_on: "hybrid-application-service (Application/Component CRDs)"
+  related_services: "hybrid-application-service (Application/Component CRDs)"
   related_adrs: "ADR-0034 (project controller for multiversion)"
   key_concepts: "Project lifecycle, development streams, templating, resource provisioning"
 ---

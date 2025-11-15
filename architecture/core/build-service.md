@@ -5,10 +5,10 @@ eleventyNavigation:
   parent: Core Services
   order: 2
 toc: true
-local_summary:
+overview:
   scope: "Build pipelines, Tekton PipelineRun definitions, Component builds"
   key_crds: "Component, Repository (PaC)"
-  depends_on: "pipeline-service, image-controller"
+  related_services: "pipeline-service, image-controller"
   related_adrs: "ADR-0047 (build caching), ADR-0029 (component dependencies), ADR-0046 (task runner image)"
   key_concepts: "Pipelines as Code (PaC), build provisioning, component nudging/renovate"
 ---
