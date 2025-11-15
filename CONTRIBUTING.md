@@ -66,11 +66,11 @@ When adding new ADRs, update these files to keep Claude agent context optimized:
    - Follow template: `/ADR/0000-adr-template.md`
    - Include: Status, Context, Decision, Consequences
 
-2. **Update `/ADR/INDEX.md`**
+2. **Update `/ADR/quick-reference.md`** (can be done by maintainers after merge)
    - Add entry with:
      - ADR number and title
      - Status (Proposed, Implementable, Implemented, Superseded, etc.)
-     - One-sentence context summary (first sentence from Context section)
+     - Summary extracted from Decision section (not Context)
      - 2-4 topic keywords
    - Maintain numerical order
 
