@@ -6,7 +6,7 @@ Audit the architecture documentation for consistency:
    - Report any files missing from CLAUDE.md or listed but don't exist
 
 2. Check service frontmatter:
-   - For each service .md file, verify it has a `overview:` frontmatter section
+   - For each service .md file, verify it has an `overview:` frontmatter section
    - Verify each overview section has: scope, key_crds, related_services, related_adrs, key_concepts
    - Report any services missing this section or required fields
 

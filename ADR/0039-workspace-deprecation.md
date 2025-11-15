@@ -101,3 +101,13 @@ writing code for extending the Workspace abstraction.
 fit in the the cloud native apps ecosystem.
 
 5. Konflux doesn't have a dependency on [kubesaw].
+
+### Impact on Pipeline Service and Sprayproxy
+
+The move to a single-cluster design has significant implications for Pipeline Service architecture:
+
+**Sprayproxy Deprecation**: [ADR-0031 Sprayproxy](0031-sprayproxy.html) described a service that fanned out webhook requests from a single GitHub Application webhook URL to multiple member clusters. Sprayproxy was only relevant in a multi-cluster design where member clusters were organized behind a single host cluster, and webhook requests needed to be forwarded to the cluster where the target namespace "might be". With the single-cluster commitment, Sprayproxy is no longer needed.
+
+**GitHub Application Configuration**: Organizations operating multiple Konflux clusters should now register a separate GitHub Application for each cluster, rather than using Sprayproxy to fan out requests from a single application. Each cluster's Pipelines as Code controller receives webhooks directly from its dedicated GitHub Application.
+
+**Pipeline Service Simplification**: The Pipeline Service architecture has simplified to focus on single-cluster deployments. Multi-cluster webhook routing complexity has been eliminated in favor of independent cluster deployments with their own GitHub Application integrations.

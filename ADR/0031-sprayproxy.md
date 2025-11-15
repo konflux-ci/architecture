@@ -4,7 +4,9 @@ Created: 2023-10-24
 
 ## Status
 
-Accepted
+Replaced
+
+Superseded by [ADR-0039 Workspace Deprecation](0039-workspace-deprecation.html), which commits Konflux to a single-cluster design. Sprayproxy is no longer needed as organizations now register a separate GitHub Application for each Konflux cluster instead of using a fan-out proxy.
 
 ## Context
 
