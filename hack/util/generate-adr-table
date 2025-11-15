@@ -20,7 +20,7 @@ title: Architecture Decision Records
 eleventyNavigation:
   key: Architecture Decision Records
   order: 3
-  url: /architecture/ADR/
+  url: /ADR/
 toc: true
 ---
 
@@ -35,6 +35,7 @@ echo "| --- | --- | --- | --- |"
 for adr in ADR/*.md; do
 	[[ "$adr" == "ADR/index.md" ]] && continue
 	[[ "$adr" == "ADR/0000-adr-template.md" ]] && continue
+	[[ "$adr" == "ADR/quick-reference.md" ]] && continue
 	title=$(head -1 "${adr}");
 	status=$(hack/util/get-adr-status "${adr}")
 	emoji=$(get_status_emoji "$status")
