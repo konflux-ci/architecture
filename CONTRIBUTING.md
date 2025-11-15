@@ -16,11 +16,9 @@ This repository contains architecture documentation, ADRs, and diagrams. All cha
 - Add `skip-adr-check` label
 - Require 1+ approval
 
-## Maintaining CLAUDE.md Structure
+## Adding a New Service
 
-When adding new services or ADRs, update these files to keep Claude agent context optimized:
-
-### Adding a New Service
+When adding new services, update these files to keep Claude agent context optimized:
 
 1. **Create service documentation**
    - Location: `/architecture/core/[service].md` OR `/architecture/add-ons/[service].md`
@@ -42,7 +40,7 @@ When adding new services or ADRs, update these files to keep Claude agent contex
      ---
      ```
 
-2. **Update `/architecture/CLAUDE.md`**
+2. **Update `CLAUDE.md`**
    - Add to `Core Services` or `Add-ons` list
    - Format: `` `filename.md` - Brief description (< 10 words)``
    - Maintain alphabetical order within section
@@ -56,7 +54,12 @@ When adding new services or ADRs, update these files to keep Claude agent contex
 4. **Update main overview** (if architecturally significant)
    - `/architecture/index.md`
 
-### Adding a New ADR
+5. **Update service frontmatter** (see local_summary guidelines below)
+   - Include `local_summary:` frontmatter with scope, key_crds, depends_on, related_adrs, key_concepts
+
+## Adding a New ADR
+
+When adding new ADRs, update these files to keep Claude agent context optimized:
 
 1. **Create ADR file**
    - Location: `/ADR/NNNN-description.md`
@@ -75,7 +78,7 @@ When adding new services or ADRs, update these files to keep Claude agent contex
    - Add to `related_adrs:` field in affected service(s)
    - Format: `"ADR-XXXX (brief context)"`
 
-## local_summary: Frontmatter Guidelines
+## Service Frontmatter Guidelines (local_summary)
 
 Keep frontmatter concise - agents read this frequently:
 
@@ -95,7 +98,6 @@ Keep frontmatter concise - agents read this frequently:
 ├── CONTRIBUTING.md              # This file
 ├── README.md                    # Repository overview
 ├── /architecture/
-│   ├── CLAUDE.md               # Duplicate for subagents in architecture/
 │   ├── index.md                # Main published architecture doc
 │   ├── /core/
 │   │   ├── index.md            # Published core services overview
@@ -104,7 +106,7 @@ Keep frontmatter concise - agents read this frequently:
 │       ├── index.md            # Published add-ons overview
 │       └── [service].md        # Individual add-on docs (with local_summary: frontmatter)
 ├── /ADR/
-│   ├── INDEX.md                # Searchable ADR catalog (agents use this!)
+│   ├── quick-reference.md      # Searchable ADR catalog (agents use this!)
 │   └── NNNN-*.md               # Individual ADRs
 └── /diagrams/                  # SVG diagrams (draw.io format)
 ```

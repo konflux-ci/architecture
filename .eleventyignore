@@ -6,7 +6,9 @@ Gemfile.lock
 .DS_Store
 .idea/
 
-local/
+# AI assistant workspace for feature analysis and refinement
+local-analysis/
+# AI assistant instructions (not part of published documentation)
 CLAUDE.md
 CONTRIBUTING.md
 README.md

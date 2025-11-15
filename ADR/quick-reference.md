@@ -6,9 +6,11 @@ _NOTE: This file is NOT published_
 
 **Usage:**
 - Search this file for keywords (grep/search)
-- Note the ADR number
-- Read ADR head/tail only (first 30 + last 20 lines)
-- Only read full ADR if critical
+- Note the ADR number and read the summary (extracted from Decision section)
+- Use a subagent to process the full ADR if potentially relevant:
+  - Pass context about what you're investigating
+  - Subagent determines if ADR is relevant
+  - If relevant, subagent returns pertinent sections
 
 ---
 
@@ -16,255 +18,255 @@ _NOTE: This file is NOT published_
 
 ### ADR-0001: Pipeline Service Phase 1
 - **Status**: Replaced (Superseded by ADR-0009)
-- **Summary**: App Studio initially ran on a single cluster and provisioned Tekton controllers.
+- **Summary**: Tekton APIs and services will be provided through a separate Pipeline Service, with App Studio and HACBS as initial customers.
 - **Topics**: tekton, pipeline, kcp, deployment
 
 ### ADR-0002: Feature Flags
 - **Status**: Replaced
-- **Summary**: We know we need some way for processes to recognize that they're working in a HACBS context or in an App Studio context.
+- **Summary**: Use API discovery to control the enablement of individual features in individual workspaces through APIBinding resources.
 - **Topics**: feature-flags, kcp, configuration, workspace
 
 ### ADR-0003: Interacting with Internal Services
 - **Status**: Implemented
-- **Summary**: Many organizations, including Red Hat, possess numerous internal services that help productize their software.
+- **Summary**: Use a controller running in a private cluster to watch and reconcile Request custom resources in workspaces, enabling secure communication with internal services.
 - **Topics**: internal-services, controller, security, integration
 
 ### ADR-0004: Out-of-the-box image repository for StoneSoup users
 - **Status**: Implemented
-- **Summary**: StoneSoup does not have a internal registry where images could be pushed to as an intermediate step before being deployed as a container.
+- **Summary**: Per workspace, setup a new Quay.io org; per component, setup a new repo within that org, using robot account tokens for image push operations.
 - **Topics**: image-repository, quay, registry, component
 
 ### ADR-0006: Log Conventions
 - **Status**: Implemented
-- **Summary**: We need log conventions to make our offering easier to operate and maintain.
+- **Summary**: Controller logs will use structured log messages formatted in JSON with key-value pairs for timestamps, levels, logger names, messages, and actions.
 - **Topics**: logging, observability, monitoring, json
 
 ### ADR-0007: Change Management Process
 - **Status**: Accepted
-- **Summary**: Red Hat's ESS requirement SEC-CHG-REQ-1 (Change Management) states that "All applications/systems/platforms/services must follow Change Management process and procedures, as applicable / appropriate."
+- **Summary**: Incremental code changes fully tested by automated tests will follow normal code review process; infrastructure and software deployments require changes to infra-deployments or App Interface repos.
 - **Topics**: change-management, security, compliance, deployment
 
 ### ADR-0008: Environment Provisioning
 - **Status**: Replaced (Superseded by ADR-0032)
-- **Summary**: In our old KCP architecture, we had a design for provisioning a new deployment target in support of new Environments.
+- **Summary**: Split the Environment CR into two purposes: Environment for recognizing deployment destinations, and new DeploymentTarget/DeploymentTargetClaim APIs for provisioning deployment targets.
 - **Topics**: environment, deployment, provisioning, kcp
 
 ### ADR-0009: Pipeline Service via Operator
 - **Status**: Implemented
-- **Summary**: kcp is no longer being used as a control plane for Konflux.
+- **Summary**: All Tekton APIs will be provided using the stock OpenShift Pipelines operator with candidate nightly releases deployed in a service-first manner.
 - **Topics**: tekton, pipeline, operator, openshift
 
 ### ADR-0010: Namespace Metadata
 - **Status**: Accepted
-- **Summary**: We need metadata on our namespaces to make Konflux easier to operate and maintain.
+- **Summary**: Apply standardized labels for namespace types, billing/telemetry, and operators; plus annotations to enable OVN network logging for outgoing traffic.
 - **Topics**: namespace, metadata, labels, annotations
 
 ### ADR-0011: Roles and Permissions for Konflux
 - **Status**: Accepted (Related to ADR-0050)
-- **Summary**: Konflux is using Kubernetes as the control plane for managing its resources.
+- **Summary**: Use the built-in Kubernetes RBAC system mapping four roles (Viewer, Contributor, Maintainer, Admin) to specific permissions on Konflux resources.
 - **Topics**: rbac, roles, permissions, security
 
 ### ADR-0012: Namespace Name Format
 - **Status**: Accepted
-- **Summary**: The OSD-based control plane provisions one namespace in the target member cluster for every workspace (internally represented by a Space CR) which is created for a Konflux user.
+- **Summary**: Every namespace for a top-level workspace will use format `<workspace-name>-tenant`; environment sub-workspace namespaces will use format `<sub-workspace-name>-env`.
 - **Topics**: namespace, naming, workspace, format
 
 ### ADR-0013: Konflux Test Stream - API contracts
 - **Status**: Deprecated (Deprecated by ADR-0030)
-- **Summary**: The Konflux project being developed aims to serve Red Hat teams but also partners and customers.
+- **Summary**: Tekton task output will be provided in two forms: minimized Tekton Task Results in JSON format (HACBS_TEST_OUTPUT and CLAIR_SCAN_RESULT) and Full Test Output JSON.
 - **Topics**: testing, api, contracts, tekton
 
 ### ADR-0014: Let Pipelines Proceed
 - **Status**: Accepted (Related to ADR-0013, ADR-0030, ADR-0032)
-- **Summary**: The user's build pipeline includes scanning and linting tasks that operate on the source code and the built image (SAST, antivirus, clair, etc..).
+- **Summary**: All scanning and linting TaskRuns should succeed even if they find problems, using the TEST_OUTPUT result convention to expose results and render them for users.
 - **Topics**: pipeline, testing, scanning, enterprise-contract
 
 ### ADR-0015: The Two-phase Architecture of the Integration Service
 - **Status**: Superseded (Superseded by ADR-0036)
-- **Summary**: The Integration Service is in charge of running integration test pipelines by executing the Tekton pipeline for each user-defined IntegrationTestScenario.
+- **Summary**: Integration service will leverage a two-phase approach (Component phase and optional Composite phase) to protect against race conditions when testing component builds.
 - **Topics**: integration, testing, snapshot, race-condition
 
 ### ADR-0016: Promotion logic in the Integration Service
 - **Status**: Superseded (Superseded by ADR-0032, ADR-0036)
-- **Summary**: Before the merge of HACBS & AppStudio, the Konflux build-service created the ApplicationSnapshot and promoted the content to the user's lowest environment as soon as the build was completed and once the environment was built.
+- **Summary**: Consolidate promotion logic for both HACBS and AppStudio into integration-service, updating GCL with component images upon successful test completion and ensuring Releases are associated with passing Snapshots.
 - **Topics**: integration, promotion, deployment, snapshot
 
 ### ADR-0017: Use our own pipelines
 - **Status**: Accepted (Related to ADR-0007, ADR-0027)
-- **Summary**: The maintainers of Konflux components need to demonstrate evidence of practices that support a secure software development lifecycle (for example scanning, manifesting, vulnerability detection, etc.)
+- **Summary**: Use our own pipelines to build and scan Konflux components, though not yet via the Konflux UI with configured Application and Components.
 - **Topics**: pipeline, security, sdlc, dogfooding
 
 ### ADR-0018: Continuous Performance Testing (CPT) of Apps in Konflux
 - **Status**: In consideration
-- **Summary**: In general, performance testing is just another form of testing that helps application teams to ensure there are no regressions in their code and that their application behaves as expected.
+- **Summary**: Use single Horreum instance per control plane cluster for performance testing, with pipelines uploading JSON test data to Horreum for analysis and PASS/FAIL determination.
 - **Topics**: performance, testing, horreum, metrics
 
 ### ADR-0019: Customize URLs Sent to GitHub
 - **Status**: Accepted
-- **Summary**: When we run builds and tests on PRs (see STONE-134), developers need to be provided a link to the Konflux UI so they can see the details of their PipelineRuns.
+- **Summary**: Konflux components providing PipelineRun result links to GitHub must provide URLs accessible to registered end users with permission to view the requested PipelineRun resource.
 - **Topics**: github, ui, pipelines-as-code, urls
 
 ### ADR-0020: Source Retention
 - **Status**: Accepted (Related to ADR-0007)
-- **Summary**: Red Hat's SSML requirements "SSML.PS.1.1.1 Securely Store All Forms of Code" requires that "The revision and its change history are preserved indefinitely and cannot be deleted, except when subject to an established and transparent policy for obliteration, such as a legal or policy requirement."
+- **Summary**: Source history of branches used to build Konflux components must not be overwritten or deleted, supported by enabling branch protection rules prohibiting force pushing and branch deletion.
 - **Topics**: security, compliance, source-code, retention
 
 ### ADR-0021: Partner Tasks in Build/Test Pipelines
 - **Status**: Accepted
-- **Summary**: As a Red Hat Partner, I would like to offer our service's capability as a Tekton Task that would be executed in a user's build/test Pipeline on StoneSoup.
+- **Summary**: Setup a new directory in build-definitions for partners to contribute Tasks, with CI validation and optional OCI artifact generation for consumption in Tekton Pipelines.
 - **Topics**: tekton, tasks, partner, integration
 
 ### ADR-0022: Secret Management For User Workloads
 - **Status**: Accepted (Related to ADR-0032)
-- **Summary**: When user workloads are deployed to environments, the system should be able to provide a way to inject values that are specific to the environment.
+- **Summary**: Use RemoteSecret CRD to link SecretData stored in permanent SecretStorage with DeploymentTargets and Kubernetes Secrets, allowing separation of secret upload and delivery to targets.
 - **Topics**: secrets, security, deployment, environment
 
 ### ADR-0023: Git references to furnish Integration Test Scenarios
 - **Status**: Approved
-- **Summary**: Up to now, the Integration service has only supported setting the Tekton bundle (Bundle string `json:"bundle"`) in the IntegrationTestScenario [CR] as a reference for the integration tests, in order to run the Tekton PipelineRuns.
+- **Summary**: Integration service migrates to new IntegrationTestScenario CRD supporting different Tekton resolvers (bundles, cluster, hub, git), allowing users to specify test locations via GitHub URL and Git options.
 - **Topics**: integration, testing, git, tekton-resolvers
 
 ### ADR-0024: Release Objects Attribution Tracking and Propagation
 - **Status**: Accepted
-- **Summary**: It is imperative to know, given a change that has been delivered to a production environment, which individual it can be attributed to, in order to have accountability for that change.
+- **Summary**: Use an admission webhook to capture and track user information from Kubernetes requests, validating against Red Hat's SSO for accountability of changes delivered to production.
 - **Topics**: release, attribution, security, compliance
 
 ### ADR-0025: appstudio-pipeline Service Account
 - **Status**: Accepted
-- **Summary**: A default service account must be provided to allow Konflux components to run pipelines.
+- **Summary**: Konflux will provide a service account named `appstudio-pipeline`, with Pipeline Service owning the ClusterRole and CodeReadyToolchain managing ServiceAccount creation and role grants.
 - **Topics**: serviceaccount, security, rbac, pipeline
 
 ### ADR-0026: Specifying OCP targets for File-based Catalogs
 - **Status**: Accepted
-- **Summary**: One of the supported component types within Konflux are File-based Catalogs (FBC).
+- **Summary**: All FBC components for OCP will be built using OCP-specific parent images containing target version numbers, with org.opencontainers.image.base.name annotation indicating the base image pullspec.
 - **Topics**: fbc, operator, openshift, ocp
 
 ### ADR-0027: Availability Probe Framework
 - **Status**: Accepted
-- **Summary**: As an Konflux developer building functionality for the platform, I want to be able to easily visualize and comprehend the stability and availability of deployed systems in order to inform and influence future work towards improving the overall system reliability.
+- **Summary**: Probes' availability will be provided as Prometheus metrics with labels differentiating probes, computed based on CronJob exit status and aggregated into standardized metrics.
 - **Topics**: availability, monitoring, metrics, cronjob
 
 ### ADR-0027: Container Image Management Practice
 - **Status**: Proposed (Related to ADR-0017)
-- **Summary**: The purpose of this document is to establish container image management practices for Konflux container images that are deployed in the staging and production environments.
+- **Summary**: Component Teams are responsible for onboarding to PaC service for continuous builds and scans, with defined responsibilities for automated scanning, vulnerability patching, and image updates.
 - **Topics**: container-images, security, patching, vulnerability
 
 ### ADR-0028: Handling SnapshotEnvironmentBinding Errors
 - **Status**: Superseded (Superseded by ADR-0032)
-- **Summary**: It is currently not possible to determine whether a SnapshotEnvironmentBinding (SEB) is stuck in an unrecoverable state.
+- **Summary**: Integration service has reconciler that cleans up errored SnapshotEnvironmentBindings with ErrorOccured condition true and LastUpdateTime over five minutes old as unrecoverable.
 - **Topics**: integration, deployment, error-handling, binding
 
 ### ADR-0029: Component Dependencies
 - **Status**: Accepted
-- **Summary**: As an Konflux user, I want to be able to build and test multiple coupled components which depend on each other by digest reference.
+- **Summary**: Introduce `build-nudges-ref` field on Component to declare dependencies forming a DAG, with integration-service handling nudging components specially and build-service proposing updates to nudged repositories.
 - **Topics**: component, dependencies, build, integration
 
 ### ADR-0030: Tekton Results Naming Convention
 - **Status**: Accepted (Related to ADR-0013, ADR-0014)
-- **Summary**: In order to Let Pipelines Proceed, the default interface of a Tekton Task's status code becomes an unsuitable API contract for communicating the successes and failures of tasks.
+- **Summary**: Pipeline tasks must succeed even when finding problems; two result format standards defined for test-like and scan-like tasks with unique result names and formats.
 - **Topics**: tekton, testing, results, api-contracts
 
 ### ADR-0031: Sprayproxy
 - **Status**: Accepted (Superseded by ADR-0039)
-- **Summary**: Konflux has multiple member (backend) clusters.
+- **Summary**: Service validates incoming GitHub webhook requests using shared secret and payload size limits, then forwards validated requests to all backend clusters with exported metrics.
 - **Topics**: proxy, pipelines-as-code, webhook, multi-cluster
 
 ### ADR-0032: Decoupling Deployment
 - **Status**: Accepted (Related to ADR-0014, ADR-0022, Supersedes ADR-0008, ADR-0016, ADR-0028)
-- **Summary**: Since the beginning of our project, we've had an emphasis on providing an integrated experience for the user, automating all steps through build, test, deployment, and release to higher environments.
+- **Summary**: Decouple deployment from build/test/release by deprecating Environment/SnapshotEnvironmentBinding/GitOpsDeploymentManagedEnvironment, stopping gitops-service deployment, and promoting renovatebot/dependabot for propagating releases to self-managed gitops repos.
 - **Topics**: deployment, gitops, decoupling, architecture
 
 ### ADR-0033: Enable Native OpenTelemetry Tracing
 - **Status**: Accepted
-- **Summary**: Konflux is a tool under active development and, therefore, unforeseen issues may arise.
+- **Summary**: Enable native tracing in Konflux by leveraging pre-existing capabilities, specifically Tekton's OpenTelemetry support, using an OpenTelemetry Collector for collection with flexibility to forward traces to any frontend.
 - **Topics**: tracing, observability, opentelemetry, debugging
 
 ### ADR-0034: Project Controller for Multi-version support
 - **Status**: Proposed
-- **Summary**: Konflux began its way as "App Studio", which was mainly designed to facilitate the development of online managed services.
+- **Summary**: Define two new CRs: Project resources for large projects with multiple development streams, and ProjectDevelopmentStream resources for individual streams linked via Kubernetes owner references.
 - **Topics**: project, versioning, multi-version, application
 
 ### ADR-0035: Continuous Chaos Testing of Apps in AppStudio
 - **Status**: Accepted
-- **Summary**: The chaos engineering strategy enables users to discover potential causes of service degradation.
+- **Summary**: Users can leverage Krkn chaos testing framework within IntegrationTestScenarios, using ephemeral clusters for isolated testing with optional Prometheus metrics gathering.
 - **Topics**: chaos-testing, resilience, testing, krkn
 
 ### ADR-0035: Provisioning Clusters for Integration Tests
 - **Status**: Accepted (Supersedes ADR-0008, parts of ADR-0032)
-- **Summary**: This decision clarifies how integration test environments will be dynamically provisioned.
+- **Summary**: Use CaaS Operator to orchestrate provisioning OpenShift clusters via ClusterTemplateInstances created by Tekton tasks, prioritizing Hypershift templates for cost-effectiveness and faster provisioning.
 - **Topics**: provisioning, testing, hive, hypershift
 
 ### ADR-0036: Trusted Artifacts
 - **Status**: Accepted
-- **Summary**: One of the properties of Konflux is that users should be allowed to include their own Tekton Tasks in a build Pipeline, e.g. to execute unit tests, without jeopardizing the integrity of the build process.
+- **Summary**: Sharing files between Tasks is done via Trusted Artifacts backed by OCI storage.
 - **Topics**: security, trusted-artifacts, tekton, oci
 
 ### ADR-0037: Integration service promotes components to GCL immediately after builds complete
 - **Status**: Accepted (Supersedes ADR-0015, ADR-0016, Superseded by ADR-0038)
-- **Summary**: In the initial implementation of the Integration Service, when a single component image is built, the Integration Service tests the application by creating a Snapshot.
+- **Summary**: Integration service will promote Snapshots to GCL immediately after creation instead of waiting for tests to pass, but still only creates Releases for Snapshots passing all required tests.
 - **Topics**: integration, promotion, gcl, deadlock
 
 ### ADR-0038: Integration service removes composite snapshots and logic around them
 - **Status**: Accepted
-- **Summary**: Composite snapshots main goal was to prevent race condition when teams merged multiple PRs to multiple components of the same application at nearly the same time.
+- **Summary**: Introduction of override snapshots replaces composite snapshots with simpler concept; override snapshots are manually created by users and update GCL for all contained components if tests pass.
 - **Topics**: integration, snapshot, override, simplification
 
 ### ADR-0039: Workspace Deprecation
 - **Status**: Implemented (Supersedes ADR-0031)
-- **Summary**: The purpose of this ADR is to revisit the workspace concept, understand the purpose of it, and offer an alternative implementation based on native Kubernetes APIs and other successful cloud native open source projects.
+- **Summary**: Remove Workspace abstraction and use standard Kubernetes namespaces directly, recommend existing policy engines like Kyverno/Gatekeeper, and expose namespace creation wizard in UI for users with permissions.
 - **Topics**: workspace, namespace, kubernetes, kubesaw
 
 ### ADR-0041: Konflux should send cloud events all system events
 - **Status**: Proposed
-- **Summary**: Konflux had made the architectural decision to not use cloud events.
+- **Summary**: All Konflux components shall generate cloud events for significant events.
 - **Topics**: cloud-events, eventing, integration, extensibility
 
 ### ADR-0044: SPDX SBOM support
 - **Status**: Accepted
-- **Summary**: SPDX SBOM format enables additional features not available in cyclondedx like multiple purl attributes per component.
+- **Summary**: Tekton tasks should implement sbomType attribute to specify expected SBOM format for input/output, allowing tools to be tested with SPDX before entire pipeline transitions.
 - **Topics**: sbom, spdx, security, supply-chain
 
 ### ADR-0046: Build a common Task Runner image
 - **Status**: Implementable
-- **Summary**: Tekton Tasks often depend on specific CLI tools.
+- **Summary**: Build and maintain a common Task Runner image including all commonly needed tools, built/released via Konflux with documented tool versions and proper semver versioning.
 - **Topics**: tekton, container-images, tooling, tasks
 
 ### ADR-0047: Caching for container base images used during builds
 - **Status**: Implementable
-- **Summary**: Konflux builds container images using tools like Buildah.
+- **Summary**: Implement caching layer for container base images using Squid HTTP proxies deployed via Helm chart into dedicated proxy namespace with well-known service endpoint.
 - **Topics**: caching, performance, squid, proxy
 
 ### ADR-0048: Attestable Build-Time Tests in Integration Service
 - **Status**: Proposed
-- **Summary**: Some of the security scans run during the build pipeline take a long time to run.
+- **Summary**: Add support for attestations from integration pipelines, with test pipelines generating task-specific attestations using referrer's API and Chains tracking them via *_ARTIFACT_OUTPUTS results.
 - **Topics**: testing, attestation, integration, security
 
 ### ADR-0049: Verification Summary Attestations for Release Policies
 - **Status**: Proposed
-- **Summary**: We are facing several challenges with our current approach to Conforma verification and software development lifecycle (SDL) checks.
+- **Summary**: Adopt SLSA Verification Summary Attestations (VSAs) for recording SDL policy check results as input to release pipeline Conforma checks, distributed as signed OCI artifacts.
 - **Topics**: attestation, vsa, slsa, conforma
 
 ### ADR-0050: Exclude Kubernetes Events API from User RBAC Roles
 - **Status**: Implemented (Related to ADR-0011)
-- **Summary**: Konflux users require RBAC permissions to interact with various Kubernetes resources through our defined roles (Viewer, Contributor, Maintainer, Admin).
+- **Summary**: Exclude the Kubernetes events API from all Konflux user RBAC roles.
 - **Topics**: rbac, security, kubernetes-events, permissions
 
 ### ADR-0051: KITE Architecture and Components
 - **Status**: Implementable
-- **Summary**: The KITE is a proof-of-concept designed to detect, create, and track issues that block application releases in Konflux.
+- **Summary**: Implement KITE as distributed system with Bridge Operator pattern monitoring Kubernetes resources (PipelineRuns), detecting state changes, and reporting failures to backend service for persistence.
 - **Topics**: kite, issues-dashboard, monitoring, automation
 
 ### ADR-0052: GitOps Onboarding Redesign
 - **Status**: Accepted
-- **Summary**: Currently, Konflux offers two distinct onboarding paths that create friction and complexity for developers.
+- **Summary**: Redesign onboarding to converge UI and GitOps into single Git-centric flow, deprecating UI-based tenant resource configuration in favor of Kubernetes or GitOps configuration.
 - **Topics**: gitops, onboarding, argocd, ui
 
 ### ADR-0053: Trusted Tasks model after build-definitions decentralization
 - **Status**: Accepted (Related to ADR-0021)
-- **Summary**: Conforma has the concept of Trusted Tasks which Konflux policies rely on extensively when verifying the compliance of artifacts built through Konflux Pipelines.
+- **Summary**: Adopt rule-based model for Trusted Tasks, giving policy authors ability to allow/deny sets of Tasks based on criteria via trusted_task_rules alongside existing trusted_tasks data.
 - **Topics**: trusted-tasks, security, conforma, tekton
 
 ### ADR-0054: Start versioning Tekton Tasks responsibly
 - **Status**: Accepted (Related to ADR-0053)
-- **Summary**: The upstream Tasks that Konflux releases today typically do not follow a sensible versioning scheme, leading to opaque updates for users.
+- **Summary**: Mark each meaningful change with version update following Semantic Versioning for Tasks 1.0+, recording version via org.opencontainers.image.version annotation and tagging released bundles.
 - **Topics**: versioning, tekton, tasks, semver

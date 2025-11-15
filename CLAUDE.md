@@ -30,8 +30,11 @@
 2. Read service frontmatter only (start with the first 15 lines) and look at the local_summary to determine if information is relevant
 3. Grep for keywords in service file
 4. Read matched sections only (not entire file)
-5. Search `/ADR/INDEX.md` for relevant ADRs
-6. Read ADR first 30 + last 20 lines (not full file)
+5. Search `/ADR/quick-reference.md` for relevant ADRs
+6. Use a subagent to process relevant ADRs:
+   - Pass summary of what you're trying to understand
+   - Subagent reads full ADR and determines relevance
+   - If relevant, subagent returns pertinent sections
 7. Read `/architecture/index.md` only if 3+ services involved
 
 ### Core Architectural Constraints (Always Apply)

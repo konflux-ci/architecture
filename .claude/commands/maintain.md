@@ -1,7 +1,7 @@
 Audit the architecture documentation for consistency:
 
 1. Compare service lists:
-   - Extract services from /architecture/CLAUDE.md (Core Services and Add-ons sections)
+   - Extract services from CLAUDE.md (Core Services and Add-ons sections)
    - List actual .md files in /architecture/core/ and /architecture/add-ons/
    - Report any files missing from CLAUDE.md or listed but don't exist
 
@@ -10,9 +10,10 @@ Audit the architecture documentation for consistency:
    - Report any services missing this section
 
 3. Verify ADR quick-reference.md coverage:
-   - List all ADR files in /ADR/ (excluding template)
+   - List all ADR files in /ADR/ (excluding template and quick-reference.md itself)
    - Compare to entries in /ADR/quick-reference.md
    - Report any ADRs not in the index
+   - Verify each entry has: Status, Summary, Topics
 
 4. Check ADR references in service frontmatter:
    - Extract ADR numbers mentioned in service `related_adrs:` fields
