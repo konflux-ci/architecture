@@ -270,3 +270,8 @@ _NOTE: This file is NOT published_
 - **Status**: Accepted (Related to ADR-0053)
 - **Summary**: Mark each meaningful change with version update following Semantic Versioning for Tasks 1.0+, recording version via org.opencontainers.image.version annotation and tagging released bundles.
 - **Topics**: versioning, tekton, tasks, semver
+
+### ADR-0055: SLSA Source Provenance Verification
+- **Status**: Accepted
+- **Summary**: Verify SLSA source provenance through a chained attestation approach that leverages the movable test pattern, with verification tasks reading source VSAs from git notes and publishing them to OCI registries for Conforma verification.
+- **Topics**: slsa, source-provenance, attestation, vsa, security

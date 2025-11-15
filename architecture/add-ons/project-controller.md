@@ -8,7 +8,7 @@ toc: true
 overview:
   scope: "Project and development stream management via templating system"
   key_crds: "Project, ProjectDevelopmentStream, ProjectDevelopmentStreamTemplate"
-  related_services: "hybrid-application-service (Application/Component CRDs)"
+  related_services: "hybrid-application-service (Application/Component CRDs), image-controller (ImageRepository CRD)"
   related_adrs: "ADR-0034 (project controller for multiversion)"
   key_concepts: "Project lifecycle, development streams, templating, resource provisioning"
 ---

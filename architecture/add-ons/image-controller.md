@@ -8,7 +8,7 @@ toc: true
 overview:
   scope: "Image repository setup, robot account management, secret linking to ServiceAccounts"
   key_crds: "ImageRepository"
-  related_services: "quay.io (external registry)"
+  related_services: "pipeline-service (PipelineRuns consume secrets), quay.io (external registry)"
   related_adrs: "ADR-0004 (out-of-box image repository)"
   key_concepts: "Push/pull robot accounts, component-specific repositories, visibility management, credential rotation"
 ---
