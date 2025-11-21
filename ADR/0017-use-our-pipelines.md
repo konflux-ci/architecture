@@ -40,6 +40,6 @@ start doing, but haven't made time to do so yet.
   and [Component] APIs.
 * This ADR supports [STONE-434](https://issues.redhat.com/browse/STONE-434).
 
-[integration-service]: ../ref/integration-service.html
-[Application]: ../ref/application-environment-api.html#application
-[Components]: ../ref/application-environment-api.html#component
+[integration-service]: ../architecture/core/integration-service.md
+[Application]: https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-application
+[Components]: https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-component
