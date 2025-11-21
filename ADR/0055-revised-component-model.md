@@ -38,8 +38,8 @@ are:
   component version can be referenced by multiple component groups.
   build-service owns the Component API going forwards and the spec changes
   for branches.
-* **Component Group**: A component group can contain other component groups or
-  component versions, forming a Directed Acyclic Graph (DAG) that represents
+* **Component Group**: A component group can contain component versions
+  forming a Directed Acyclic Graph (DAG) that represents
   the release structure. This allows for greater flexibility and reusability,
   as a component can be used in multiple groups without re-registration.
   integration-service owns the new Group API and the eventual decommissioning
