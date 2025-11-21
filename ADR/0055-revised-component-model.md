@@ -8,8 +8,11 @@ Implementable
 
 ## References
 
+* [Konflux Community Call, 2024-08-27](https://www.youtube.com/watch?v=2-IlGvRw6iQ)
 * [Konflux Community Call, 2025-03-11](https://www.youtube.com/watch?v=IwNFRNjRC_Q)
 * [Konflux Community Call, 2025-03-25](https://www.youtube.com/watch?v=VwzDbUH_vjU)
+* [Konflux Community Call, 2025-10-23](https://www.youtube.com/watch?v=1HgBlG-ykP8)
+* [Konflux Community Call, 2025-11-06](https://www.youtube.com/watch?v=duyCp_JEaZM)
 
 ## Context
 
