@@ -5,6 +5,12 @@ eleventyNavigation:
   parent: Add-ons
   order: 2
 toc: true
+overview:
+  scope: "Dynamic VM provisioning for multi-architecture builds (arm64, ppc64le, s390x)"
+  key_crds: "None (uses ConfigMap configuration + TaskRun contract)"
+  related_services: "pipeline-service (TaskRuns), cloud providers (AWS, IBM Power, IBM Z)"
+  related_adrs: "None specific (implicit in build architecture decisions)"
+  key_concepts: "SSH-based remote builds, OTP service, dynamic/pool/static host allocation, TaskRun secret contract, platform-specific VMs"
 ---
 
 # Multi Platform Controller

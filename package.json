@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Architecture documentation for Konflux",
   "scripts": {
+    "prebuild": "./hack/util/generate-adr-table > ADR/index.md",
     "build": "eleventy",
+    "preserve": "./hack/util/generate-adr-table > ADR/index.md",
     "serve": "eleventy --serve",
     "clean": "rm -rf _site"
   },

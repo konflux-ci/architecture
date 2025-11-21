@@ -5,3 +5,11 @@ Gemfile.lock
 **/.export
 .DS_Store
 .idea/
+
+# AI assistant workspace for feature analysis and refinement
+local-analysis/
+# AI assistant instructions (not part of published documentation)
+CLAUDE.md
+CONTRIBUTING.md
+README.md
+ADR/quick-reference.md
