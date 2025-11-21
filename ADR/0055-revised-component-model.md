@@ -2,7 +2,8 @@
 
 ## Status
 
-Proposed
+Implementable
+
 [//]: # (One of: Proposed, Withdrawn, Deferred, Accepted, Implementable, Implemented, Replaced)
 
 ## References
