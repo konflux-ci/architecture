@@ -10,7 +10,7 @@ Konflux CI orchestrates multi-stage workflows involving Build PipelineRuns for i
 
 Tekton’s built-in identifiers (such as event IDs) are random and cannot be reproduced. CEL templates can extract event metadata but cannot compute stable hashes. PipelineRuns may be short-lived or created in remote clusters, preventing reliable correlation based on their presence in the cluster. Downstream observability systems that consume PipelineRun CloudEvents require a durable, deterministic identifier spanning the full Build -> Integration -> Release lifecycle.
 
-A correlation mechanism is needed that is deterministic across retries and replays, configurable on a per-namespace basis, SCM-agnostic, and capable of expressing both single-event and multi-event fan-in, all without modifying existing CRDs.
+A correlation mechanism is needed that is deterministic across retries and replays, configurable on a per-namespace basis, SCM-agnostic, and capable of expressing both single-event and multi-event fan-in, all without modifying existing CRDs. Because the correlation-id is a deterministic function of a configurable set of SCM fields (e.g. provider, repo, PR number, commit SHA), operators can define what constitutes a ‘unit of work’ (per webhook, per PR+commit, etc.) and use correlation-id as a stable join key in observability systems. This enables per-change or per-delivery latency metrics (e.g. commit -> first successful integration) without PaC needing to know anything about specific downstream controllers.
 
 ## Decision / Proposal
 
