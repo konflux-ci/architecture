@@ -64,5 +64,5 @@ A proof of concept for the **Internal Services Controller** can be found [here](
 ## References
 
 [KCP]: ../ref/kcp.md
-[release-service]: ../architecture/release-service.md
+[release-service]: ../architecture/core/release-service.md
 
