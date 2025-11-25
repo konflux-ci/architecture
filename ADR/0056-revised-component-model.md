@@ -76,6 +76,9 @@ spec:
 
   containerImage: quay.io/org/tenant/component
 
+  repository-settings:
+    comment-strategy: disable_all
+
   default-build-pipeline:
     pull-and-push:
       pipelinespec-from-bundle:
@@ -136,6 +139,8 @@ status:
   message: Spec.ContainerImage is not set / GitHub App is not installed
   pac-repository: repository-cr-name
   containerImage: quay.io/org/tenant/component
+  repository-settings:
+    comment-strategy: disable_all
 
   versions:
     - name: Version 1.0
@@ -235,6 +240,16 @@ status:
   * Type: string
   * Optional field
   * Will be set by controller when ImageRepository for a specific component is created, or is explicitly specified with a custom repository without tag.
+
+* **spec.repository-settings**
+  * Type: object
+  * Optional field
+  * Used for setting additional settings for the Repository CR.
+
+* **spec.repository-settings.comment-strategy**
+  * Type: string
+  * Optional field
+  * When specified, will set value of `comment_strategy` in the Repository CR.
 
 * **spec.default-build-pipeline**
   * Type: object
@@ -618,6 +633,18 @@ status:
   * Optional field
   * Updated only during onboarding.
   * If containerImage is modified after onboarding, just do nothing, not even add anything in status.message like we do now.
+
+* **status.repository-settings**
+  * Type: object
+  * Optional field
+  * Identifies which additional settings are used for the Repository CR.
+  * Updated when repository-settings changes in the spec.
+
+* **status.repository-settings.comment-strategy**
+  * Type: string
+  * Optional field
+  * Identifies value of `comment_strategy` in the Repository CR.
+  * Updated when comment-strategy changes in the spec.
 
 * **status.versions**
   * Type: array of objects
