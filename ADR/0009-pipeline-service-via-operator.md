@@ -9,7 +9,7 @@ Implemented
 
 ## Context
 
-kcp is no longer being used as a control plane for RHTAP. This means that
+kcp is no longer being used as a control plane for Konflux. This means that
 "Pipeline Service" cannot be deployed as an independent service. For our
 initial MVP, all Tekton APIs need to be deployed onto a standard OpenShift
 cluster (specifically OpenShift Dedicated).
@@ -17,7 +17,7 @@ cluster (specifically OpenShift Dedicated).
 ## Decision
 
 All Tekton APIs will be provided using the stock OpenShift Pipelines operator (OSP).
-In the spirit of developing in a "Service First" manner, RHTAP will deploy
+In the spirit of developing in a "Service First" manner, Konflux will deploy
 a candidate "nightly" release of the operator. The service will be defined in
 the [pipeline-service](https://github.com/openshift-pipelines/pipeline-service)
 repository, which is then imported into
@@ -29,8 +29,8 @@ controllers. The `pipeline-metrics-exporter` controller is to be used as a test
 bed to expose new metrics, with the goal of upstreaming those metrics as they
 mature and prove their value.
 
-Configurations that are specific to RHTAP must be made available through
-the OSP CRDs. The following changes are specific to RHTAP:
+Configurations that are specific to Konflux must be made available through
+the OSP CRDs. The following changes are specific to Konflux:
 
 - Disable Tekton Triggers. Pipelines as Code will be the favored mechanism for
   event-based triggering of pipelines for now. This decision can be revisited
@@ -46,7 +46,7 @@ the OSP CRDs. The following changes are specific to RHTAP:
 - Any configuration related to performance.
 
 Furthermore, as the service will be accessed through CodeReadyToolchain (CRT), the
-following changes are also specific to RHTAP:
+following changes are also specific to Konflux:
 - Deploying a proxy (known as `SprayProxy`) on the CRT host cluster that redirects
   incoming PaC requests to the member clusters. More on SprayProxy [here](0031-sprayproxy.md).
 - Providing a plugin to the CRT Proxy so Tekton Results requests are redirected
@@ -54,9 +54,9 @@ following changes are also specific to RHTAP:
 
 ## Consequences
 
-- Tekton Triggers should be disabled in RHTAP using the appropriate operator
+- Tekton Triggers should be disabled in Konflux using the appropriate operator
   configuration.
-- The Tekton Pruner needs to be disabled in RHTAP using the appropriate
+- The Tekton Pruner needs to be disabled in Konflux using the appropriate
   operator configuration. This is done under the assumption that Results will
   be responsible for pruning resources. Eventually the operator should automate
   this setting if `Results` is deployed and configured to prune resources.
