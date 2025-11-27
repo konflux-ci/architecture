@@ -30,7 +30,6 @@ To facilitate disabling use of the proxy throughout the cluster, a `allow-cache-
 
 * **Pipeline Integration**: The `enable-cache-proxy` parameter will be passed to the pipeline init task
 * **Configuration Resolution**: The init task will read configuration values from the `cluster-config` config map in the `konflux-info` namespace and resolve the final proxy settings
-* **Environment Variables**: The init task will emit `HTTP_PROXY` and `NO_PROXY` configuration values to be used by the buildah task
 * **Default Values**: If no configuration is found, the system will fall back emitting empty values, effectively switching the proxy off.
 * **Proxy Activation**: The proxy will be enabled if `enable-cache-proxy` is set to `true` and `allow-cache-proxy` is either set to `true` or unset.
 * **Emitted Values**: The init task will emit `HTTP_PROXY` and `NO_PROXY` configuration values be used by the buildah task, The emitted values for `HTTP_PROXY` and `NO_PROXY` will be read from the `cluster-config` config map, from the `http-proxy` and `no-proxy` keys respectively. If the keys are missing from the config map, the following default values would be had-coded in the init task:
