@@ -11,7 +11,6 @@ Proposed
 Following the implementation of container build layer caching via Squid HTTP proxies as described in [ADR 0047](0047-caching-for-container-build-layers.md), we need to provide users with flexible control over when and how the proxy caching is enabled for their pipelines. Users need the ability to:
 
 * Enable or disable HTTP proxy use for individual pipelines without knowing technical details about the proxy configuration
-* Control proxy usage at the namespace level for all pipelines running in that namespace
 * Control proxy usage at the cluster level for all pipelines in the cluster
 * Apply GitOps processes for this configuration, similar to other Konflux configuration elements
 
@@ -19,12 +18,11 @@ The current design requires users to manually configure `HTTP_PROXY` and `NO_PRO
 
 ## Decision
 
-We will implement a hierarchical feature flag system for controlling pipeline caching proxy usage with the following configuration levels and precedence:
+We will implement a two-level feature flag system for controlling pipeline caching proxy usage with the following configuration levels and precedence:
 
 ### Configuration Levels
 
 1. **Pipeline Level**: An `enable-cache-proxy` parameter that can be set in individual pipeline definitions
-2. **Namespace Level**: An `enable-cache-proxy` value in the `konflux-config` config map in the pipeline's namespace
 3. **Cluster Level**: An `enable-cache-proxy` value in the `cluster-config` config map in the `konflux-info` namespace
 
 ### Precedence Order
@@ -32,7 +30,6 @@ We will implement a hierarchical feature flag system for controlling pipeline ca
 Configuration takes effect based on the following precedence (highest to lowest):
 
 1. Cluster-level configuration (`cluster-config` in `konflux-info` namespace)
-2. Namespace-level configuration (`konflux-config` in pipeline's namespace)
 3. Pipeline-level configuration (`enable-cache-proxy` parameter)
 
 The motivation for this seemingly unintuitive precedence order is to allow for
@@ -49,7 +46,7 @@ scenarios. See the "Configuration Logic" section below for details.
 * **Configuration Values**: Each level supports `true`, `false`, `""` (empty), `"defer"`, or unset values
 * **Proxy Activation**: The proxy will be enabled if any of the configuration levels is set to `true`, following the precedence order above. The emitted values for `HTTP_PROXY` and `NO_PROXY` will be read from the `cluster-config` config map, from the `http-proxy` and `no-proxy` keys respectively. If the keys are missing from the config map, the following default values would be had-coded in the init task:
   * `HTTP_PROXY`: `squid.caching.svc.cluster.local:3128`
-  * `NO_PROXY`: *&lt;TBD&gt;*
+  * `NO_PROXY`: "" (Empty string)
 * **Logging**: The pipeline init task will log the proxy configuration applied to the pipeline run and the reasoning for it being in effect.
 
 ### Configuration Logic
@@ -57,8 +54,7 @@ scenarios. See the "Configuration Logic" section below for details.
 The proxy will be enabled if any of these conditions are met (in order of precedence):
 
 * Cluster flag is `true`
-* Cluster flag is unset/empty/deferred AND namespace flag is `true`
-* Cluster flag is unset/empty/deferred AND namespace flag is unset/empty/deferred AND pipeline parameter is `true`
+* Cluster flag is unset/empty/deferred AND pipeline parameter is `true`
 
 What this means in practice is that setting the flag to `false` switches the
 proxy off regardless of the configuration in the lower precedence levels, while
@@ -67,6 +63,10 @@ decide.
 
 The default behavior is a consequence of having the value be unset in all
 levels. That results in the proxy being "off".
+
+### Rejected ideas
+
+Originally this ADR proposed a per-namespace configuration level to override the pipeline configuration and be overridden by the cluster-level configuration. Following community discussion, this idea was rejected due to concerns of introducing unnecessary complexity.
 
 ## Consequences
 
