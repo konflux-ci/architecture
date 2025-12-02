@@ -5,6 +5,12 @@ eleventyNavigation:
   parent: Core Services
   order: 5
 toc: true
+overview:
+  scope: "Foundational Tekton APIs, Pipelines as Code, Chains (signing), Results (archival)"
+  key_crds: "PipelineRun, TaskRun, Repository (PaC)"
+  related_services: "None (foundational - all services depend on this)"
+  related_adrs: "ADR-0009 (pipeline service via operator), ADR-0001 (pipeline service phase 1 - superseded), ADR-0036 (trusted artifacts)"
+  key_concepts: "OpenShift Pipelines operator, Tekton Chains (signing/attestations), Tekton Results (archival), appstudio-pipeline ServiceAccount"
 ---
 
 # Pipeline Service

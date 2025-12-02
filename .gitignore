@@ -12,3 +12,9 @@ _site/
 .jekyll-cache/
 Gemfile.lock
 ADR/index.md
+
+# AI assistant workspace for feature analysis and refinement
+local-analysis/
+
+# AI tools
+.serena/
