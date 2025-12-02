@@ -1,4 +1,4 @@
-# 27. Availability Probe Framework
+# 40. Availability Probe Framework
 
 * Date 2023-07-06
 
