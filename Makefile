@@ -1,7 +1,7 @@
 # Konflux Architecture Makefile
 # Provides targets for linting, validation, and development tasks
 
-.PHONY: help build serve install lint lint-mermaid lint-adr-status lint-eleventy-headers install-mermaid-cli clean
+.PHONY: help build serve install lint lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers install-mermaid-cli clean
 
 help:
 	@echo "Available targets:"
@@ -12,6 +12,7 @@ help:
 	@echo "  lint              - Run all linting and validation"
 	@echo "  lint-mermaid      - Validate Mermaid diagrams in markdown files"
 	@echo "  lint-adr-status   - Validate ADR statuses in all ADR files"
+	@echo "  lint-adr-numbers  - Check for duplicate ADR numeric identifiers"
 	@echo "  lint-eleventy-headers - Validate Eleventy front matter in markdown files"
 	@echo "  install-mermaid-cli - Install Mermaid CLI tool locally"
 	@echo "  clean             - Clean up generated files"
@@ -30,7 +31,7 @@ serve: install
 	npm run serve
 
 # Main lint target - runs all validation
-lint: lint-mermaid lint-adr-status lint-eleventy-headers
+lint: lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers
 
 # Mermaid diagram validation
 lint-mermaid: install-mermaid-cli
@@ -39,6 +40,10 @@ lint-mermaid: install-mermaid-cli
 # ADR status validation
 lint-adr-status:
 	@./hack/lint-adr-status
+
+# ADR number uniqueness validation
+lint-adr-numbers:
+	@./hack/lint-adr-numbers
 
 # Eleventy front matter validation
 lint-eleventy-headers:

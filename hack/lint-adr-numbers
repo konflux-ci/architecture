@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# lint-adr-numbers - Check for duplicate ADR numeric identifiers
+#
+# This script checks that no two ADR files have the same numeric identifier.
+# ADR files are expected to follow the pattern: NNNN-description.md where
+# NNNN is a four-digit number.
+#
+# Exit codes:
+#   0 - All ADR numbers are unique
+#   1 - Duplicate ADR numbers found
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Function to print error messages
+error() {
+    echo -e "${RED}ERROR:${NC} $1" >&2
+}
+
+# Function to print success messages
+success() {
+    echo -e "${GREEN}SUCCESS:${NC} $1"
+}
+
+# Function to print info messages
+info() {
+    echo -e "${BLUE}INFO:${NC} $1"
+}
+
+# Function to print warning messages
+warning() {
+    echo -e "${YELLOW}WARNING:${NC} $1"
+}
+
+# Find all ADR markdown files (excluding index.md and template)
+adr_files=()
+while IFS= read -r -d '' file; do
+    adr_files+=("$file")
+done < <(find ADR/ -name "*.md" -type f ! -name "index.md" ! -name "0000-adr-template.md" -print0 | sort -z)
+
+if [[ ${#adr_files[@]} -eq 0 ]]; then
+    warning "No ADR markdown files found in ADR/ directory"
+    exit 0
+fi
+
+info "Found ${#adr_files[@]} ADR files to check"
+
+# Extract numeric identifiers and track duplicates
+declare -A number_to_files
+duplicates_found=false
+
+echo "Checking for duplicate ADR numbers..."
+echo "======================================"
+
+for file in "${adr_files[@]}"; do
+    filename=$(basename "$file")
+
+    # Extract the numeric prefix (first 4 digits)
+    if [[ $filename =~ ^([0-9]{4})- ]]; then
+        number="${BASH_REMATCH[1]}"
+
+        # Check if we've seen this number before
+        if [[ -n "${number_to_files[$number]:-}" ]]; then
+            # Duplicate found!
+            if [[ "$duplicates_found" == false ]]; then
+                duplicates_found=true
+            fi
+
+            error "Duplicate ADR number $number found:"
+            echo -e "  ${RED}•${NC} ${number_to_files[$number]}"
+            echo -e "  ${RED}•${NC} $filename"
+            echo ""
+        else
+            # First time seeing this number
+            number_to_files[$number]="$filename"
+        fi
+    else
+        warning "File does not match expected naming pattern (NNNN-description.md): $filename"
+    fi
+done
+
+echo "======================================"
+
+# Summary
+if [[ "$duplicates_found" == true ]]; then
+    error "Duplicate ADR numbers found. Each ADR must have a unique numeric identifier."
+    exit 1
+else
+    success "All ${#adr_files[@]} ADR files have unique numeric identifiers"
+    exit 0
+fi
