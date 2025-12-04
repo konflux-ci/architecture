@@ -10,7 +10,6 @@ Thank you for your interest in contributing to the Konflux Architecture document
 - [Development Setup](#development-setup)
 - [Making Changes](#making-changes)
 - [Pull Request Process](#pull-request-process)
-- [ADR Guidelines](#adr-guidelines)
 - [Style Guidelines](#style-guidelines)
 - [Testing Your Changes](#testing-your-changes)
 
@@ -40,6 +39,8 @@ Examples of significant changes:
 - Changes to core system design
 - Introduction of new components or services
 - Modifications to existing service contracts
+
+For details on the ADR process at [konflux-ci/community/ADRs.md](https://github.com/konflux-ci/community/blob/main/ADRs.md)
 
 ### Corrections and Clarifications
 
@@ -116,21 +117,6 @@ Diagrams are stored in the `/diagrams` folder:
 - Use descriptive filenames
 - Place diagrams in service-specific subdirectories when applicable
 
-### Creating an ADR
-
-For significant changes, create an Architecture Decision Record:
-
-1. Check the ADR template at `/ADR/0000-adr-template.md`
-2. Review the new ADR process at [konflux-ci/community/ADRs.md](https://github.com/konflux-ci/community/blob/main/ADRs.md)
-3. Number your ADR sequentially (check existing ADRs for the next number)
-4. Use the format: `XXXX-brief-description.md`
-5. Include the following sections:
-   - Title and date
-   - Status (Proposed, Accepted, Implemented, Superseded, etc.)
-   - Context
-   - Decision
-   - Consequences
-
 ## Pull Request Process
 
 ### Before Submitting
@@ -169,29 +155,6 @@ The repository uses CODEOWNERS for automatic review assignment:
 - `/ADR/` - Konflux Governance Committee (@konflux-ci/kgc)
 - Service-specific paths have dedicated maintainer teams
 - General changes require review from @konflux-ci/book-publishers
-
-## ADR Guidelines
-
-### ADR Numbering
-
-- Use sequential numbers starting from 0001
-- Check for duplicate numbers using: `make lint-adr-numbers`
-- Do not renumber existing ADRs unless explicitly reorganizing
-
-### ADR Status
-
-Valid ADR statuses include:
-- Proposed
-- Accepted
-- Implemented
-- Superseded
-- Deprecated
-- Rejected
-
-Validate ADR statuses with:
-```bash
-make lint-adr-status
-```
 
 ## Style Guidelines
 
@@ -244,7 +207,6 @@ make build
 - Ask questions in pull request comments
 
 ## Additional Resources
-
 - [ADR Process Documentation](https://github.com/konflux-ci/community/blob/main/ADRs.md)
 - [Eleventy Documentation](https://www.11ty.dev/docs/)
 - [Mermaid Documentation](https://mermaid.js.org/)
