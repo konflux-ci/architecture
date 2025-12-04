@@ -10,6 +10,13 @@ toc: true
 # Pulp Access Controller
 
 # Overview
+
+## What is Pulp?
+
+Pulp is Red Hat's offering for centrally storing artifacts. Initially designed for RPMs, today it's the go-to place for storing any language artifacts, excluding OCI types. For example, if you're producing RPMs during a Konflux job and want to store and redistribute them through native RPM tools (yum/dnf), you would store them in Pulp.
+
+## What does this controller do?
+
 The Pulp Access Controller is a Kubernetes operator that makes working with Red Hat Pulp services less painful. Instead of manually creating secrets and configuring authentication for every team or project, you just create a `PulpAccessRequest` CR and the controller handles the rest.
 
 It's built on [Kopf](https://github.com/nolar/kopf) (a Python framework for Kubernetes operators) and watches for `PulpAccessRequest` resources. When it sees one, it:
