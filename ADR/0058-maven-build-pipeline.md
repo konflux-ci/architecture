@@ -13,7 +13,7 @@ for Java builds. The results are pushed as container images, which cannot be eas
 dependent Java projects.
 
 Apache [Maven](https://maven.apache.org/index.html) is the most widely adopted build tool for Java
-projects, although it is not hold and exclusive position. Java projects with Maven are distributed
+projects, although it is not hold an exclusive position. Java projects with Maven are distributed
 through [Maven Repositories](https://maven.apache.org/repositories/index.html), whose model has
 adopted by other Java build tools like [Gradle](https://gradle.org/).
 
@@ -51,9 +51,9 @@ These can all be addressed through follow-up ADRs.
 
 ## Decision
 
-The build pipeline will execute up to two "deployments":
+Konflux will provide one or more build pipelines for Maven which will execute up to two "deployments":
 
-- The pipeline will first deploy Maven artifacts to a container registry using ORAS.
+- The pipeline will first deploy Maven artifacts to a container registry using [ORAS](https://oras.land).
 - The pipeline will optionally execute a second deployment to a real Maven repository, if one is
   configured.
 
@@ -71,13 +71,13 @@ The core pipeline task, `maven-deploy-oras`, performs the following steps:
 
 3. **deploy-maven (Conditional):** If a real Maven repository is configured, perform a second
    `mvn deploy` to the appropriate remote Maven repository.
-4. **Deploy-ORAS:** Use the ORAS CLI to push the full local staging directory tree to the container
+4. **deploy-oras:** Use the ORAS CLI to push the full local staging directory tree to the container
    registry:
 
    ```
    oras push ${IMG_URL} ./target/stage-deploy \
      --artifact-type application/vnd.apache.maven.repository.v2.tar+gzip \
-     --export-manifest manifest-out.
+     --export-manifest manifest-out.txt
    ```
 
    The artifact type `application/vnd.apache.maven.repository.v2.tar+gzip` communicates that this
@@ -92,13 +92,40 @@ The pipeline will also include the following tasks:
     project has configured its use.
   - [Syft](https://github.com/anchore/syft)
   - Hermeto once Maven is supported as a package manager (design is
-    [under discussion](https://github.com/hermetoproject/hermeto/pull/1046))
+    [under discussion](https://github.com/hermetoproject/hermeto/pull/1046)).
 - `build-source-container`: this will build a source container, using existing tasks in the Konflux
   catalog.
-- `scan-xxxx`: these will be additional scanning tasks, using tools in the Konflux catalog. Tools
-  that do not support scanning of OCI artifacts or a direct local directory will be excluded.
+
+Security scanning tasks will be omitted from the pipeline. These should be executed as part of an
+`IntegrationTestScenario` pipeline in accordance with [ADR-0048](./0048-movable-build-tests.md).
+Scanning tasks should do the following:
+
+1. Pull the Maven "repository" contents in the build pipeline. By default the contents will be
+   extracted to the designated output directory.
+
+   ```sh
+   oras pull ${IMG_URL} -o /konflux/scan-targets
+   ```
+
+2. Run the selected scanning tool against the extracted content. Example below for
+   [Snyk](https://docs.snyk.io/supported-languages/supported-languages-list/java-and-kotlin), which
+   has support for Java:
+
+   ```sh
+   cd /konflux/scan-targets && snyk code test --sartif-file-output=snyk-results-code.sarif
+   ```
 
 ## Consequences
+
+### Required Infrastructure
+
+- Create a new GitHub repository within the `konflux-ci` organization: `java-build-pipelines`. This
+  repository will host validated build pipelines for all Java or JVM-based build systems. In the
+  future, this can host build piplines for additional tools such as [Gradle](https://gradle.org/),
+  [Ivy](https://ant.apache.org/ivy/), [Scala](https://www.scala-lang.org/), and [Kotlin](https://kotlinlang.org/).
+- Onboard build pipelines and tasks to our "dogfooding" Konflux instance, creating the necessary
+  `Application` and `Components` as needed. This process should take advantage of the Image
+  Controller to create `quay.io` repositories within the `konflux-ci` organization.
 
 ### Positive Consequences
 
@@ -120,7 +147,9 @@ The pipeline will also include the following tasks:
 - **SBOM Size:** The combined SBOM for multi-module projects can be enormous and potentially not
   applicable to products at runtime.
 - **Scanning Limitations:** Due to the output not being a runnable container image, not all
-  existing scanning tools (like Clair, Clamav, Coverity) are likely to support it.
+  existing scanning tools (like Clair, Clamav, Coverity) are likely to support it. Scanning tools
+  may not be capable of analyzing Java bytecode, and may need to scan the associated source code of
+  the build instead.
 
 ### Rejected Alternatives
 
