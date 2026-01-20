@@ -114,6 +114,12 @@ Materials (SBOMs), signatures, and security scan reports.
   images SHOULD use the `-src` suffix as part of its published name, and provide necessary metadata
   identifying the contents as source code.
 
+- Component build pipelines MUST use trusted artifacts to transmit large data (volumes) between
+  tasks - see [ADR-0036](./0036-trusted-artifacts.md).
+
+- Component build pipelines MUST document the critical path of tasks that must be executed, which
+  shall be verified by an associated Conforma policy.
+
 - The `Release` object is responsible for documenting all artifacts published by its corresponding
   release pipeline. For each component referenced in the provided `Snapshot`, the release pipeline
   must verify that it is able to publish the contents of OCI image's artifact type.
@@ -139,6 +145,16 @@ Materials (SBOMs), signatures, and security scan reports.
 - Current known build pipelines for container images, RPMs, and Python wheels meet the metadata
   requirements for _Component Build Artifacts_. Future build pipelines for non-contiainer artifacts
   must adhere to these requirements.
+
+- Conforma policies that verify build pipeline execution should be defined alongside the build
+  pipeline definition. This has far reaching consequences for how Conforma policies are defined
+  today:
+  - Konflux policies currently reside in the Conforma GitHub organization. This creates a tight
+    coupling between the two projects, inhibiting wider adoption of Conforma as a tool. There is
+    active discussion to minimize this coupling - see [Conforma Discussion #75](https://github.com/conforma/community/discussions/75).
+  - Inputs to Conforma policies need to be well documented so build pipeline authors have the
+    ability to maintain the corresponding verification policy.
+  - Conforma policies need to be composable and able to be imported from multiple sources.
 
 - Release pipelines for a given component MUST verify that they are capable of releasing provided
   _Component Build Artifacts_ based on their metadata. Most known release pipelines do not do this
