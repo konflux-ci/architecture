@@ -70,9 +70,10 @@ Materials (SBOMs), signatures, and security scan reports.
 - The definition of a `Release` is updated as follows:
 
   ```
-  A "Release" is the process of verifying the software package artifacts within one or more
-  Component Build Artifacts, and upon verification publishing these software package artifacts to a
-  destination package registry.
+  A "Release" is the process of verifying and distributing the software package artifacts within an
+  `Application` or `ComponentGroup`, which in turn are comprised of one or more Components and
+  their related Component Build Artifacts. A successful "Release" publishes all identified software
+  package artifacts for an `Application` or `ComponentGroup` to a destination package registry.
   ```
 
 - All Konflux build pipelines MUST produce an OCI image that _stores_ all content that is intended
