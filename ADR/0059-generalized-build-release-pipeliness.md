@@ -85,7 +85,7 @@ Materials (SBOMs), signatures, and security scan reports.
     (tar+gzip) contents of the RPM package.
 
 - The _Component Build Artifact_ MUST be stored on a container registry that
-  enables the [OCI Distribtuion Referrers API](https://github.com/opencontainers/distribution-spec/blob/v1.1.1/spec.md#listing-referrers).
+  enables the [OCI Distribution Referrers API](https://github.com/opencontainers/distribution-spec/blob/v1.1.1/spec.md#listing-referrers).
 
 - The _Component Build Artifact_ MUST provide sufficient metadata that allows its contents to be
   analyzed and extracted, namely:
@@ -94,6 +94,13 @@ Materials (SBOMs), signatures, and security scan reports.
   - If the _Component Build Artifact_ is an Image Manifest, provide one of the following:
     - A value for `artifactType`, OR
     - A value for `config.mediaType` that is not set to the [empty value](https://github.com/opencontainers/image-spec/blob/main/manifest.md#guidance-for-an-empty-descriptor)
+  - If the `artifactType` value is set, it SHOULD use a recognized OCI MIME type for the artifact's
+    package ecosystem (ex: runnable container images, Helm charts). If no MIME type for OCI exists
+    within the package ecosystem, the build pipeline can set an arbitrary media type value that
+    uses the `vnd.konflux` namespace prefix.
+
+- The build pipeline MUST document the expected `mediaType`, `artifactType`, and/or
+  `config.mediaType` for the _Component Build Artifact_.
 
 - In `Snapshot` objects, the `spec.components[*].containerImage` field stores a reference to a
   build's _Component Build Artifact_. Downstream pipelines (`IntegrationTestScenario`, `Release`)
@@ -126,6 +133,9 @@ Materials (SBOMs), signatures, and security scan reports.
 
 ## Consequences
 
+- Build pipelines will need to document the `mediaType`, `artifactType`, and/or `config.mediaType`
+  for the component build artifact in their catalog `README.md` files.
+
 - `IntegrationTestScenario` pipelines MUST only accept `Snapshot` data as their primary input.
   Additional inputs such as SBOMs, signatures, etc. MUST be obtained through OCI image referrers of
   components referenced in the `Snapshot` data.
@@ -143,7 +153,7 @@ Materials (SBOMs), signatures, and security scan reports.
     package registry and/or package ecosystem tooling.
 
 - Current known build pipelines for container images, RPMs, and Python wheels meet the metadata
-  requirements for _Component Build Artifacts_. Future build pipelines for non-contiainer artifacts
+  requirements for _Component Build Artifacts_. Future build pipelines for non-container artifacts
   must adhere to these requirements.
 
 - Conforma policies that verify build pipeline execution should be defined alongside the build
@@ -243,6 +253,6 @@ status:
 ```
 
 The current `status.artifacts` field is capable of storing this data, albeit without any OpenAPI
-schema validations provided by Kubernetes Custom Resource Defintions. This feature is not a hard
+schema validations provided by Kubernetes Custom Resource Definitions. This feature is not a hard
 requirement to generalize builds and releases on Konflux, however it may be reconsidered through a
 follow-up feature or ADR.
