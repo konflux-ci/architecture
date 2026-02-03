@@ -71,3 +71,5 @@ Chosen option: "give read-access across all the cluster", because it is the opti
 * Good, because it will solve the immediate priority for the project
 * Good, because it will imply in no throw-away work when we switch to the best long-term solution
 * Bad, because it gives the broadest access of information to all users
+* In particular, mintmaker is aware of all namespaces. This gives all users the ability to discover the names of all namespaces, components and source repositories registered on the cluster, including those of sensitive tenant namespaces.
+* Mintmaker has access to secrets in tenant namespaces. Today, it does not log the contents of those secrets. But, if in the future, a bug is introduced that causes it to log them, then the contents of those secrets for every tenant will be exposed to every user. This would necessitate a major token rotation to be coordinated with all users of a cluster.
