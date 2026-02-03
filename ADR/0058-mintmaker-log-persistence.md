@@ -1,7 +1,8 @@
-# MintMaker log persistence
+# 58. MintMaker log persistence
 
 ## Status
-Ongoing discussion
+
+Implementable
 
 ## Context and Problem Statement
 
