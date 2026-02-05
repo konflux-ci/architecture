@@ -41,7 +41,7 @@ However, several problems exist with the current approach:
 
 ## Decision
 
-We will standardize VCS information by requiring it to be present in three places:
+We will standardize VCS information by requiring it to be present in two places:
 
 ### OCI Manifest Annotations
 
@@ -74,21 +74,16 @@ set:
   defined; or
 * `mediaType` `==` `application/vnd.docker.distribution.manifest.v2+json`
 
-### SBOM
+### What about the SBOM?
 
-VCS information must be included in the SBOM generated for each image. Builder Tasks will be
-updated to include:
+Currently, there is no guidance from neither the CycloneDX or SPDX community on how to represent
+VCS information. Furthermore, a comparison to images provided by different vendors (Google's
+Distroless, Docker Images, Docker Hardened Images, and Chainguard) shows that when an SBOM is
+present, VCS information is not included.
 
-* Source repository URL
-* Git commit SHA
-
-Conforma will verify this information is available in the SBOM.
-
-TODO: Provide info on how to represent this info in CycloneDX and SPDX.
-
-**Note**: This ADR opts for the simpler approach of teaching builder Tasks to directly include VCS
-information in the SBOM. A more sophisticated approach (having the `git-clone` Task generate a
-partial SBOM that gets merged by builder Tasks) is deferred to future work.
+Whatever we choose to represent this information in the SBOM is not going to follow an industry
+standard (because there doesn't seem to be one!). For this reason, this ADR defers any
+recommendation towards including VCS information in an SBOM.
 
 ## Consequences
 
@@ -97,15 +92,12 @@ partial SBOM that gets merged by builder Tasks) is deferred to future work.
 * VCS information will be reliably available across all image formats regardless of the builder
   Task used
 * Conforma can enforce that VCS information is present and correct
-* Including VCS info in SBOMs improves its quality
 
 ### Negative
 
 * All builder Tasks must be updated to:
   * Set both annotations (for OCI manifests) and, in some cases, labels
-  * Include VCS information in generated SBOMs
 * New Conforma policies must be implemented to verify:
   * OCI manifest annotations are present
   * Image labels are present
-  * SBOM contains VCS information
 * Users may need to update their build PipelineRuns
