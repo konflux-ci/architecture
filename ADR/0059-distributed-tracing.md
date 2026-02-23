@@ -70,7 +70,7 @@ No new infrastructure is required beyond existing OTLP trace collection.
 
 ### PaC (pipelines-as-code)
 
-PaC must extract trace context from inbound webhook headers via a W3C TraceContext TextMapPropagator and inject the resulting SpanContext as `tekton.dev/traceparent` (plus `tracestate` and `baggage` when present) onto the build PipelineRun. If no existing trace context is found, a new root span is generated.
+PaC must extract trace context from inbound webhook headers via a W3C TraceContext TextMapPropagator and inject the resulting SpanContext as `tekton.dev/traceparent` (plus `tracestate` and `baggage` when present) onto the build PipelineRun. If no existing trace context is present, a new root span is created.
 
 ### Tekton Pipelines
 
