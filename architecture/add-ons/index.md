@@ -37,15 +37,15 @@ Official add-ons are officially supported by the Konflux community and follow st
 
 Official add-ons receive community support, are maintained by the Konflux project, and follow the same quality and security standards as core services.
 
-### Unofficial Add-ons
+### External Add-ons
 
-Unofficial add-ons exist outside the `konflux-ci` GitHub organization and have more flexible requirements:
+External add-ons exist outside the `konflux-ci` GitHub organization and have more flexible requirements:
 
 - **Code Location**: Can exist anywhere.
 - **ADR Process**: Do not require ADR approval (though authors may choose to document their design decisions using their own process)
 - **Build Process**: It is recommended (but not required) to build them with strict policy using Konflux
 
-Unofficial add-ons enable community members to experiment, share solutions, and extend Konflux functionality without going through the formal governance process. While they may not receive official support, they demonstrate the extensibility of the Konflux platform and can serve as inspiration for future official add-ons.
+External add-ons enable community members to experiment, share solutions, and extend Konflux functionality without going through the formal governance process. While they may not receive official support, they demonstrate the extensibility of the Konflux platform and can serve as inspiration for future official add-ons.
 
 ## Application Context
 
