@@ -1,10 +1,10 @@
-# XXXX. Backend Usage Telemetry Collection from Konflux Clusters
+# 59. Backend Usage Telemetry Collection from Konflux Clusters
 
 Date: 2026-01-26
 
 ## Status
 
-Proposed
+Implementable
 
 ## Context
 
