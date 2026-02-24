@@ -13,6 +13,40 @@ Konflux subsystems are divided into two categories: **core** and **add-ons**. Th
 
 This document describes the add-on subsystems and how they integrate with the rest of the Konflux platform.
 
+## Why Add-ons?
+
+The add-ons architecture serves three primary purposes:
+
+1. **Gradual Adoption**: Add-ons allow users to gradually adopt more Konflux features as needed, without requiring them to spend resources and maintenance effort on services they don't need. Organizations can start with the core Konflux services and add capabilities incrementally as their requirements evolve.
+
+2. **Integration with Existing Solutions**: Users may have existing solutions for some of the problems Konflux solves. Add-ons allow users to avoid an "all or nothing" scenario, enabling them to integrate Konflux with their existing tooling and infrastructure. This flexibility reduces migration friction and allows organizations to leverage their current investments while benefiting from Konflux's capabilities.
+
+3. **Community Innovation**: The add-ons model encourages innovation in the community and removes barriers for trying new things. By providing a clear extension point, the architecture enables community members to experiment with new capabilities, contribute solutions, and share innovations without requiring changes to core Konflux services.
+
+## Types of Add-ons
+
+Konflux add-ons are categorized into two types based on their level of official support and governance:
+
+### Official Add-ons
+
+Official add-ons are officially supported by the Konflux community and follow strict governance processes:
+
+- **Code Location**: The codebase must exist in the `konflux-ci` GitHub organization
+- **Build Process**: Must be built using Konflux with strict policy enforcement
+- **Governance**: Must be planned and approved using the [ADR process](https://github.com/konflux-ci/community/blob/main/ADRs.md)
+
+Official add-ons receive community support, are maintained by the Konflux project, and follow the same quality and security standards as core services.
+
+### External Add-ons
+
+External add-ons exist outside the `konflux-ci` GitHub organization and have more flexible requirements:
+
+- **Code Location**: Can exist anywhere.
+- **ADR Process**: Do not require ADR approval (though authors may choose to document their design decisions using their own process)
+- **Build Process**: It is recommended (but not required) to build them with strict policy using Konflux
+
+External add-ons enable community members to experiment, share solutions, and extend Konflux functionality without going through the formal governance process. While they may not receive official support, they demonstrate the extensibility of the Konflux platform and can serve as inspiration for future official add-ons.
+
 ## Application Context
 
 ```mermaid
