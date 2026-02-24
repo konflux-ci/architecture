@@ -8,33 +8,33 @@ Proposed
 
 ## Context
 
-Tekton's OpenTelemetry instrumentation (TEP-0124) emits spans for PipelineRun and TaskRun reconciliation, and propagates SpanContext from parent PipelineRuns to child TaskRuns via the `tekton.dev/pipelinerunSpanContext` annotation. However, **PipelineRun spans are always created as root spans** — the reconciler does not extract a remote parent SpanContext from any incoming context. This means an external system that creates a PipelineRun has no way to include it in an existing distributed trace.
+Tekton's OpenTelemetry instrumentation (TEP-0124) emits spans for PipelineRun and TaskRun reconciliation, and propagates SpanContext from parent PipelineRuns to child TaskRuns via the `tekton.dev/pipelinerunSpanContext` annotation. This annotation accepts a JSON-encoded OTel TextMapCarrier (`{"traceparent":"00-...","tracestate":"..."}`) and parents the PipelineRun's `ReconcileKind` span under the provided SpanContext. Although designed for Tekton-internal parent-child PipelineRun linkage, the annotation accepts a SpanContext from any source — enabling external systems to provide a remote parent by injecting the same JSON carrier format.
 
-The [W3C Trace Context](https://www.w3.org/TR/trace-context/) specification defines the `traceparent` and `tracestate` formats for propagating trace context across service boundaries. Although designed for HTTP headers, these formats have become the de facto standard for distributed trace propagation and are implemented natively by OpenTelemetry. We adopt these same formats for Kubernetes resource annotations, since PipelineRuns are created via manifests rather than HTTP requests and have no header channel. By honoring a `tekton.dev/traceparent` annotation as a remote parent, Tekton can participate in any distributed trace that spans the delivery lifecycle — from SCM webhook receipt through build, snapshotting, integration, and release — enabling consistent trace-based measurement of end-to-end delivery latency (MTTB) across controllers and clusters.
+By injecting a `pipelinerunSpanContext` annotation onto PipelineRuns it creates, a Konflux controller can cause Tekton's execution spans to appear as children in an external distributed trace. This enables end-to-end trace continuity across the delivery lifecycle — from SCM webhook receipt through build, snapshotting, integration, and release — supporting consistent trace-based measurement of delivery latency (MTTB) across controllers and clusters, with no upstream Tekton changes required.
 
 ## Goals
 
-1. Propagate a W3C Trace Context remote SpanContext across Konflux controllers and clusters so that all PipelineRuns in a delivery form a single distributed trace.
+1. Propagate a remote SpanContext across Konflux controllers and clusters so that all PipelineRuns in a delivery form a single distributed trace.
 2. Remain inert when trace context annotations are absent — no behavioral change to existing PipelineRuns.
-3. Preserve TEP-0124 local parent linkage: `tekton.dev/pipelinerunSpanContext` retains precedence when present.
-4. Support reliable timing analysis using resource timestamps (wait vs. execute breakdown).
+3. Support reliable timing analysis using resource timestamps (wait vs. execute breakdown).
 
 ## Decision
 
-### Trace context annotations
+### Trace context carrier
 
-Two annotations on Tekton resources form the TextMapCarrier for W3C context propagation:
+A single annotation on PipelineRuns, Snapshots, and Release CRs carries the propagated trace context:
 
-| Annotation | W3C Spec | Required |
+| Annotation | Format | Description |
 |---|---|---|
-| `tekton.dev/traceparent` | [Trace Context `traceparent`](https://www.w3.org/TR/trace-context/#traceparent-header) | Yes |
-| `tekton.dev/tracestate` | [Trace Context `tracestate`](https://www.w3.org/TR/trace-context/#tracestate-header) | No |
+| `tekton.dev/pipelinerunSpanContext` | JSON-encoded OTel TextMapCarrier | Contains `traceparent` and optionally `tracestate` per [W3C Trace Context](https://www.w3.org/TR/trace-context/) |
 
-Each annotation encodes the same value format as its corresponding HTTP header. A TextMapPropagator configured for these annotations can inject and extract a full remote SpanContext, including vendor-specific tracestate, using standard OpenTelemetry APIs.
+Example value: `{"traceparent":"00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01","tracestate":"vendorname=opaqueValue"}`
+
+This reuses TEP-0124's existing annotation and carrier format. Tekton's PipelineRun reconciler already extracts a SpanContext from this annotation and parents the `ReconcileKind` span under it. Once the execution span is parented correctly, the resulting SpanContext propagates to child TaskRuns via TEP-0124's existing `taskrunSpanContext` mechanism. No Tekton changes are needed.
 
 ### Propagation and continuity
 
-PaC extracts a remote SpanContext from inbound webhook headers using a W3C TraceContext TextMapPropagator (creating a new root when no incoming context is present), then injects the resulting SpanContext as `tekton.dev/traceparent` (plus `tracestate` when present) onto the build PipelineRun it creates.
+PaC extracts a remote SpanContext from inbound webhook headers using a W3C TraceContext TextMapPropagator (creating a new root when no incoming context is present), then injects the resulting SpanContext as a JSON-encoded carrier in `tekton.dev/pipelinerunSpanContext` onto the build PipelineRun it creates.
 
 After a successful build, integration-service persists the trace context onto the Snapshot — the durable carrier for propagated context across temporal and cluster boundaries. For any integration PipelineRuns derived from that Snapshot, integration-service injects the Snapshot's trace context onto each created PipelineRun. When release is initiated, integration-service copies the Snapshot's trace context onto the Release CR; release-service carries it onto release PipelineRuns.
 
@@ -42,15 +42,7 @@ A delivery may produce multiple integration and release PipelineRuns. The propag
 
 ### Heterogeneous snapshots and missing context
 
-Some Snapshots may be heterogeneous (components built from different initiating events) or may lack a usable `traceparent` (missing, invalid, or never seeded). In these cases, integration-service creates a new root span and injects its SpanContext onto the Snapshot for continuity.
-
-### Tekton remote parent extraction
-
-Tekton's TEP-0124 currently creates PipelineRun execution spans as root spans, with no mechanism to accept a remote parent. This gap prevents PipelineRuns from participating in broader distributed traces.
-
-The fix: when the PipelineRun reconciler creates the execution span, it extracts a remote SpanContext from the PipelineRun's `tekton.dev/traceparent` (and `tracestate`) annotations using a TextMapPropagator. If a valid remote SpanContext is present, the execution span is created as a child of that remote parent, following the W3C Trace Context processing model. If `tekton.dev/pipelinerunSpanContext` is also present (indicating an already-established local parent from Tekton-internal linkage), it takes precedence. If neither annotation is present, a new root span is created as today.
-
-Once the execution span is parented correctly, the resulting SpanContext propagates to child TaskRuns via TEP-0124's existing `taskrunSpanContext` mechanism. No downstream changes are needed.
+Some Snapshots may be heterogeneous (components built from different initiating events) or may lack a usable trace context (missing, invalid, or never seeded). In these cases, integration-service creates a new root span and injects its SpanContext onto the Snapshot for continuity.
 
 ### Timing visibility
 
@@ -69,17 +61,13 @@ No new infrastructure is required beyond existing OTLP trace collection.
 
 ### PaC (pipelines-as-code)
 
-PaC must extract trace context from inbound webhook headers via a W3C TraceContext TextMapPropagator and inject the resulting SpanContext as `tekton.dev/traceparent` (plus `tracestate` when present) onto the build PipelineRun. If no existing trace context is present, a new root span is created.
-
-### Tekton Pipelines
-
-Tekton Pipelines must extract `tekton.dev/traceparent` (and `tracestate`) as a remote parent SpanContext when creating PipelineRun execution spans, following W3C Trace Context conventions. `tekton.dev/pipelinerunSpanContext` retains precedence when present. This extends TEP-0124 to support remote parent propagation — the change is inert when the annotation is absent.
+PaC must extract trace context from inbound webhook headers via a W3C TraceContext TextMapPropagator and inject the resulting SpanContext as a JSON-encoded OTel TextMapCarrier in the `tekton.dev/pipelinerunSpanContext` annotation onto the build PipelineRun. If no existing trace context is present, a new root span is created.
 
 ### Integration-service
 
 Integration-service must:
 
-1. Propagate trace context (`traceparent`, `tracestate`) across the Snapshot → PipelineRun → Release CR chain, treating the Snapshot as the durable carrier across temporal and cluster boundaries.
+1. Propagate the `pipelinerunSpanContext` annotation across the Snapshot → PipelineRun → Release CR chain, treating the Snapshot as the durable carrier across temporal and cluster boundaries.
 2. Create a new root span and inject its SpanContext onto the Snapshot when valid context is missing.
 3. Emit `wait_duration` and `execute_duration` timing spans for build and integration PipelineRuns, parented under the propagated SpanContext.
 
@@ -107,6 +95,13 @@ Good, because it provides typed storage and validation potential.
 Bad, because it requires schema changes and coordination cost.
 Bad, because it is more invasive than annotation-based propagation.
 
+### Dedicated `traceparent`/`tracestate` annotations on PipelineRuns
+Good, because it uses standard W3C header formats directly as annotation values.
+Good, because external systems can inject a flat string without constructing JSON.
+Bad, because it duplicates the existing `pipelinerunSpanContext` mechanism with a different carrier format.
+Bad, because it requires an upstream Tekton change to recognize the new annotations.
+Bad, because it introduces a second code path that produces identical behavior to the existing one.
+
 ### Linking of non-triggering build PipelineRuns in Snapshot
 Good, because it allows a stochastic sampling of correlated build PipelineRuns included in a multi-component Snapshot.
 Bad, because limits on span links result in an _arbitrary_ sampling of component build times.
@@ -114,4 +109,4 @@ Bad, because a limited sampling cannot guarantee useful metrics or navigability.
 
 ## Consequences
 
-Adopting W3C Trace Context formats for annotation-based propagation yields end-to-end trace continuity across controllers and clusters, enabling MTTB analysis and reducing manual correlation. It introduces controller responsibility to inject and extract trace context annotations correctly, depends on an upstream extension to Tekton Pipelines (TEP-0124) for remote parent support, and provides a defined path for missing-context Snapshots by allowing integration-service to establish a new root. Because the annotation formats match what OpenTelemetry implements natively, any system that creates PipelineRuns can participate in distributed tracing by injecting standard trace context annotations.
+Reusing TEP-0124's existing `pipelinerunSpanContext` annotation for external trace propagation yields end-to-end trace continuity across controllers and clusters with no upstream Tekton changes required. It introduces controller responsibility to inject and extract the JSON-encoded carrier correctly, and provides a defined path for missing-context Snapshots by allowing integration-service to establish a new root. Because the carrier format uses standard W3C Trace Context values inside a JSON-encoded OTel TextMapCarrier, any system that creates PipelineRuns can participate in distributed tracing by injecting the same annotation.
