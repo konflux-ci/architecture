@@ -81,7 +81,7 @@ Integration-service propagates the trace context across the Snapshot → Pipelin
 
 ### Release-service
 
-Release-service emits timing spans with required attributes for release PipelineRuns. This completes the end-to-end timing visibility from webhook receipt through release completion.
+Release-service propagates trace context from the Release CR onto release PipelineRuns and emits timing spans with required attributes. When a Release CR lacks trace context (e.g., a manually created release), release-service creates a new root span for the release trace. This completes the end-to-end timing visibility from webhook receipt through release completion.
 
 ## Pros and Cons of Alternatives Considered
 
@@ -125,3 +125,5 @@ Bad, because a limited sampling cannot guarantee useful metrics or navigability.
 Reusing TEP-0124's existing annotation for external trace propagation yields end-to-end trace continuity across controllers and clusters with no upstream Tekton changes required. It introduces controller responsibility to propagate trace context correctly, and provides a defined path for missing-context Snapshots by allowing integration-service to establish a new root. Any system that creates PipelineRuns can participate in distributed tracing by injecting the same annotation.
 
 All attributes required for per-namespace MTTB analysis are locally available at each timing span emission point. No OTel Baggage or cross-service attribute propagation is needed for the current attribute set.
+
+Any future controller that creates PipelineRuns should follow the same propagation pattern: inject the trace context annotation onto created PipelineRuns, emit timing spans with the required attributes, and create a new root span when valid trace context is unavailable.
