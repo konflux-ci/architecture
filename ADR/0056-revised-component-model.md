@@ -78,6 +78,9 @@ spec:
 
   repository-settings:
     comment-strategy: disable_all
+    github-app-token-scope-repos:
+      - repo1
+      - repo2
 
   default-build-pipeline:
     pull-and-push:
@@ -138,9 +141,11 @@ spec:
 status:
   message: Spec.ContainerImage is not set / GitHub App is not installed
   pac-repository: repository-cr-name
-  containerImage: quay.io/org/tenant/component
   repository-settings:
     comment-strategy: disable_all
+    github-app-token-scope-repos:
+      - repo1
+      - repo2
 
   versions:
     - name: Version 1.0
@@ -250,6 +255,11 @@ status:
   * Type: string
   * Optional field
   * When specified, will set value of `comment_strategy` in the Repository CR.
+
+* **spec.repository-settings.github-app-token-scope-repos**
+  * Type: array of strings
+  * Optional field
+  * When specified, will set value of `github_app_token_scope_repos` in the Repository CR.
 
 * **spec.default-build-pipeline**
   * Type: object
@@ -628,12 +638,6 @@ status:
   * Optional field
   * Name of Repository CR for the component.
 
-* **status.containerImage**
-  * Type: string
-  * Optional field
-  * Updated only during onboarding.
-  * If containerImage is modified after onboarding, just do nothing, not even add anything in status.message like we do now.
-
 * **status.repository-settings**
   * Type: object
   * Optional field
@@ -645,6 +649,12 @@ status:
   * Optional field
   * Identifies value of `comment_strategy` in the Repository CR.
   * Updated when comment-strategy changes in the spec.
+
+* **status.repository-settings.github-app-token-scope-repos**
+  * Type: array of strings
+  * Optional field
+  * Identifies value of `github_app_token_scope_repos` in the Repository CR.
+  * Updated when github-app-token-scope-repos changes in the spec.
 
 * **status.versions**
   * Type: array of objects
