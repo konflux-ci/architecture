@@ -22,7 +22,7 @@ By injecting this annotation onto PipelineRuns it creates, a Konflux controller 
 
 ### Trace context carrier
 
-The `tekton.dev/pipelinerunSpanContext` annotation on PipelineRuns, Snapshots, and Release CRs carries the propagated trace context, reusing TEP-0124's existing annotation. No Tekton changes are needed.
+The `tekton.dev/pipelinerunSpanContext` annotation on PipelineRuns, Snapshots, and Release CRs carries the propagated trace context, reusing TEP-0124's existing annotation ([W3C Trace Context](https://www.w3.org/TR/trace-context/) values inside a JSON-encoded OTel TextMapCarrier). No Tekton changes are needed.
 
 ### Propagation and continuity
 
@@ -49,7 +49,7 @@ These timing spans are emitted for build, integration, and release PipelineRuns,
 
 ### Span attributes
 
-Every timing span carries attributes sufficient for per-namespace, per-application MTTB analysis:
+Timing spans are emitted once per PipelineRun, when the controller observes completion. Each span carries attributes read directly from the PipelineRun's own metadata, labels, and status — no attributes are propagated across services or carried on the Snapshot. The Snapshot carries only the trace context annotation (trace ID and parent span ID); all span attributes are local to the emitting controller.
 
 | Attribute | Required |
 |---|---|
@@ -59,11 +59,12 @@ Every timing span carries attributes sufficient for per-namespace, per-applicati
 | `konflux.stage` (`build`, `test`, or `release`) | Yes |
 | `konflux.application` | Yes |
 | `konflux.component` | When available |
-| `konflux.pipeline.role` | When available |
 | `konflux.success` | Yes (execute only) |
 | `konflux.reason` | Yes (execute only) |
 
-All attributes are locally available on the PipelineRun object at each emission point — no cross-service propagation (e.g., OTel Baggage) is required.
+No cross-service attribute propagation (e.g., OTel Baggage) is required for the current attribute set.
+
+As the Application/Component model evolves toward ComponentGroup, attributes such as `konflux.application` and `konflux.component` will be updated to reflect the new model.
 
 ## Infrastructure Requirements
 
@@ -86,39 +87,56 @@ Release-service propagates trace context from the Release CR onto release Pipeli
 ## Pros and Cons of Alternatives Considered
 
 ### Separate traces per stage
-Good, because it may be simpler logic.
-Good, because it requires no Tekton changes.
-Bad, because it offers no end-to-end delivery view.
-Bad, because it offers weaker correlation across controllers/clusters.
-Bad, because MTTB is harder to compute from trace data across multiple traces.
+
+- Good, because it may be simpler logic.
+- Good, because it requires no Tekton changes.
+- Bad, because it offers no end-to-end delivery view.
+- Bad, because it offers weaker correlation across controllers/clusters.
+- Bad, because MTTB is harder to compute from trace data across multiple traces.
+
+Not adopted because the primary goal is end-to-end delivery latency measurement, which requires a single trace spanning all stages.
 
 ### Link-only correlation (no remote parentage)
-Good, because it avoids parenting concerns.
-Good, because it works with independent trace roots.
-Bad, because span links do not establish parent-child relationships, so tools cannot render a single trace tree.
-Bad, because end-to-end timing analysis is less direct.
+
+- Good, because it avoids parenting concerns.
+- Good, because it works with independent trace roots.
+- Bad, because span links do not establish parent-child relationships, so tools cannot render a single trace tree.
+- Bad, because end-to-end timing analysis is less direct.
+
+Not adopted because span links do not produce a navigable trace tree, making delivery latency analysis indirect and tool-dependent.
 
 ### Custom CRD fields for trace context
-Good, because it provides typed storage and validation potential.
-Bad, because it requires schema changes and coordination cost.
-Bad, because it is more invasive than annotation-based propagation.
+
+- Good, because it provides typed storage and validation potential.
+- Bad, because it requires schema changes and coordination cost.
+- Bad, because it is more invasive than annotation-based propagation.
+
+Not adopted because annotation-based propagation achieves the same result with no schema changes and reuses an existing Tekton mechanism.
 
 ### Dedicated `traceparent`/`tracestate` annotations on PipelineRuns
-Good, because it uses standard W3C header formats directly as annotation values.
-Good, because external systems can inject a flat string without constructing JSON.
-Bad, because it duplicates the existing `pipelinerunSpanContext` mechanism.
-Bad, because it requires an upstream Tekton change.
-Bad, because it introduces a second code path that produces identical behavior.
+
+- Good, because it uses standard W3C header formats directly as annotation values.
+- Good, because external systems can inject a flat string without constructing JSON.
+- Bad, because it duplicates the existing `pipelinerunSpanContext` mechanism.
+- Bad, because it requires an upstream Tekton change.
+- Bad, because it introduces a second code path that produces identical behavior.
+
+Not adopted because `pipelinerunSpanContext` already exists and works; adding a parallel annotation mechanism provides no functional benefit.
 
 ### OTel Baggage for attribute propagation
-Good, because it propagates contextual attributes through the trace without requiring labels on each resource.
-Bad, because all MTTB-required attributes are already locally available at each emission point.
+
+- Good, because it propagates contextual attributes through the trace without requiring labels on each resource.
+- Bad, because all MTTB-required attributes are already locally available at each emission point.
+
 Not adopted for current requirements. Can be reconsidered if future attributes that are not locally available need cross-service propagation.
 
 ### Linking of non-triggering build PipelineRuns in Snapshot
-Good, because it allows a stochastic sampling of correlated build PipelineRuns included in a multi-component Snapshot.
-Bad, because limits on span links result in an _arbitrary_ sampling of component build times.
-Bad, because a limited sampling cannot guarantee useful metrics or navigability.
+
+- Good, because it allows a stochastic sampling of correlated build PipelineRuns included in a multi-component Snapshot.
+- Bad, because limits on span links result in an _arbitrary_ sampling of component build times.
+- Bad, because a limited sampling cannot guarantee useful metrics or navigability.
+
+Not adopted because span link limits make the sampling arbitrary and unreliable for metrics or navigation.
 
 ## Consequences
 
