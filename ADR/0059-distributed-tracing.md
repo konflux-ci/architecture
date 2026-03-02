@@ -74,11 +74,11 @@ No new infrastructure is required beyond existing OTLP trace collection.
 
 ### PaC (pipelines-as-code)
 
-PaC propagates trace context from inbound webhooks onto build PipelineRuns, creating a new root when no incoming context is present.
+PaC propagates trace context from inbound webhooks onto build PipelineRuns, creating a new root when no incoming context is present. PaC also emits timing spans (`wait_duration`, `execute_duration`) with required attributes for build PipelineRuns, since its watcher already observes PipelineRun completion.
 
 ### Integration-service
 
-Integration-service propagates the trace context across the Snapshot → PipelineRun → Release CR chain, creates a new root when valid context is missing, and emits timing spans with required attributes for build and integration PipelineRuns.
+Integration-service propagates the trace context across the Snapshot → PipelineRun → Release CR chain, creates a new root when valid context is missing, and emits timing spans with required attributes for integration PipelineRuns.
 
 ### Release-service
 
