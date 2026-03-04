@@ -46,7 +46,7 @@ Some Snapshots may be heterogeneous (components built from different initiating 
 
 Timing spans derived from resource lifecycle timestamps are parented under the propagated span context, decomposed into two phases:
 
-- **Pre-execution**: captures all delays from resource creation to execution start, including queue admission and provisioning time.
+- **Pre-execution**: captures all delays from resource creation to execution start.
 - **Execution**: captures active execution from start to completion.
 
 These timing spans are emitted for build, integration, and release PipelineRuns, making end-to-end delivery latency and per-stage breakdown directly visible from trace data.
