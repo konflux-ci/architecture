@@ -28,7 +28,7 @@ Trace context propagation follows two complementary standards:
 
 - **Kubernetes resource ownership**: Controllers propagate trace context using Kubernetes-idiomatic resource metadata, respecting controller ownership boundaries. Controllers that create resources own the trace context they inject; controllers that reconcile resources read trace context observationally without competing for ownership of fields managed by other controllers.
 
-Following extraction from inbound HTTP headers, the same trace context carrier is used uniformly across PipelineRuns, Snapshots, and Release CRs, ensuring a single propagation mechanism throughout the resource-level delivery lifecycle.
+PaC extracts trace context from inbound SCM events and propagates it onto the build PipelineRun ensuring a single propagation mechanism throughout the resource-level delivery lifecycle.
 
 ### Trace context propagation
 
