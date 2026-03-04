@@ -32,9 +32,9 @@ PaC extracts trace context from inbound SCM events and propagates it onto the bu
 
 ### Trace context propagation
 
-PaC extracts trace context from inbound SCM webhook headers and propagates it onto the build PipelineRun it creates, establishing a new root when no incoming context is present. The initiating event's trace context takes precedence — controllers propagate the event-origin context, not any pre-existing context that may be present in a PipelineRun template.
+PaC extracts trace context from inbound SCM webhook headers and propagates it onto the build PipelineRun it creates, establishing a new root when no incoming context is present. The initiating event's trace context takes precedence and controllers propagate the event-origin context, not any pre-existing context that may be present in resource metadata at creation time.
 
-After a successful build, integration-service persists the trace context onto the Snapshot — the durable carrier for propagated context across temporal and cluster boundaries. For any integration PipelineRuns derived from that Snapshot, integration-service injects the Snapshot's trace context onto each created PipelineRun. When release is initiated, integration-service copies the Snapshot's trace context onto the Release CR; release-service carries it onto release PipelineRuns.
+After a successful build, integration-service persists the trace context onto the the Snapshot, which serves as the logical handoff boundary across temporal and cluster transitions. Trace context is propagated forward across this boundary to preserve trace continuity. For any integration PipelineRuns derived from that Snapshot, integration-service injects the Snapshot's trace context onto each created PipelineRun. When release is initiated, integration-service copies the Snapshot's trace context onto the Release CR; release-service carries it onto release PipelineRuns.
 
 A delivery may produce multiple integration and release PipelineRuns. The propagation rule is consistent: any PipelineRun derived from the Snapshot carries the Snapshot's trace context.
 
@@ -51,11 +51,11 @@ Timing spans derived from resource lifecycle timestamps are parented under the p
 
 These timing spans are emitted for build, integration, and release PipelineRuns, making end-to-end delivery latency and per-stage breakdown directly visible from trace data.
 
-Pre-execution timing captures all delays as a single measurement. Finer-grained breakdown (e.g., queue vs. provisioning) is available through native scheduling metrics where applicable. Timing spans are emitted once per PipelineRun at completion and are not affected by reconciliation-driven span accumulation.
+Pre-execution timing captures delays as a single measurement. Finer-grained breakdown (e.g., queue vs. provisioning) is available through native scheduling metrics where applicable.
 
 ### Span attributes
 
-Timing spans carry attributes sufficient for per-namespace delivery latency analysis, read directly from the PipelineRun's own metadata and status at the point of emission. No attributes are propagated across services. The Snapshot carries only trace context; all span attributes are local to the emitting controller. The attribute set covers:
+All attributes required for per-namespace delivery latency analysis are locally available at each timing span emission point. The attribute set covers:
 
 - **Resource identity**: namespace, PipelineRun name and UID
 - **Workload identity**: application and, when available, component
