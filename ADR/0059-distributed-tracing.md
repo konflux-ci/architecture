@@ -74,7 +74,7 @@ No new infrastructure is required beyond existing OTLP trace collection.
 
 ### PaC (pipelines-as-code)
 
-PaC propagates trace context from inbound SCM events onto build PipelineRuns, creating a new root when no incoming context is present. PaC also emits timing spans with required attributes for build PipelineRuns, since its watcher already observes PipelineRun completion.
+PaC propagates trace context from inbound SCM events onto build PipelineRuns, creating a new root when no incoming context is present, and emits timing spans with required attributes for build PipelineRuns
 
 ### Integration-service
 
