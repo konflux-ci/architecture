@@ -1,4 +1,4 @@
-# 59. Distributed Tracing
+# 61. Distributed Tracing
 
 Date started: 2026-02-04
 
