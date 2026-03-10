@@ -1,3 +1,15 @@
+---
+title: "48. Attestable Build-Time Tests in Integration Service"
+status: Accepted
+applies_to:
+  - integration-service
+  - build-service
+topics:
+  - attestations
+  - integration-tests
+  - security-scans
+---
+
 # 48. Attestable Build-Time Tests in Integration Service
 
 Date: 2025-04-06

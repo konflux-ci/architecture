@@ -1,3 +1,15 @@
+---
+title: "44. SPDX SBOM support"
+status: Implemented
+applies_to:
+  - build-service
+  - enterprise-contract
+topics:
+  - sbom
+  - spdx
+  - supply-chain-security
+---
+
 # 44. SPDX SBOM support
 
 Date: 2024-09-24

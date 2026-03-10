@@ -1,3 +1,14 @@
+---
+title: "38. Integration service removes composite snapshots and logic around them"
+status: Accepted
+applies_to:
+  - integration-service
+topics:
+  - snapshots
+  - promotion
+  - global-candidate-list
+---
+
 # 38. Integration service removes composite snapshots and logic around them
 
 * Date started: 2024-07-10

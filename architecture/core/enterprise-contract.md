@@ -5,6 +5,23 @@ eleventyNavigation:
   parent: Core Services
   order: 6
 toc: true
+overview:
+  scope: "Policy enforcement, attestation validation, release gating"
+  key_crds:
+    - EnterpriseContractPolicy
+  related_services:
+    - release-service
+  related_adrs:
+    - "0036"
+    - "0044"
+    - "0049"
+  key_concepts:
+    - Rego policies
+    - Conftest
+    - signature verification
+    - attestation checks
+    - ec-cli
+    - policy sources
 ---
 
 Enterprise Contract

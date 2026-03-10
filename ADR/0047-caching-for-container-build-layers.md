@@ -1,3 +1,15 @@
+---
+title: "47. Caching for container base images used during builds"
+status: Implementable
+applies_to:
+  - build-service
+topics:
+  - caching
+  - squid-proxy
+  - performance
+  - container-images
+---
+
 # 47. Caching for container base images used during builds
 
 Date: 2025-06-22

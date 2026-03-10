@@ -1,3 +1,17 @@
+---
+title: "19. Customize URLs Sent to GitHub"
+status: Accepted
+applies_to:
+  - build-service
+  - integration-service
+  - konflux-ui
+  - pipeline-service
+topics:
+  - github-integration
+  - url-customization
+  - ui-links
+---
+
 # 19. Customize URLs Sent to GitHub
 
 Created Date: 2023-03-29

@@ -1,3 +1,14 @@
+---
+title: "40. Availability Probe Framework"
+status: Accepted
+applies_to:
+  - "*"
+topics:
+  - observability
+  - monitoring
+  - availability
+---
+
 # 40. Availability Probe Framework
 
 * Date 2023-07-06

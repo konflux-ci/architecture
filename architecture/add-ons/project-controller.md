@@ -3,8 +3,24 @@ title: Project Controller
 eleventyNavigation:
   key: Project Controller
   parent: Add-ons
-  order: 2
+  order: 3
 toc: true
+overview:
+  scope: "Project and development stream management via templating system"
+  key_crds:
+    - Project
+    - ProjectDevelopmentStream
+    - ProjectDevelopmentStreamTemplate
+  related_services:
+    - hybrid-application-service
+    - image-controller
+  related_adrs:
+    - "0034"
+  key_concepts:
+    - Project lifecycle
+    - development streams
+    - templating
+    - resource provisioning
 ---
 
 # Project Controller

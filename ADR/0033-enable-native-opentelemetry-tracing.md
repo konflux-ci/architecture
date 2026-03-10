@@ -1,3 +1,14 @@
+---
+title: "33. Enable Native OpenTelemetry Tracing"
+status: Accepted
+applies_to:
+  - pipeline-service
+topics:
+  - observability
+  - tracing
+  - opentelemetry
+---
+
 # 33. Enable Native OpenTelemetry Tracing
 
 Date started: 2024-02-27

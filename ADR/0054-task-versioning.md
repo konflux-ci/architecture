@@ -1,3 +1,15 @@
+---
+title: "54. Start versioning Tekton Tasks responsibly"
+status: Accepted
+applies_to:
+  - build-service
+  - mintmaker
+topics:
+  - task-versioning
+  - semver
+  - changelog
+---
+
 # 54. Start versioning Tekton Tasks responsibly
 
 Date: 2025-10-06

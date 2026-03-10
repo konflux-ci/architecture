@@ -1,3 +1,14 @@
+---
+title: "51. KITE Architecture and Components"
+status: Implementable
+applies_to:
+  - "*"
+topics:
+  - issues-dashboard
+  - monitoring
+  - kite
+---
+
 # 51. KITE Architecture and Components
 
 Date: 2025-09-08

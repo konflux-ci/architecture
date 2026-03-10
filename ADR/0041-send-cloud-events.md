@@ -1,3 +1,14 @@
+---
+title: "41. Konflux should send cloud events all system events."
+status: Accepted
+applies_to:
+  - "*"
+topics:
+  - cloud-events
+  - integration
+  - eventing
+---
+
 # 41. Konflux should send cloud events all system events.
 
 Date: 2024-09-24

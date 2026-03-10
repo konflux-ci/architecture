@@ -1,3 +1,15 @@
+---
+title: "61. VCS Info Specification for Container Images"
+status: Implementable
+applies_to:
+  - build-service
+  - enterprise-contract
+topics:
+  - container-images
+  - provenance
+  - vcs
+---
+
 # 61. VCS Info Specification for Container Images
 
 Date: 2026-01-09

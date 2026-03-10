@@ -1,3 +1,14 @@
+---
+title: "2. Feature Flags"
+status: Replaced
+applies_to:
+  - "*"
+topics:
+  - kcp
+  - api-discovery
+  - feature-flags
+---
+
 # 2. Feature Flags
 
 Date: 2022-06-01

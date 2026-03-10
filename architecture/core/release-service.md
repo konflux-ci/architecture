@@ -5,6 +5,25 @@ eleventyNavigation:
   parent: Core Services
   order: 4
 toc: true
+overview:
+  scope: "Release orchestration, privileged pipelines, cross-namespace releases"
+  key_crds:
+    - Release
+    - ReleasePlan
+    - ReleasePlanAdmission
+  related_services:
+    - pipeline-service
+    - integration-service
+    - enterprise-contract
+  related_adrs:
+    - "0024"
+    - "0032"
+    - "0049"
+  key_concepts:
+    - Development vs Managed workspaces
+    - tenant vs managed pipelines
+    - auto-release flag
+    - enterprise contract gating
 ---
 
 # Release Service

@@ -1,3 +1,14 @@
+---
+title: "27. Container Image Management Practice"
+status: Proposed
+applies_to:
+  - "*"
+topics:
+  - image-management
+  - security
+  - patching
+---
+
 # 27. Container Image Management Practice
 
 Date: 2023-06-30

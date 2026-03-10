@@ -1,3 +1,14 @@
+---
+title: "23. Git references to furnish Integration Test Scenarios"
+status: Approved
+applies_to:
+  - integration-service
+topics:
+  - testing
+  - git-resolvers
+  - tekton-resolvers
+---
+
 # 23. Git references to furnish Integration Test Scenarios
 
 * Date Documented: 2023-04-10

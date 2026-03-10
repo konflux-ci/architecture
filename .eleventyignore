@@ -5,3 +5,8 @@ Gemfile.lock
 **/.export
 .DS_Store
 .idea/
+
+# AI assistant instructions (not part of published documentation)
+CLAUDE.md
+CONTRIBUTING.md
+README.md

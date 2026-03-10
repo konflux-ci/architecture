@@ -1,3 +1,16 @@
+---
+title: "39. Workspace Deprecation"
+status: Implemented
+supersedes: ["0031"]
+applies_to:
+  - "*"
+topics:
+  - namespaces
+  - workspaces
+  - multi-cluster
+  - architecture
+---
+
 # 39. Workspace Deprecation
 
 Some of the text was taken from - https://github.com/konflux-ci/architecture/pull/187

@@ -1,3 +1,18 @@
+---
+title: "32. Decoupling Deployment"
+status: Accepted
+supersedes: ["0008", "0016", "0028"]
+applies_to:
+  - integration-service
+  - release-service
+  - hybrid-application-service
+topics:
+  - deployment
+  - gitops
+  - testing
+  - environments
+---
+
 # 32. Decoupling Deployment
 
 Date started: 2023-11-17

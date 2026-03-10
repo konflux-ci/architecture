@@ -1,3 +1,14 @@
+---
+title: "3. Interacting with Internal Services"
+status: Implemented
+applies_to:
+  - internal-services
+topics:
+  - controllers
+  - security
+  - internal-networks
+---
+
 # 3. Interacting with Internal Services
 
 Date: 2022-10-20

@@ -1,3 +1,16 @@
+---
+title: "36. Trusted Artifacts"
+status: Implemented
+applies_to:
+  - build-service
+  - enterprise-contract
+  - pipeline-service
+topics:
+  - security
+  - artifacts
+  - tekton
+---
+
 # 36. Trusted Artifacts
 
 Date: 2024-06-11

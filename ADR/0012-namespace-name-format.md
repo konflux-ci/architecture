@@ -1,3 +1,13 @@
+---
+title: "12. Namespace Name Format"
+status: Accepted
+applies_to:
+  - "*"
+topics:
+  - namespaces
+  - naming-conventions
+---
+
 # 12. Namespace Name Format
 
 Date: 2023-01-23

@@ -1,3 +1,15 @@
+---
+title: "16. Promotion logic in the Integration Service"
+status: Superseded
+superseded_by: ["0032", "0037"]
+applies_to:
+  - integration-service
+topics:
+  - promotion
+  - deployment
+  - snapshot
+---
+
 # 16. Promotion logic in the Integration Service
 
 * Date Documented: 2023-02-08

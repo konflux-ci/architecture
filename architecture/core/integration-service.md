@@ -5,6 +5,27 @@ eleventyNavigation:
   parent: Core Services
   order: 3
 toc: true
+overview:
+  scope: "Test orchestration, snapshot creation/validation, promotion logic"
+  key_crds:
+    - Snapshot
+    - IntegrationTestScenario
+    - Release
+  related_services:
+    - pipeline-service
+    - hybrid-application-service
+    - release-service
+    - enterprise-contract
+  related_adrs:
+    - "0016"
+    - "0037"
+    - "0038"
+    - "0048"
+  key_concepts:
+    - Global Candidate List (GCL)
+    - snapshot immutability
+    - component vs composite testing
+    - auto-release
 ---
 
 # Integration Service

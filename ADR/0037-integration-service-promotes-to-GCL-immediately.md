@@ -1,3 +1,16 @@
+---
+title: "37. Integration service promotes components to GCL immediately after builds complete"
+status: Accepted
+supersedes: ["0015", "0016"]
+superseded_by: ["0038"]
+applies_to:
+  - integration-service
+topics:
+  - promotion
+  - global-candidate-list
+  - snapshots
+---
+
 # 37. Integration service promotes components to GCL immediately after builds complete
 
 * Date: 2024-06-21

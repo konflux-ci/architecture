@@ -1,3 +1,17 @@
+---
+title: "55. SLSA Source Provenance Verification"
+status: Accepted
+applies_to:
+  - enterprise-contract
+  - build-service
+  - integration-service
+topics:
+  - slsa
+  - source-provenance
+  - vsa
+  - attestations
+---
+
 # 55. SLSA Source Provenance Verification
 
 Date: 2025-10-09

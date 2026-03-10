@@ -5,6 +5,18 @@ eleventyNavigation:
   parent: Add-ons
   order: 4
 toc: true
+overview:
+  scope: "Automated dependency updates using Renovate for Konflux components"
+  key_crds:
+    - DependencyUpdateCheck
+  related_services:
+    - pipeline-service
+  related_adrs: []
+  key_concepts:
+    - Renovate integration
+    - GitHub App tokens (1-hour lifespan)
+    - component scanning
+    - namespace/application filtering
 ---
 
 # MintMaker

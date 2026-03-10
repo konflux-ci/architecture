@@ -1,3 +1,16 @@
+---
+title: "21. Partner Tasks in Build/Test Pipelines"
+status: Replaced
+superseded_by: ["0053"]
+applies_to:
+  - build-service
+  - pipeline-service
+topics:
+  - partner-tasks
+  - task-validation
+  - extensibility
+---
+
 # 21. Partner Tasks in Build/Test Pipelines
 
 Date: 2023-03-06

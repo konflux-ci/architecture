@@ -5,6 +5,19 @@ eleventyNavigation:
   parent: Add-ons
   order: 1
 toc: true
+overview:
+  scope: "Image repository setup, robot account management, secret linking to ServiceAccounts"
+  key_crds:
+    - ImageRepository
+  related_services:
+    - pipeline-service
+  related_adrs:
+    - "0004"
+  key_concepts:
+    - Push/pull robot accounts
+    - component-specific repositories
+    - visibility management
+    - credential rotation
 ---
 
 # Image Controller
