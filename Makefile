@@ -1,7 +1,7 @@
 # Konflux Architecture Makefile
 # Provides targets for linting, validation, and development tasks
 
-.PHONY: help build serve install lint lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers install-mermaid-cli clean
+.PHONY: help build serve install lint lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers lint-frontmatter install-mermaid-cli clean
 
 help:
 	@echo "Available targets:"
@@ -14,6 +14,7 @@ help:
 	@echo "  lint-adr-status   - Validate ADR statuses in all ADR files"
 	@echo "  lint-adr-numbers  - Check for duplicate ADR numeric identifiers"
 	@echo "  lint-eleventy-headers - Validate Eleventy front matter in markdown files"
+	@echo "  lint-frontmatter     - Validate frontmatter schemas and cross-references"
 	@echo "  install-mermaid-cli - Install Mermaid CLI tool locally"
 	@echo "  clean             - Clean up generated files"
 
@@ -23,7 +24,7 @@ install:
 
 # Build the site
 build: install
-	@./hack/util/generate-adr-table > ADR/index.md
+	rm -rf ./_site/*
 	npm run build
 
 # Serve the site with live reload
@@ -31,7 +32,7 @@ serve: install
 	npm run serve
 
 # Main lint target - runs all validation
-lint: lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers
+lint: lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers lint-frontmatter
 
 # Mermaid diagram validation
 lint-mermaid: install-mermaid-cli
@@ -48,6 +49,10 @@ lint-adr-numbers:
 # Eleventy front matter validation
 lint-eleventy-headers:
 	@./hack/lint-eleventy-headers
+
+# Frontmatter schema and cross-reference validation
+lint-frontmatter:
+	@python3 ./hack/lint-frontmatter
 
 # Install Mermaid CLI locally to user's home directory
 install-mermaid-cli:

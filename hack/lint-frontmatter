@@ -1,0 +1,403 @@
+#!/usr/bin/env python3
+"""Validate frontmatter schemas and cross-references in architecture docs.
+
+Checks (errors — block merge):
+- Service docs have required overview fields with correct types
+- ADR files have required frontmatter fields
+- ADR status in frontmatter matches ## Status section
+- All ADR/service cross-references point to existing files
+
+Checks (warnings — informational only):
+- Bidirectional references: ADR applies_to ↔ service related_adrs
+
+Bidirectional references are warnings, not errors, by design. The ADR
+applies_to field is the authoritative source for which services an ADR
+affects — agents discover relevant ADRs by grepping this field. The
+service doc's related_adrs is a curated highlights list (the 3-5 most
+important ADRs), not an exhaustive backlink. Requiring full
+bidirectional consistency would turn every new ADR into a multi-file
+change, creating exactly the maintenance burden structured frontmatter
+is meant to eliminate.
+"""
+
+import sys
+import os
+import re
+import glob
+
+try:
+    import yaml
+except ImportError:
+    print("ERROR: PyYAML is required. Install with: pip install pyyaml", file=sys.stderr)
+    sys.exit(1)
+
+# ANSI colors
+RED = "\033[0;31m"
+GREEN = "\033[0;32m"
+YELLOW = "\033[1;33m"
+BLUE = "\033[0;34m"
+NC = "\033[0m"
+
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+VALID_ADR_STATUSES = {
+    "Accepted", "Implemented", "Implementable", "Proposed",
+    "Replaced", "Superseded", "Deprecated", "Approved",
+    "In consideration",
+}
+
+# Service filenames (without .md) that are valid for applies_to / related_services
+def get_valid_services():
+    services = set()
+    for d in ["architecture/core", "architecture/add-ons"]:
+        path = os.path.join(REPO_ROOT, d)
+        if not os.path.isdir(path):
+            continue
+        for f in os.listdir(path):
+            if f.endswith(".md") and f != "index.md":
+                services.add(f.replace(".md", ""))
+    return services
+
+
+def get_adr_numbers():
+    """Return set of ADR numbers (as 4-digit strings) that exist on disk."""
+    numbers = set()
+    for f in os.listdir(os.path.join(REPO_ROOT, "ADR")):
+        m = re.match(r"^(\d{4})-.*\.md$", f)
+        if m and m.group(1) != "0000":
+            numbers.add(m.group(1))
+    return numbers
+
+
+def parse_frontmatter(filepath):
+    """Extract YAML frontmatter from a markdown file. Returns (dict, error)."""
+    with open(filepath, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    if not content.startswith("---\n"):
+        return None, "missing frontmatter"
+
+    end = content.find("\n---\n", 4)
+    if end == -1:
+        end = content.find("\n---\r\n", 4)
+    if end == -1:
+        return None, "missing closing frontmatter delimiter"
+
+    fm_text = content[4:end]
+    try:
+        data = yaml.safe_load(fm_text)
+    except yaml.YAMLError as e:
+        return None, f"invalid YAML: {e}"
+
+    if not isinstance(data, dict):
+        return None, "frontmatter is not a mapping"
+
+    return data, None
+
+
+def extract_status_from_content(filepath):
+    """Extract status from ## Status section in markdown content."""
+    with open(filepath, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    in_status = False
+    for line in lines:
+        stripped = line.strip()
+        if stripped == "## Status":
+            in_status = True
+            continue
+        if in_status and stripped.startswith("## "):
+            break
+        if in_status and stripped:
+            # Remove markdown formatting
+            clean = re.sub(r"[*_`]", "", stripped)
+            return clean.split(",")[0].strip()  # Handle "Accepted, ..." cases
+    return None
+
+
+def validate_is_list(value, field_name):
+    """Check that a value is a list (or empty list)."""
+    if isinstance(value, list):
+        return []
+    return [f"{field_name} must be a YAML list, got {type(value).__name__}"]
+
+
+def validate_service_doc(filepath, valid_services, adr_numbers):
+    """Validate a service documentation file's frontmatter."""
+    errors = []
+    rel_path = os.path.relpath(filepath, REPO_ROOT)
+
+    fm, err = parse_frontmatter(filepath)
+    if err:
+        return [f"{rel_path}: {err}"]
+
+    if "title" not in fm:
+        errors.append(f"{rel_path}: missing required field 'title'")
+
+    overview = fm.get("overview")
+    if overview is None:
+        errors.append(f"{rel_path}: missing required 'overview' section")
+        return errors
+
+    if not isinstance(overview, dict):
+        errors.append(f"{rel_path}: 'overview' must be a mapping")
+        return errors
+
+    # Required overview fields
+    required = ["scope", "key_crds", "related_services", "related_adrs", "key_concepts"]
+    for field in required:
+        if field not in overview:
+            errors.append(f"{rel_path}: overview missing required field '{field}'")
+
+    # Type checks — lists
+    for field in ["key_crds", "related_services", "related_adrs", "key_concepts"]:
+        if field in overview:
+            errors.extend(
+                f"{rel_path}: overview.{e}"
+                for e in validate_is_list(overview[field], field)
+            )
+
+    # scope should be a string
+    if "scope" in overview and not isinstance(overview["scope"], str):
+        errors.append(f"{rel_path}: overview.scope must be a string")
+
+    # Validate related_services reference existing services
+    if isinstance(overview.get("related_services"), list):
+        for svc in overview["related_services"]:
+            if svc not in valid_services and svc != "*":
+                errors.append(
+                    f"{rel_path}: overview.related_services references "
+                    f"unknown service '{svc}'"
+                )
+
+    # Validate related_adrs reference existing ADRs
+    if isinstance(overview.get("related_adrs"), list):
+        for adr_num in overview["related_adrs"]:
+            adr_str = str(adr_num).zfill(4)
+            if adr_str not in adr_numbers:
+                errors.append(
+                    f"{rel_path}: overview.related_adrs references "
+                    f"non-existent ADR '{adr_str}'"
+                )
+
+    return errors
+
+
+def validate_adr(filepath, valid_services):
+    """Validate an ADR file's frontmatter."""
+    errors = []
+    rel_path = os.path.relpath(filepath, REPO_ROOT)
+
+    fm, err = parse_frontmatter(filepath)
+    if err:
+        return [f"{rel_path}: {err}"]
+
+    # Required fields
+    for field in ["title", "status"]:
+        if field not in fm:
+            errors.append(f"{rel_path}: missing required field '{field}'")
+
+    # Status validation
+    if "status" in fm:
+        if fm["status"] not in VALID_ADR_STATUSES:
+            errors.append(
+                f"{rel_path}: invalid status '{fm['status']}'. "
+                f"Valid: {', '.join(sorted(VALID_ADR_STATUSES))}"
+            )
+
+        # Check consistency with ## Status section
+        content_status = extract_status_from_content(filepath)
+        if content_status:
+            # Normalize for comparison — handle common typos like
+            # "Superceded" for "Superseded"
+            fm_norm = fm["status"].lower().strip()
+            content_norm = content_status.lower().strip()
+            # Normalize known typos
+            content_norm = content_norm.replace("superceded", "superseded")
+            # Handle multi-word statuses
+            if not content_norm.startswith(fm_norm):
+                errors.append(
+                    f"{rel_path}: frontmatter status '{fm['status']}' does not "
+                    f"match ## Status section '{content_status}'"
+                )
+
+    # applies_to validation
+    if "applies_to" in fm:
+        errs = validate_is_list(fm["applies_to"], "applies_to")
+        errors.extend(f"{rel_path}: {e}" for e in errs)
+        if isinstance(fm["applies_to"], list):
+            for svc in fm["applies_to"]:
+                if svc not in valid_services and svc != "*":
+                    errors.append(
+                        f"{rel_path}: applies_to references "
+                        f"unknown service '{svc}'"
+                    )
+
+    # topics validation
+    if "topics" in fm:
+        errs = validate_is_list(fm["topics"], "topics")
+        errors.extend(f"{rel_path}: {e}" for e in errs)
+
+    # supersedes / superseded_by validation
+    for field in ["supersedes", "superseded_by"]:
+        if field in fm:
+            errs = validate_is_list(fm[field], field)
+            errors.extend(f"{rel_path}: {e}" for e in errs)
+
+    return errors
+
+
+def check_bidirectional_references(valid_services, adr_numbers):
+    """Check that ADR applies_to and service related_adrs are consistent."""
+    errors = []
+
+    # Build maps: ADR -> services it applies to, Service -> ADRs it references
+    adr_to_services = {}  # adr_number -> set of service names
+    service_to_adrs = {}  # service_name -> set of adr numbers
+
+    # Read all ADRs
+    adr_dir = os.path.join(REPO_ROOT, "ADR")
+    for f in sorted(os.listdir(adr_dir)):
+        m = re.match(r"^(\d{4})-.*\.md$", f)
+        if not m or m.group(1) == "0000":
+            continue
+        adr_num = m.group(1)
+        filepath = os.path.join(adr_dir, f)
+        fm, _ = parse_frontmatter(filepath)
+        if fm and isinstance(fm.get("applies_to"), list):
+            # Skip ADRs that apply to "*" — cross-cutting ADRs shouldn't
+            # require every service to back-reference them
+            if "*" in fm["applies_to"]:
+                continue
+            adr_to_services[adr_num] = set(fm["applies_to"])
+
+    # Read all service docs
+    for d in ["architecture/core", "architecture/add-ons"]:
+        dirpath = os.path.join(REPO_ROOT, d)
+        if not os.path.isdir(dirpath):
+            continue
+        for f in sorted(os.listdir(dirpath)):
+            if not f.endswith(".md") or f == "index.md":
+                continue
+            svc_name = f.replace(".md", "")
+            filepath = os.path.join(dirpath, f)
+            fm, _ = parse_frontmatter(filepath)
+            if fm:
+                overview = fm.get("overview", {})
+                if isinstance(overview, dict) and isinstance(
+                    overview.get("related_adrs"), list
+                ):
+                    service_to_adrs[svc_name] = {
+                        str(n).zfill(4) for n in overview["related_adrs"]
+                    }
+
+    # Check: if ADR applies_to service X, service X should list that ADR
+    for adr_num, services in adr_to_services.items():
+        for svc in services:
+            if svc not in service_to_adrs:
+                continue  # Service file might not have related_adrs yet
+            if adr_num not in service_to_adrs.get(svc, set()):
+                errors.append(
+                    f"ADR {adr_num} applies_to '{svc}' but "
+                    f"{svc}.md does not list ADR {adr_num} in related_adrs"
+                )
+
+    # Check: if service lists ADR X, ADR X should apply_to that service
+    for svc, adrs in service_to_adrs.items():
+        for adr_num in adrs:
+            if adr_num not in adr_to_services:
+                continue  # ADR might not have applies_to yet
+            adr_services = adr_to_services.get(adr_num, set())
+            if svc not in adr_services:
+                errors.append(
+                    f"{svc}.md lists ADR {adr_num} in related_adrs but "
+                    f"ADR {adr_num} does not include '{svc}' in applies_to"
+                )
+
+    return errors
+
+
+def main():
+    errors = []
+    valid_services = get_valid_services()
+    adr_numbers = get_adr_numbers()
+
+    print(f"{BLUE}INFO:{NC} Validating frontmatter...")
+    print(f"{BLUE}INFO:{NC} Found {len(valid_services)} services, {len(adr_numbers)} ADRs")
+    print()
+
+    # Validate service docs
+    print("Checking service documentation frontmatter...")
+    print("=" * 50)
+    service_errors = []
+    for d in ["architecture/core", "architecture/add-ons"]:
+        dirpath = os.path.join(REPO_ROOT, d)
+        if not os.path.isdir(dirpath):
+            continue
+        for f in sorted(os.listdir(dirpath)):
+            if not f.endswith(".md") or f == "index.md":
+                continue
+            filepath = os.path.join(dirpath, f)
+            rel_path = os.path.relpath(filepath, REPO_ROOT)
+            file_errors = validate_service_doc(filepath, valid_services, adr_numbers)
+            if file_errors:
+                service_errors.extend(file_errors)
+                print(f"  {rel_path}: {RED}FAIL{NC}")
+            else:
+                print(f"  {rel_path}: {GREEN}OK{NC}")
+    print()
+
+    # Validate ADRs
+    print("Checking ADR frontmatter...")
+    print("=" * 50)
+    adr_errors = []
+    adr_dir = os.path.join(REPO_ROOT, "ADR")
+    for f in sorted(os.listdir(adr_dir)):
+        m = re.match(r"^(\d{4})-.*\.md$", f)
+        if not m or m.group(1) == "0000":
+            continue
+        filepath = os.path.join(adr_dir, f)
+        rel_path = os.path.relpath(filepath, REPO_ROOT)
+        file_errors = validate_adr(filepath, valid_services)
+        if file_errors:
+            adr_errors.extend(file_errors)
+            print(f"  {rel_path}: {RED}FAIL{NC}")
+        else:
+            print(f"  {rel_path}: {GREEN}OK{NC}")
+    print()
+
+    # Check bidirectional references
+    print("Checking bidirectional ADR ↔ service references...")
+    print("=" * 50)
+    bidir_errors = check_bidirectional_references(valid_services, adr_numbers)
+    if bidir_errors:
+        for e in sorted(bidir_errors):
+            print(f"  {YELLOW}WARNING:{NC} {e}")
+    else:
+        print(f"  {GREEN}All cross-references are consistent{NC}")
+    print()
+
+    # Summary
+    errors = service_errors + adr_errors
+    all_issues = errors + bidir_errors
+
+    print("=" * 50)
+    if not all_issues:
+        print(f"{GREEN}SUCCESS:{NC} All frontmatter is valid and cross-references are consistent")
+        return 0
+    else:
+        if errors:
+            print(f"{RED}ERRORS:{NC} {len(errors)} frontmatter validation error(s)")
+            for e in errors:
+                print(f"  {RED}ERROR:{NC} {e}")
+        if bidir_errors:
+            print(
+                f"{YELLOW}WARNINGS:{NC} {len(bidir_errors)} "
+                f"bidirectional reference inconsistency(ies)"
+            )
+        # Only fail on hard errors, not bidirectional warnings
+        return 1 if errors else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
