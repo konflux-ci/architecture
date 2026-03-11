@@ -261,14 +261,72 @@ The migration replaced the four HAS webhooks as follows:
 
 ---
 
+## Component API type history
+
+The Go types for `Application`, `Component`, and `ComponentDetectionQuery` did not stay
+in one place. They moved twice, and if you are chasing an import path in older code you
+need to know all three locations.
+
+**Stage 1 — HAS repo (original home)**
+
+The types were defined inside `redhat-appstudio/application-service` alongside the
+webhook controllers. `api/v1alpha1/` held the CRD structs, markers, and generated
+`zz_generated.deepcopy.go`. Any service that used `Application` or `Component` objects
+imported directly from this path.
+
+**Stage 2 — Consolidated API repo (intermediate)**
+
+As additional services needed the same types, vendoring the full HAS controller repo
+created a large, awkward dependency. The types were extracted into a standalone
+API-only repo: [`konflux-ci/application-api`](https://github.com/konflux-ci/application-api).
+
+This repo contains no controllers or webhooks — only the CRD Go structs, generated
+clients, and webhook registration markers. Services that were updated during this period
+import from `github.com/konflux-ci/application-api/apis/appstudio/v1alpha1`.
+
+The `konflux-ci/application-api` repo is still active today. It still exports the
+`Application` CRD types, which remain in use while the transition described below
+completes.
+
+**Stage 3 — Build Service (current, in progress)**
+
+With [ADR-0056](../../ADR/0056-revised-component-model.md), the `Component` type is
+being redesigned. As part of that redesign, ownership of the `Component` CRD moves from
+the centralised `application-api` repo into
+[`konflux-ci/build-service`](https://github.com/konflux-ci/build-service). The new
+`Component` spec lives in `build-service`'s own `api/` directory.
+
+This means:
+
+- New code importing `Component` should use the `build-service` module path.
+- The `Application` CRD, once replaced by `ComponentGroup` (ADR-0060), will stop being
+  defined in `application-api` as well. Integration Service will own the
+  `ComponentGroup` type.
+- `application-api` is transitioning toward a no-longer-needed state, though it is not
+  yet archived.
+
+> **Summary of import paths across time:**
+>
+> | Era | Import path | Status |
+> |-----|-------------|--------|
+> | HAS era | `github.com/redhat-appstudio/application-service/api/v1alpha1` | Archived — read only |
+> | Consolidated API era | `github.com/konflux-ci/application-api/apis/appstudio/v1alpha1` | Active, transitioning out |
+> | Current / new model | `github.com/konflux-ci/build-service/api/...` | Active, canonical for new work |
+
+---
+
 ## Migration path
 
 If you maintain tooling, tests, or documentation that references HAS:
 
 **Replace the import path.** Any code importing from
-`github.com/redhat-appstudio/application-service` should migrate to the types in
+`github.com/redhat-appstudio/application-service` should already have been migrated to
+`github.com/konflux-ci/application-api` (the intermediate consolidated API repo). The
+next step is to migrate from there to the types in
 [konflux-ci/build-service](https://github.com/konflux-ci/build-service) for `Component`
 and to `ComponentGroup` (Integration Service API) for what was previously `Application`.
+See the [Component API type history](#component-api-type-history) section for the full
+import path timeline.
 
 **Remove stale webhook registrations.** If any `ValidatingWebhookConfiguration` or
 `MutatingWebhookConfiguration` objects in a cluster still point at the old HAS service
@@ -296,5 +354,6 @@ Current active repositories:
 
 - [konflux-ci/build-service](https://github.com/konflux-ci/build-service) — owns `Component` CR and build pipeline provisioning
 - [konflux-ci/integration-service](https://github.com/konflux-ci/integration-service) — owns `ComponentGroup` CR (implementation in progress per ADR-0060)
+- [konflux-ci/application-api](https://github.com/konflux-ci/application-api) — consolidated API types repo; active but transitioning out as CRD ownership moves into the service repos above
 - ~~`redhat-appstudio/application-service`~~ — archived, read-only
 
