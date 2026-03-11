@@ -239,7 +239,7 @@ problems:
 **1. One component = one branch.** Building the same repository from two branches
 (`main` and `release-1.x`) required two separate `Component` objects with duplicated
 config. There was no concept of component versions. The new `Component` spec addresses
-this with a `spec.versions` list.
+this with a `spec.source.versions` list.
 
 **2. One component = one application.** The hard `spec.application` field meant a
 component image could only belong to one release group. Putting it in two groups
