@@ -1,3 +1,15 @@
+---
+title: "31. Sprayproxy"
+status: Replaced
+superseded_by: ["0039"]
+applies_to:
+  - pipeline-service
+topics:
+  - webhooks
+  - multi-cluster
+  - github-integration
+---
+
 # 31. Sprayproxy
 
 Created: 2023-10-24

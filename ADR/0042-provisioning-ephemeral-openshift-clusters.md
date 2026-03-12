@@ -1,3 +1,15 @@
+---
+title: "42. Provisioning Clusters for Integration Tests"
+status: Accepted
+supersedes: ["0008", "0032"]
+applies_to:
+  - integration-service
+topics:
+  - testing
+  - environments
+  - ephemeral-clusters
+---
+
 # 42. Provisioning Clusters for Integration Tests
 
 Date: 2024-06-05

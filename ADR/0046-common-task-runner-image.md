@@ -1,3 +1,15 @@
+---
+title: "46. Build a common Task Runner image"
+status: Implementable
+applies_to:
+  - build-service
+  - pipeline-service
+topics:
+  - task-runner
+  - container-images
+  - build-tasks
+---
+
 # 46. Build a common Task Runner image
 
 Date: 2024-11-15

@@ -1,3 +1,13 @@
+---
+title: "0. Record architecture decisions"
+status: Implemented
+applies_to:
+  - "*"
+topics:
+  - process
+  - documentation
+---
+
 # 0. Record architecture decisions
 
 Date: 2022-06-17

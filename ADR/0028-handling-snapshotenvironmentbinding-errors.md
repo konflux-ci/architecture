@@ -1,3 +1,15 @@
+---
+title: "28. Handling SnapshotEnvironmentBinding Errors"
+status: Superseded
+superseded_by: ["0032"]
+applies_to:
+  - integration-service
+topics:
+  - deployment
+  - error-handling
+  - snapshot
+---
+
 # 28. Handling SnapshotEnvironmentBinding Errors
 Date: 2023-08-31
 

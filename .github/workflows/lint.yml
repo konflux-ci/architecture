@@ -19,7 +19,10 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '22'
-        
+
+    - name: Setup Python dependencies
+      run: pip install pyyaml
+
     - name: Run make lint
       run: |
         echo "🔧 Running make lint..."

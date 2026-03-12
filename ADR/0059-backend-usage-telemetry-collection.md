@@ -1,3 +1,14 @@
+---
+title: "59. Backend Usage Telemetry Collection from Konflux Clusters"
+status: Implementable
+applies_to:
+  - "*"
+topics:
+  - telemetry
+  - analytics
+  - segment
+---
+
 # 59. Backend Usage Telemetry Collection from Konflux Clusters
 
 Date: 2026-01-26

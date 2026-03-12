@@ -5,6 +5,18 @@ eleventyNavigation:
   parent: Add-ons
   order: 2
 toc: true
+overview:
+  scope: "Dynamic VM provisioning for multi-architecture builds (arm64, ppc64le, s390x)"
+  key_crds: []
+  related_services:
+    - pipeline-service
+  related_adrs: []
+  key_concepts:
+    - SSH-based remote builds
+    - OTP service
+    - dynamic/pool/static host allocation
+    - TaskRun secret contract
+    - platform-specific VMs
 ---
 
 # Multi Platform Controller

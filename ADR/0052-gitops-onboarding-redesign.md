@@ -1,3 +1,15 @@
+---
+title: "52. GitOps Onboarding Redesign"
+status: Accepted
+applies_to:
+  - hybrid-application-service
+  - konflux-ui
+topics:
+  - gitops
+  - onboarding
+  - argocd
+---
+
 # 52. GitOps Onboarding Redesign
 
 Date: 2024-12-21

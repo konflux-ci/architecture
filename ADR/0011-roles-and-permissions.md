@@ -1,3 +1,14 @@
+---
+title: "11. Roles and Permissions for Konflux"
+status: Accepted
+applies_to:
+  - "*"
+topics:
+  - rbac
+  - permissions
+  - roles
+---
+
 # 11. Roles and Permissions for Konflux
 
 Date: 2023-01-10

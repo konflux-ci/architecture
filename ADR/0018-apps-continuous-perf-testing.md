@@ -1,3 +1,14 @@
+---
+title: "18. Continuous Performance Testing (CPT) of Apps in Konflux"
+status: In consideration
+applies_to:
+  - integration-service
+topics:
+  - performance-testing
+  - testing
+  - horreum
+---
+
 # 18. Continuous Performance Testing (CPT) of Apps in Konflux
 
 Date: 2023-03-10

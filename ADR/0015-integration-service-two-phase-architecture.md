@@ -1,3 +1,15 @@
+---
+title: "15. The Two-phase Architecture of the Integration Service"
+status: Superseded
+superseded_by: ["0037"]
+applies_to:
+  - integration-service
+topics:
+  - testing
+  - snapshot-promotion
+  - race-conditions
+---
+
 # 15. The Two-phase Architecture of the Integration Service
 
 Date Documented: 2023-02-09

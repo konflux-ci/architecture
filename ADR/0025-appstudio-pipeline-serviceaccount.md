@@ -1,3 +1,14 @@
+---
+title: "25. appstudio-pipeline Service Account"
+status: Accepted
+applies_to:
+  - pipeline-service
+topics:
+  - service-accounts
+  - rbac
+  - security
+---
+
 # 25. appstudio-pipeline Service Account
 
 Date: 2023-05-30

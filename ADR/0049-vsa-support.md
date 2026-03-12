@@ -1,3 +1,16 @@
+---
+title: "49. Verification Summary Attestations for Release Policies"
+status: Accepted
+applies_to:
+  - enterprise-contract
+  - release-service
+topics:
+  - attestations
+  - vsa
+  - policy-verification
+  - slsa
+---
+
 # 49. Verification Summary Attestations for Release Policies
 
 Date: 2025-07-02

@@ -1,3 +1,14 @@
+---
+title: "58. MintMaker log persistence"
+status: Implementable
+applies_to:
+  - mintmaker
+topics:
+  - logging
+  - persistence
+  - rbac
+---
+
 # 58. MintMaker log persistence
 
 ## Status

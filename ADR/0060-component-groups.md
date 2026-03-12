@@ -1,3 +1,15 @@
+---
+title: "60. ComponentGroups"
+status: Proposed
+applies_to:
+  - integration-service
+  - release-service
+topics:
+  - component-groups
+  - test-ordering
+  - snapshot-creation
+---
+
 # 60. ComponentGroups
 
 Date: 2025-11019

@@ -1,3 +1,15 @@
+---
+title: "8. Environment Provisioning"
+status: Replaced
+superseded_by: ["0032"]
+applies_to:
+  - hybrid-application-service
+topics:
+  - environments
+  - deployment-targets
+  - provisioning
+---
+
 # 8. Environment Provisioning
 
 Date: 2022-12-14

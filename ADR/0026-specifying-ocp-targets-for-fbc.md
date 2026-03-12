@@ -1,3 +1,15 @@
+---
+title: "26. Specifying OCP targets for File-based Catalogs"
+status: Accepted
+applies_to:
+  - build-service
+  - integration-service
+topics:
+  - fbc
+  - operators
+  - versioning
+---
+
 # 26. Specifying OCP targets for File-based Catalogs
 
 * Date 2023-06-08

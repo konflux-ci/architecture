@@ -20,15 +20,9 @@ User documentation is out of scope.
 
 ## Contributing
 
-All changes to the documents and diagrams require a peer-reviewed pull request.
-
-For significant changes that include changes to technical details or architecture the pull request should have
-1. Changes to the overview document and diagrams where applicable.
-2. An ADR record is added to the `/ADR` folder.
-3. At least 2 approvals to be merged
-
-The changes that are corrections and clarifications and that do not reflect a significant change pull request should have
-1. Changes to the overview document and diagrams where applicable.
-2. Should have a `skip-adr-check` label
-3. At least 1 approval
+All changes to the documents and diagrams require peer-reviewed pull requests. See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
+- Pull request requirements
+- Adding new services
+- Adding new ADRs
+- Maintaining documentation structure
 

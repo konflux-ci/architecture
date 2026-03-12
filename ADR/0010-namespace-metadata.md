@@ -1,3 +1,14 @@
+---
+title: "10. Namespace Metadata"
+status: Accepted
+applies_to:
+  - "*"
+topics:
+  - namespaces
+  - metadata
+  - telemetry
+---
+
 # 10. Namespace Metadata
 
 Date: 2022-12-09

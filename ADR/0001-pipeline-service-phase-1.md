@@ -1,3 +1,15 @@
+---
+title: "1. Pipeline Service Phase 1"
+status: Replaced
+superseded_by: ["0009"]
+applies_to:
+  - pipeline-service
+topics:
+  - kcp
+  - tekton
+  - deployment
+---
+
 # 1. Pipeline Service Phase 1
 
 Created: 2022-10-13

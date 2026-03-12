@@ -1,3 +1,16 @@
+---
+title: "56. Revised Component Model"
+status: Implementable
+applies_to:
+  - build-service
+  - integration-service
+  - hybrid-application-service
+topics:
+  - component-model
+  - component-versions
+  - api-redesign
+---
+
 # 56. Revised Component Model
 
 ## Status

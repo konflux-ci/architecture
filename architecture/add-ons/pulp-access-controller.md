@@ -5,6 +5,18 @@ eleventyNavigation:
   parent: Add-ons
   order: 2
 toc: true
+overview:
+  scope: "Automated Pulp domain and secret provisioning for artifact storage"
+  key_crds:
+    - PulpAccessRequest
+  related_services:
+    - image-controller
+  related_adrs: []
+  key_concepts:
+    - mTLS authentication
+    - Pulp domain creation
+    - secret management
+    - OCI backend integration
 ---
 
 # Pulp Access Controller

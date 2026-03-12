@@ -1,3 +1,15 @@
+---
+title: "53. Trusted Tasks model after build-definitions decentralization"
+status: Accepted
+applies_to:
+  - enterprise-contract
+  - build-service
+topics:
+  - trusted-tasks
+  - policy
+  - task-signing
+---
+
 # 53. Trusted Tasks model after build-definitions decentralization
 
 Date: 2025-09-30

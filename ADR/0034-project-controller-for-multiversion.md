@@ -1,3 +1,14 @@
+---
+title: "34. Project Controller for Multi-version support"
+status: Implemented
+applies_to:
+  - project-controller
+topics:
+  - multi-version
+  - templating
+  - project-management
+---
+
 # 34. Project Controller for Multi-version support
 
 Date: 2024-02-01

@@ -1,3 +1,14 @@
+---
+title: "35. Continuous Chaos Testing of Apps in AppStudio"
+status: Accepted
+applies_to:
+  - integration-service
+topics:
+  - chaos-testing
+  - resilience
+  - testing
+---
+
 # 35. Continuous Chaos Testing of Apps in AppStudio
 
 Date: 2024-06-04

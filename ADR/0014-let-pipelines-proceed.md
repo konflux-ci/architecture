@@ -1,3 +1,15 @@
+---
+title: "14. Let Pipelines Proceed"
+status: Accepted
+applies_to:
+  - build-service
+  - enterprise-contract
+topics:
+  - tekton
+  - testing
+  - scanning
+---
+
 # 14. Let Pipelines Proceed
 
 * Date Decided: 2022-05-??

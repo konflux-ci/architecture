@@ -1,3 +1,16 @@
+---
+title: "29. Component Dependencies"
+status: Accepted
+applies_to:
+  - build-service
+  - hybrid-application-service
+  - integration-service
+topics:
+  - dependencies
+  - component-builds
+  - pr-groups
+---
+
 # 29. Component Dependencies
 
 * Date 2023-08-15

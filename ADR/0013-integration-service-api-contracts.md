@@ -1,3 +1,16 @@
+---
+title: "13. Konflux Test Stream - API contracts"
+status: Deprecated
+superseded_by: ["0030"]
+applies_to:
+  - integration-service
+  - build-service
+topics:
+  - tekton
+  - testing
+  - api-contracts
+---
+
 # 13. Konflux Test Stream - API contracts
 
 Date: 2023-01-30

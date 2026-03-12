@@ -5,6 +5,22 @@ eleventyNavigation:
   parent: Core Services
   order: 2
 toc: true
+overview:
+  scope: "Build pipelines, Tekton PipelineRun definitions, Component builds"
+  key_crds:
+    - Component
+    - Repository
+  related_services:
+    - pipeline-service
+    - image-controller
+  related_adrs:
+    - "0047"
+    - "0029"
+    - "0046"
+  key_concepts:
+    - Pipelines as Code (PaC)
+    - build provisioning
+    - component nudging/renovate
 ---
 
 # Build Service

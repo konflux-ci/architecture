@@ -5,6 +5,18 @@ eleventyNavigation:
   parent: Core Services
   order: 1
 toc: true
+overview:
+  scope: "Validation webhooks for Application and Component CRs"
+  key_crds:
+    - Application
+    - Component
+  related_services: []
+  related_adrs:
+    - "0029"
+  key_concepts:
+    - Defaulting webhook (OwnerReference)
+    - validation (names/sources)
+    - BuildNudgesRef management
 ---
 
 # Hybrid Application Service (HAS)

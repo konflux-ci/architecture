@@ -1,3 +1,14 @@
+---
+title: "17. Use our own pipelines"
+status: Accepted
+applies_to:
+  - "*"
+topics:
+  - dogfooding
+  - secure-development
+  - pipelines
+---
+
 # 17. Use our own pipelines
 
 * Date 2023-02-10

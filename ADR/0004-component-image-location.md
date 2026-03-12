@@ -1,3 +1,14 @@
+---
+title: "4. Out-of-the-box image repository for StoneSoup users"
+status: Implemented
+applies_to:
+  - image-controller
+topics:
+  - quay
+  - image-registry
+  - components
+---
+
 # 4. Out-of-the-box image repository for StoneSoup users 
 
 Date: Oct 29, 2022 

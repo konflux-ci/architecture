@@ -1,3 +1,14 @@
+---
+title: "50. Exclude Kubernetes Events API from User RBAC Roles"
+status: Implemented
+applies_to:
+  - "*"
+topics:
+  - rbac
+  - security
+  - events-api
+---
+
 # 50. Exclude Kubernetes Events API from User RBAC Roles
 
 Date: 2025-09-05

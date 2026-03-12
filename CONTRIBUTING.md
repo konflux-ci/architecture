@@ -12,6 +12,8 @@ Thank you for your interest in contributing to the Konflux Architecture document
 - [Pull Request Process](#pull-request-process)
 - [Style Guidelines](#style-guidelines)
 - [Testing Your Changes](#testing-your-changes)
+- [Adding a New Service](#adding-a-new-service)
+- [Adding a New ADR](#adding-a-new-adr)
 
 ## Code of Conduct
 
@@ -62,6 +64,7 @@ Examples of corrections/clarifications:
 
 - Node.js 22 or later
 - npm (comes with Node.js)
+- Python 3 with PyYAML (for frontmatter linting)
 - Git
 - A text editor that supports EditorConfig
 
@@ -192,12 +195,87 @@ This runs:
 - `lint-adr-status` - Validates ADR statuses
 - `lint-adr-numbers` - Checks for duplicate ADR numbers
 - `lint-eleventy-headers` - Validates Eleventy front matter
+- `lint-frontmatter` - Validates frontmatter schemas and cross-references
 
 Build the site to ensure no errors:
 
 ```bash
 make build
 ```
+
+## Adding a New Service
+
+1. **Create service documentation** in `/architecture/core/[service].md` or `/architecture/add-ons/[service].md` with `overview:` frontmatter:
+   ```yaml
+   ---
+   title: Service Name
+   eleventyNavigation:
+     key: Service Name
+     parent: Core Services  # or Add-ons
+     order: N
+   toc: true
+   overview:
+     scope: "One-line description of what service does"
+     key_crds:
+       - CRDName1
+       - CRDName2
+     related_services:
+       - other-service
+     related_adrs:
+       - "NNNN"
+     key_concepts:
+       - concept one
+       - concept two
+   ---
+   ```
+
+2. **Update published index pages** (`/architecture/core/index.md` or `/architecture/add-ons/index.md`) — add service summary and update mermaid interaction diagrams.
+
+3. **Update main overview** (`/architecture/index.md`) if architecturally significant.
+
+4. **Run `make lint-frontmatter`** to verify the frontmatter is valid and cross-references are consistent.
+
+## Adding a New ADR
+
+1. **Create ADR file** at `/ADR/NNNN-description.md` following the template at `/ADR/0000-adr-template.md`. Include frontmatter:
+   ```yaml
+   ---
+   title: "NNNN. ADR Title"
+   status: Proposed
+   applies_to:
+     - service-name   # or "*" if cross-cutting
+   topics:
+     - keyword1
+     - keyword2
+   ---
+   ```
+
+2. **Update service frontmatter** for affected services — add the ADR number to `related_adrs` in each service's `overview:` block. The `lint-frontmatter` check will warn about missing bidirectional references.
+
+3. **Run `make lint-frontmatter`** to verify the ADR frontmatter is valid and references are consistent.
+
+Note: frontmatter indexing can be done by maintainers after merge if needed. The key requirement is the ADR content itself.
+
+## Frontmatter Reference
+
+### Service docs (`overview:` block)
+
+All fields except `scope` must be YAML lists:
+
+- **scope** (string): One line, < 100 characters
+- **key_crds** (list): CRD resource type names
+- **related_services** (list): Service filenames without `.md` (e.g., `build-service`). Use `[]` if standalone.
+- **related_adrs** (list): 4-digit ADR numbers as strings (e.g., `"0047"`). This is a curated list of the most important ADRs for understanding the service, not an exhaustive backlink — agents discover all applicable ADRs by grepping the ADR `applies_to` field directly.
+- **key_concepts** (list): Important terminology and patterns
+
+### ADR docs
+
+- **title** (string): Must match the `# NN. Title` heading
+- **status** (string): One of Accepted, Implemented, Implementable, Proposed, Replaced, Superseded, Deprecated, Approved, In consideration
+- **applies_to** (list): Service filenames without `.md`, or `"*"` for cross-cutting
+- **topics** (list): 2-4 keywords
+- **supersedes** (list, optional): ADR numbers this supersedes
+- **superseded_by** (list, optional): ADR numbers that supersede this
 
 ## Getting Help
 

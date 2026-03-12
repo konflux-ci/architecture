@@ -1,3 +1,14 @@
+---
+title: "6. Log Conventions"
+status: Implemented
+applies_to:
+  - "*"
+topics:
+  - logging
+  - observability
+  - standards
+---
+
 # 6. Log Conventions
 
 * Date started: 2022-11-11

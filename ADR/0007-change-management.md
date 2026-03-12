@@ -1,3 +1,14 @@
+---
+title: "7. Change Management Process"
+status: Accepted
+applies_to:
+  - "*"
+topics:
+  - process
+  - operations
+  - change-management
+---
+
 # 7. Change Management Process
 
 Date: 2022-11-22

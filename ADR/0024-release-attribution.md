@@ -1,3 +1,14 @@
+---
+title: "24. Release Objects Attribution Tracking and Propagation"
+status: Accepted
+applies_to:
+  - release-service
+topics:
+  - attribution
+  - accountability
+  - release
+---
+
 # 24. Release Objects Attribution Tracking and Propagation
 
 Date: 2023-04-25
