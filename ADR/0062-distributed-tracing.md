@@ -1,10 +1,20 @@
+---
+title: "62. Distributed Tracing"
+status: Implementable
+applies_to:
+  - pipeline-service
+  - integration-service
+  - release-service
+topics:
+  - observability
+---
 # 62. Distributed Tracing
 
 Date started: 2026-02-04
 
 ## Status
 
-Proposed
+Implementable
 
 ## Context
 
