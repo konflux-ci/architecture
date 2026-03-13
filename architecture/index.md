@@ -254,10 +254,10 @@ graph TD
     style SCM fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000;
 
     click HAS "Hybrid Application Service" "https://github.com/redhat-appstudio/application-service"
-    click BS "Build Service" "https://github.com/redhat-appstudio/core/build-service.md"
-    click IS "Integration Service" "https://github.com/redhat-appstudio/core/integration-service.md"
-    click RS "Release Service" "https://github.com/redhat-appstudio/core/release-service.md"
-    click PS "Pipeline Service" "https://github.com/redhat-appstudio/core/pipeline-service.md"
+    click BS "Build Service" "https://github.com/konflux-ci/build-service"
+    click IS "Integration Service" "https://github.com/konflux-ci/integration-service"
+    click RS "Release Service" "https://github.com/konflux-ci/release-service"
+    click PS "Pipeline Service" "https://github.com/openshift-pipelines/pipeline-service"
     click KubeAPI "Kubernetes API Server (Controllers)" "https://kubernetes.io/docs/concepts/architecture/controller/"
 
     click App "Application API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-application"

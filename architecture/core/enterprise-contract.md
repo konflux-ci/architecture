@@ -49,8 +49,8 @@ The built-in requirements are as follows:
 ### Rule-based requirements
 
 The rule-based requirements are based on the content of the pipeline run
-attestation and are defined using [Rego](https://tekton.dev/docs/chains/), the
-[Open Policy Agent](https://tekton.dev/docs/chains/) query language.
+attestation and are defined using [Rego](https://www.openpolicyagent.org/docs/latest/policy-language/), the
+[Open Policy Agent](https://www.openpolicyagent.org/) query language.
 
 Some examples of rule-based requirements are:
 
