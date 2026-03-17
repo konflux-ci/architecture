@@ -6,18 +6,16 @@ Checks (errors — block merge):
 - ADR files have required frontmatter fields
 - ADR status in frontmatter matches ## Status section
 - All ADR/service cross-references point to existing files
+- If a service lists an ADR in related_adrs, that ADR must list the
+  service in applies_to
+- A service may not reference a superseded or replaced ADR in
+  related_adrs
 
-Checks (warnings — informational only):
-- Bidirectional references: ADR applies_to ↔ service related_adrs
-
-Bidirectional references are warnings, not errors, by design. The ADR
-applies_to field is the authoritative source for which services an ADR
-affects — agents discover relevant ADRs by grepping this field. The
-service doc's related_adrs is a curated highlights list (the 3-5 most
-important ADRs), not an exhaustive backlink. Requiring full
-bidirectional consistency would turn every new ADR into a multi-file
-change, creating exactly the maintenance burden structured frontmatter
-is meant to eliminate.
+The ADR applies_to field is the authoritative source for which services
+an ADR affects — agents discover relevant ADRs by grepping this field.
+The service doc's related_adrs is a curated highlights list (the 3-5
+most important ADRs), not an exhaustive backlink. An ADR may apply_to a
+service without the service back-referencing it, but NOT vice versa.
 """
 
 import sys
@@ -247,15 +245,19 @@ def validate_adr(filepath, valid_services):
     return errors
 
 
-def check_bidirectional_references(valid_services, adr_numbers):
-    """Check that ADR applies_to and service related_adrs are consistent."""
+def check_service_adr_references(valid_services, adr_numbers):
+    """Check service related_adrs against ADR applies_to and status.
+
+    Enforces:
+    - If a service lists an ADR in related_adrs, that ADR must include
+      the service in applies_to.
+    - A service may not reference a superseded or replaced ADR.
+    """
     errors = []
 
-    # Build maps: ADR -> services it applies to, Service -> ADRs it references
+    # Build maps from ADR frontmatter in a single pass
     adr_to_services = {}  # adr_number -> set of service names
-    service_to_adrs = {}  # service_name -> set of adr numbers
-
-    # Read all ADRs
+    adr_statuses = {}     # adr_number -> status string
     adr_dir = os.path.join(REPO_ROOT, "ADR")
     for f in sorted(os.listdir(adr_dir)):
         m = re.match(r"^(\d{4})-.*\.md$", f)
@@ -264,14 +266,17 @@ def check_bidirectional_references(valid_services, adr_numbers):
         adr_num = m.group(1)
         filepath = os.path.join(adr_dir, f)
         fm, _ = parse_frontmatter(filepath)
-        if fm and isinstance(fm.get("applies_to"), list):
-            # Skip ADRs that apply to "*" — cross-cutting ADRs shouldn't
-            # require every service to back-reference them
+        if not fm:
+            continue
+        if "status" in fm:
+            adr_statuses[adr_num] = fm["status"]
+        if isinstance(fm.get("applies_to"), list):
             if "*" in fm["applies_to"]:
-                continue
-            adr_to_services[adr_num] = set(fm["applies_to"])
+                adr_to_services[adr_num] = {"*"}
+            else:
+                adr_to_services[adr_num] = set(fm["applies_to"])
 
-    # Read all service docs
+    # Read all service docs and check their related_adrs
     for d in ["architecture/core", "architecture/add-ons"]:
         dirpath = os.path.join(REPO_ROOT, d)
         if not os.path.isdir(dirpath):
@@ -282,37 +287,38 @@ def check_bidirectional_references(valid_services, adr_numbers):
             svc_name = f.replace(".md", "")
             filepath = os.path.join(dirpath, f)
             fm, _ = parse_frontmatter(filepath)
-            if fm:
-                overview = fm.get("overview", {})
-                if isinstance(overview, dict) and isinstance(
-                    overview.get("related_adrs"), list
-                ):
-                    service_to_adrs[svc_name] = {
-                        str(n).zfill(4) for n in overview["related_adrs"]
-                    }
+            if not fm:
+                continue
+            overview = fm.get("overview", {})
+            if not isinstance(overview, dict):
+                continue
+            related_adrs = overview.get("related_adrs", [])
+            if not isinstance(related_adrs, list):
+                continue
 
-    # Check: if ADR applies_to service X, service X should list that ADR
-    for adr_num, services in adr_to_services.items():
-        for svc in services:
-            if svc not in service_to_adrs:
-                continue  # Service file might not have related_adrs yet
-            if adr_num not in service_to_adrs.get(svc, set()):
-                errors.append(
-                    f"ADR {adr_num} applies_to '{svc}' but "
-                    f"{svc}.md does not list ADR {adr_num} in related_adrs"
-                )
+            for adr_num_raw in related_adrs:
+                adr_num = str(adr_num_raw).zfill(4)
 
-    # Check: if service lists ADR X, ADR X should apply_to that service
-    for svc, adrs in service_to_adrs.items():
-        for adr_num in adrs:
-            if adr_num not in adr_to_services:
-                continue  # ADR might not have applies_to yet
-            adr_services = adr_to_services.get(adr_num, set())
-            if svc not in adr_services:
-                errors.append(
-                    f"{svc}.md lists ADR {adr_num} in related_adrs but "
-                    f"ADR {adr_num} does not include '{svc}' in applies_to"
-                )
+                # Check: service must not reference a superseded/replaced ADR
+                status = adr_statuses.get(adr_num)
+                if status in ("Superseded", "Replaced"):
+                    errors.append(
+                        f"{svc_name}.md lists ADR {adr_num} in related_adrs "
+                        f"but ADR {adr_num} has status '{status}'"
+                    )
+
+                # Check: ADR must include this service in applies_to
+                adr_services = adr_to_services.get(adr_num)
+                if adr_services is None:
+                    continue  # ADR might not have applies_to yet
+                if "*" in adr_services:
+                    continue  # Cross-cutting ADR applies to all services
+                if svc_name not in adr_services:
+                    errors.append(
+                        f"{svc_name}.md lists ADR {adr_num} in related_adrs "
+                        f"but ADR {adr_num} does not include '{svc_name}' "
+                        f"in applies_to"
+                    )
 
     return errors
 
@@ -366,37 +372,29 @@ def main():
             print(f"  {rel_path}: {GREEN}OK{NC}")
     print()
 
-    # Check bidirectional references
-    print("Checking bidirectional ADR ↔ service references...")
+    # Check service → ADR reference consistency
+    print("Checking service → ADR references...")
     print("=" * 50)
-    bidir_errors = check_bidirectional_references(valid_services, adr_numbers)
-    if bidir_errors:
-        for e in sorted(bidir_errors):
-            print(f"  {YELLOW}WARNING:{NC} {e}")
+    ref_errors = check_service_adr_references(valid_services, adr_numbers)
+    if ref_errors:
+        for e in sorted(ref_errors):
+            print(f"  {RED}ERROR:{NC} {e}")
     else:
-        print(f"  {GREEN}All cross-references are consistent{NC}")
+        print(f"  {GREEN}All service → ADR references are consistent{NC}")
     print()
 
     # Summary
-    errors = service_errors + adr_errors
-    all_issues = errors + bidir_errors
+    errors = service_errors + adr_errors + ref_errors
 
     print("=" * 50)
-    if not all_issues:
+    if not errors:
         print(f"{GREEN}SUCCESS:{NC} All frontmatter is valid and cross-references are consistent")
         return 0
     else:
-        if errors:
-            print(f"{RED}ERRORS:{NC} {len(errors)} frontmatter validation error(s)")
-            for e in errors:
-                print(f"  {RED}ERROR:{NC} {e}")
-        if bidir_errors:
-            print(
-                f"{YELLOW}WARNINGS:{NC} {len(bidir_errors)} "
-                f"bidirectional reference inconsistency(ies)"
-            )
-        # Only fail on hard errors, not bidirectional warnings
-        return 1 if errors else 0
+        print(f"{RED}ERRORS:{NC} {len(errors)} frontmatter validation error(s)")
+        for e in errors:
+            print(f"  {RED}ERROR:{NC} {e}")
+        return 1
 
 
 if __name__ == "__main__":
