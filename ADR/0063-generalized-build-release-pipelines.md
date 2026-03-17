@@ -115,7 +115,7 @@ Materials (SBOMs), signatures, and security scan reports.
     within the package ecosystem, the build pipeline can set an arbitrary media type value that
     uses the `vnd.konflux` namespace prefix.
 
-- The build pipeline MUST document the expected `mediaType`, `artifactType`, and/or
+- The build tasks and pipelines MUST document the expected `mediaType`, `artifactType`, and/or
   `config.mediaType` for the _Component Build Artifact_.
 
 - In `Snapshot` objects, the `spec.components[*].containerImage` field stores a reference to a
@@ -148,8 +148,8 @@ Materials (SBOMs), signatures, and security scan reports.
 
 ## Consequences
 
-- Build pipelines will need to document the `mediaType`, `artifactType`, and/or `config.mediaType`
-  for the component build artifact in their catalog `README.md` files.
+- Build tasks and pipelines will need to document the `mediaType`, `artifactType`, and/or 
+  `config.mediaType` for the component build artifact in their catalog `README.md` files.
 
 - `IntegrationTestScenario` pipelines MUST only accept `Snapshot` data as their primary input.
   Additional inputs such as SBOMs, signatures, etc. MUST be obtained through OCI image referrers of
