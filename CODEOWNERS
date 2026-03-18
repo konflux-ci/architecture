@@ -30,3 +30,5 @@
 /diagrams/integration-service  		    @konflux-ci/integration-service-maintainers
 
 /architecture/add-ons/project-controller.md  @konflux-ci/vanguard @ifireball
+
+/architecture/add-ons/kubearchive.md @kubearchive/maintainers
