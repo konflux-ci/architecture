@@ -17,7 +17,6 @@ overview:
     - release-service
     - enterprise-contract
   related_adrs:
-    - "0016"
     - "0037"
     - "0038"
     - "0048"

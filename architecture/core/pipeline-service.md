@@ -14,7 +14,6 @@ overview:
   related_services: []
   related_adrs:
     - "0009"
-    - "0001"
     - "0036"
   key_concepts:
     - OpenShift Pipelines operator
