@@ -1,3 +1,15 @@
+---
+title: "64. Package Registry Proxy Configuration for Hermeto"
+status: Implementable
+applies_to:
+  - build-service
+topics:
+  - build
+  - security
+  - cache
+  - proxy
+---
+
 # 64. Package Registry Proxy Configuration for Hermeto
 
 Date: 2026-04-07
