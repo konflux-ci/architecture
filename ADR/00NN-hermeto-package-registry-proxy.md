@@ -1,10 +1,10 @@
-# NN. Package Registry Proxy Configuration for Hermeto
+# 64. Package Registry Proxy Configuration for Hermeto
 
-Date: YYYY-MM-DD
+Date: 2026-04-07
 
 ## Status
 
-Proposed
+Implementable
 
 ## Context
 
