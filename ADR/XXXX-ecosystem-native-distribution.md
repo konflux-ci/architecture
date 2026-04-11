@@ -65,13 +65,15 @@ ecosystem.
     [publication requirements](https://central.sonatype.org/publish/requirements/).
 
   OCI referrers MAY be used to store supply chain metadata internally within Konflux, but this
-  does not satisfy the requirement for ecosystem-native distribution.
+  does not satisfy the requirement for ecosystem-native distribution. When an ecosystem does not
+  yet support a particular metadata type natively, OCI referrers remain the sole store for that
+  metadata within Konflux.
 
 - Build and integration pipelines that make non-OCI artifacts available for pre-release or
-  integration testing SHOULD expose those artifacts via native package tooling. Consumers of
-  pre-release builds SHOULD be able to install or resolve the artifact using standard ecosystem
-  tools (e.g., `pip install`, `dnf install`) without requiring direct interaction with an OCI
-  registry.
+  integration testing should be able to expose those artifacts via native package tooling.
+  Consumers of pre-release builds should be able to install or resolve the artifact using
+  standard ecosystem tools (e.g., `pip install`, `dnf install`) without requiring direct
+  interaction with an OCI registry.
 
 ## Consequences
 
@@ -82,7 +84,7 @@ ecosystem.
   (Konflux-internal) and in the ecosystem-native location (external). Release pipelines are
   responsible for this translation.
 
-- Pre-release and integration test infrastructure for non-OCI artifacts SHOULD include
+- Pre-release and integration test infrastructure for non-OCI artifacts should be able to include
   ecosystem-native package repositories or indices (e.g., a local Yum repository, a local PyPI
   index) so that tests can consume artifacts using standard tooling.
 
