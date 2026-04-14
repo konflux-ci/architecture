@@ -82,12 +82,17 @@ graph TD
         MPC["Multi-Platform Controller"]
         MM["MintMaker"]
         PC["Project Controller"]
+        KA["KubeArchive"]
     end
 
     IR -- managed by --> IC
     IC -- injects push secrets --> BPR
     BPR -- triggers multi-arch provisioning --> MPC
     MPC -- provisions VMs for --> BPR
+    KA -- archives and prunes --> BPR
+    KA -- archives and prunes --> TPR
+    KA -- archives and prunes --> Snap
+    KA -- archives and prunes --> Release
 
     subgraph managed[Managed Namespace]
         RPA["ReleasePlanAdmission(s)"]
@@ -127,9 +132,10 @@ graph TD
     style EXT fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000
     style AWS fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px,color:#000000
     style IBM fill:#e8f5e8,stroke:#2e7d32,stroke-width:1px,color:#000000
+    style KA fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000
 
     classDef controlPlane fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000;
-    class App,Comp,ITS,RP,RPA,ECP,IC,MPC,ISC,MM,PC controlPlane;
+    class App,Comp,ITS,RP,RPA,ECP,IC,MPC,ISC,MM,PC,KA controlPlane;
 
     classDef dataPlane fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000000;
     class Snap,Release dataPlane;
@@ -157,6 +163,7 @@ graph TD
         ISC[Internal Services Controller]
         MM[MintMaker]
         PC[Project Controller]
+        KA[KubeArchive]
     end
 
     subgraph quayio[quay.io]
@@ -180,12 +187,17 @@ graph TD
     MPC -- Watches Build PipelineRuns --> TW
     ISC -- Watches InternalRequest in Managed Namespace --> MW
     ISC -- Performs actions in --> EXT[External Network Zone]
+    KA -- Archives resources from --> TW
+    KA -- Archives resources from --> MW
+    KA -- Stores archived resources --> DB[Database]
 
     style IC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
     style MPC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
     style ISC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
     style MM fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
     style PC fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
+    style KA fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000;
+    style DB fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#000000;
     style kubeapi fill:#e8eaf6,stroke:#3f51b5,stroke-width:2px,color:#000000;
     style TW fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
     style MW fill:#ffffff,stroke:#1565c0,stroke-width:3px,color:#000000;
@@ -215,8 +227,13 @@ The [MintMaker] automates dependency updates for Konflux components using Renova
 
 The [Project Controller] enables users to manage projects and development streams in Konflux. It provides a templating system for creating multiple similar development streams with consistent resource structures, streamlining the process of setting up complex multi-component applications.
 
+### KubeArchive
+
+[KubeArchive] archives Kubernetes resources outside of the cluster, enabling deletion of one-shot resources such as `PipelineRuns`, `TaskRuns`, `Snapshots`, and `Releases` for future reference. It introduces `KubeArchiveConfig` and `ClusterKubeArchiveConfig` custom resources to define archival and deletion rules using CEL expressions. It exposes a REST API to provide access to archived resources.
+
 [Image Controller]: ./image-controller.md
 [Multi-Platform Controller]: ./multi-platform-controller.md
 [Internal Services Controller]: ./internal-services.md
 [MintMaker]: ./mintmaker.md
 [Project Controller]: ./project-controller.md
+[KubeArchive]: ./kubearchive.md
