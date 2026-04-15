@@ -10,33 +10,54 @@ toc: true
 
 ## Overview
 
-Konflux is a platform for building integrated software that streamlines, consolidates, and secures the development lifecycle.
+From ["Why Konflux?"](https://konflux-ci.dev/docs):
 
-### Goals
+> Konflux is an open-source continuous integration and delivery (CI/CD) application that helps you
+> secure and simplify the process of building, testing, and releasing rock-solid software faster.
 
-- Build component artifacts from source.
-- Compose software that consists of multiple components, from multiple repositories.
-- Provide transparency on the software supply chain of artifacts: what makes up the software and how was it built.
-- Provide a way for software teams to release to destinations under the control of their SRE or release engineering team(s).
+Key goals of Konflux:
+
+- Build component artifacts from source
+- Compose software that consists of multiple components, from multiple repositories
+- Provide transparency on the software supply chain of artifacts: what makes up the software and how was it built
+- Provide a way for software teams to publish software to authoritative [distribution platforms](https://slsa.dev/spec/v1.2/terminology#distribution-model)
 - Provide a unified user interface across the entire process
 
-## Architecture Goals
+## Architecture Principles
 
-- Build artifacts once with enough data to determine suitability for releasing.
-- Build artifacts once that can be released to multiple locations, multiple use cases.
-- Specify builds and their dependencies entirely from git and not from transient state of the build system. Employ tools like [renovate](https://docs.renovatebot.com/) to manage dependency updates.
-- Build semantically reproducible artifacts. Any configuration which has the potential to affect the semantic functionality of a build should be recorded in the provenance and source controlled whenever possible.
-- Be extensible. Provide opinionated [build pipelines](https://github.com/redhat-appstudio/build-definitions/) and [release pipelines](https://github.com/redhat-appstudio/release-service-catalog), but let users extend those and create their own.
-- "Shift left" the decisions for releasing into PRs; you should be able to release artifacts from a PR as soon as it is merged.
-- Scale without capacity reserved ahead of time.
-- Static stability: the overall system continues to work when a dependency is impaired.
-- Enhancements to the pipelines (the extensible elements of the system) should be rolled out in such a way that individual users can control **when** they accept the update to their namespaces, their processes. Use policy to drive eventual compliance.
-- Each subservice can fulfill its primary use cases independently, without relying on other systems’ availability. An exception to this is the tekton [pipeline service] which provides foundational APIs on which [build-service], [integration-service], and [release-service] depend.
-- Each sub-service owns its data and logic.
-- Communication among services and participants is always asynchronous.
-- Each sub-service is owned by one team. Ownership does not mean that only one team can change the code, but the owning team has the final decision.
-- Minimize shared resources among sub-services.
-- Security, Privacy, and Governance: Sensitive data is protected by fine-grained access control
+> Principles are fundamental truths that serve as the foundations for behavior that gets you what you want out of life.
+_- Ray Dalio, "Principles: Life & Work"_
+
+- **Build once, publish many:**
+  - Every artifact is a release candidate, with enough data to determine suitability for releasing.
+  - A single artifact can be released to multiple locations which serve multiple use cases.
+  - Publishing software automatically from an approved change in source code should be feasible.
+- **Git is the source of truth:**
+  - Build execution is defined and controlled alongside source code.
+  - Artifacts and their dependency trees should be defined in git to the furthest extent possible.
+  - Control the rate of change through git-based review processes (i.e. pull requests, merge requests, etc.), especially for updates to software dependencies and changes to build execution.
+  - Build semantically reproducible artifacts. Any configuration which has the potential to affect the semantic functionality of a build should be recorded in the provenance and source controlled whenever possible.
+- **Be opinionated yet flexible:**
+  - Provide authoritative build execution pipelines and example release pipelines "out of the box."
+  - Provide example programmatic policies that validate a software artifact is ready for publication "out of the box."
+  - Ensure adopters have sufficient knowledge to extend these tools to suit their own needs.
+- **Enforce compliance at the point of change:**
+  - Use programmatic policies to determine if a software artifact meets publication criteria.
+  - Allow policies to be tailored to specific distribution platform requirements.
+  - Allow policy definition and application to be done separately from the software build process.
+- **Build for distributed, scalable systems:**
+  - Scale without capacity reserved ahead of time.
+  - Communication among services and participants is asynchronous to the furthest extent possible.
+  - Expect failures from downstream/dependent systems, and handle them gracefully.
+  - Each subservice can fulfill its primary use cases independently, with minimal synchronous dependencies.
+  - Each sub-service owns its data and logic.
+  - Minimize shared resources among sub-services.
+  - Each sub-service is owned by one team. Ownership does not mean that only one team can change the code, but the owning team has the final decision.
+- **Secure the system by default:**
+  - Sensitive data is protected by fine-grained access control.
+  - Users should not be able to view, modify, or interfere with builds without explicit authority.
+  - The build system provides cryptographically verifiable evidence of the actions taken that are related to a specific software artifact.
+
 
 ## Architecture Constraints
 
@@ -45,7 +66,7 @@ Konflux is a platform for building integrated software that streamlines, consoli
 - The **user has admin** in their namespace. This means that the user can access secrets in their namespace. This means that the system can never provide secrets to the user that are scoped beyond that user's domain. A user can exfiltrate the push secret from their namespace, build invalid content on their laptop, and push it to their buildtime registry. Such a build will be rejected at release time.
 - The cluster is our **unit of sharding**. Each cluster is independent and runs an instance of every subsystem. User namespaces are allocated to one cluster. If we lose a cluster, all namespaces on that cluster are inaccessible, but namespaces on other clusters are not impacted, limiting the blast radius. No subsystem should coordinate across clusters.
 - Artifacts built, tested, and shipped by the system are **OCI artifacts**. SBOMs, attestations, signatures, and other supporting metadata are stored in the registry alongside the artifact, tagged by the `cosign triangulate` convention.
-- While not true today, it should be possible to **install** one subsystem without the others and to replace one subsystem with a new one without affecting the others. See [!148](https://github.com/redhat-appstudio/architecture/pull/148) for an example of attempting to achieve this.
+- While not true today, it should be possible to **install** one subsystem without the others and to replace one subsystem with a new one without affecting the others. See [!148](https://github.com/konflux-ci/architecture/pull/148) for an example of attempting to achieve this.
 - Any attestation used for making a release-time decision should be provably trusted (either because it is GPG signed or its immutable reference is added to the provenance by a trusted task).
 
 > :bulb: Adding new functionality usually looks like either adding a new **controller** or adding a new **tekton task**.
