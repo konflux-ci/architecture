@@ -15,7 +15,7 @@ overview:
     - integration-service
     - release-service
   related_adrs:
-    - "0064"
+    - "0065"
   key_concepts:
     - Resource archival to external database
     - CEL-based archival and deletion policies
@@ -28,7 +28,7 @@ overview:
 
 [KubeArchive](https://github.com/kubearchive/kubearchive) is a tool that archives Kubernetes resources outside of the cluster and is able to delete these resources from the cluster. And it exposes a REST API protected by the Kubernetes RBAC (it uses SubjectAccessReview and TokenReview to delegate auth).
 
-KubeArchive is essential for operating Konflux at scale. Without it, completed `Snapshot`s, `Release`s other resources accumulate in Etcd, impacting cluster performance. See [ADR 63](../../ADR/0063-kubearchive.md) for the decision to adopt KubeArchive.
+KubeArchive is essential for operating Konflux at scale. Without it, completed `Snapshot`s, `Release`s other resources accumulate in Etcd, impacting cluster performance. See [ADR 65](../../ADR/0065-kubearchive.md) for the decision to adopt KubeArchive.
 
 ## Architecture
 

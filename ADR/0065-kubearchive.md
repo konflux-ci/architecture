@@ -1,5 +1,5 @@
 ---
-title: "64. Adopt KubeArchive for resource lifecycle management"
+title: "65. Adopt KubeArchive for resource lifecycle management"
 status: Implemented
 applies_to:
   - pipeline-service
@@ -10,7 +10,7 @@ topics:
   - resource-lifecycle
 ---
 
-# 64. Adopt KubeArchive for resource lifecycle management
+# 65. Adopt KubeArchive for resource lifecycle management
 
 Date: 2026-03-16
 
