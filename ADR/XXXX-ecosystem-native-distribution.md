@@ -3,7 +3,6 @@ title: "XXXX. Ecosystem-Native Distribution for Non-OCI Artifacts"
 status: Proposed
 applies_to:
   - release-service
-  - build-service
 topics:
   - release
   - rpm
@@ -58,22 +57,26 @@ ecosystem.
 - Release pipelines for non-OCI artifacts MUST publish supply chain metadata -- including SBOMs,
   attestations, and signatures -- to the ecosystem-native location and in the ecosystem-native
   format, to the extent possible as allowed by the standards of that ecosystem, which continue to
-  evolve. Examples include:
+  evolve. Examples include, but are not limited to:
   - **RPM**: GPG-signed packages in a Yum/DNF repository with a signed `repomd.xml`.
   - **Python**: Attestations published to PyPI per [PEP 740](https://peps.python.org/pep-0740/).
   - **Maven**: Signatures published to Maven Central per its
     [publication requirements](https://central.sonatype.org/publish/requirements/).
+  - **NPM**: Provenance published to the npm registry per its
+    [provenance documentation](https://docs.npmjs.com/generating-provenance-statements).
+
+  The requirement applies to all non-OCI ecosystems, not only those listed above.
 
   OCI referrers MAY be used to store supply chain metadata internally within Konflux, but this
   does not satisfy the requirement for ecosystem-native distribution. When an ecosystem does not
   yet support a particular metadata type natively, OCI referrers remain the sole store for that
   metadata within Konflux.
 
-- Build and integration pipelines that make non-OCI artifacts available for pre-release or
-  integration testing should be able to expose those artifacts via native package tooling.
-  Consumers of pre-release builds should be able to install or resolve the artifact using
-  standard ecosystem tools (e.g., `pip install`, `dnf install`) without requiring direct
-  interaction with an OCI registry.
+- Pipelines that make non-OCI artifacts available for pre-release or integration testing --
+  whether build pipelines, Integration Test Scenarios, or tenant release pipelines -- should be
+  able to expose those artifacts via native package tooling. Consumers of pre-release builds
+  should be able to install or resolve the artifact using standard ecosystem tools (e.g.,
+  `pip install`, `dnf install`) without requiring direct interaction with an OCI registry.
 
 ## Consequences
 
@@ -91,6 +94,11 @@ ecosystem.
 - Konflux's scope is bounded: it provides a consistent internal representation using OCI and
   ensures release pipelines translate that to whatever the target ecosystem requires. Konflux does
   not require downstream ecosystems to adopt OCI-based distribution.
+
+- Supply chain metadata that Konflux produces but the target ecosystem cannot accept natively
+  will only persist in the tenant's OCI location. Release pipelines do not push OCI artifacts to
+  a separate reserved location, so this metadata is not independently preserved outside the
+  tenant's registry.
 
 - Ecosystem-native supply chain standards will evolve. Release pipelines are expected to track and
   adopt those standards over time.
