@@ -136,6 +136,13 @@ Materials (SBOMs), signatures, and security scan reports.
   - Security scan results. These MAY be produced as part of the build pipeline, or as the result of
     an `IntegrationTestScenario` - see [ADR-0048](./0048-movable-build-tests.md).
 
+- Component build pipelines MUST generate Software Bill of Materials in a format that its respective
+  package ecosystem can process, if such a standard exists within the package ecosystem. Examples:
+  - Python: packages can provide SBOMs in the [`.dist-info/sboms/`](https://packaging.python.org/en/latest/specifications/binary-distribution-format/#the-dist-info-sboms-directory)
+    directory. See [PEP-0770](https://peps.python.org/pep-0770/#specification).
+  - Maven: The [CycloneDX Plugin](https://github.com/CycloneDX/cyclonedx-maven-plugin#goals)
+    established a convention for publishing SBOMs within a Maven repository.
+
 - Component build pipelines MUST use trusted artifacts to transmit large data (volumes) between
   tasks - see [ADR-0036](./0036-trusted-artifacts.md).
 
@@ -356,3 +363,9 @@ policies are defined today:
 
 This idea was considered too large to be included in this ADR. The community is seeking a follow-up
 ADR from Conforma experts who could refine this idea further.
+
+## Changelog
+
+- 2026-04-22: Added package ecosystem requirement for SBOMs
+- 2026-03-17: ADR approved
+- 2026-01-23: Initial Draft
