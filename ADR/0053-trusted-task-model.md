@@ -115,6 +115,11 @@ Note:
 This ADR doesn't mandate a specific format for `trusted_task_rules`, but does
 come with an example of what it could look like - see the [Appendix](#appendix).
 
+Note: The `trusted_task_rules` structure uses maps (keyed by a descriptive name)
+rather than arrays for the `allow` and `deny` fields. This is because OPA does
+not merge arrays — when multiple data sources contribute rules, array values
+would conflict instead of combining. Map-based keys merge naturally in OPA.
+
 ### Trust upstream Konflux Tasks based on bundle URL
 
 A policy author who wants to trust all the upstream Konflux Tasks should do so by
@@ -215,39 +220,31 @@ This is an attempt to illustrate how such a mechanism could look.
 ```yaml
 trusted_task_rules:
   allow:
-    - name: Implicitly trust all tasks from konflux-ci/tekton-catalog
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/*
-
-    - name: Require common signing key  # starting in 2026
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/*
-      signing_key: <common public key for konflux-ci Tasks>
-      effective_on: 2026-01-01
+    tekton-catalog-tasks:
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/*
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/*
+        signing_key: <common public key for konflux-ci Tasks>
+        effective_on: 2026-01-01
   deny:
-    - name: Deprecate the old reference for task-build-image-index
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/task-build-image-manifest
-      message: >
-        The task was renamed to 'build-image-index',
-        please replace the task reference with an equivalent one from
-        https://quay.io/konflux-ci/tekton-catalog/task-build-image-index
-      effective_on: 2025-10-26
-
-    - name: Expire all buildah task versions below 0.5
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/task-buildah*
-      versions:
-        - '<0.5'
-      effective_on: 2025-11-15
-
-    - name: Expire all buildah task versions below 0.5.1
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/task-buildah*
-      versions:
-        - '<0.5.1'
-      effective_on: 2025-11-29  # (later than 0.5)
-
-    - name: Expire the older 2.x versions of task-foo without affecting 1.x
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/task-foo
-      versions:
-        - '>=2,<2.1.0'
-      effective_on: 2025-10-30
+    tekton-catalog-tasks:
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/task-build-image-manifest
+        message: >
+          The task was renamed to 'build-image-index',
+          please replace the task reference with an equivalent one from
+          https://quay.io/konflux-ci/tekton-catalog/task-build-image-index
+        effective_on: 2025-10-26
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/task-buildah*
+        versions:
+          - '<0.5'
+        effective_on: 2025-11-15
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/task-buildah*
+        versions:
+          - '<0.5.1'
+        effective_on: 2025-11-29  # (later than 0.5)
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/task-foo
+        versions:
+          - '>=2,<2.1.0'
+        effective_on: 2025-10-30
 ```
 
 `is_allowed_by_trusted_task_rules(task_reference)`:
