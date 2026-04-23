@@ -115,11 +115,6 @@ Note:
 This ADR doesn't mandate a specific format for `trusted_task_rules`, but does
 come with an example of what it could look like - see the [Appendix](#appendix).
 
-Note: The `trusted_task_rules` structure uses maps (keyed by a descriptive name)
-rather than arrays for the `allow` and `deny` fields. This is because OPA does
-not merge arrays — when multiple data sources contribute rules, array values
-would conflict instead of combining. Map-based keys merge naturally in OPA.
-
 ### Trust upstream Konflux Tasks based on bundle URL
 
 A policy author who wants to trust all the upstream Konflux Tasks should do so by
@@ -206,6 +201,39 @@ Note that Conforma also supports [setting Task expiry] manually via the
 `build.appstudio.redhat.com/expires-on` annotation. This will still work.
 
 ## Appendix
+
+### Why maps instead of arrays
+
+The `trusted_task_rules` structure uses maps (keyed by a descriptive name)
+rather than arrays for the `allow` and `deny` fields. This is driven by how
+OPA merges data from multiple sources.
+
+When OPA loads data from multiple sources (e.g. separate bundles or data
+files), it merges them into a single `data` document. The merge is recursive
+for maps — keys from both sides are combined into one map. But if two sources
+define the same key path with a non-map value (an array, a scalar, or null),
+OPA treats it as a conflict and **fails the entire data load**.
+
+For example, suppose two bundles each contribute rules under
+`trusted_task_rules.allow`:
+
+```yaml
+# Bundle A                          # Bundle B
+trusted_task_rules:                  trusted_task_rules:
+  allow:                               allow:
+    tekton-catalog-tasks:                my-org-tasks:
+      - pattern: oci://quay.io/…          - pattern: oci://my.registry/…
+```
+
+Because `allow` is a map, OPA merges the two: the result has both
+`tekton-catalog-tasks` and `my-org-tasks` as keys under `allow`. If `allow`
+were an array instead, both bundles would define the same key path
+(`trusted_task_rules.allow`) with an array value, and OPA would reject the
+data at load time.
+
+The map keys themselves (`tekton-catalog-tasks`, `my-org-tasks`) are
+descriptive labels. Conforma treats them as opaque — it iterates over all
+values in the map to collect the full set of rules, regardless of key names.
 
 ### Example `trusted_task_rules` mechanism
 
