@@ -1,3 +1,15 @@
+---
+title: "65. Unified Conforma Release Workflow"
+status: Proposed
+applies_to:
+  - enterprise-contract
+  - release-service
+topics:
+  - release
+  - conforma
+  - deployment
+---
+
 # ADR-65: Unified Conforma Release Workflow
 
 ## Status
