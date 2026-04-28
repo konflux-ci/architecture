@@ -215,39 +215,31 @@ This is an attempt to illustrate how such a mechanism could look.
 ```yaml
 trusted_task_rules:
   allow:
-    - name: Implicitly trust all tasks from konflux-ci/tekton-catalog
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/*
-
-    - name: Require common signing key  # starting in 2026
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/*
-      signing_key: <common public key for konflux-ci Tasks>
-      effective_on: 2026-01-01
+    tekton-catalog-tasks:
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/*
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/*
+        signing_key: <common public key for konflux-ci Tasks>
+        effective_on: 2026-01-01
   deny:
-    - name: Deprecate the old reference for task-build-image-index
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/task-build-image-manifest
-      message: >
-        The task was renamed to 'build-image-index',
-        please replace the task reference with an equivalent one from
-        https://quay.io/konflux-ci/tekton-catalog/task-build-image-index
-      effective_on: 2025-10-26
-
-    - name: Expire all buildah task versions below 0.5
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/task-buildah*
-      versions:
-        - '<0.5'
-      effective_on: 2025-11-15
-
-    - name: Expire all buildah task versions below 0.5.1
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/task-buildah*
-      versions:
-        - '<0.5.1'
-      effective_on: 2025-11-29  # (later than 0.5)
-
-    - name: Expire the older 2.x versions of task-foo without affecting 1.x
-      pattern: oci://quay.io/konflux-ci/tekton-catalog/task-foo
-      versions:
-        - '>=2,<2.1.0'
-      effective_on: 2025-10-30
+    tekton-catalog-tasks:
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/task-build-image-manifest
+        message: >
+          The task was renamed to 'build-image-index',
+          please replace the task reference with an equivalent one from
+          https://quay.io/konflux-ci/tekton-catalog/task-build-image-index
+        effective_on: 2025-10-26
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/task-buildah*
+        versions:
+          - '<0.5'
+        effective_on: 2025-11-15
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/task-buildah*
+        versions:
+          - '<0.5.1'
+        effective_on: 2025-11-29  # (later than 0.5)
+      - pattern: oci://quay.io/konflux-ci/tekton-catalog/task-foo
+        versions:
+          - '>=2,<2.1.0'
+        effective_on: 2025-10-30
 ```
 
 `is_allowed_by_trusted_task_rules(task_reference)`:
@@ -259,6 +251,39 @@ matching `allow` rules with an `effective_on` date not in the future.
 
 The task reference meets the criteria in any matching `deny` rule with an `effective_on`
 date not in the future.
+
+### Why maps instead of arrays
+
+The `trusted_task_rules` structure uses maps (keyed by a descriptive name)
+rather than arrays for the `allow` and `deny` fields. This is driven by how
+OPA merges data from multiple sources.
+
+When OPA loads data from multiple sources (e.g. separate bundles or data
+files), it merges them into a single `data` document. The merge is recursive
+for maps — keys from both sides are combined into one map. But if two sources
+define the same key path with a non-map value (an array, a scalar, or null),
+OPA treats it as a conflict and **fails the entire data load**.
+
+For example, suppose two bundles each contribute rules under
+`trusted_task_rules.allow`:
+
+```yaml
+# Bundle A                          # Bundle B
+trusted_task_rules:                  trusted_task_rules:
+  allow:                               allow:
+    tekton-catalog-tasks:                my-org-tasks:
+      - pattern: oci://quay.io/…          - pattern: oci://my.registry/…
+```
+
+Because `allow` is a map, OPA merges the two: the result has both
+`tekton-catalog-tasks` and `my-org-tasks` as keys under `allow`. If `allow`
+were an array instead, both bundles would define the same key path
+(`trusted_task_rules.allow`) with an array value, and OPA would reject the
+data at load time.
+
+The map keys themselves (`tekton-catalog-tasks`, `my-org-tasks`) are
+descriptive labels. Conforma treats them as opaque — it iterates over all
+values in the map to collect the full set of rules, regardless of key names.
 
 [Trusted Tasks]: https://conforma.dev/docs/policy/trusted_tasks.html
 [data-acceptable-bundles]: https://quay.io/repository/konflux-ci/tekton-catalog/data-acceptable-bundles
