@@ -18,7 +18,7 @@ Proposed
 
 ## Date
 
-2026-04-15
+2026-04-30
 
 ## Context
 
@@ -47,36 +47,40 @@ There is no mechanism to test all three components together before deployment. T
 
 ## Decision
 
-### New Conforma Release Workflow
+We will introduce a unified release workflow that tests the CLI, policy bundles, and task definitions together before publishing them. All resolver references will then be pinned to the exact versions that were tested, eliminating version skew between components.
+
+### Release Workflow
 
 A [new workflow](https://github.com/conforma/infra-deployments-ci/blob/main/.github/workflows/konflux-policy.yaml) has been introduced that:
 
-1. Pulls the latest policy, task definition and CLI changes.
+1. Pulls the latest policy, task definition, and CLI changes.
 2. Tests them by running both the release pipeline Conforma task and the integration pipeline Conforma task.
 3. Tags the CLI and policy bundles with the `konflux` tag.
-4. Pushes the tested task definitions to the `konflux` branch in the tekton-catalog repo. These task definitions also contain a pinned version of the CLI for the step image.
+4. Pushes the tested task definitions to the `konflux` branch in the tekton-catalog repo, with pinned CLI versions for the step images.
+
+Once the workflow completes, pull requests are submitted to build-definitions and release-service-catalog to update the resolver references: bundle resolvers are pinned to the digest of the `konflux` tag, and git resolvers are pinned to the corresponding git SHA.
+
+### Task-Level Policy Bundle Override
+
+The `verify-enterprise-contract` and `verify-conforma-konflux-ta` tasks will accept a new `POLICY_BUNDLE_SOURCE` parameter. A new step in each task will replace the policy bundle referenced in the EnterpriseContractPolicy (policy.yaml) with the bundle specified by this parameter. This allows the release workflow to pin the exact policy bundle version that was tested, rather than relying on whatever bundle the ECP happens to reference at evaluation time.
 
 ### Rollback
 
-If a release introduces a regression, any member of the Conforma team can roll back by running a GitHub workflow in the [conforma/infra-deployments-ci](https://github.com/conforma/infra-deployments-ci) repository. The workflow re-tags the CLI, policy bundles, and task definitions to a known-good prior version.
-
-### What We Are Changing
-
-We are updating both the Conforma integration pipeline in build-definitions and the Conforma release pipeline task to use the floating `konflux` tag. This ensures the CLI, policies, and task definitions are tested and released together.
+If a release introduces a regression, rollback is performed by reverting the resolver reference update in the affected repository (build-definitions for the integration pipeline, release-service-catalog for the release task). This restores the previous pinned digest or git SHA, returning that pipeline to the last known-good version of the Conforma components.
 
 ## Consequences
 
 ### Positive
 
 - Eliminates version skew between the CLI, policies, and task definitions
-- All three components are tested together before the `konflux` tag is updated
-- Removes dependency on the slow build-definitions and infra-deployments merge process for Conforma updates
+- All three components are tested together before resolver references are updated
+- Digest-pinned bundle resolvers and SHA-pinned git resolvers preserve Tekton's built-in caching
 - Step images use pinned CLI versions instead of `latest`
 
 ### Negative
 
-- We don't yet have a workflow that includes development and staging environments.
-- By referencing task definitions via tag-based Tekton resolvers, we bypass Tekton's built-in caching, which relies on digest references.
+- Updating the pinned digests and git SHAs in build-definitions and release-service-catalog still requires pull requests, so Conforma updates can be delayed by the review and approval process in those repositories.
+- The Conforma integration pipeline (build-definitions) and the Conforma release task (release-service-catalog) are updated via separate pull requests, so version drift can occur if one merges significantly before the other.
 
 ## References
 
