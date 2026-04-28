@@ -54,8 +54,8 @@ ecosystem.
   package registries, in the format and manner required by the target package ecosystem, to the
   extent possible as allowed by the standards of that ecosystem, which continue to evolve.
 
-- Release pipelines for non-OCI artifacts MUST publish supply chain metadata -- including SBOMs,
-  attestations, and signatures -- to the ecosystem-native location and in the ecosystem-native
+- Release pipelines for non-OCI artifacts MUST publish supply chain metadata -- including
+  attestations and signatures -- to the ecosystem-native location and in the ecosystem-native
   format, to the extent possible as allowed by the standards of that ecosystem, which continue to
   evolve. Examples include, but are not limited to:
   - **RPM**: GPG-signed packages in a Yum/DNF repository with a signed `repomd.xml`.
@@ -99,6 +99,12 @@ ecosystem.
   will only persist in the tenant's OCI location. Release pipelines do not push OCI artifacts to
   a separate reserved location, so this metadata is not independently preserved outside the
   tenant's registry.
+
+- Tenants who test with ecosystem-native representations of their artifacts (e.g., via a local
+  PyPI index or Yum repository) should understand that the artifact tested in that form may
+  differ from the OCI artifact that Konflux will ultimately release. If this risk is significant
+  for a given tenant, they should verify that the ecosystem-native artifact matches the content
+  of the OCI artifact before relying on pre-release test results.
 
 - Ecosystem-native supply chain standards will evolve. Release pipelines are expected to track and
   adopt those standards over time.
