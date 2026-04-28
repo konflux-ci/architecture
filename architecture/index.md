@@ -30,33 +30,36 @@ _- Ray Dalio, "Principles: Life & Work"_
 
 - **Build once, publish many:**
   - Every artifact is a release candidate, with enough data to determine suitability for releasing.
-  - A single artifact can be released to multiple locations which serve multiple use cases.
-  - Publishing software automatically from an approved change in source code should be feasible.
+  - A single artifact can be released to multiple distribution platforms which serve multiple use cases.
+  - Each distribution platform can declare its own set of requirements and enforce these requirements through programmatic policy documents.
+  - Distribution platforms control the publication of software artifacts through _managed release pipelines_.
+  - The system can be configured to automatically publish software from an approved change in source code.
 - **Git is the source of truth:**
-  - Build execution is defined and controlled alongside source code.
-  - Artifacts and their dependency trees should be defined in git to the furthest extent possible.
-  - Control the rate of change through git-based review processes (i.e. pull requests, merge requests, etc.), especially for updates to software dependencies and changes to build execution.
+  - Build execution is defined in a source code repository, and _can_ be stored alongside the source code itself.
+  - Source code documents its dependency trees to the furthest extent possible using appropriate tools from the software's packaging ecosystem.
+  - Git-based review processes (ex: pull requests) control the rate of change, especially for updates to software dependencies and changes to build execution.
   - Build semantically reproducible artifacts. Any configuration which has the potential to affect the semantic functionality of a build should be recorded in the provenance and source controlled whenever possible.
 - **Be opinionated yet flexible:**
-  - Provide authoritative build execution pipelines and example release pipelines "out of the box."
-  - Provide example programmatic policies that validate a software artifact is ready for publication "out of the box."
+  - Provide example [build](https://github.com/konflux-ci/build-definitions) and [release](https://github.com/konflux-ci/release-catalog) pipelines as part of a default deployment experience.
+  - Provide example [programmatic policies](https://github.com/conforma/policy) that validate a software artifact is ready for publication as part of a default deployment experience.
   - Ensure adopters have sufficient knowledge to extend these tools to suit their own needs.
 - **Enforce compliance at the point of change:**
   - Use programmatic policies to determine if a software artifact meets publication criteria.
   - Allow policies to be tailored to specific distribution platform requirements.
-  - Allow policy definition and application to be done separately from the software build process.
+  - Require policy definition and application to be done separately from the software build process.
 - **Build for distributed, scalable systems:**
   - Scale without capacity reserved ahead of time.
   - Communication among services and participants is asynchronous to the furthest extent possible.
   - Expect failures from downstream/dependent systems, and handle them gracefully.
-  - Each subservice can fulfill its primary use cases independently, with minimal synchronous dependencies.
+  - Each sub-service can fulfill its primary use cases independently, with minimal synchronous dependencies.
   - Each sub-service owns its data and logic.
   - Minimize shared resources among sub-services.
   - Each sub-service is owned by one team. Ownership does not mean that only one team can change the code, but the owning team has the final decision.
 - **Secure the system by default:**
   - Sensitive data is protected by fine-grained access control.
-  - Users should not be able to view, modify, or interfere with builds without explicit authority.
-  - The build system provides cryptographically verifiable evidence of the actions taken that are related to a specific software artifact.
+  - Only explicitly authorized users can view or halt the execution of a build.
+  - A neutral observer within the build system generates evidence of the actions taken to package a given software artifact.
+    The neutrality of this observer can be verified cryptographically.
 
 
 ## Architecture Constraints
@@ -64,9 +67,9 @@ _- Ray Dalio, "Principles: Life & Work"_
 - Our API server is **the kube API server**. Services are [controllers](https://kubernetes.io/docs/concepts/architecture/controller/) that expose their API as Custom Resource Definitions. This means that requests are necessarily asyncronous. This means that [RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/) is implemented the same way across services. In any exceptional case that a service needs to expose its own user-facing HTTP endpoint (like [tekton results](https://github.com/tektoncd/results)), use `SubjectAccessReviews` to ensure RBAC is consistent. Note, a few other supporting endpoints are exposed outside of kube (the [sprayproxy](https://github.com/redhat-appstudio/sprayproxy) from [pipeline-service] for receiving webhooks, [registration-service](https://github.com/codeready-toolchain/registration-service) from [codeready-toolchain](https://github.com/codeready-toolchain/) for signing up new users).
 - **Use tekton** for anything that should be extended by the user (building, testing, releasing). Expose as much detail via kube resources as possible. Prefer to implement native tasks to perform work on cluster, rather than calling out to third-party services.
 - The **user has admin** in their namespace. This means that the user can access secrets in their namespace. This means that the system can never provide secrets to the user that are scoped beyond that user's domain. A user can exfiltrate the push secret from their namespace, build invalid content on their laptop, and push it to their buildtime registry. Such a build will be rejected at release time.
-- The cluster is our **unit of sharding**. Each cluster is independent and runs an instance of every subsystem. User namespaces are allocated to one cluster. If we lose a cluster, all namespaces on that cluster are inaccessible, but namespaces on other clusters are not impacted, limiting the blast radius. No subsystem should coordinate across clusters.
+- The cluster is our **unit of sharding**. Each cluster is independent and runs an instance of every sub-service. User namespaces are allocated to one cluster. If we lose a cluster, all namespaces on that cluster are inaccessible, but namespaces on other clusters are not impacted, limiting the blast radius. No sub-service should coordinate across clusters.
 - Artifacts built, tested, and shipped by the system are **OCI artifacts**. SBOMs, attestations, signatures, and other supporting metadata are stored in the registry alongside the artifact, tagged by the `cosign triangulate` convention.
-- While not true today, it should be possible to **install** one subsystem without the others and to replace one subsystem with a new one without affecting the others. See [!148](https://github.com/konflux-ci/architecture/pull/148) for an example of attempting to achieve this.
+- While not true today, it should be possible to **install** one sub-service without the others and to replace one sub-service with a new one without affecting the others.
 - Any attestation used for making a release-time decision should be provably trusted (either because it is GPG signed or its immutable reference is added to the provenance by a trusted task).
 
 > :bulb: Adding new functionality usually looks like either adding a new **controller** or adding a new **tekton task**.
@@ -305,20 +308,20 @@ These services make up the core of Konflux and are all required for a working sy
   pipelines to release user content to protected destinations.
 - [Pipeline Service](./core/pipeline-service.md) - A foundational service providing Pipeline APIs and secure supply
   chain capabilities to other services
-- [Enterprise Contract](./core/enterprise-contract.md) - A specialized subsystem responsible for the
+- [Enterprise Contract](./core/enterprise-contract.md) - A specialized sub-service responsible for the
   definition and enforcement of policies related to how OCI artifacts are built and tested.
 
 ### Konflux Add-Ons
 
 The [konflux add-ons](./add-ons/index.md) are optional services that, when installed, provide some additional capability.
 
-- [Image Controller](./add-ons/image-controller.md) - A subsystem of the build-service that manages the
+- [Image Controller](./add-ons/image-controller.md) - A sub-service of the build-service that manages the
   creation and access rights to OCI repositories.
 - [Multi Platform Controller](./add-ons/multi-platform-controller.md) - A
-  subsystem that manages public cloud resources to make multi-platform VMs
+  sub-service that manages public cloud resources to make multi-platform VMs
   available to build pipelines.
 - [Internal Services Controller](./add-ons/internal-services.md) - A
-  subsystem that facilitates access to resources across network boundaries.
+  sub-service that facilitates access to resources across network boundaries.
 
 ## Data Flow
 
