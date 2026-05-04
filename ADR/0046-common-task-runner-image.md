@@ -1,6 +1,6 @@
 ---
 title: "46. Build a common Task Runner image"
-status: Implementable
+status: Implemented
 applies_to:
   - build-service
   - pipeline-service
@@ -16,7 +16,11 @@ Date: 2024-11-15
 
 ## Status
 
-Implementable
+Implemented
+
+Git repository: [task-runner](https://github.com/konflux-ci/task-runner)
+
+Image repository: [task-runner](https://quay.io/repository/konflux-ci/task-runner?tab=tags)
 
 ## Context
 
