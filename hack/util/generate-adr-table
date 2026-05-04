@@ -20,7 +20,7 @@ title: Architecture Decision Records
 eleventyNavigation:
   key: Architecture Decision Records
   order: 3
-  url: /ADR/
+  url: /architecture/ADR/
 toc: true
 ---
 
