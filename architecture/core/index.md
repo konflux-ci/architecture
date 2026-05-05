@@ -162,6 +162,15 @@ The [Pipeline Service] provides Tekton APIs and services to Konflux. It offers T
 
 The [Enterprise Contract] ensures container images produced by Konflux meet clearly defined requirements before they are considered releasable. It validates that images are signed with trusted keys, have attestations, and meet rule-based requirements defined using Rego policies, such as ensuring tasks were defined in known and trusted task bundles and that required tests passed during the pipeline build.
 
+### Trusted Tasks
+
+The [Trusted Tasks] page describes how Konflux determines whether the Tekton Tasks that ran
+in a build pipeline are ones the platform trusts. This covers the three categories of tasks
+(build, external, and release tasks), how the `trusted_tasks` list and `trusted_task_rules`
+mechanism work, how [Trusted Artifacts](./trusted-tasks.md#role-of-trusted-artifacts) keep
+untrusted tasks from corrupting the critical build path, and how task versioning and expiry
+tie into supply chain policy.
+
 ### Konflux UI
 
 The [Konflux UI] provides a web-based user interface for interacting with Konflux. It offers a unified interface for managing Applications, Components, and monitoring builds, tests, and releases across the entire development lifecycle.
@@ -172,4 +181,5 @@ The [Konflux UI] provides a web-based user interface for interacting with Konflu
 [Release Service]: ./release-service.md
 [Pipeline Service]: ./pipeline-service.md
 [Enterprise Contract]: ./enterprise-contract.md
+[Trusted Tasks]: ./trusted-tasks.md
 [Konflux UI]: ./konflux-ui.md
