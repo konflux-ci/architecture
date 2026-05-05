@@ -1,8 +1,7 @@
 ---
-title: "XXXX. Ecosystem-Native Distribution for Non-OCI Artifacts"
-status: Proposed
-applies_to:
-  - release-service
+title: "66. Ecosystem-Native Distribution for Non-OCI Artifacts"
+status: Accepted
+applies_to: []
 topics:
   - release
   - rpm
