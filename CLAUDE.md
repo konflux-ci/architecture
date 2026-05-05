@@ -4,14 +4,14 @@ Architecture documentation, ADRs, and diagrams for the Konflux platform. Documen
 
 ## Finding Information
 
-For a complete document map with line counts, see `AGENTS.md`. Use it to estimate context cost before loading files.
+Each subdirectory has an `AGENTS.md` with document maps and line counts for context cost estimation. Read those before loading files.
 
-Service docs have structured `overview:` frontmatter (scope, key_crds, related_services, related_adrs, key_concepts). ADRs have `status:`, `applies_to:`, and `topics:` frontmatter. Grep frontmatter to find relevant files, then read matched sections only.
-
-- Service docs: `architecture/core/*.md` and `architecture/add-ons/*.md` (20–371 lines each)
-- ADRs: `ADR/NNNN-*.md` (65 files, 29–765 lines — use frontmatter to filter)
+- Service docs: `architecture/core/*.md` and `architecture/add-ons/*.md` — see `architecture/AGENTS.md`
+- ADRs: `ADR/NNNN-*.md` (64 files) — see `ADR/AGENTS.md`
 - ADR template: `ADR/0000-adr-template.md` (31 lines)
 - System overview: `architecture/index.md` (424 lines — read only when 3+ services involved)
+
+Use frontmatter to filter: `overview:` in service docs, `status:`/`applies_to:`/`topics:` in ADRs.
 
 ## Core Architectural Constraints
 

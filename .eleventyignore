@@ -7,7 +7,7 @@ Gemfile.lock
 .idea/
 
 # AI assistant instructions (not part of published documentation)
-AGENTS.md
+**/AGENTS.md
 CLAUDE.md
 CONTRIBUTING.md
 README.md
