@@ -1,10 +1,13 @@
 #!/bin/bash
 
-# generate-agents-md - Generate AGENTS.md files with current line counts
+# generate-agents-md - Generate compact AGENTS.md files for AI agents
 #
-# Produces architecture/AGENTS.md and ADR/AGENTS.md with accurate
-# line counts. Also ensures the root AGENTS.md symlink exists.
-# Run whenever documents are added, removed, or significantly resized.
+# Produces architecture/AGENTS.md and ADR/AGENTS.md in a compact,
+# machine-oriented format with accurate line counts. Also ensures
+# the root AGENTS.md symlink exists.
+#
+# Output is intentionally terse — these files are consumed by AI
+# coding agents for context cost estimation, not by humans.
 #
 # Usage:
 #   ./hack/util/generate-agents-md
@@ -16,13 +19,9 @@ if ! python3 -c "import yaml" 2>/dev/null; then
     exit 1
 fi
 
-# Extract a frontmatter field from a markdown file.
-# Usage: extract_frontmatter <file> <field>
-# For nested fields like overview.scope, pass "overview" and handle in caller.
 extract_scope() {
     local file="$1"
-    local result
-    result=$(python3 -c "
+    python3 -c "
 import yaml, sys
 try:
     with open(sys.argv[1]) as fh:
@@ -36,16 +35,10 @@ try:
                     print(ov['scope'])
                 else:
                     t = fm.get('title', '')
-                    if t:
-                        print(t)
-except Exception as e:
-    print(f'WARNING: failed to extract frontmatter from {sys.argv[1]}: {e}', file=sys.stderr)
-" "$file" 2>/dev/null) || true
-    if [[ -n "$result" ]]; then
-        echo "$result"
-    else
-        echo "WARNING: could not extract scope or title from $file" >&2
-    fi
+                    if t: print(t)
+except Exception:
+    pass
+" "$file" 2>/dev/null || true
 }
 
 # --- Ensure root symlink ---
@@ -67,49 +60,14 @@ fi
 
 # --- Generate architecture/AGENTS.md ---
 {
-cat <<'HEADER'
-# Architecture Document Index
-
-Document map with line counts for context cost estimation.
-Use `overview:` frontmatter in service docs to filter before reading.
-
-## System overview
-
-| File | Lines | Purpose |
-|------|------:|---------|
-HEADER
-
 lines=$(wc -l < architecture/index.md)
-echo "| index.md | $lines | Full system overview with diagrams (read only when 3+ services involved) |"
-
-cat <<'HEADER'
-
-## Core services
-
-| File | Lines | Scope |
-|------|------:|-------|
-HEADER
-
-for f in architecture/core/*.md; do
+echo "index.md ${lines}L — Full system overview (read when 3+ services involved)"
+echo ""
+for f in architecture/core/*.md architecture/add-ons/*.md; do
     lines=$(wc -l < "$f")
     relpath="${f#architecture/}"
     scope=$(extract_scope "$f")
-    echo "| $relpath | $lines | $scope |"
-done
-
-cat <<'HEADER'
-
-## Add-on services
-
-| File | Lines | Scope |
-|------|------:|-------|
-HEADER
-
-for f in architecture/add-ons/*.md; do
-    lines=$(wc -l < "$f")
-    relpath="${f#architecture/}"
-    scope=$(extract_scope "$f")
-    echo "| $relpath | $lines | $scope |"
+    echo "${relpath} ${lines}L — ${scope}"
 done
 } > architecture/AGENTS.md
 echo "Generated architecture/AGENTS.md"
@@ -123,30 +81,14 @@ while IFS= read -r -d '' f; do
     adr_lines=$((adr_lines + l))
 done < <(find ADR/ -name "[0-9]*.md" -type f -print0)
 
-cat <<HEADER
-# ADR Document Index
-
-${adr_count} ADR files totaling ${adr_lines} lines. Use frontmatter to filter:
-\`grep -l 'applies_to:' *.md\` or \`grep -l 'topics:' *.md\`.
-
-Status key: Ac=Accepted, Im=Implemented, Ib=Implementable,
-Pr=Proposed, Ap=Approved, Rp=Replaced, Ss=Superseded,
-Dp=Deprecated, Ic=In consideration
-
-| ADR | Status | Lines | Title |
-|-----|--------|------:|-------|
-HEADER
+echo "${adr_count} ADRs, ${adr_lines} total lines. Filter: grep -l 'applies_to:' ADR/*.md"
+echo "Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=Replaced Ss=Superseded Dp=Deprecated Ic=In-consideration"
+echo ""
 
 declare -A STATUS_ABBR=(
-    ["Accepted"]="Ac"
-    ["Implemented"]="Im"
-    ["Implementable"]="Ib"
-    ["Proposed"]="Pr"
-    ["Approved"]="Ap"
-    ["Replaced"]="Rp"
-    ["Superseded"]="Ss"
-    ["Deprecated"]="Dp"
-    ["In consideration"]="Ic"
+    ["Accepted"]="Ac" ["Implemented"]="Im" ["Implementable"]="Ib"
+    ["Proposed"]="Pr" ["Approved"]="Ap" ["Replaced"]="Rp"
+    ["Superseded"]="Ss" ["Deprecated"]="Dp" ["In consideration"]="Ic"
 )
 
 while IFS= read -r -d '' f; do
@@ -165,12 +107,11 @@ try:
                 t = re.sub(r'^[0-9]+\.\s*', '', t)
                 s = fm.get('status','')
                 print(t + '\t' + s)
-except Exception as e:
-    print(f'WARNING: failed to extract frontmatter from {sys.argv[1]}: {e}', file=sys.stderr)
+except Exception:
     print('\t')
 " "$f" 2>/dev/null || echo -e "\t")
     abbr="${STATUS_ABBR[$status]:-$status}"
-    echo "| $num | $abbr | $lines | $title |"
+    echo "${num} ${abbr} ${lines}L ${title}"
 done < <(find ADR/ -name "[0-9]*.md" -type f -print0 | sort -z)
 } > ADR/AGENTS.md
 echo "Generated ADR/AGENTS.md"
