@@ -33,11 +33,11 @@ if [[ -L "AGENTS.md" ]]; then
     target=$(readlink "AGENTS.md")
     if [[ "$target" != "CLAUDE.md" ]]; then
         error "AGENTS.md symlink points to '$target', expected 'CLAUDE.md'"
-        ((errors++)) || true
+        errors=$((errors + 1))
     fi
 elif [[ -f "AGENTS.md" ]]; then
     error "AGENTS.md should be a symlink to CLAUDE.md, not a regular file"
-    ((errors++)) || true
+    errors=$((errors + 1))
 fi
 
 # --- Validate architecture/AGENTS.md ---
@@ -46,35 +46,37 @@ echo "========================================"
 
 if [[ ! -f "$ARCH_AGENTS" ]]; then
     error "$ARCH_AGENTS not found"
-    ((errors++)) || true
+    errors=$((errors + 1))
 else
     while IFS= read -r line; do
-        if [[ $line =~ ^\|[[:space:]]*([a-zA-Z_/.-]+\.md)[[:space:]]*\|[[:space:]]*([0-9]+)[[:space:]]*\| ]]; then
+        if [[ $line =~ ^\|[[:space:]]*([a-zA-Z0-9_/.-]+\.md)[[:space:]]*\|[[:space:]]*([0-9]+)[[:space:]]*\| ]]; then
             file="architecture/${BASH_REMATCH[1]}"
             claimed="${BASH_REMATCH[2]}"
             if [[ ! -f "$file" ]]; then
                 error "File not found: $file (listed with $claimed lines)"
-                ((errors++)) || true
-                ((checked++)) || true
+                errors=$((errors + 1))
+                checked=$((checked + 1))
                 continue
             fi
             actual=$(wc -l < "$file")
             if [[ "$actual" -ne "$claimed" ]]; then
                 error "$file: listed as $claimed lines, actual $actual lines"
-                ((errors++)) || true
+                errors=$((errors + 1))
             fi
-            ((checked++)) || true
+            checked=$((checked + 1))
         fi
     done < "$ARCH_AGENTS"
 
     # Check completeness
+    shopt -s nullglob
     for file in architecture/core/*.md architecture/add-ons/*.md architecture/index.md; do
         relpath="${file#architecture/}"
-        if [[ -f "$file" ]] && ! grep -q "$relpath" "$ARCH_AGENTS"; then
+        if [[ -f "$file" ]] && ! grep -qF "$relpath" "$ARCH_AGENTS"; then
             warning "File not listed in $ARCH_AGENTS: $file"
-            ((errors++)) || true
+            errors=$((errors + 1))
         fi
     done
+    shopt -u nullglob
 fi
 
 # --- Validate ADR/AGENTS.md ---
@@ -83,7 +85,7 @@ echo "========================================"
 
 if [[ ! -f "$ADR_AGENTS" ]]; then
     error "$ADR_AGENTS not found"
-    ((errors++)) || true
+    errors=$((errors + 1))
 else
     while IFS= read -r line; do
         if [[ $line =~ ^\|[[:space:]]*([0-9]{4})[[:space:]]*\|[[:space:]]*[A-Za-z]+[[:space:]]*\|[[:space:]]*([0-9]+)[[:space:]]*\| ]]; then
@@ -92,16 +94,16 @@ else
             adr_file=$(find ADR/ -maxdepth 1 -name "${adr_num}-*.md" -type f 2>/dev/null | head -1)
             if [[ -z "$adr_file" ]]; then
                 error "ADR file not found for number: $adr_num (listed with $claimed lines)"
-                ((errors++)) || true
-                ((checked++)) || true
+                errors=$((errors + 1))
+                checked=$((checked + 1))
                 continue
             fi
             actual=$(wc -l < "$adr_file")
             if [[ "$actual" -ne "$claimed" ]]; then
                 error "$adr_file: listed as $claimed lines, actual $actual lines"
-                ((errors++)) || true
+                errors=$((errors + 1))
             fi
-            ((checked++)) || true
+            checked=$((checked + 1))
         fi
     done < "$ADR_AGENTS"
 
@@ -110,7 +112,7 @@ else
         adr_num=$(basename "$adr_file" | cut -c1-4)
         if ! grep -qE "^\| ${adr_num} " "$ADR_AGENTS"; then
             warning "ADR not listed in $ADR_AGENTS: $(basename "$adr_file")"
-            ((errors++)) || true
+            errors=$((errors + 1))
         fi
     done < <(find ADR/ -name "[0-9]*.md" -type f -print0 | sort -z)
 fi

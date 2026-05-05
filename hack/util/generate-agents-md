@@ -16,6 +16,38 @@ if ! python3 -c "import yaml" 2>/dev/null; then
     exit 1
 fi
 
+# Extract a frontmatter field from a markdown file.
+# Usage: extract_frontmatter <file> <field>
+# For nested fields like overview.scope, pass "overview" and handle in caller.
+extract_scope() {
+    local file="$1"
+    local result
+    result=$(python3 -c "
+import yaml, sys
+try:
+    with open(sys.argv[1]) as fh:
+        content = fh.read()
+        if content.startswith('---'):
+            parts = content.split('---', 2)
+            if len(parts) >= 3:
+                fm = yaml.safe_load(parts[1])
+                ov = fm.get('overview', {})
+                if ov and 'scope' in ov:
+                    print(ov['scope'])
+                else:
+                    t = fm.get('title', '')
+                    if t:
+                        print(t)
+except Exception as e:
+    print(f'WARNING: failed to extract frontmatter from {sys.argv[1]}: {e}', file=sys.stderr)
+" "$file" 2>/dev/null) || true
+    if [[ -n "$result" ]]; then
+        echo "$result"
+    else
+        echo "WARNING: could not extract scope or title from $file" >&2
+    fi
+}
+
 # --- Ensure root symlink ---
 if [[ -L "AGENTS.md" ]]; then
     target=$(readlink "AGENTS.md")
@@ -61,30 +93,7 @@ HEADER
 for f in architecture/core/*.md; do
     lines=$(wc -l < "$f")
     relpath="${f#architecture/}"
-    scope=$(python3 -c "
-import yaml, sys
-with open('$f') as fh:
-    content = fh.read()
-    if content.startswith('---'):
-        parts = content.split('---', 2)
-        if len(parts) >= 3:
-            fm = yaml.safe_load(parts[1])
-            ov = fm.get('overview', {})
-            if ov and 'scope' in ov:
-                print(ov['scope'])
-" 2>/dev/null || true)
-    if [[ -z "$scope" ]]; then
-        scope=$(python3 -c "
-import yaml, sys
-with open('$f') as fh:
-    content = fh.read()
-    if content.startswith('---'):
-        parts = content.split('---', 2)
-        if len(parts) >= 3:
-            fm = yaml.safe_load(parts[1])
-            print(fm.get('title',''))
-" 2>/dev/null || true)
-    fi
+    scope=$(extract_scope "$f")
     echo "| $relpath | $lines | $scope |"
 done
 
@@ -99,30 +108,7 @@ HEADER
 for f in architecture/add-ons/*.md; do
     lines=$(wc -l < "$f")
     relpath="${f#architecture/}"
-    scope=$(python3 -c "
-import yaml, sys
-with open('$f') as fh:
-    content = fh.read()
-    if content.startswith('---'):
-        parts = content.split('---', 2)
-        if len(parts) >= 3:
-            fm = yaml.safe_load(parts[1])
-            ov = fm.get('overview', {})
-            if ov and 'scope' in ov:
-                print(ov['scope'])
-" 2>/dev/null || true)
-    if [[ -z "$scope" ]]; then
-        scope=$(python3 -c "
-import yaml, sys
-with open('$f') as fh:
-    content = fh.read()
-    if content.startswith('---'):
-        parts = content.split('---', 2)
-        if len(parts) >= 3:
-            fm = yaml.safe_load(parts[1])
-            print(fm.get('title',''))
-" 2>/dev/null || true)
-    fi
+    scope=$(extract_scope "$f")
     echo "| $relpath | $lines | $scope |"
 done
 } > architecture/AGENTS.md
@@ -167,19 +153,22 @@ while IFS= read -r -d '' f; do
     num=$(basename "$f" | cut -c1-4)
     lines=$(wc -l < "$f")
     IFS=$'\t' read -r title status < <(python3 -c "
-import yaml, sys
-with open('$f') as fh:
-    content = fh.read()
-    if content.startswith('---'):
-        parts = content.split('---', 2)
-        if len(parts) >= 3:
-            fm = yaml.safe_load(parts[1])
-            t = fm.get('title','')
-            import re
-            t = re.sub(r'^[0-9]+\.\s*', '', t)
-            s = fm.get('status','')
-            print(t + '\t' + s)
-" 2>/dev/null || echo -e "\t")
+import yaml, sys, re
+try:
+    with open(sys.argv[1]) as fh:
+        content = fh.read()
+        if content.startswith('---'):
+            parts = content.split('---', 2)
+            if len(parts) >= 3:
+                fm = yaml.safe_load(parts[1])
+                t = fm.get('title','')
+                t = re.sub(r'^[0-9]+\.\s*', '', t)
+                s = fm.get('status','')
+                print(t + '\t' + s)
+except Exception as e:
+    print(f'WARNING: failed to extract frontmatter from {sys.argv[1]}: {e}', file=sys.stderr)
+    print('\t')
+" "$f" 2>/dev/null || echo -e "\t")
     abbr="${STATUS_ABBR[$status]:-$status}"
     echo "| $num | $abbr | $lines | $title |"
 done < <(find ADR/ -name "[0-9]*.md" -type f -print0 | sort -z)
