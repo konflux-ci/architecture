@@ -10,7 +10,7 @@ topics:
   - supply-chain
 ---
 
-# XXXX. Ecosystem-Native Distribution for Non-OCI Artifacts
+# 66. Ecosystem-Native Distribution for Non-OCI Artifacts
 
 Date: 2026-03-18
 
