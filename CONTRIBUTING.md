@@ -196,6 +196,7 @@ This runs:
 - `lint-adr-numbers` - Checks for duplicate ADR numbers
 - `lint-eleventy-headers` - Validates Eleventy front matter
 - `lint-frontmatter` - Validates frontmatter schemas and cross-references
+- `lint-agents-md` - Validates AGENTS.md line counts match actual files
 
 Build the site to ensure no errors:
 

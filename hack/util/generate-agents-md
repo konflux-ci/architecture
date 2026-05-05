@@ -1,0 +1,206 @@
+#!/bin/bash
+
+# generate-agents-md - Generate AGENTS.md with current line counts
+#
+# This script produces a fresh AGENTS.md document index with accurate
+# line counts for all architecture docs and ADRs. Run it whenever
+# documents are added, removed, or significantly resized.
+#
+# Usage:
+#   ./hack/util/generate-agents-md > AGENTS.md
+
+set -euo pipefail
+
+# Requires PyYAML for frontmatter parsing
+if ! python3 -c "import yaml" 2>/dev/null; then
+    echo "ERROR: python3 with PyYAML required" >&2
+    exit 1
+fi
+
+cat <<'HEADER'
+# AGENTS.md - Konflux Architecture Document Index
+
+> Read CLAUDE.md first. This file provides a detailed map of every
+> document in the repository with line counts so you can estimate
+> context cost before loading a file.
+
+## How to use this index
+
+1. **Start with CLAUDE.md** (21 lines) for architectural constraints
+   and orientation.
+2. **Use frontmatter to filter** — grep `applies_to:` or `topics:`
+   in ADR files, or `overview:` in service docs, instead of reading
+   every file.
+3. **Check line counts below** before reading a file. Prefer files
+   under 200 lines; files over 300 lines should be read only when
+   directly relevant.
+
+## Root files
+
+| File | Lines | Purpose |
+|------|------:|---------|
+HEADER
+
+# Root files
+for f in CLAUDE.md CONTRIBUTING.md README.md; do
+    if [[ -f "$f" ]]; then
+        lines=$(wc -l < "$f")
+        case "$f" in
+            CLAUDE.md) purpose="Entry point — architectural constraints and navigation" ;;
+            CONTRIBUTING.md) purpose="Contribution guidelines, frontmatter reference, lint commands" ;;
+            README.md) purpose="Repository overview" ;;
+            *) purpose="" ;;
+        esac
+        echo "| $f | $lines | $purpose |"
+    fi
+done
+
+cat <<'HEADER'
+
+## Architecture — system overview
+
+| File | Lines | Purpose |
+|------|------:|---------|
+HEADER
+
+lines=$(wc -l < architecture/index.md)
+echo "| architecture/index.md | $lines | Full system overview with diagrams (large — read only when 3+ services involved) |"
+
+cat <<'HEADER'
+
+## Architecture — core services
+
+| File | Lines | Scope |
+|------|------:|-------|
+HEADER
+
+for f in architecture/core/*.md; do
+    lines=$(wc -l < "$f")
+    # Extract scope from frontmatter if available
+    scope=$(python3 -c "
+import yaml, sys
+with open('$f') as fh:
+    content = fh.read()
+    if content.startswith('---'):
+        parts = content.split('---', 2)
+        if len(parts) >= 3:
+            fm = yaml.safe_load(parts[1])
+            ov = fm.get('overview', {})
+            if ov and 'scope' in ov:
+                print(ov['scope'])
+" 2>/dev/null || true)
+    if [[ -z "$scope" ]]; then
+        # Use title as fallback
+        scope=$(python3 -c "
+import yaml, sys
+with open('$f') as fh:
+    content = fh.read()
+    if content.startswith('---'):
+        parts = content.split('---', 2)
+        if len(parts) >= 3:
+            fm = yaml.safe_load(parts[1])
+            print(fm.get('title',''))
+" 2>/dev/null || true)
+    fi
+    echo "| $f | $lines | $scope |"
+done
+
+cat <<'HEADER'
+
+## Architecture — add-on services
+
+| File | Lines | Scope |
+|------|------:|-------|
+HEADER
+
+for f in architecture/add-ons/*.md; do
+    lines=$(wc -l < "$f")
+    scope=$(python3 -c "
+import yaml, sys
+with open('$f') as fh:
+    content = fh.read()
+    if content.startswith('---'):
+        parts = content.split('---', 2)
+        if len(parts) >= 3:
+            fm = yaml.safe_load(parts[1])
+            ov = fm.get('overview', {})
+            if ov and 'scope' in ov:
+                print(ov['scope'])
+" 2>/dev/null || true)
+    if [[ -z "$scope" ]]; then
+        scope=$(python3 -c "
+import yaml, sys
+with open('$f') as fh:
+    content = fh.read()
+    if content.startswith('---'):
+        parts = content.split('---', 2)
+        if len(parts) >= 3:
+            fm = yaml.safe_load(parts[1])
+            print(fm.get('title',''))
+" 2>/dev/null || true)
+    fi
+    echo "| $f | $lines | $scope |"
+done
+
+# Count ADR totals
+adr_count=$(find ADR/ -name "[0-9]*.md" -type f | wc -l)
+adr_lines=0
+while IFS= read -r -d '' f; do
+    l=$(wc -l < "$f")
+    adr_lines=$((adr_lines + l))
+done < <(find ADR/ -name "[0-9]*.md" -type f -print0)
+
+cat <<HEADER
+
+## ADRs (Architecture Decision Records)
+
+> ${adr_count} ADR files totaling ${adr_lines} lines. Use frontmatter to filter:
+> \`grep -l 'applies_to:' ADR/*.md\` or \`grep -l 'topics:' ADR/*.md\`.
+>
+> Status key: Ac=Accepted, Im=Implemented, Ib=Implementable,
+> Pr=Proposed, Ap=Approved, Rp=Replaced, Ss=Superseded,
+> Dp=Deprecated, Ic=In consideration
+
+| ADR | Status | Lines | Title |
+|-----|--------|------:|-------|
+HEADER
+
+# Status abbreviation map
+declare -A STATUS_ABBR=(
+    ["Accepted"]="Ac"
+    ["Implemented"]="Im"
+    ["Implementable"]="Ib"
+    ["Proposed"]="Pr"
+    ["Approved"]="Ap"
+    ["Replaced"]="Rp"
+    ["Superseded"]="Ss"
+    ["Deprecated"]="Dp"
+    ["In consideration"]="Ic"
+)
+
+while IFS= read -r -d '' f; do
+    num=$(basename "$f" | cut -c1-4)
+    lines=$(wc -l < "$f")
+
+    # Get title and status from frontmatter
+    read -r title status < <(python3 -c "
+import yaml, sys
+with open('$f') as fh:
+    content = fh.read()
+    if content.startswith('---'):
+        parts = content.split('---', 2)
+        if len(parts) >= 3:
+            fm = yaml.safe_load(parts[1])
+            t = fm.get('title','')
+            # Strip leading number prefix like '1. ' or '01. '
+            import re
+            t = re.sub(r'^[0-9]+\.\s*', '', t)
+            s = fm.get('status','')
+            print(t + '\t' + s)
+" 2>/dev/null || echo -e "\t")
+
+    # Abbreviate status
+    abbr="${STATUS_ABBR[$status]:-$status}"
+
+    echo "| $num | $abbr | $lines | $title |"
+done < <(find ADR/ -name "[0-9]*.md" -type f -print0 | sort -z)
