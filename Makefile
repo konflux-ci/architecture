@@ -1,7 +1,7 @@
 # Konflux Architecture Makefile
 # Provides targets for linting, validation, and development tasks
 
-.PHONY: help build serve install lint lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers lint-frontmatter install-mermaid-cli clean
+.PHONY: help build serve install lint lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers lint-frontmatter lint-agents-md install-mermaid-cli clean
 
 help:
 	@echo "Available targets:"
@@ -10,6 +10,7 @@ help:
 	@echo "  serve             - Build and serve the site with live reload"
 	@echo "  install           - Install npm dependencies"
 	@echo "  lint              - Run all linting and validation"
+	@echo "  lint-agents-md    - Validate AGENTS.md line counts are accurate"
 	@echo "  lint-mermaid      - Validate Mermaid diagrams in markdown files"
 	@echo "  lint-adr-status   - Validate ADR statuses in all ADR files"
 	@echo "  lint-adr-numbers  - Check for duplicate ADR numeric identifiers"
@@ -33,7 +34,7 @@ serve: install
 	npm run serve
 
 # Main lint target - runs all validation
-lint: lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers lint-frontmatter
+lint: lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers lint-frontmatter lint-agents-md
 
 # Mermaid diagram validation
 lint-mermaid: install-mermaid-cli
@@ -54,6 +55,10 @@ lint-eleventy-headers:
 # Frontmatter schema and cross-reference validation
 lint-frontmatter:
 	@python3 ./hack/lint-frontmatter
+
+# AGENTS.md line count validation
+lint-agents-md:
+	@./hack/lint-agents-md
 
 # Install Mermaid CLI locally to user's home directory
 install-mermaid-cli:

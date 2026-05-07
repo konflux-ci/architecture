@@ -1,0 +1,117 @@
+#!/bin/bash
+
+# generate-agents-md - Generate compact AGENTS.md files for AI agents
+#
+# Produces architecture/AGENTS.md and ADR/AGENTS.md in a compact,
+# machine-oriented format with accurate line counts. Also ensures
+# the root AGENTS.md symlink exists.
+#
+# Output is intentionally terse — these files are consumed by AI
+# coding agents for context cost estimation, not by humans.
+#
+# Usage:
+#   ./hack/util/generate-agents-md
+
+set -euo pipefail
+
+if ! python3 -c "import yaml" 2>/dev/null; then
+    echo "ERROR: python3 with PyYAML required" >&2
+    exit 1
+fi
+
+extract_scope() {
+    local file="$1"
+    python3 -c "
+import yaml, sys
+try:
+    with open(sys.argv[1]) as fh:
+        content = fh.read()
+        if content.startswith('---'):
+            parts = content.split('---', 2)
+            if len(parts) >= 3:
+                fm = yaml.safe_load(parts[1])
+                ov = fm.get('overview', {})
+                if ov and 'scope' in ov:
+                    print(ov['scope'])
+                else:
+                    t = fm.get('title', '')
+                    if t: print(t)
+except Exception:
+    pass
+" "$file" 2>/dev/null || true
+}
+
+# --- Ensure root symlink ---
+if [[ -L "AGENTS.md" ]]; then
+    target=$(readlink "AGENTS.md")
+    if [[ "$target" != "CLAUDE.md" ]]; then
+        rm -f AGENTS.md
+        ln -s CLAUDE.md AGENTS.md
+        echo "Fixed AGENTS.md symlink → CLAUDE.md"
+    fi
+elif [[ -e "AGENTS.md" ]]; then
+    rm -f AGENTS.md
+    ln -s CLAUDE.md AGENTS.md
+    echo "Replaced AGENTS.md with symlink → CLAUDE.md"
+else
+    ln -s CLAUDE.md AGENTS.md
+    echo "Created AGENTS.md symlink → CLAUDE.md"
+fi
+
+# --- Generate architecture/AGENTS.md ---
+{
+lines=$(wc -l < architecture/index.md)
+echo "index.md ${lines}L — Full system overview (read when 3+ services involved)"
+echo ""
+for f in architecture/core/*.md architecture/add-ons/*.md; do
+    lines=$(wc -l < "$f")
+    relpath="${f#architecture/}"
+    scope=$(extract_scope "$f")
+    echo "${relpath} ${lines}L — ${scope}"
+done
+} > architecture/AGENTS.md
+echo "Generated architecture/AGENTS.md"
+
+# --- Generate ADR/AGENTS.md ---
+{
+adr_count=$(find ADR/ -name "[0-9]*.md" -type f | wc -l)
+adr_lines=0
+while IFS= read -r -d '' f; do
+    l=$(wc -l < "$f")
+    adr_lines=$((adr_lines + l))
+done < <(find ADR/ -name "[0-9]*.md" -type f -print0)
+
+echo "${adr_count} ADRs, ${adr_lines} total lines. Filter: grep -l 'applies_to:' ADR/*.md"
+echo "Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=Replaced Ss=Superseded Dp=Deprecated Ic=In-consideration"
+echo ""
+
+declare -A STATUS_ABBR=(
+    ["Accepted"]="Ac" ["Implemented"]="Im" ["Implementable"]="Ib"
+    ["Proposed"]="Pr" ["Approved"]="Ap" ["Replaced"]="Rp"
+    ["Superseded"]="Ss" ["Deprecated"]="Dp" ["In consideration"]="Ic"
+)
+
+while IFS= read -r -d '' f; do
+    num=$(basename "$f" | cut -c1-4)
+    lines=$(wc -l < "$f")
+    IFS=$'\t' read -r title status < <(python3 -c "
+import yaml, sys, re
+try:
+    with open(sys.argv[1]) as fh:
+        content = fh.read()
+        if content.startswith('---'):
+            parts = content.split('---', 2)
+            if len(parts) >= 3:
+                fm = yaml.safe_load(parts[1])
+                t = fm.get('title','')
+                t = re.sub(r'^[0-9]+\.\s*', '', t)
+                s = fm.get('status','')
+                print(t + '\t' + s)
+except Exception:
+    print('\t')
+" "$f" 2>/dev/null || echo -e "\t")
+    abbr="${STATUS_ABBR[$status]:-$status}"
+    echo "${num} ${abbr} ${lines}L ${title}"
+done < <(find ADR/ -name "[0-9]*.md" -type f -print0 | sort -z)
+} > ADR/AGENTS.md
+echo "Generated ADR/AGENTS.md"

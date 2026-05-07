@@ -99,6 +99,7 @@ done < <(find architecture -name "*.md" -type f \
     ! -path "./_site/*" \
     ! -path "./node_modules/*" \
     ! -path "./.git/*" \
+    ! -name "AGENTS.md" \
     -print0 | sort -z)
 
 if [[ ${#markdown_files[@]} -eq 0 ]]; then

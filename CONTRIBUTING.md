@@ -196,6 +196,7 @@ This runs:
 - `lint-adr-numbers` - Checks for duplicate ADR numbers
 - `lint-eleventy-headers` - Validates Eleventy front matter
 - `lint-frontmatter` - Validates frontmatter schemas and cross-references
+- `lint-agents-md` - Validates AGENTS.md files are up-to-date with `hack/util/generate-agents-md` output
 
 Build the site to ensure no errors:
 
@@ -276,6 +277,23 @@ All fields except `scope` must be YAML lists:
 - **topics** (list): 2-4 keywords
 - **supersedes** (list, optional): ADR numbers this supersedes
 - **superseded_by** (list, optional): ADR numbers that supersede this
+
+## AGENTS.md Files
+
+The `AGENTS.md` files in `architecture/` and `ADR/` are auto-generated indexes
+for AI coding agents. They provide compact document maps with line counts for
+context cost estimation. **Do not edit these files manually.**
+
+To regenerate after adding, removing, or resizing documents:
+
+```bash
+./hack/util/generate-agents-md
+```
+
+The `lint-agents-md` CI check verifies these files match what the generator
+produces. If this check fails, re-run the generator and commit the result.
+
+The root `AGENTS.md` is a symlink to `CLAUDE.md`.
 
 ## Getting Help
 

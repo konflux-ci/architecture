@@ -1,0 +1,89 @@
+#!/bin/bash
+
+# lint-agents-md - Validate AGENTS.md files are up-to-date
+#
+# Checks that AGENTS.md files match what generate-agents-md would produce.
+# This ensures line counts, completeness, and format are always consistent.
+#
+# Exit codes:
+#   0 - AGENTS.md files are up-to-date
+#   1 - AGENTS.md files need regeneration
+
+set -euo pipefail
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+error() { echo -e "${RED}ERROR:${NC} $1" >&2; }
+success() { echo -e "${GREEN}SUCCESS:${NC} $1"; }
+info() { echo -e "${BLUE}INFO:${NC} $1"; }
+
+ARCH_AGENTS="architecture/AGENTS.md"
+ADR_AGENTS="ADR/AGENTS.md"
+
+errors=0
+
+# Verify root AGENTS.md is a symlink to CLAUDE.md
+if [[ -L "AGENTS.md" ]]; then
+    target=$(readlink "AGENTS.md")
+    if [[ "$target" != "CLAUDE.md" ]]; then
+        error "AGENTS.md symlink points to '$target', expected 'CLAUDE.md'"
+        errors=$((errors + 1))
+    fi
+elif [[ -f "AGENTS.md" ]]; then
+    error "AGENTS.md should be a symlink to CLAUDE.md, not a regular file"
+    errors=$((errors + 1))
+else
+    error "AGENTS.md not found (should be a symlink to CLAUDE.md)"
+    errors=$((errors + 1))
+fi
+
+# Verify AGENTS.md files exist
+for f in "$ARCH_AGENTS" "$ADR_AGENTS"; do
+    if [[ ! -f "$f" ]]; then
+        error "$f not found"
+        errors=$((errors + 1))
+    fi
+done
+
+if [[ $errors -gt 0 ]]; then
+    error "$errors issue(s) found — run 'hack/util/generate-agents-md' to regenerate"
+    exit 1
+fi
+
+# Regenerate into temp files and diff
+TMPDIR_AGENTS=$(mktemp -d)
+trap 'rm -rf "$TMPDIR_AGENTS"' EXIT
+
+cp "$ARCH_AGENTS" "$TMPDIR_AGENTS/arch-actual.md"
+cp "$ADR_AGENTS" "$TMPDIR_AGENTS/adr-actual.md"
+
+# Run generator to produce expected output
+./hack/util/generate-agents-md > /dev/null 2>&1
+
+if ! diff -q "$TMPDIR_AGENTS/arch-actual.md" "$ARCH_AGENTS" > /dev/null 2>&1; then
+    error "$ARCH_AGENTS is out of date"
+    diff -u "$TMPDIR_AGENTS/arch-actual.md" "$ARCH_AGENTS" || true
+    errors=$((errors + 1))
+fi
+
+if ! diff -q "$TMPDIR_AGENTS/adr-actual.md" "$ADR_AGENTS" > /dev/null 2>&1; then
+    error "$ADR_AGENTS is out of date"
+    diff -u "$TMPDIR_AGENTS/adr-actual.md" "$ADR_AGENTS" || true
+    errors=$((errors + 1))
+fi
+
+# Restore originals (generator overwrote them)
+cp "$TMPDIR_AGENTS/arch-actual.md" "$ARCH_AGENTS"
+cp "$TMPDIR_AGENTS/adr-actual.md" "$ADR_AGENTS"
+
+if [[ $errors -eq 0 ]]; then
+    success "AGENTS.md files are up-to-date and consistent"
+    exit 0
+else
+    error "$errors issue(s) found — run 'hack/util/generate-agents-md' to regenerate"
+    exit 1
+fi
