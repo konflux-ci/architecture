@@ -1,0 +1,7 @@
+#!/bin/bash
+# Output one ADR file path per line, sorted, excluding non-ADR markdown.
+find ADR/ -name "*.md" -type f \
+  ! -name "index.md" \
+  ! -name "0000-adr-template.md" \
+  ! -name "AGENTS.md" \
+  | sort

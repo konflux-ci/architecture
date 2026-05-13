@@ -32,13 +32,11 @@ EOF
 
 echo "| ADR | Status | Created | Updated |"
 echo "| --- | --- | --- | --- |"
-for adr in ADR/*.md; do
-	[[ "$adr" == "ADR/index.md" ]] && continue
-	[[ "$adr" == "ADR/0000-adr-template.md" ]] && continue
+while IFS= read -r adr; do
 	title=$(grep -m1 "^# " "${adr}");
 	status=$(hack/util/get-adr-status "${adr}")
 	emoji=$(get_status_emoji "$status")
 	created=$(git log --follow --format=%ad --date short "${adr}" | tail -1)
 	updated=$(git log --follow --format=%ad --date short "${adr}" | head -1)
 	echo "|[${title:2}](./${adr#ADR/})|$emoji $status|$created|$updated|"
-done
+done < <("$(dirname "$0")/list-adr-files")
