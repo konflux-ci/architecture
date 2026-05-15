@@ -57,6 +57,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0026 Ac 88L Specifying OCP targets for File-based Catalogs
 0031 Rp 43L Sprayproxy
 0054 Ac 459L Start versioning Tekton Tasks responsibly
+0068 Pr 105L Support for zstd:chunked image compression
 0030 Ac 273L Tekton Results Naming Convention
 0015 Ss 121L The Two-phase Architecture of the Integration Service
 0036 Im 67L Trusted Artifacts
