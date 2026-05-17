@@ -1,4 +1,4 @@
-64 ADRs, 10430 total lines. Filter: grep -l 'applies_to:' ADR/*.md
+65 ADRs, 10846 total lines. Filter: grep -l 'applies_to:' ADR/*.md
 Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=Replaced Ss=Superseded Dp=Deprecated Ic=In-consideration
 
 0000 Im 31L Record architecture decisions
@@ -65,3 +65,4 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0064 Ib 126L Package Registry Proxy Configuration for Hermeto
 0065 Im 39L Adopt KubeArchive for resource lifecycle management
 0066 Ac 128L Ecosystem-Native Distribution for Non-OCI Artifacts
+0067 Pr 416L Nudging Relationship Storage via Singleton CRD
