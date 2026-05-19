@@ -4,7 +4,6 @@ status: Implemented
 applies_to:
   - build-service
   - enterprise-contract
-  - pipeline-service
 topics:
   - security
   - artifacts

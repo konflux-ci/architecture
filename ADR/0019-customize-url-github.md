@@ -5,7 +5,6 @@ applies_to:
   - build-service
   - integration-service
   - konflux-ui
-  - pipeline-service
 topics:
   - github-integration
   - url-customization

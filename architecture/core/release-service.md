@@ -12,7 +12,6 @@ overview:
     - ReleasePlan
     - ReleasePlanAdmission
   related_services:
-    - pipeline-service
     - integration-service
     - enterprise-contract
   related_adrs:
@@ -127,7 +126,7 @@ The Release service will copy the annotations and labels from the Release CR and
 ### Dependencies
 
 The [Release Service](./release-service.md) is dependent on the following services:
-- [Pipeline Service](./pipeline-service.md)
+- [Pipeline Service (Tekton)](https://tekton.dev/docs/)
     - Pipeline execution, Pipeline logging
 - [Integration Service](./integration-service.md)
     - Facilitates automated testing of content produced by the build pipelines
@@ -144,4 +143,4 @@ The [Release Service](./release-service.md) is dependent on the following servic
 [Enterprise Contract]: ./enterprise-contract.md
 [Integration Service]: ./integration-service.md
 [GitOps Service]: ./gitops-service.md
-[Pipeline Service]: ./pipeline-service.md
+[Pipeline Service]: https://tekton.dev/docs/

@@ -11,7 +11,6 @@ overview:
     - KubeArchiveConfig
     - ClusterKubeArchiveConfig
   related_services:
-    - pipeline-service
     - integration-service
     - release-service
   related_adrs:

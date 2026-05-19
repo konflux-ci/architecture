@@ -2,8 +2,7 @@
 title: "31. Sprayproxy"
 status: Replaced
 superseded_by: ["0039"]
-applies_to:
-  - pipeline-service
+applies_to: []
 topics:
   - webhooks
   - multi-cluster

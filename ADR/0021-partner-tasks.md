@@ -4,7 +4,6 @@ status: Replaced
 superseded_by: ["0053"]
 applies_to:
   - build-service
-  - pipeline-service
 topics:
   - partner-tasks
   - task-validation
