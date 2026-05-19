@@ -11,7 +11,6 @@ overview:
     - Component
     - Repository
   related_services:
-    - pipeline-service
     - image-controller
   related_adrs:
     - "0047"
@@ -36,7 +35,7 @@ The Build Service is composed of controllers that create and configure build pip
 
 The Build Service is dependent on the following services:
 
-- **[Pipeline Service](./pipeline-service.md)** (Core Service)
+- **[Pipeline Service (Tekton)](https://tekton.dev/docs/)** (Core Service)
   - Tekton Pipelines for pipeline execution
   - Pipelines as Code for webhook-driven builds
   - Tekton Chains for signing and attestations

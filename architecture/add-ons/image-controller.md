@@ -9,8 +9,7 @@ overview:
   scope: "Image repository setup, robot account management, secret linking to ServiceAccounts"
   key_crds:
     - ImageRepository
-  related_services:
-    - pipeline-service
+  related_services: []
   related_adrs:
     - "0004"
   key_concepts:

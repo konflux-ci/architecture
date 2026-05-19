@@ -3,7 +3,6 @@ title: "46. Build a common Task Runner image"
 status: Implemented
 applies_to:
   - build-service
-  - pipeline-service
 topics:
   - task-runner
   - container-images

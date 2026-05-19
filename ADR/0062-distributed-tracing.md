@@ -2,7 +2,6 @@
 title: "62. Distributed Tracing"
 status: Implementable
 applies_to:
-  - pipeline-service
   - integration-service
   - release-service
 topics:

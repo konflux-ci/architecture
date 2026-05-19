@@ -2,7 +2,6 @@
 title: "65. Adopt KubeArchive for resource lifecycle management"
 status: Implemented
 applies_to:
-  - pipeline-service
   - kubearchive
 topics:
   - archival

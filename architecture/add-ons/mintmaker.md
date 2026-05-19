@@ -9,8 +9,7 @@ overview:
   scope: "Automated dependency updates using Renovate for Konflux components"
   key_crds:
     - DependencyUpdateCheck
-  related_services:
-    - pipeline-service
+  related_services: []
   related_adrs: []
   key_concepts:
     - Renovate integration

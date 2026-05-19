@@ -12,7 +12,6 @@ overview:
     - IntegrationTestScenario
     - Release
   related_services:
-    - pipeline-service
     - hybrid-application-service
     - release-service
     - enterprise-contract
@@ -206,7 +205,7 @@ The Integration Service source code is maintained in the Konflux CI repository:
 
 The Integration Service is dependent on the following services:
 
-- [Pipeline Service](./pipeline-service.md)
+- [Pipeline Service (Tekton)](https://tekton.dev/docs/)
   - Pipeline execution, Pipeline logging
 - [Hybrid Application Service](./hybrid-application-service.md)
   - Validates the Application and Component CRs. Integration Service updates the pullspec reference on the Component CR when a snapshot is created for the built image.

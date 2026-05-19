@@ -10,8 +10,7 @@ overview:
   key_crds:
     - InternalRequest
     - InternalServicesConfig
-  related_services:
-    - pipeline-service
+  related_services: []
   related_adrs:
     - "0003"
   key_concepts:

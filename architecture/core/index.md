@@ -156,7 +156,7 @@ The [Release Service] orchestrates release pipelines to deliver content. It mana
 
 ### Pipeline Service
 
-The [Pipeline Service] provides Tekton APIs and services to Konflux. It offers Tekton APIs through custom resource definitions, container image signing and provenance attestations through Tekton Chains, and archiving of PipelineRuns, TaskRuns, and logs through Tekton Results. Pipeline Service is a foundational service on which Build Service, Integration Service, and Release Service depend.
+[Pipeline Service] provides [Tekton](https://tekton.dev/docs/) APIs and services to Konflux. It offers Tekton APIs through custom resource definitions, container image signing and provenance attestations through Tekton Chains, and archiving of PipelineRuns, TaskRuns, and logs through Tekton Results. Pipeline Service is a foundational service on which Build Service, Integration Service, and Release Service depend.
 
 ### Enterprise Contract
 
@@ -170,6 +170,6 @@ The [Konflux UI] provides a web-based user interface for interacting with Konflu
 [Build Service]: ./build-service.md
 [Integration Service]: ./integration-service.md
 [Release Service]: ./release-service.md
-[Pipeline Service]: ./pipeline-service.md
+[Pipeline Service]: https://tekton.dev/docs/
 [Enterprise Contract]: ./enterprise-contract.md
 [Konflux UI]: ./konflux-ui.md

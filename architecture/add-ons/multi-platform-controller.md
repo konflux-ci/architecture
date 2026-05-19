@@ -8,8 +8,7 @@ toc: true
 overview:
   scope: "Dynamic VM provisioning for multi-architecture builds (arm64, ppc64le, s390x)"
   key_crds: []
-  related_services:
-    - pipeline-service
+  related_services: []
   related_adrs: []
   key_concepts:
     - SSH-based remote builds
