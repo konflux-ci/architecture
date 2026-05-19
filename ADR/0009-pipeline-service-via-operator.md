@@ -2,8 +2,7 @@
 title: "9. Pipeline Service via Operator"
 status: Implemented
 supersedes: ["0001"]
-applies_to:
-  - pipeline-service
+applies_to: []
 topics:
   - tekton
   - operator
