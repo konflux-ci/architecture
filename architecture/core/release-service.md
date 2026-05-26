@@ -71,7 +71,6 @@ Below is the list of CRs that the Release service is responsible for interacting
 
 | Custom Resource             | When?                                                       | Why?                                                                                          |
 |-----------------------------|-------------------------------------------------------------|-----------------------------------------------------------------------------------------------|
-| SnapshotEnvironmentBinding  | When deploying the Snapshot to an Environment               | To create a SnapshotEnvironmentBinding for the referenced Environment when one does not exist |
 | PipelineRun                 | Once a Release has been composed and is ready for execution | To perform the steps in the Release Pipeline                                                  |
 
 ### READ
@@ -87,7 +86,6 @@ Below is the list of CRs that the Release service is responsible for interacting
 
 | Custom Resource            | When?                                                    | Why?                                                             |
 |----------------------------|----------------------------------------------------------|------------------------------------------------------------------|
-| SnapshotEnvironmentBinding | When deploying the Snapshot to an Environment            | To update existing SnapshotEnvironmentBinding for a new Snapshot |
 | Release                    | During the lifecycle of an attempt to release a Snapshot | To provide status for the execution of the Release Pipeline      |
 
 ### WATCH
@@ -96,7 +94,6 @@ Below is the list of CRs that the Release service is responsible for interacting
 |----------------------------|------------------------------------------------------------|--------------------------------------------------------------------|
 | Release                    | Always                                                     | To provide an API to trigger a release                             |
 | PipelineRun                | Once the PipelineRun is created                            | To relay the Release PipelineRun status to the Release for viewing |
-| SnapshotEnvironmentBinding | After the SnapshotEnvironmentBinding is created or updated | To relay the GitOps deployment status to the Release for viewing   |
 
 #### Annotations/Labels
 
@@ -118,11 +115,6 @@ The Release service will copy the annotations and labels from the Release CR and
 3. Extract the `spec.pipelineRef`, `spec.serviceAccount`, `spec.policy` from the ReleasePlanAdmission
 5. Create a Release PipelineRun using the above info.
 6. Watch Release PipelineRun and update Release `status` with progress and outcome.
-7. If ReleasePlanAdmission specified a `spec.environment`, then do the following:
-   * Copy the Snapshot to the managed workspace.
-   * Verify that the Application and Components have been copied to managed workspace.
-   * Create or update SnapshotEnvironmentBinding in the managed workspace.
-   * Watch SnapshotEnvironmentBinding to relay deployment status to Release CR `status`.
 
 ### Dependencies
 
@@ -132,10 +124,7 @@ The [Release Service](./release-service.md) is dependent on the following servic
 - [Integration Service](./integration-service.md)
     - Facilitates automated testing of content produced by the build pipelines
 - [GitOps Service](./gitops-service.md)
-    - Provides the facility to create
-        - Snapshots defining sets of Builds to release
-        - Environment to deploy the Application to
-        - SnapshotEnvironmentBindings to have the Snapshot of the Application deployed to a specific Environment
+    - Provides the facility to create Snapshots defining sets of Builds to release
 - [Enterprise Contract Service](./enterprise-contract.md)
     - Provides facilities to validate whether content has passed the Enterprise Contract.
 
