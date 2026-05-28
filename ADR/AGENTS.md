@@ -56,6 +56,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0044 Im 308L SPDX SBOM support
 0026 Ac 88L Specifying OCP targets for File-based Catalogs
 0031 Rp 43L Sprayproxy
+0068 Pr 145L Standardize on konflux-ci.dev as Official API Group
 0054 Ac 459L Start versioning Tekton Tasks responsibly
 0030 Ac 273L Tekton Results Naming Convention
 0015 Ss 121L The Two-phase Architecture of the Integration Service
