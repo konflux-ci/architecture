@@ -7,7 +7,7 @@ Architecture documentation, ADRs, and diagrams for the Konflux platform. Documen
 Each subdirectory has an `AGENTS.md` with document maps and line counts for context cost estimation. Read those before loading files.
 
 - Service docs: `architecture/core/*.md` and `architecture/add-ons/*.md` — see `architecture/AGENTS.md`
-- ADRs: `ADR/NNNN-*.md` (64 files) — see `ADR/AGENTS.md`
+- ADRs: `ADR/NNNN-*.md` — see `ADR/AGENTS.md`
 - ADR template: `ADR/0000-adr-template.md` (31 lines)
 - System overview: `architecture/index.md` (424 lines — read only when 3+ services involved)
 
