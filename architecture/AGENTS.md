@@ -1,7 +1,7 @@
 index.md 424L — Full system overview (read when 3+ services involved)
 
 core/build-service.md 285L — Build pipelines, Tekton PipelineRun definitions, Component builds
-core/enterprise-contract.md 198L — Policy enforcement, attestation validation, release gating
+core/enterprise-contract.md 307L — Policy enforcement, attestation validation, release gating
 core/hybrid-application-service.md 371L — Validation webhooks for Application and Component CRs
 core/index.md 175L — Core Services
 core/integration-service.md 225L — Test orchestration, snapshot creation/validation, promotion logic
