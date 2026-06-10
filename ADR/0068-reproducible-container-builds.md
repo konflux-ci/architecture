@@ -131,8 +131,7 @@ The logical fallback lives in Konflux: `build-image-index` is our own task, and 
 
 ### Open Questions
 
-1. Is the Hermeto-mutated Containerfile byte-stable across two runs with identical `PREFETCH_INPUT`? The experiment on this failed because the test Containerfile didn't include an `rpms-lock.yaml`, so Hermeto produced no prefetch artifact and the downstream `use-trusted-artifact` step had nothing to extract.
-2. Is the syft-generated SBOM byte-identical when run twice against a byte-identical input image? Direct comparison was inconclusive in the local experiments because the SBOM blob is stored under the digest-derived `sha256-<digest>.sbom` tag, and the second run's push overwrote the first's before both could be pulled. Resolving this needs either capturing the SBOM blob inside each TaskRun before push, or one of the two tag-derivation changes proposed in the secondary-artifact section.
+1. Is the syft-generated SBOM byte-identical when run twice against a byte-identical input image? Direct comparison was inconclusive in the local experiments because the SBOM blob is stored under the digest-derived `sha256-<digest>.sbom` tag, and the second run's push overwrote the first's before both could be pulled. Resolving this needs either capturing the SBOM blob inside each TaskRun before push, or one of the two tag-derivation changes proposed in the secondary-artifact section.
 
 ## Consequences
 
