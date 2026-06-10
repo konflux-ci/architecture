@@ -1,5 +1,5 @@
 ---
-title: "68. Reproducible Container Builds in Konflux"
+title: "69. Reproducible Container Builds in Konflux"
 status: Proposed
 applies_to:
   - build-service
@@ -10,7 +10,7 @@ topics:
   - sbom
 ---
 
-# 68. Reproducible Container Builds in Konflux
+# 69. Reproducible Container Builds in Konflux
 
 Date: 2026-05-28
 
@@ -24,7 +24,7 @@ Konflux container builds currently produce different image digests from identica
 
 The mechanism to produce identical digests already exist at the task level. The `buildah-oci-ta` task accepts `--source-date-epoch`, `--rewrite-timestamp`, and `--omit-history` as task params (the wiring was done when [the buildah task picked up the buildah 1.41+ reproducibility flags](https://github.com/konflux-ci/build-definitions/pull/2947)). What's missing is the pipeline passing those params through, and a story about what users opt into, what verification looks like, and what happens to the secondary artifacts (SBOMs, attestations, signatures) that are tagged by the primary image digest. A [previous PR that tried to wire `commit-timestamp` into `SOURCE_DATE_EPOCH`](https://github.com/konflux-ci/build-definitions/pull/3263) closed unmerged after review pointed out a tag-collision concern: when two runs produce the same digest, secondary artifacts tagged by that digest can overwrite each other in the registry. Three [earlier attempts at a `verify-reproducibility` task](https://github.com/konflux-ci/build-definitions/pulls?q=3383+3385+3386) also closed unmerged, on the observation that a "build twice and compare" step does not fit a pipeline whose contract is to build once.
 
-This ADR proposes decisions that'll turn the existing primitives into a supported user feature: pipeline wiring, an opt-in default policy with a roadmap to default-on, a separation between production builds and verification, and a path forward on the secondary-artifact problem. It also aligns with the long-term direction in [the architecture-level reproducibility roadmap](https://github.com/konflux-ci/architecture/issues/299), which moves the buildah task toward being a thin wrapper around `buildah build` and frames rebuild verification as a separate prefetch-then-build-hermetically operation. None of the decisions here depend on that long-term work, but are all in alignment with it.
+This ADR proposes decisions that'll turn the existing primitives into a supported user feature: pipeline wiring, an opt-in default policy with a roadmap to default-on, a separation between production builds and verification, and a path forward on the secondary-artifact problem. It also aligns with the long-term direction in [the architecture-level reproducibility roadmap](https://github.com/konflux-ci/architecture/issues/299), which moves the buildah task toward being a thin wrapper around `buildah build` and frames rebuild verification as a separate [prefetch-then-build-hermetically operation](https://github.com/konflux-ci/architecture/issues/299#issuecomment-3656614799). None of the decisions here depend on that long-term work, but are all in alignment with it.
 
 ### Sources of non-determinism
 
@@ -62,7 +62,7 @@ We will wire the existing buildah reproducibility primitives through Konflux bui
 
 We will expose three new opt-in pipeline parameters on every `docker-build*` variant:
 
-- `source-date-epoch`: when set, the pipeline passes it to the task's `SOURCE_DATE_EPOCH` param. When not set, the pipeline auto-sources it from `clone-repository.results.commit-timestamp` *only if* either `rewrite-timestamp` or `omit-history` is also enabled (see "Default policy" below for why we don't auto-source unconditionally).
+- `source-date-epoch`: when set, the pipeline passes it to the task's `SOURCE_DATE_EPOCH` param. When not set, the pipeline auto-sources it from `clone-repository.results.commit-timestamp` *only if* `rewrite-timestamp` is also enabled. The reason for the coupling is that `--rewrite-timestamp` needs a `SOURCE_DATE_EPOCH` value to clamp file mtimes against; without one, the flag does nothing. `omit-history` does not have this dependency (it just strips the build history block regardless of any timestamp value), so setting `omit-history` alone does not trigger the auto-source.
 - `rewrite-timestamp`: passed straight through to the task's `REWRITE_TIMESTAMP`. Default `false`.
 - `omit-history`: passed straight through to the task's `OMIT_HISTORY`. Default `false`.
 
@@ -102,7 +102,7 @@ We are not removing the injection path or changing its default. The injection ex
 
 Reproducibility is a property you verify. A pipeline whose contract is to build an artifact once shouldn't also build it a second time to check its own work. The two activities have different inputs and different consumers. Mixing them inside `docker-build*` would double every build's cost for every user even though only some users care about the verification result at any given moment, and it would mix "build failed" with "build succeeded but the verification step found a diff." Three earlier task-level attempts at this approach ([PRs #3383](https://github.com/konflux-ci/build-definitions/pull/3383), [#3385](https://github.com/konflux-ci/build-definitions/pull/3385), and [#3386](https://github.com/konflux-ci/build-definitions/pull/3386)) ran into versions of the same issue and were closed without merging.
 
-Instead, we will deliver a standalone `verify-reproducibility` pipeline. It accepts an image reference and a source artifact, runs the build twice from the same source with identical reproducibility parameters, compares the resulting digests, and emits a `REPRODUCIBLE=true|false` result plus a structured `DIFF_SUMMARY`. On digest mismatch, it invokes [diffoci](https://github.com/reproducible-containers/diffoci) to produce a layer-by-layer diff. Users and CI trigger it on demand. It is independent of the production build flow, keeping the production flow unchanged for everyone.
+Instead, we will deliver a standalone `verify-reproducibility` pipeline. It accepts an image reference (the artifact to verify) and a source artifact (the recipe the image claims to have been built from), rebuilds the image once from that source using identical reproducibility parameters, and compares the resulting digest against the supplied image reference's digest. It emits a `REPRODUCIBLE=true|false` result plus a structured `DIFF_SUMMARY`. On digest mismatch, it invokes [diffoci](https://github.com/reproducible-containers/diffoci) to produce a layer-by-layer diff. Users and CI trigger it on demand. It is independent of the production build flow, keeping the production flow unchanged for everyone.
 
 The property the verification pipeline asserts (i.e. given the same source, the same task version, and the same prefetched inputs, the same digest) aligns with how SLSA frames reproducibility today, as a property attested separately and tracked in the Verification Summary Attestation rather than as a property of the build itself (see [`slsa.buildReproduced`](https://slsa.dev/spec/v1.2/verified-properties#slsabuildreproduced)). There's also a limitation though: reproducing on the same build platform doesn't defend against attacks on the build platform itself. The stronger property, where an independent identity on an independent platform reproduces the same artifact from the provenance recipe, is something the verification pipeline's shape can extend toward (but isn't what this ADR plans to do out of the box).
 
@@ -155,4 +155,4 @@ The logical fallback lives in Konflux: `build-image-index` is our own task, and 
 
 * The default-on roadmap (four conditions listed in "Default policy") becomes the migration target. Each condition is independently trackable, so progress can be reviewed against them rather than against an open-ended "is reproducibility the default yet?" question.
 
-* Two open questions remain (Hermeto Containerfile mutation, syft SBOM determinism).
+* One open question remains: whether syft produces a byte-identical SBOM when run twice against a byte-identical input image.
