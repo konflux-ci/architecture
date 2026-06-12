@@ -1,6 +1,6 @@
 ---
 title: "68. Standardize on konflux-ci.dev as Official API Group"
-status: Proposed
+status: Accepted
 applies_to:
   - "*"
 topics:
@@ -16,7 +16,7 @@ Date: 2026-05-28
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
