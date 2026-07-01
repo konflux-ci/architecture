@@ -1,4 +1,18 @@
-# ADR 0071: Decentralize Tenant Build Configuration from konflux-release-data
+---
+title: "0071. Decentralize Tenant Build Configuration from konflux-release-data"
+status: Proposed
+applies_to:
+  - "*"
+topics:
+  - gitops
+  - tenant-management
+  - self-service
+  - release-data
+---
+
+# 0071. Decentralize Tenant Build Configuration from konflux-release-data
+
+Date: 2026-07-01
 
 ## Status
 
