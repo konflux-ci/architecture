@@ -13,6 +13,10 @@ Each subdirectory has an `AGENTS.md` with document maps and line counts for cont
 
 Use frontmatter to filter: `overview:` in service docs, `status:`/`applies_to:`/`topics:` in ADRs.
 
+## Review conventions
+
+- `ADR/AGENTS.md` and `architecture/AGENTS.md` are sorted indexes updated whenever documents are added, renamed, or removed. Changes that only add or update entries are routine and do not require linked issues or special justification.
+
 ## Core Architectural Constraints
 
 - **API Model**: Kubernetes API server (controllers + CRDs), no REST APIs
