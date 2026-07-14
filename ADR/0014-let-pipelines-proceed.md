@@ -65,4 +65,4 @@ for users ([STONE-459]).
 [STONE-459]: https://issues.redhat.com/browse/STONE-459
 [Environments]: ../ref/application-environment-api.md#environment
 [ADR-0030]: 0030-tekton-results-naming-convention.html
-[enterprise contract]: ../architecture/core/enterprise-contract.md
+[enterprise contract]: ../architecture/core/conforma.md

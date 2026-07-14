@@ -308,7 +308,7 @@ These services make up the core of Konflux and are all required for a working sy
   pipelines to release user content to protected destinations.
 - [Pipeline Service](./core/pipeline-service.md) - A foundational service providing Pipeline APIs and secure supply
   chain capabilities to other services
-- [Enterprise Contract](./core/enterprise-contract.md) - A specialized sub-service responsible for the
+- [Conforma](./core/conforma.md) - A specialized sub-service responsible for the
   definition and enforcement of policies related to how OCI artifacts are built and tested.
 
 ### Konflux Add-Ons

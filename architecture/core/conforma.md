@@ -1,7 +1,7 @@
 ---
-title: Enterprise Contract
+title: Conforma
 eleventyNavigation:
-  key: Enterprise Contract
+  key: Conforma
   parent: Core Services
   order: 6
 toc: true
@@ -26,16 +26,16 @@ overview:
     - policy sources
 ---
 
-# Enterprise Contract
+# Conforma
 
 ## Overview
 
-The Enterprise Contract (EC) ensures that container images produced by
-Konflux meet clearly defined requirements before they are considered
-releasable. When an image does not meet the requirements, the Enterprise
-Contract produces a list of the reasons why so they can be addressed.
+Conforma (formerly Enterprise Contract) ensures that container images
+produced by Konflux meet clearly defined requirements before they are
+considered releasable. When an image does not meet the requirements,
+Conforma produces a list of the reasons why so they can be addressed.
 
-Enterprise Contract requirements fall into two categories:
+Conforma requirements fall into two categories:
 
 - **Built-in requirements** — the container image is signed with a known
   and trusted key, and the image has an attestation also signed with a
@@ -71,18 +71,20 @@ run attestation.
 
 ### Validation Workflow
 
-The EC validation is triggered during the release pipeline. The
-[Release Service](./release-service.md) includes an instance of the EC
-Tekton task which gates the release — if the EC task fails, the release
-is blocked.
+Conforma validation is triggered during the release pipeline. The
+[Release Service](./release-service.md) includes an instance of the
+Conforma Tekton task which gates the release — if the task fails, the
+release is blocked.
 
-The [Integration Service](./integration-service.md) can also invoke EC
-validation via an IntegrationTestScenario configured with the
+The [Integration Service](./integration-service.md) can also invoke
+Conforma validation via an IntegrationTestScenario configured with the
 `enterprise-contract` kind annotation, allowing policy checks to run
 after builds complete and before a release is created.
 
 The validation proceeds as follows for each image included in the
-release (the list of images is defined in a Snapshot CR):
+release. The list of images is defined in a Snapshot CR, which is
+created by the [Integration Service](./integration-service.md) after
+a build pipeline completes successfully:
 
 1. Confirm the image is signed and verify the signature.
 2. Confirm the image has a signed and verifiable attestation.
@@ -99,34 +101,33 @@ release (the list of images is defined in a Snapshot CR):
 
 ```
 Build Pipeline
-      │
-      ▼
-Tekton Chains ──► signs image + creates attestation
-      │
-      ▼
+      |
+      v
+Tekton Chains --> signs image + creates attestation
+      |
+      v
 Integration / Release Pipeline
-      │
-      ▼
-EC Tekton Task
-      │
-      ▼
-ec-cli validate
-  ├── verify image signature (cosign / sigstore)
-  ├── verify attestation signature
-  ├── download Rego policies + data from configured sources
-  ├── run Conftest evaluation against attestation
-  └── output JSON results (pass / fail / warn)
+      |
+      v
+Conforma Tekton Task
+      |
+      v
+ec validate
+  |-- verify image signature (cosign / sigstore)
+  |-- verify attestation signature
+  |-- download Rego policies + data from configured sources
+  |-- run Conftest evaluation against attestation
+  +-- output JSON results (pass / fail / warn)
 ```
 
 ## API
 
-The Enterprise Contract defines one Custom Resource:
+Conforma defines one Custom Resource:
 
 - **EnterpriseContractPolicy (ECP)** — a Kubernetes CR that holds the
-  configuration needed for running a specific instance of the Enterprise
-  Contract. This includes the public key required to verify signatures,
-  the list of policy and data sources, and any other required
-  configuration.
+  configuration needed for running a specific instance of Conforma.
+  This includes the public key required to verify signatures, the list
+  of policy and data sources, and any other required configuration.
 
 Example:
 
@@ -157,10 +158,10 @@ For detailed CRD documentation, see the
 
 ## Sub-components
 
-### EC CLI (`ec`)
+### Conforma CLI (`ec`)
 
 The `ec` command line tool is written in Go. Its primary purpose is to
-perform EC policy validation. It supports several sub-commands:
+perform Conforma policy validation. It supports several sub-commands:
 
 - **`validate image`** — validates container image signatures,
   attestations, and evaluates policy rules against attestation content.
@@ -175,15 +176,15 @@ perform EC policy validation. It supports several sub-commands:
 - **`version`** — prints version information.
 
 For more information on the CLI, refer to the
-[documentation](https://conforma.github.io/conforma.github.io/) and
+[documentation](https://conforma.dev/) and
 the [source code](https://github.com/conforma/cli).
 
-### EC Tekton Task
+### Conforma Tekton Task
 
-The EC Tekton task (`verify-enterprise-contract`) defines how the
+The Conforma Tekton task (`verify-enterprise-contract`) defines how the
 `ec` CLI should be run within a Tekton pipeline. It handles task
 inputs (the image list from a Snapshot, the policy configuration
-reference, and the public key) and calls the CLI to perform EC
+reference, and the public key) and calls the CLI to perform Conforma
 validation.
 
 The task definition is maintained in the
@@ -192,54 +193,53 @@ Tekton bundles containing the task are also published by the
 [conforma/tekton-catalog](https://github.com/conforma/tekton-catalog)
 repository.
 
-### EC Policy CRD
+### Conforma Policy CRD
 
 The EnterpriseContractPolicy CRD is defined and maintained in the
 [conforma/crds](https://github.com/conforma/crds) repository. It
 provides the CRD definitions, validation schemas, and generated code
 for working with EnterpriseContractPolicy resources in Kubernetes.
 
-### EC Policies (Reference Rule Set)
+### Conforma Policies (Reference Rule Set)
 
 The reference set of Rego policy rules for Konflux is maintained in
 [conforma/policy](https://github.com/conforma/policy). It includes
 rules for a range of supply chain security policies. The policies are
-documented using [Antora](https://antora.org/) and published at
-[conforma.github.io](https://conforma.github.io/conforma.github.io/).
+documented and published at
+[conforma.dev](https://conforma.dev/docs/policy/release_policy.html).
 
 Conftest bundles containing the latest version of these policies are
 available as OCI artifacts in
-[quay.io](https://quay.io/repository/enterprise-contract/ec-release-policy?tab=tags).
+[quay.io](https://quay.io/repository/conforma/release-policy?tab=tags).
 
 ## Source Repositories
 
 | Repository | Description |
 |---|---|
-| [conforma/cli](https://github.com/conforma/cli) | EC CLI tool and Tekton task definitions |
+| [conforma/cli](https://github.com/conforma/cli) | Conforma CLI tool and Tekton task definitions |
 | [conforma/policy](https://github.com/conforma/policy) | Reference Rego policy rules |
 | [conforma/crds](https://github.com/conforma/crds) | EnterpriseContractPolicy CRD definitions |
-| [conforma/tekton-catalog](https://github.com/conforma/tekton-catalog) | Tekton bundle publishing for EC tasks |
+| [conforma/tekton-catalog](https://github.com/conforma/tekton-catalog) | Tekton bundle publishing for Conforma tasks |
 
 ## Dependencies
 
-The Enterprise Contract depends on the following services and
-components:
+Conforma depends on the following services and components:
 
-- **[Tekton Chains](./pipeline-service.md)** — EC works by examining
-  attestations created by Tekton Chains during Konflux build pipeline
-  runs. Chains signs both the container images and the attestations
-  that EC subsequently validates. Without Chains, there are no
-  attestations or signatures for EC to verify.
+- **[Tekton Chains](./pipeline-service.md)** — Conforma works by
+  examining attestations created by Tekton Chains during Konflux build
+  pipeline runs. Chains signs both the container images and the
+  attestations that Conforma subsequently validates. Without Chains,
+  there are no attestations or signatures for Conforma to verify.
 - **[Release Service](./release-service.md)** — the release pipeline
-  contains an instance of the EC Tekton task that gates releases. If
-  EC validation fails, the release is blocked.
-- **[Integration Service](./integration-service.md)** — can invoke EC
-  validation via IntegrationTestScenarios of kind
+  contains an instance of the Conforma Tekton task that gates releases.
+  If Conforma validation fails, the release is blocked.
+- **[Integration Service](./integration-service.md)** — can invoke
+  Conforma validation via IntegrationTestScenarios of kind
   `enterprise-contract`, running policy checks after builds complete.
 - **[Sigstore / Cosign](https://www.sigstore.dev/)** — used for
   cryptographic signature verification of images and attestations.
 - **[Open Policy Agent / Conftest](https://www.conftest.dev/)** — the
-  Rego policy evaluation engine embedded in the EC CLI.
+  Rego policy evaluation engine embedded in the Conforma CLI.
 
 ## Authentication and Authorization
 
@@ -250,16 +250,16 @@ components:
 - **Policy source access** — policy and data sources can be fetched
   from git repositories or OCI registries. Access to private
   repositories requires appropriate credentials to be configured in
-  the namespace where the EC task runs.
-- **Image registry access** — the EC CLI needs pull access to the
-  container registries where images and their attestations are stored.
-  This is handled through standard Kubernetes image pull secrets in
-  the task's service account.
+  the namespace where the Conforma task runs.
+- **Image registry access** — the Conforma CLI needs pull access to
+  the container registries where images and their attestations are
+  stored. This is handled through standard Kubernetes image pull
+  secrets in the task's service account.
 
 ## Network Traffic
 
-The EC CLI, running as a Tekton task within the cluster, makes outbound
-network requests to:
+The Conforma CLI, running as a Tekton task within the cluster, makes
+outbound network requests to:
 
 - **OCI registries** (e.g., `quay.io`) — to pull container image
   signatures, attestations, and Conftest policy bundles.
@@ -269,39 +269,40 @@ network requests to:
   CA) — when keyless signing verification is configured. This is
   optional and depends on the signing configuration.
 
-All network traffic is outbound from the cluster. The EC components do
-not expose any inbound services or endpoints — there is no running
-controller or long-lived service. The EC CLI executes as a short-lived
-process within a Tekton TaskRun pod.
+All network traffic is outbound from the cluster. Conforma components
+do not expose any inbound services or endpoints — there is no running
+controller or long-lived service. The Conforma CLI executes as a
+short-lived process within a Tekton TaskRun pod.
 
 ## Performance and Availability
 
-- **No long-running controller** — unlike most Konflux services, the
-  Enterprise Contract does not have a continuously running controller
-  or operator. It executes as a Tekton task on demand, so there are no
-  availability concerns for an EC service itself.
-- **Execution time** — EC validation time depends on the number of
-  images in the Snapshot, the number of policy rules to evaluate, and
-  network latency for fetching policy sources and image attestations.
+- **No long-running controller** — unlike most Konflux services,
+  Conforma does not have a continuously running controller or operator.
+  It executes as a Tekton task on demand, so there are no availability
+  concerns for a Conforma service itself.
+- **Execution time** — Conforma validation time depends on the number
+  of images in the Snapshot, the number of policy rules to evaluate,
+  and network latency for fetching policy sources and image
+  attestations.
 - **Policy bundle caching** — Conftest policy bundles are published as
   OCI artifacts, which benefit from registry-level caching.
 - **Scalability** — scales with the Tekton pipeline infrastructure.
-  Each release or integration test runs its own EC TaskRun pod.
+  Each release or integration test runs its own Conforma TaskRun pod.
 
 ## Monitoring and Metrics
 
-The EC CLI produces structured JSON output that includes detailed
+The Conforma CLI produces structured JSON output that includes detailed
 results for each policy rule evaluated, including pass, fail, and
 warning outcomes. This output is captured as a Tekton task result and
 can be consumed by downstream systems for reporting and auditing.
 
-There are no dedicated EC-specific Prometheus metrics or monitoring
-dashboards, as the EC CLI runs as a short-lived Tekton task rather
-than a persistent service. Monitoring of EC validation is handled
-through:
+There are no dedicated Conforma-specific Prometheus metrics or
+monitoring dashboards, as the Conforma CLI runs as a short-lived Tekton
+task rather than a persistent service. Monitoring of Conforma
+validation is handled through:
 
 - **Tekton PipelineRun / TaskRun status** — standard Kubernetes and
   Tekton monitoring of task success or failure.
-- **EC task result output** — the JSON results from EC validation can
-  be archived and analyzed via Tekton Results or other pipeline
-  result storage mechanisms.
+- **Conforma task result output** — the JSON results from Conforma
+  validation can be archived and analyzed via Tekton Results or other
+  pipeline result storage mechanisms.
