@@ -3,7 +3,6 @@ title: "57. Pipeline Caching Feature Flag Configuration"
 status: Implementable
 applies_to:
   - build-service
-  - pipeline-service
 topics:
   - caching
   - feature-flags

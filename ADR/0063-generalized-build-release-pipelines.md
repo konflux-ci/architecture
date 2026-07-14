@@ -2,7 +2,6 @@
 title: "63. Generalized Build and Release Pipelines"
 status: Implementable
 applies_to:
-  - pipeline-service
   - build-service
   - integration-service
   - release-service

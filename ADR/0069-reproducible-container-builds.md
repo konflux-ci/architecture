@@ -3,7 +3,6 @@ title: "69. Reproducible Container Builds in Konflux"
 status: Proposed
 applies_to:
   - build-service
-  - pipeline-service
 topics:
   - reproducible-builds
   - buildah

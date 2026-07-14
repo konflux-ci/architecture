@@ -281,7 +281,7 @@ graph TD
     click BS "Build Service" "https://github.com/konflux-ci/build-service"
     click IS "Integration Service" "https://github.com/konflux-ci/integration-service"
     click RS "Release Service" "https://github.com/konflux-ci/release-service"
-    click PS "Pipeline Service" "https://github.com/openshift-pipelines/pipeline-service"
+    click PS "Pipeline Service (Tekton)" "https://tekton.dev/docs/"
     click KubeAPI "Kubernetes API Server (Controllers)" "https://kubernetes.io/docs/concepts/architecture/controller/"
 
     click App "Application API Reference" "https://konflux-ci.dev/docs/reference/kube-apis/application-api/#k8s-api-github-com-konflux-ci-application-api-api-v1alpha1-application"
@@ -306,7 +306,7 @@ These services make up the core of Konflux and are all required for a working sy
   users' tests and promotion in response to completing builds.
 - [Release Service](./core/release-service.md) - A workflow service that manages execution of privileged
   pipelines to release user content to protected destinations.
-- [Pipeline Service](./core/pipeline-service.md) - A foundational service providing Pipeline APIs and secure supply
+- [Pipeline Service (Tekton)](https://tekton.dev/docs/) - A foundational service providing Pipeline APIs and secure supply
   chain capabilities to other services
 - [Enterprise Contract](./core/enterprise-contract.md) - A specialized sub-service responsible for the
   definition and enforcement of policies related to how OCI artifacts are built and tested.
@@ -403,7 +403,7 @@ When a commit lands on a tracked branch in a user's git repository, a series of 
 
 [integration-service promotes OCI artifacts]: ../ADR/0016-integration-service-promotion-logic.md
 [application-service]: ./core/hybrid-application-service.md
-[pipeline-service]: ./core/pipeline-service.md
+[pipeline-service]: https://tekton.dev/docs/
 [gitops-service]: ./gitops-service.md
 [build-service]: ./core/build-service.md
 [integration-service]: ./core/integration-service.md

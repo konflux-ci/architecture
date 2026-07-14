@@ -1,8 +1,7 @@
 ---
 title: "25. appstudio-pipeline Service Account"
 status: Accepted
-applies_to:
-  - pipeline-service
+applies_to: []
 topics:
   - service-accounts
   - rbac
