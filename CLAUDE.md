@@ -9,7 +9,7 @@ Each subdirectory has an `AGENTS.md` with document maps and line counts for cont
 - Service docs: `architecture/core/*.md` and `architecture/add-ons/*.md` — see `architecture/AGENTS.md`
 - ADRs: `ADR/NNNN-*.md` — see `ADR/AGENTS.md`
 - ADR template: `ADR/0000-adr-template.md` (31 lines)
-- System overview: `architecture/index.md` (424 lines — read only when 3+ services involved)
+- System overview: `architecture/index.md` (426 lines — read only when 3+ services involved)
 
 Use frontmatter to filter: `overview:` in service docs, `status:`/`applies_to:`/`topics:` in ADRs.
 

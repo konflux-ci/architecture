@@ -166,6 +166,10 @@ The [Enterprise Contract] ensures container images produced by Konflux meet clea
 
 The [Konflux UI] provides a web-based user interface for interacting with Konflux. It offers a unified interface for managing Applications, Components, and monitoring builds, tests, and releases across the entire development lifecycle.
 
+### Konflux Operator
+
+The [Konflux Operator] is a Kubernetes operator that installs, configures, and manages the entire Konflux platform from a single `Konflux` Custom Resource. It deploys all core services and selected optional components listed on this page, handles configuration propagation, and provides declarative lifecycle management for the platform.
+
 [Hybrid Application Service]: ./hybrid-application-service.md
 [Build Service]: ./build-service.md
 [Integration Service]: ./integration-service.md
@@ -173,3 +177,4 @@ The [Konflux UI] provides a web-based user interface for interacting with Konflu
 [Pipeline Service]: ./pipeline-service.md
 [Enterprise Contract]: ./enterprise-contract.md
 [Konflux UI]: ./konflux-ui.md
+[Konflux Operator]: ./konflux-operator.md

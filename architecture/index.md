@@ -310,6 +310,8 @@ These services make up the core of Konflux and are all required for a working sy
   chain capabilities to other services
 - [Enterprise Contract](./core/enterprise-contract.md) - A specialized sub-service responsible for the
   definition and enforcement of policies related to how OCI artifacts are built and tested.
+- [Konflux Operator](./core/konflux-operator.md) - A Kubernetes operator that installs and manages
+  the entire Konflux platform from a single `Konflux` Custom Resource.
 
 ### Konflux Add-Ons
 
