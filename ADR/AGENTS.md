@@ -49,7 +49,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0000 Im 31L Record architecture decisions
 0024 Ac 97L Release Objects Attribution Tracking and Propagation
 0071 Ac 275L Replace Appstudio Labels, Annotations, and Finalizers with Konflux equivalents
-0069 Pr 158L Reproducible Container Builds in Konflux
+0069 Pr 157L Reproducible Container Builds in Konflux
 0056 Ib 765L Revised Component Model
 0011 Ac 148L Roles and Permissions for Konflux
 0022 Ac 450L Secret Management For User Workloads
