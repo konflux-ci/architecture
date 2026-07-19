@@ -543,6 +543,48 @@ add ~100 KB to the NudgeConfig status during the batch. This is within
 the 1 MB resource limit. The `maxItems: 5000` constraint on
 `spec.nudges` (from ADR 67) implicitly bounds batch size.
 
+## Considered Alternative: ComponentGroup Membership Gate
+
+An earlier iteration of this design considered adding an optional
+`expectedGroup` field to `batchPolicy` that references a ComponentGroup
+CR (from [ADR 60](0060-component-groups.md)). The idea: the batch would
+fire only when every component listed in the referenced ComponentGroup
+has contributed a successful build result, replacing the debounce timer
+with an explicit completeness check.
+
+This was rejected for the following reasons:
+
+1. **Conflicts with the trigger-agnostic principle.** The debounce
+   model's key strength is that it works without knowing membership
+   upfront. A hard group gate re-introduces the "membership must be
+   known" requirement criticized in the ChangeGroup approach (see
+   Context, point 3). A single configuration must work for both
+   full-set CVE rebuilds and partial single-component pushes.
+
+2. **Pessimizes partial rebuilds.** If a developer pushes to 1 of 30
+   operands and the other 29 never rebuild, a group gate forces the
+   batch to wait until `maxWaitTime` (hours). Debounce fires after 15
+   minutes of quiet -- the correct behavior for partial updates.
+
+3. **Maintenance drift.** Adding a new nudge edge without updating the
+   ComponentGroup creates a silent gap (the batch fires before the new
+   component builds). Debounce automatically includes any component
+   with an edge to the target.
+
+4. **Redundant with the nudge graph.** The NudgeConfig already
+   enumerates all `from → to` edges. A separate ComponentGroup listing
+   the same set is duplication that can fall out of sync.
+
+5. **Conflates concerns.** ComponentGroup (ADR 60) serves snapshot
+   aggregation and test ordering. Coupling it to nudge batching adds a
+   cross-cutting lifecycle dependency: changes to ComponentGroup
+   membership for test-ordering purposes would have unintended side
+   effects on batch firing behavior.
+
+The "early fire on completeness" optimization is better addressed by
+adaptive debounce (see Future Work) which derives expected membership
+from the nudge edges themselves -- no external group reference needed.
+
 ## Consequences
 
 ### Positive
@@ -599,9 +641,20 @@ the 1 MB resource limit. The `maxItems: 5000` constraint on
 
 ### Future Work
 
-- **Adaptive debounce timeout:** Adjust the timeout based on observed
-  build arrival patterns. If 28 of 30 components have built and the last
-  2 are expected based on the NudgeConfig graph, shorten the timeout.
+- **Adaptive debounce with edge-derived membership:** The controller
+  can derive "expected membership" from the nudge graph itself -- all
+  components with a `to: <target>` edge are potential contributors. When
+  all expected members have a result in `accumulated`, the batch fires
+  immediately (early exit), skipping the remaining debounce wait. When
+  only a subset rebuilds (partial update), the debounce timer fires
+  normally after the quiet period. This gives the "fire as soon as
+  complete" benefit of an explicit group gate without requiring
+  additional configuration, without maintenance drift risk, and without
+  pessimizing partial rebuilds. Progress reporting (e.g., "28/30
+  components built") becomes possible since the expected set is known.
+  The adaptive logic could also shorten the debounce timeout
+  proportionally as more members arrive (e.g., 28 of 30 built →
+  reduce remaining debounce to 2 minutes).
 - **Per-batch-type filtering (label selectors / CEL expressions):**
   Allow `targetConfig` entries to filter incoming builds by PipelineRun
   labels so that different types of updates (e.g., CVE fixes vs.
