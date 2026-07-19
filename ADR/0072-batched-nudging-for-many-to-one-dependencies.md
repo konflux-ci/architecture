@@ -229,6 +229,9 @@ spec:
 | `spec.targetConfig[].batchPolicy.debounceTimeout` | `duration` | Overrides `batchDefaults.debounceTimeout` for this target. |
 | `spec.targetConfig[].batchPolicy.maxWaitTime` | `duration` | Overrides `batchDefaults.maxWaitTime` for this target. |
 | `spec.targetConfig[].batchPolicy.failurePolicy` | `enum` | Overrides `batchDefaults.failurePolicy` for this target. |
+| `spec.actions.forceFire` | `object` | One-shot action field. When set, the controller force-fires the batch for the specified target regardless of debounce state. Cleared after processing. |
+| `spec.actions.forceFire.target` | `string` | Required. Name of the target component whose batch should be force-fired. Must match a target in `activeBatches`. |
+| `spec.actions.forceFire.includePartial` | `bool` | Optional. Default: `true`. When `true`, fires with whatever has accumulated (excluding failed). When `false`, fires only if no component is in `failed`; otherwise the action is rejected (see Manual Override). |
 
 **Why batching is declared on the target, not per-edge:** Batching is
 inherently a property of the target component -- it controls how the
@@ -311,7 +314,7 @@ stateDiagram-v2
     direction LR
     [*] --> Accumulating : build completes
     Accumulating --> Accumulating : +build
-    Accumulating --> Blocked : failure
+    Accumulating --> Blocked : failure [Block]
     Accumulating --> Firing : timer / forceFire
     Blocked --> Accumulating : fix
     Blocked --> Firing : forceFire
@@ -414,9 +417,14 @@ fires with whatever has accumulated, excluding failed components. When
 `false`, the batch fires only if all known nudging components (those
 with at least one build result in either `accumulated` or `failed`)
 have succeeded -- if any component is still in `failed`, the action is
-rejected and the batch remains in its current phase. This lets users
-distinguish "fire now with partial results" from "fire now but only if
-everything succeeded."
+rejected and the batch remains in its current phase. On rejection the
+controller emits a Kubernetes Event (type `Warning`, reason
+`ForceFireRejected`) on the NudgeConfig and sets a transient Condition
+(`type: ForceFireRejected`, `status: "True"`, `message` listing the
+failed components). The Condition is cleared on the next successful
+reconciliation. This lets users distinguish "fire now with partial
+results" from "fire now but only if everything succeeded" and provides
+clear feedback when the action cannot proceed.
 
 The controller processes the action, transitions the batch to `Firing`,
 creates the aggregated Renovate PipelineRun with whatever has
@@ -447,10 +455,12 @@ component simply never contributes a result.
 
 #### Overlapping batches for the same target
 
-Only one active batch exists per target at any time. This is a hard
-invariant -- concurrent batches for the same target risk digest
-regression (a later-firing batch could overwrite a newer digest with an
-older one).
+At most one batch per target accepts new builds at any time (the
+two-slot concurrency model allows a second batch in
+`Firing`/`Failed`/`Completed`, but only the current accepting batch
+receives new results). This serialization invariant prevents digest
+regression -- a later-firing batch could overwrite a newer digest with
+an older one if concurrent accepting batches were allowed.
 
 - **`Accumulating` or `Blocked` phase:** New builds are added to the
   existing batch (debounce timer resets).

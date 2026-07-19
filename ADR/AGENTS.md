@@ -5,7 +5,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0048 Ac 92L Attestable Build-Time Tests in Integration Service
 0040 Ac 142L Availability Probe Framework
 0059 Ib 66L Backend Usage Telemetry Collection from Konflux Clusters
-0072 Pr 678L Batched Nudging for Many-to-One Component Dependencies
+0072 Pr 688L Batched Nudging for Many-to-One Component Dependencies
 0046 Im 157L Build a common Task Runner image
 0047 Ib 70L Caching for container base images used during builds
 0007 Ac 89L Change Management Process
