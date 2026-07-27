@@ -65,7 +65,7 @@ decommissioning the old model once the migration is complete.
 ### Example of new Component CR spec
 
 ```
-apiVersion: appstudio.redhat.com/v1alpha1
+apiVersion: konflux-ci.dev/v1alpha1
 kind: Component
 metadata:
   name: example
@@ -131,7 +131,7 @@ spec:
   source:
     url: https://github.com/user/repo
 
-    dockerfileUri: Dockerfile
+    dockerfilePath: Dockerfile
 
     versions:
       - name: Version 1.0
@@ -140,7 +140,7 @@ spec:
       - name: Test
         revision: test
         context: ./test
-        dockerfileUri: test.Dockerfile
+        dockerfilePath: test.Dockerfile
         skip-builds: true
 
       - name: Different pipeline
@@ -188,7 +188,7 @@ status:
 * **apiVersion**
   * Type: string
   * Required field
-  * Value: `appstudio.redhat.com/v1alpha1`.
+  * Value: `konflux-ci.dev/v1alpha1`.
 
 * **kind**
   * Type: string
@@ -438,9 +438,9 @@ status:
   * Type: string
   * Required field
   * Git repository url.
-  * Modifications prevented by a webhook.
+  * Modifications prevented by a CEL XValidation rule at the API server level.
 
-* **spec.source.dockerfileUri**
+* **spec.source.dockerfilePath**
   * Type: string
   * Optional field, default: Dockerfile
   * Dockerfile path for all versions, unless explicitly specified for a version.
@@ -448,7 +448,7 @@ status:
 
 * **spec.source.versions**
   * Type: array of objects
-  * Required field (but can be an empty array, in that case it is just empty shell of component)
+  * Optional field (an empty or omitted list means the component has no versions and is an empty shell)
   * List of all versions.
 
 * **spec.source.versions[].name**
@@ -460,7 +460,6 @@ status:
   * Type: string
   * Required field (we won't support the default branch anymore)
   * Branch name for the version.
-  * Modifications prevented by a webhook.
 
 * **spec.source.versions[].context**
   * Type: string
@@ -468,7 +467,7 @@ status:
   * Context directory for the version.
   * Used only when sending a PR with build pipeline configuration was requested via `spec.actions.create-pipeline-configuration-pr`.
 
-* **spec.source.versions[].dockerfileUri**
+* **spec.source.versions[].dockerfilePath**
   * Type: string
   * Optional field, default: Dockerfile
   * Dockerfile path for the version.
