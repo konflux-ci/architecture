@@ -171,10 +171,40 @@ PipelineRun fires only when the debounce timer expires (no new builds
 for the same target within the quiet period) or a hard deadline is
 reached.
 
+The debounce timer is implemented as a `fireAt` timestamp in status. On
+each build result capture, the controller updates
+`fireAt = now + debounceTimeout` and schedules
+`RequeueAfter: debounceTimeout`. On controller startup, the informer
+cache triggers a reconcile for every NudgeConfig, allowing expired
+`fireAt` values to be detected and fired immediately, and future
+`fireAt` values to be re-queued with the appropriate remaining delay.
+
 Batching is orthogonal to the nudge mode defined in ADR 67. In
 `immediate` mode the accumulation trigger is a successful build; in
 `validated` mode the trigger is a passing Snapshot. Either way, the
 batch collects the result and delays the Renovate PipelineRun.
+
+#### Validated mode specifics
+
+In `validated` mode the accumulation trigger is a passing Snapshot rather
+than a raw build completion. Three details differ from `immediate` mode:
+
+1. **Image digest source.** The `imageDigest` stored in `accumulated` is
+   the digest from the passing Snapshot (the tested image), not the
+   build PipelineRun output. This is the same digest that single-
+   component validated nudging already uses.
+
+2. **Shared gating groups.** If operand-a and operand-b share the same
+   gatingGroup, a single passing Snapshot covers both. The controller
+   adds one entry per component to `accumulated` from that single
+   Snapshot event -- both operand-a and operand-b gain an entry
+   simultaneously and the debounce timer resets once.
+
+3. **Failure semantics.** A "failure" for `failurePolicy` purposes is a
+   failing Snapshot (integration tests failed), not a failed build PLR.
+   A build failure that never produces a Snapshot simply never
+   contributes to the batch -- it is invisible to the batch state
+   machine.
 
 Targets without a `targetConfig` entry (or without `batchPolicy`)
 continue to use their configured mode (`immediate` or `validated`)
@@ -255,6 +285,10 @@ precedence over `batchDefaults`; omitted fields fall back to defaults.
 3. `maxWaitTime` must be greater than `debounceTimeout` (checked on both
    `batchDefaults` and each resolved policy with fallback).
 4. `debounceTimeout` must be between 1m and 24h.
+5. Removing a nudge edge is rejected if it would leave a
+   `targetConfig[].target` entry with no matching `to` values in
+   `spec.nudges`. Both the edge removal and the `targetConfig` removal
+   must be submitted in the same update to avoid orphaned batch policies.
 
 ### NudgeConfig Status Changes
 
@@ -363,6 +397,9 @@ policies. All invariants hold: types are correct, `Firing` always has
 non-empty `accumulated`, and at most one batch is in `Firing` at any
 time.
 
+The TLA+ specification will be published in a companion repository once
+the ADR is accepted. It is available for review on request.
+
 ### Batch Grouping
 
 Batches are grouped implicitly by target component: all nudge edges
@@ -392,6 +429,32 @@ PipelineRun containing the list of `(component, digest)` pairs from
 single-component nudge PLR (from PR #1604) but includes multiple update
 entries in the generated Renovate configuration -- each entry maps a
 nudging component's image reference to its new digest.
+
+**Annotation schema for batched PLRs:** The existing single-component
+nudge PLR annotations (`nudged-components`, `nudging-component`,
+`nudging-pipeline`, `nudging-image`) are single-valued. For batched
+PLRs the schema is extended:
+
+| Annotation | Batched value |
+|---|---|
+| `build.appstudio.redhat.com/nudged-components` | Unchanged (target component name). |
+| `build.appstudio.redhat.com/nudging-components` | JSON array of source component names: `["operand-a","operand-b",...]`. Replaces the singular `nudging-component`. |
+| `build.appstudio.redhat.com/nudging-digests` | JSON object mapping component name to digest: `{"operand-a":"sha256:abc...","operand-b":"sha256:def..."}`. Replaces the singular `nudging-image`. |
+| `build.appstudio.redhat.com/batch-id` | `<target>-<createdAt-epoch>` (e.g., `bundle-1721126400`). Links the PLR to the batch for observability. |
+
+The singular annotations (`nudging-component`, `nudging-pipeline`,
+`nudging-image`) are not set on batched PLRs to avoid ambiguity.
+Consumers must check for the plural form first.
+
+**Renovate configuration inheritance:** The two-tier ConfigMap lookup
+from ADR 67 (`namespace-wide-nudging-renovate-config` + per-target
+annotation override) applies unchanged to batched PLRs. The controller
+resolves the Renovate configuration for the target component using the
+same mechanism as single-component nudges. The
+`build-nudge-simple-branch` annotation on source components is
+superseded by the batch branch prefix (`konflux/nudge-batch/<target>`)
+for batched targets -- individual source branch preferences do not apply
+when multiple sources are aggregated into a single PR.
 
 The PLR name is deterministic (see [Controller restart mid-batch](#controller-restart-mid-batch)).
 Branch naming uses a batch-specific prefix (e.g.,
@@ -426,9 +489,18 @@ reconciliation. This lets users distinguish "fire now with partial
 results" from "fire now but only if everything succeeded" and provides
 clear feedback when the action cannot proceed.
 
-The controller processes the action, transitions the batch to `Firing`,
-creates the aggregated Renovate PipelineRun with whatever has
-accumulated, and clears the `actions.forceFire` field.
+The controller clears `spec.actions.forceFire` on every reconcile where
+it is set -- whether the action fires the batch, is ignored (batch
+already in `Firing`), or is rejected (`includePartial: false` with
+failures present). This ensures the field never persists in a stale
+state across restarts. When the action successfully fires, the
+controller transitions the batch to `Firing` and creates the aggregated
+Renovate PipelineRun with whatever has accumulated.
+When the action is ignored or rejected, the controller emits a
+Kubernetes Event (type `Warning`, reason `ForceFireIgnored` for the
+ignored case, `ForceFireRejected` for the rejected case) explaining why
+the action had no effect. This provides consistent feedback regardless
+of outcome.
 
 This handles:
 - **Blocked batches:** one component's build failed and won't be fixed
@@ -449,9 +521,20 @@ most recent digest per nudging component is included.
 #### Component deleted during a batch
 
 If a nudging component is deleted while a batch is accumulating, the
-stale reference controller (from ADR 67) marks the NudgeConfig condition.
-The batch continues with whatever has accumulated -- the deleted
-component simply never contributes a result.
+stale reference controller (from ADR 67) marks the NudgeConfig condition
+(`Valid=False`). Two cases apply:
+
+- **Deleted before contributing a result:** The deleted component never
+  contributes to the batch. The batch continues normally -- it simply
+  has fewer entries in `accumulated` than it otherwise would.
+
+- **Deleted after contributing a result:** The component's entry remains
+  in `accumulated` and its digest is included when the batch fires.
+  The `Valid=False` condition does not block batch firing -- the batch
+  proceeds because the digest was valid at capture time and the target
+  component's Dockerfile still references that image. The stale
+  reference condition is an informational signal for the user, not a
+  gate on batch operations.
 
 #### Overlapping batches for the same target
 
@@ -489,6 +572,18 @@ failure and `failurePolicy: Block`, the batch transitions back to
 self-healing without manual intervention when the underlying issue is
 fixed.
 
+#### Blocked batch observability
+
+When a batch transitions to `Blocked`, the controller emits a Kubernetes
+Event (type `Warning`, reason `BatchBlocked`) on the NudgeConfig listing
+the failed component(s). If the batch remains in `Blocked` phase past
+the configured `maxWaitTime` (which is not enforced as a firing trigger
+for blocked batches, but serves as an alerting threshold), the controller
+emits a second Event (type `Warning`, reason `BatchBlockedPastDeadline`)
+prompting the user to investigate or use `forceFire`. This makes the
+escape hatch discoverable without requiring users to actively poll
+NudgeConfig status.
+
 #### Controller restart mid-batch
 
 On startup, the controller reads NudgeConfig status. Active batches with
@@ -514,6 +609,17 @@ and the user can either investigate the failure, fix the underlying
 issue, and use `forceFire` to re-trigger, or manually clean up the
 batch.
 
+#### Post-partial-fire convergence
+
+When a batch fires under `failurePolicy: ProceedWithPartial`, the target
+component ends up with a mix of updated and stale image references for
+the failed components. This is expected -- failed components' results
+are picked up in a subsequent batch cycle when those components
+successfully rebuild. The next batch starts fresh, collects the new
+successful builds, and fires a nudge that updates the remaining stale
+references. The target converges to a fully updated state without manual
+intervention, just one batch cycle later.
+
 #### PipelineRun pruning during a batch
 
 For immediate-mode nudging, integration-service processes build
@@ -525,7 +631,17 @@ for immediate-mode nudging today.
 
 The batched path uses the same mechanism: when a build PLR completes,
 integration-service captures the result into `activeBatches` status and
-marks the PLR with the processed annotation. The build result is
+marks the PLR with the processed annotation.
+
+**Write ordering:** The NudgeConfig status update must be persisted
+before the `component-nudge-processed` annotation is written to the PLR.
+This ordering ensures that a controller crash between the two writes is
+always recoverable -- the PLR will be re-processed on restart and the
+dedup-by-`from` rule prevents duplicate entries. The reverse ordering
+(annotate first, then status) would lose the build result permanently if
+the controller crashes between the two writes.
+
+The build result is
 captured immediately on completion -- it is not held until the batch
 fires. This keeps build PLR etcd lifetime unchanged from the
 non-batched case.
