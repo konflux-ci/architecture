@@ -481,8 +481,7 @@ fires with whatever has accumulated, excluding failed components. When
 with at least one build result in either `accumulated` or `failed`)
 have succeeded -- if any component is still in `failed`, the action is
 rejected and the batch remains in its current phase. On rejection the
-controller emits a Kubernetes Event (type `Warning`, reason
-`ForceFireRejected`) on the NudgeConfig and sets a transient Condition
+controller sets a transient Condition on the NudgeConfig status
 (`type: ForceFireRejected`, `status: "True"`, `message` listing the
 failed components). The Condition is cleared on the next successful
 reconciliation. This lets users distinguish "fire now with partial
@@ -496,11 +495,12 @@ failures present). This ensures the field never persists in a stale
 state across restarts. When the action successfully fires, the
 controller transitions the batch to `Firing` and creates the aggregated
 Renovate PipelineRun with whatever has accumulated.
-When the action is ignored or rejected, the controller emits a
-Kubernetes Event (type `Warning`, reason `ForceFireIgnored` for the
-ignored case, `ForceFireRejected` for the rejected case) explaining why
-the action had no effect. This provides consistent feedback regardless
-of outcome.
+When the action is ignored or rejected, the controller sets a transient
+Condition on the NudgeConfig status (`ForceFireIgnored` for the ignored
+case, `ForceFireRejected` for the rejected case) explaining why the
+action had no effect. These Conditions are cleared on the next
+successful reconciliation, providing consistent feedback regardless of
+outcome.
 
 This handles:
 - **Blocked batches:** one component's build failed and won't be fixed
@@ -574,15 +574,26 @@ fixed.
 
 #### Blocked batch observability
 
-When a batch transitions to `Blocked`, the controller emits a Kubernetes
-Event (type `Warning`, reason `BatchBlocked`) on the NudgeConfig listing
-the failed component(s). If the batch remains in `Blocked` phase past
-the configured `maxWaitTime` (which is not enforced as a firing trigger
-for blocked batches, but serves as an alerting threshold), the controller
-emits a second Event (type `Warning`, reason `BatchBlockedPastDeadline`)
-prompting the user to investigate or use `forceFire`. This makes the
-escape hatch discoverable without requiring users to actively poll
-NudgeConfig status.
+When a batch transitions to `Blocked`, the controller sets a Condition
+on the NudgeConfig status (`type: BatchBlocked`, `status: "True"`,
+`message` listing the failed component(s) and the target). The Condition
+is cleared when the batch leaves the `Blocked` phase (e.g., via retry
+success or `forceFire`). This is the primary observability mechanism —
+users (and the UI) inspect the NudgeConfig status directly, which is
+already the authoritative source for batch progress.
+
+#### Why not Kubernetes Events?
+
+We deliberately avoid Kubernetes Events for lifecycle signalling:
+
+- **Not surfaced in the UI.** The Konflux UI does not expose Kubernetes
+  Events, so users would never see them without direct cluster access.
+- **etcd overhead.** Each Event is a separate object written to etcd.
+  The platform is already working to reduce Event TTLs to relieve
+  storage pressure; adding new Event sources works against that goal.
+- **No discoverability advantage.** Users must already inspect the
+  NudgeConfig status for batch progress. A Condition on the same CR is
+  strictly easier to find than a separate Event resource.
 
 #### Controller restart mid-batch
 
@@ -734,10 +745,11 @@ from the nudge edges themselves -- no external group reference needed.
   entry continue to use immediate or validated nudging unchanged. Users
   adopt batching per-target at their own pace.
 
-- **Structured observability.** The `activeBatches` status provides a
-  structured API that the UI can consume to display progress bars,
-  failure details, countdowns, and a "Force Fire" button. The controller
-  emits Kubernetes Events for key lifecycle transitions.
+- **Structured observability.** The `activeBatches` status and
+  Conditions provide a structured API that the UI can consume to display
+  progress bars, failure details, countdowns, and a "Force Fire" button.
+  All observability is on the NudgeConfig CR itself — no separate
+  resources to discover.
 
 - **Formally verified.** The batch state machine was verified with TLA+
   model checking (656,827 states explored), confirming no deadlocks, no
