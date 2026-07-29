@@ -293,6 +293,12 @@ corresponding targetConfig), adding operational friction for no safety
 benefit. Users may also want to pre-configure batch policies before
 wiring up edges.
 
+To surface accidental orphans without blocking them, the controller sets
+an informational Condition (`type: OrphanedTargetConfig`, `status:
+"True"`, `message` listing the orphaned targets) whenever any
+`targetConfig` entry has no matching nudge edge. The Condition clears
+automatically once edges are wired up or the stale entry is removed.
+
 ### NudgeConfig Status Changes
 
 ```yaml
