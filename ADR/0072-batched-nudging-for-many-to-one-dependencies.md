@@ -394,14 +394,6 @@ when builds arrive during `Firing`/`Failed`/`Completed`.
 | **Failed** | Recorded in **next batch** (create if needed → next `Accumulating`). This batch stays `Failed`. | Same -- recorded in **next batch**. | n/a | → `Firing`. Create new PLR with same `accumulated`. | n/a | n/a |
 | **Completed** | **Next batch** created (→ next `Accumulating`). This batch cleaned up. | Same -- recorded in **next batch**. This batch cleaned up. | n/a | Ignored (nothing to fire). | n/a | n/a |
 
-The state machine was formally verified with TLA+ model checking. TLC
-explored 656,827 states with 3 components, 12 events, and both failure
-policies. All invariants hold: types are correct, `Firing` always has
-non-empty `accumulated`, and at most one batch is in `Firing` at any
-time.
-
-The TLA+ specification will be published in a companion repository once
-the ADR is accepted. It is available for review on request.
 
 ### Batch Grouping
 
@@ -754,9 +746,6 @@ from the nudge edges themselves -- no external group reference needed.
   All observability is on the NudgeConfig CR itself — no separate
   resources to discover.
 
-- **Formally verified.** The batch state machine was verified with TLA+
-  model checking (656,827 states explored), confirming no deadlocks, no
-  empty-firing, and serial firing invariants.
 
 ### Negative
 
