@@ -280,15 +280,18 @@ precedence over `batchDefaults`; omitted fields fall back to defaults.
 **Validation rules:**
 
 1. No duplicate `target` values in `targetConfig`.
-2. Each `targetConfig[].target` must match the `to` value of at least
-   one nudge edge. Orphan entries are rejected.
-3. `maxWaitTime` must be greater than `debounceTimeout` (checked on both
+2. `maxWaitTime` must be greater than `debounceTimeout` (checked on both
    `batchDefaults` and each resolved policy with fallback).
-4. `debounceTimeout` must be between 1m and 24h.
-5. Removing a nudge edge is rejected if it would leave a
-   `targetConfig[].target` entry with no matching `to` values in
-   `spec.nudges`. Both the edge removal and the `targetConfig` removal
-   must be submitted in the same update to avoid orphaned batch policies.
+3. `debounceTimeout` must be between 1m and 24h.
+
+Orphaned `targetConfig` entries (those with no matching nudge edges) are
+explicitly allowed. An orphaned entry is inert — the controller never
+matches it, so it cannot cause incorrect behavior. Rejecting orphans at
+admission time would force users to keep `targetConfig` and `nudges` in
+lockstep (e.g., requiring atomic removal of edges and their
+corresponding targetConfig), adding operational friction for no safety
+benefit. Users may also want to pre-configure batch policies before
+wiring up edges.
 
 ### NudgeConfig Status Changes
 
