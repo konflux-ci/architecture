@@ -446,7 +446,14 @@ PLRs the schema is extended:
 
 The singular annotations (`nudging-component`, `nudging-pipeline`,
 `nudging-image`) are not set on batched PLRs to avoid ambiguity.
-Consumers must check for the plural form first.
+`nudging-pipeline` has no plural equivalent — for a batch with N source
+builds, the individual build PLR names are already recorded in
+`status.activeBatches[].accumulated[].buildPipelineRun`. Duplicating
+them into a PLR annotation would risk hitting annotation size limits on
+large batches and duplicate information already available via the
+`batch-id` link to NudgeConfig status. Consumers must check for the
+plural annotations first; the singular forms indicate a non-batched
+nudge.
 
 **Renovate configuration inheritance:** The two-tier ConfigMap lookup
 from ADR 67 (`namespace-wide-nudging-renovate-config` + per-target
