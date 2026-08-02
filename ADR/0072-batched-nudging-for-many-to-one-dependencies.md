@@ -311,6 +311,7 @@ status:
   # New: active batch tracking
   activeBatches:
     - target: bundle
+      batchId: bundle-1721126400    # <target>-<createdAt-epoch>
       phase: Blocked               # Accumulating | Blocked | Firing | Failed | Completed
       createdAt: "2026-07-16T10:00:00Z"
       fireAt: ""                     # paused while blocked
