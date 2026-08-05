@@ -1,0 +1,38 @@
+#!/bin/bash
+# Regenerate the root llms.txt (https://llmstxt.org) from the repository's own
+# content tree (architecture/ + ADR/) via Sourcey. Deterministic: the same
+# commit always reproduces the same llms.txt byte-for-byte.
+#
+# Pipeline:
+#   1. hack/llms-txt/eleventy_nav_to_sourcey.py derives the Sourcey config from
+#      the content tree (no hand-picked page selection).
+#   2. `sourcey build` (pinned 3.6.5) extracts per-page descriptions and emits
+#      llms.txt.
+#   3. hack/llms-txt/normalize_llms_urls.py rewrites Sourcey's .html-style URLs
+#      to this Eleventy site's live clean-URL style and absolutizes them.
+#
+# Requires: python3, node/npm (sourcey@3.6.5 is fetched via npx).
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+python3 "${REPO_ROOT}/hack/llms-txt/eleventy_nav_to_sourcey.py" "${REPO_ROOT}" \
+  "${REPO_ROOT}/hack/llms-txt/sourcey.config.ts"
+
+STAGE="$(mktemp -d)"
+trap 'rm -rf "${STAGE}"' EXIT
+
+# Stage the content exactly as the live site maps it: architecture/* -> root, ADR -> /ADR
+cp -r "${REPO_ROOT}/architecture/." "${STAGE}/"
+cp -r "${REPO_ROOT}/ADR" "${STAGE}/ADR"
+cp "${REPO_ROOT}/hack/llms-txt/sourcey.config.ts" "${STAGE}/"
+
+( cd "${STAGE}" && npm install --no-save sourcey@3.6.5 >/dev/null 2>&1 \
+  && ./node_modules/.bin/sourcey build -c . -o ./dist )
+
+python3 "${REPO_ROOT}/hack/llms-txt/normalize_llms_urls.py" \
+  "${STAGE}/dist/llms.txt" "${REPO_ROOT}/llms.txt" "${REPO_ROOT}"
+
+echo "Wrote ${REPO_ROOT}/llms.txt"
