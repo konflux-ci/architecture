@@ -60,7 +60,9 @@ cp "${REPO_ROOT}/hack/llms-txt/package.json" "${REPO_ROOT}/hack/llms-txt/package
 ( cd "${STAGE}" && npm ci --no-audit --no-fund >/dev/null \
   && ./node_modules/.bin/sourcey build -c . -o ./dist )
 
-python3 "${REPO_ROOT}/hack/llms-txt/finalize_llms_txt.py" \
+# -B: this one imports its sibling, and generating the site index should not
+# leave a __pycache__ directory behind in the repository.
+python3 -B "${REPO_ROOT}/hack/llms-txt/finalize_llms_txt.py" \
   "${STAGE}/dist/llms.txt" "${OUTPUT}" "${REPO_ROOT}"
 
 if "${CHECK}"; then
