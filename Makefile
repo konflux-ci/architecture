@@ -36,7 +36,11 @@ serve: install
 	npm run serve
 
 # Main lint target - runs all validation
-lint: lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers lint-frontmatter lint-agents-md lint-llms-txt
+# lint-llms-txt is deliberately not part of this target: it installs Sourcey from
+# the npm registry, so it runs as its own CI job scoped to documentation changes
+# (.github/workflows/lint-llms-txt.yml) instead of adding a registry fetch to
+# every lint run.
+lint: lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers lint-frontmatter lint-agents-md
 
 # Mermaid diagram validation
 lint-mermaid: install-mermaid-cli
