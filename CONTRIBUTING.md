@@ -198,6 +198,16 @@ This runs:
 - `lint-frontmatter` - Validates frontmatter schemas and cross-references
 - `lint-agents-md` - Validates AGENTS.md files are up-to-date with `hack/util/generate-agents-md` output
 
+`llms.txt` freshness is checked by a separate target, because it installs Sourcey
+from the npm registry:
+
+```bash
+make lint-llms-txt
+```
+
+Run it after adding or renaming a published page. CI runs it as its own job on
+changes to `architecture/`, `ADR/`, `llms.txt`, or the generator.
+
 Build the site to ensure no errors:
 
 ```bash
@@ -236,6 +246,8 @@ make build
 
 4. **Run `make lint-frontmatter`** to verify the frontmatter is valid and cross-references are consistent.
 
+5. **Run `make llms-txt`** and commit the regenerated `llms.txt` so the new page is indexed. `make lint-llms-txt` fails if it is out of date.
+
 ## Adding a New ADR
 
 1. **Create ADR file** at `/ADR/NNNN-description.md` following the template at `/ADR/0000-adr-template.md`. Include frontmatter:
@@ -254,6 +266,8 @@ make build
 2. **Update service frontmatter** for affected services — add the ADR number to `related_adrs` in each service's `overview:` block. The `lint-frontmatter` check will warn about missing bidirectional references.
 
 3. **Run `make lint-frontmatter`** to verify the ADR frontmatter is valid and references are consistent.
+
+4. **Run `make llms-txt`** and commit the regenerated `llms.txt` so the new ADR is indexed. `make lint-llms-txt` fails if it is out of date.
 
 Note: frontmatter indexing can be done by maintainers after merge if needed. The key requirement is the ADR content itself.
 
