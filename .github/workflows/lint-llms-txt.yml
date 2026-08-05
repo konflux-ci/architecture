@@ -24,6 +24,9 @@ on:
     - 'hack/llms-txt/**'
     - '.github/workflows/lint-llms-txt.yml'
 
+permissions:
+  contents: read
+
 jobs:
   lint-llms-txt:
     name: Check llms.txt is up to date
@@ -39,7 +42,4 @@ jobs:
         node-version: '22'
 
     - name: Run make lint-llms-txt
-      run: |
-        echo "🔧 Running make lint-llms-txt..."
-        make lint-llms-txt
-        echo "✅ make lint-llms-txt completed successfully"
+      run: make lint-llms-txt
