@@ -1,10 +1,13 @@
 # Konflux Architecture
 
-> From "Why Konflux?":
+> Technical and architecture documentation for Konflux, an open source CI/CD system: a platform overview, the core and add-on services it is built from, and the architecture decision records (ADRs) behind them.
 
-## Documentation
+## Overview
 
-- [Overview](https://konflux-ci.dev/architecture/): From "Why Konflux?":
+- [Overview](https://konflux-ci.dev/architecture/): Technical and architecture documentation for Konflux, an open source CI/CD system: a platform overview, the core and add-on services it is built from, and the architecture decision records (ADRs) behind them.
+
+## Core Services
+
 - [Build Service](https://konflux-ci.dev/architecture/core/build-service/): The Build Service is composed of controllers that create and configure build pipelines. The main input for the Build Service is a Component CR managed by the Konflux UI or created manually via `kubectl`.
 - [Enterprise Contract](https://konflux-ci.dev/architecture/core/enterprise-contract/): The Enterprise Contract's purpose is to ensure container images produced by Konflux meet certain clearly defined requirements before they are considered releasable. Should a container image not meet the requirements the Enterprise Contract will produce a list of the reasons why so they can be addressed as required to produce a releasable build.
 - [Hybrid Application Service (Deprecated)](https://konflux-ci.dev/architecture/core/hybrid-application-service/): The name "Hybrid Application Service" appears in older ADRs, git blame outputs, and archived GitHub issues without explanation. This page documents what HAS did and what replaced it — useful context when reading the Konflux commit history or tracing why certain design decisions were made.
@@ -14,6 +17,9 @@
 - [Konflux UI](https://konflux-ci.dev/architecture/core/konflux-ui/): No architecture documentation available. See konflux-ci/konflux-ui.
 - [Pipeline Service](https://konflux-ci.dev/architecture/core/pipeline-service/): Pipeline Service provides Tekton APIs and services to Konflux.
 - [Release Service](https://konflux-ci.dev/architecture/core/release-service/): The **Release service** is composed of a Release Operator that can create and orchestrate release pipelines defined in Release Strategies to deliver content.
+
+## Add-ons
+
 - [Image Controller](https://konflux-ci.dev/architecture/add-ons/image-controller/): Image controller sets up and manages container image repositories in configured quay.io organization. It works either for general purpose image repository or Component-specific image repository.
 - [Add-ons](https://konflux-ci.dev/architecture/add-ons/): Konflux subsystems are divided into two categories: **core** and **add-ons**. The core subsystems are required for a working system, while add-ons are optional services that provide additional capabilities.
 - [Internal Services Controller](https://konflux-ci.dev/architecture/add-ons/internal-services/): The Internal Services system consists of a kubernetes controller (running on an internal, private cluster) that is capable of watching and reconciling custom resources on a remote, public cluster. These custom resources describe which pipelines and parameters to use to execute internal jobs on an internal, private cluster. The results and outcome of the pipeline are added as an update to the custom resources. The remote, public cluster watches these resources to determine the outcome.
@@ -22,72 +28,74 @@
 - [Multi Platform Controller](https://konflux-ci.dev/architecture/add-ons/multi-platform-controller/): The Multi Platform Controller is a Kubernetes Controller that can provision virtual machines for Tekton `TaskRun` instances. This allows these TaskRuns to SSH into the provided virtual machines to build images in platforms other than amd64.
 - [Project Controller](https://konflux-ci.dev/architecture/add-ons/project-controller/): The Project Controller is a Kubernetes controller that enables users to manage projects and development streams in Konflux. It provides a templating system for creating multiple similar development streams with consistent resource structures, streamlining the process of setting up complex multi-component applications.
 - [Pulp Access Controller](https://konflux-ci.dev/architecture/add-ons/pulp-access-controller/): Pulp is Red Hat's offering for centrally storing artifacts. Initially designed for RPMs, today it's the go-to place for storing any language artifacts, excluding OCI types. For example, if you're producing RPMs during a Konflux job and want to store and redistribute them through native RPM tools (yum/dnf), you would store them in Pulp.
-- [0. Record architecture decisions](https://konflux-ci.dev/architecture/ADR/0000-adr-template/): Date: 2022-06-17
-- [1. Pipeline Service Phase 1](https://konflux-ci.dev/architecture/ADR/0001-pipeline-service-phase-1/): Created: 2022-10-13 Last Updated: 2023-09-29
-- [2. Feature Flags](https://konflux-ci.dev/architecture/ADR/0002-feature-flags/): Date: 2022-06-01
-- [3. Interacting with Internal Services](https://konflux-ci.dev/architecture/ADR/0003-interacting-with-internal-services/): Date: 2022-10-20
-- [4. Out-of-the-box image repository for StoneSoup users](https://konflux-ci.dev/architecture/ADR/0004-component-image-location/): Date: Oct 29, 2022
-- [6. Log Conventions](https://konflux-ci.dev/architecture/ADR/0006-log-conventions/): Implemented
-- [7. Change Management Process](https://konflux-ci.dev/architecture/ADR/0007-change-management/): Date: 2022-11-22
-- [8. Environment Provisioning](https://konflux-ci.dev/architecture/ADR/0008-environment-provisioning/): Date: 2022-12-14
-- [9. Pipeline Service via Operator](https://konflux-ci.dev/architecture/ADR/0009-pipeline-service-via-operator/): Created: 2023-09-29 Last Updated: 2023-09-29
-- [10. Namespace Metadata](https://konflux-ci.dev/architecture/ADR/0010-namespace-metadata/): Date: 2022-12-09
-- [11. Roles and Permissions for Konflux](https://konflux-ci.dev/architecture/ADR/0011-roles-and-permissions/): Date: 2023-01-10
-- [12. Namespace Name Format](https://konflux-ci.dev/architecture/ADR/0012-namespace-name-format/): Date: 2023-01-23
-- [13. Konflux Test Stream - API contracts](https://konflux-ci.dev/architecture/ADR/0013-integration-service-api-contracts/): Date: 2023-01-30
-- [14. Let Pipelines Proceed](https://konflux-ci.dev/architecture/ADR/0014-let-pipelines-proceed/): Accepted
-- [15. The Two-phase Architecture of the Integration Service](https://konflux-ci.dev/architecture/ADR/0015-integration-service-two-phase-architecture/): Date Documented: 2023-02-09 Date Accepted: 2023-02-14
-- [16. Promotion logic in the Integration Service](https://konflux-ci.dev/architecture/ADR/0016-integration-service-promotion-logic/): Superseded by ADR 32. Decoupling Deployment Superseded by ADR 36. Integration service promotes components to GCL immediately after builds complete
-- [17. Use our own pipelines](https://konflux-ci.dev/architecture/ADR/0017-use-our-pipelines/): Accepted
-- [18. Continuous Performance Testing (CPT) of Apps in Konflux](https://konflux-ci.dev/architecture/ADR/0018-apps-continuous-perf-testing/): Date: 2023-03-10
-- [19. Customize URLs Sent to GitHub](https://konflux-ci.dev/architecture/ADR/0019-customize-url-github/): Created Date: 2023-03-29 Accepted Date: 2023-03-31
-- [20. Source Retention](https://konflux-ci.dev/architecture/ADR/0020-source-retention/): Date: 2023-04-04
-- [21. Partner Tasks in Build/Test Pipelines](https://konflux-ci.dev/architecture/ADR/0021-partner-tasks/): Date: 2023-03-06
-- [22. Secret Management For User Workloads](https://konflux-ci.dev/architecture/ADR/0022-secret-mgmt-for-user-workloads/): Date started: 2023-03-25 Date revised: 2023-08-29
-- [23. Git references to furnish Integration Test Scenarios](https://konflux-ci.dev/architecture/ADR/0023-git-references-to-furnish-integration-test-scenarios/): Approved
-- [24. Release Objects Attribution Tracking and Propagation](https://konflux-ci.dev/architecture/ADR/0024-release-attribution/): Date: 2023-04-25
-- [25. appstudio-pipeline Service Account](https://konflux-ci.dev/architecture/ADR/0025-appstudio-pipeline-serviceaccount/): Date: 2023-05-30
-- [26. Specifying OCP targets for File-based Catalogs](https://konflux-ci.dev/architecture/ADR/0026-specifying-ocp-targets-for-fbc/): Accepted
-- [27. Container Image Management Practice](https://konflux-ci.dev/architecture/ADR/0027-container-images/): Date: 2023-06-30
-- [28. Handling SnapshotEnvironmentBinding Errors](https://konflux-ci.dev/architecture/ADR/0028-handling-snapshotenvironmentbinding-errors/): Date: 2023-08-31
-- [29. Component Dependencies](https://konflux-ci.dev/architecture/ADR/0029-component-dependencies/): Accepted
-- [30. Tekton Results Naming Convention](https://konflux-ci.dev/architecture/ADR/0030-tekton-results-naming-convention/): Date: 2023-09-27
-- [31. Sprayproxy](https://konflux-ci.dev/architecture/ADR/0031-sprayproxy/): Created: 2023-10-24
-- [32. Decoupling Deployment](https://konflux-ci.dev/architecture/ADR/0032-decoupling-deployment/): Date started: 2023-11-17 Date accepted: 2023-02-01
-- [33. Enable Native OpenTelemetry Tracing](https://konflux-ci.dev/architecture/ADR/0033-enable-native-opentelemetry-tracing/): Date started: 2024-02-27
-- [34. Project Controller for Multi-version support](https://konflux-ci.dev/architecture/ADR/0034-project-controller-for-multiversion/): Date: 2024-02-01
-- [35. Continuous Chaos Testing of Apps in AppStudio](https://konflux-ci.dev/architecture/ADR/0035-apps-continuous-chaos-testing/): Date: 2024-06-04
-- [36. Trusted Artifacts](https://konflux-ci.dev/architecture/ADR/0036-trusted-artifacts/): Date: 2024-06-11
-- [37. Integration service promotes components to GCL immediately after builds complete](https://konflux-ci.dev/architecture/ADR/0037-integration-service-promotes-to-GCL-immediately/): Accepted
-- [38. Integration service removes composite snapshots and logic around them](https://konflux-ci.dev/architecture/ADR/0038-integration-service-composite-removal/): Accepted
-- [39. Workspace Deprecation](https://konflux-ci.dev/architecture/ADR/0039-workspace-deprecation/): Some of the text was taken from - https://github.com/konflux-ci/architecture/pull/187
-- [40. Availability Probe Framework](https://konflux-ci.dev/architecture/ADR/0040-availability-probe-framework/): Accepted
-- [41. Konflux should send cloud events all system events.](https://konflux-ci.dev/architecture/ADR/0041-send-cloud-events/): Date: 2024-09-24
-- [42. Provisioning Clusters for Integration Tests](https://konflux-ci.dev/architecture/ADR/0042-provisioning-ephemeral-openshift-clusters/): Date: 2024-06-05
-- [44. SPDX SBOM support](https://konflux-ci.dev/architecture/ADR/0044-spdx-support/): Date: 2024-09-24
-- [46. Build a common Task Runner image](https://konflux-ci.dev/architecture/ADR/0046-common-task-runner-image/): Date: 2024-11-15
-- [47. Caching for container base images used during builds](https://konflux-ci.dev/architecture/ADR/0047-caching-for-container-build-layers/): Date: 2025-06-22
-- [48. Attestable Build-Time Tests in Integration Service](https://konflux-ci.dev/architecture/ADR/0048-movable-build-tests/): Date: 2025-04-06
-- [49. Verification Summary Attestations for Release Policies](https://konflux-ci.dev/architecture/ADR/0049-vsa-support/): Date: 2025-07-02
-- [50. Exclude Kubernetes Events API from User RBAC Roles](https://konflux-ci.dev/architecture/ADR/0050-exclude-events-api-from-user-rbac/): Date: 2025-09-05
-- [51. KITE Architecture and Components](https://konflux-ci.dev/architecture/ADR/0051-kite-poc-architecture-and-components/): Date: 2025-09-08
-- [52. GitOps Onboarding Redesign](https://konflux-ci.dev/architecture/ADR/0052-gitops-onboarding-redesign/): Date: 2024-12-21
-- [53. Trusted Tasks model after build-definitions decentralization](https://konflux-ci.dev/architecture/ADR/0053-trusted-task-model/): Date: 2025-09-30
-- [54. Start versioning Tekton Tasks responsibly](https://konflux-ci.dev/architecture/ADR/0054-task-versioning/): Date: 2025-10-06
-- [55. SLSA Source Provenance Verification](https://konflux-ci.dev/architecture/ADR/0055-slsa-source-provenance-verification/): Date: 2025-10-09
-- [56. Revised Component Model](https://konflux-ci.dev/architecture/ADR/0056-revised-component-model/): Implementable
-- [57. Pipeline Caching Feature Flag Configuration](https://konflux-ci.dev/architecture/ADR/0057-pipeline-caching-feature-flag/): Date: 2025-10-23
-- [58. MintMaker log persistence](https://konflux-ci.dev/architecture/ADR/0058-mintmaker-log-persistence/): Implementable
-- [59. Backend Usage Telemetry Collection from Konflux Clusters](https://konflux-ci.dev/architecture/ADR/0059-backend-usage-telemetry-collection/): Date: 2026-01-26
-- [60. ComponentGroups](https://konflux-ci.dev/architecture/ADR/0060-component-groups/): Date: 2025-11019
-- [61. VCS Info Specification for Container Images](https://konflux-ci.dev/architecture/ADR/0061-vcs-info-specification/): Date: 2026-01-09
-- [62. Distributed Tracing](https://konflux-ci.dev/architecture/ADR/0062-distributed-tracing/): Date started: 2026-02-04
-- [63. Generalized Build and Release Pipelines](https://konflux-ci.dev/architecture/ADR/0063-generalized-build-release-pipelines/): Date: 2026-03-17
-- [64. Package Registry Proxy Configuration for Hermeto](https://konflux-ci.dev/architecture/ADR/0064-hermeto-package-registry-proxy/): Date: 2026-04-07
-- [65. Adopt KubeArchive for resource lifecycle management](https://konflux-ci.dev/architecture/ADR/0065-kubearchive/): Date: 2026-03-16
-- [66. Ecosystem-Native Distribution for Non-OCI Artifacts](https://konflux-ci.dev/architecture/ADR/0066-ecosystem-native-distribution/): Date: 2026-05-05
-- [67. Nudging Relationship Storage via Singleton CRD](https://konflux-ci.dev/architecture/ADR/0067-nudging-relationship-singleton-crd/): Date: 2026-05-11
-- [68. Standardize on konflux-ci.dev as Official API Group](https://konflux-ci.dev/architecture/ADR/0068-konflux-ci-dev-api-group/): Date: 2026-05-28
-- [69. Reproducible Container Builds in Konflux](https://konflux-ci.dev/architecture/ADR/0069-reproducible-container-builds/): Date: 2026-05-28
-- [70. Support for zstd:chunked image compression](https://konflux-ci.dev/architecture/ADR/0070-dual-compression-for-container-builds/): Date: 2026-05-13
-- [71. Replace Appstudio Labels, Annotations, and Finalizers with Konflux equivalents](https://konflux-ci.dev/architecture/ADR/0071-konflux-labels-annotations-finalizers/): Date: 2026-06-11
+
+## ADRs
+
+- [1. Pipeline Service Phase 1](https://konflux-ci.dev/architecture/ADR/0001-pipeline-service-phase-1/): App Studio initially ran on a single cluster and provisioned Tekton controllers.
+- [2. Feature Flags](https://konflux-ci.dev/architecture/ADR/0002-feature-flags/): We know we need some way for processes to recognize that they’re working in a HACBS context or in an App Studio context.
+- [3. Interacting with Internal Services](https://konflux-ci.dev/architecture/ADR/0003-interacting-with-internal-services/): Many organizations, including Red Hat, possess numerous internal services that help productize their software.
+- [4. Out-of-the-box image repository for StoneSoup users](https://konflux-ci.dev/architecture/ADR/0004-component-image-location/): StoneSoup does not have a internal registry where images could be pushed to as an intermediate step before being deployed as a container.
+- [6. Log Conventions](https://konflux-ci.dev/architecture/ADR/0006-log-conventions/): We need log conventions to make our offering easier to operate and maintain.
+- [7. Change Management Process](https://konflux-ci.dev/architecture/ADR/0007-change-management/): Red Hat's ESS requirement SEC-CHG-REQ-1 (Change Management) states that "All applications/systems/platforms/services must follow Change Management process and procedures, as applicable / appropriate." Change management is important in order to ensure no unauthorized changes are made to systems or applications, in order to help prevent the purposeful or accidental introduction of security vulnerabilities and an increase in threat attack surface.
+- [8. Environment Provisioning](https://konflux-ci.dev/architecture/ADR/0008-environment-provisioning/): In our old KCP architecture, we had a design for provisioning a new deployment target in support of new Environments.
+- [9. Pipeline Service via Operator](https://konflux-ci.dev/architecture/ADR/0009-pipeline-service-via-operator/): kcp is no longer being used as a control plane for Konflux.
+- [10. Namespace Metadata](https://konflux-ci.dev/architecture/ADR/0010-namespace-metadata/): We need metadata on our namespaces to make Konflux easier to operate and maintain.
+- [11. Roles and Permissions for Konflux](https://konflux-ci.dev/architecture/ADR/0011-roles-and-permissions/): Konflux is using Kubernetes as the control plane for managing its resources.
+- [12. Namespace Name Format](https://konflux-ci.dev/architecture/ADR/0012-namespace-name-format/): The OSD-based control plane provisions one namespace in the target member cluster for every workspace (internally represented by a Space CR) which is created for a Konflux user.
+- [13. Konflux Test Stream - API contracts](https://konflux-ci.dev/architecture/ADR/0013-integration-service-api-contracts/): The Konflux project being developed aims to serve Red Hat teams but also partners and customers.
+- [14. Let Pipelines Proceed](https://konflux-ci.dev/architecture/ADR/0014-let-pipelines-proceed/): The user's build pipeline includes scanning and linting tasks that operate on the source code and the built image (SAST, antivirus, clair, etc..).
+- [15. The Two-phase Architecture of the Integration Service](https://konflux-ci.dev/architecture/ADR/0015-integration-service-two-phase-architecture/): The Integration Service is in charge of running integration test pipelines by executing the Tekton pipeline for each user-defined IntegrationTestScenario.
+- [16. Promotion logic in the Integration Service](https://konflux-ci.dev/architecture/ADR/0016-integration-service-promotion-logic/): Before the merge of HACBS & AppStudio, the Konflux build-service created the ApplicationSnapshot and promoted the content to the user's lowest environment as soon as the build was completed and once the environment was built.
+- [17. Use our own pipelines](https://konflux-ci.dev/architecture/ADR/0017-use-our-pipelines/): The maintainers of Konflux components need to demonstrate evidence of practices that support a secure software development lifecycle (for example scanning, manifesting, vulnerability detection, etc.)
+- [18. Continuous Performance Testing (CPT) of Apps in Konflux](https://konflux-ci.dev/architecture/ADR/0018-apps-continuous-perf-testing/): In general, performance testing is just another form of testing that helps application teams to ensure there are no regressions in their code and that their application behaves as expected.
+- [19. Customize URLs Sent to GitHub](https://konflux-ci.dev/architecture/ADR/0019-customize-url-github/): When we run builds and tests on PRs (see STONE-134), developers need to be provided a link to the Konflux UI so they can see the details of their `PipelineRuns`.
+- [20. Source Retention](https://konflux-ci.dev/architecture/ADR/0020-source-retention/): Red Hat's SSML requirements "SSML.PS.1.1.1 Securely Store All Forms of Code" requires that "The revision and its change history are preserved indefinitely and cannot be deleted, except when subject to an established and transparent policy for obliteration, such as a legal or policy requirement."
+- [21. Partner Tasks in Build/Test Pipelines](https://konflux-ci.dev/architecture/ADR/0021-partner-tasks/): As a Red Hat Partner, I would like to offer our service's capability as a Tekton Task that would be executed in a user's build/test Pipeline on StoneSoup.
+- [22. Secret Management For User Workloads](https://konflux-ci.dev/architecture/ADR/0022-secret-mgmt-for-user-workloads/): When user workloads are deployed to environments, the system should be able to provide a way to inject values that are specific to the environment.
+- [23. Git references to furnish Integration Test Scenarios](https://konflux-ci.dev/architecture/ADR/0023-git-references-to-furnish-integration-test-scenarios/): Up to now, the Integration service has only supported setting the Tekton bundle (Bundle string `json:"bundle"`) in the IntegrationTestScenario CR as a reference for the integration tests, in order to run the Tekton PipelineRuns.
+- [24. Release Objects Attribution Tracking and Propagation](https://konflux-ci.dev/architecture/ADR/0024-release-attribution/): It is imperative to know, given a change that has been delivered to a production environment, which individual it can be attributed to, in order to have accountability for that change.
+- [25. appstudio-pipeline Service Account](https://konflux-ci.dev/architecture/ADR/0025-appstudio-pipeline-serviceaccount/): A default service account must be provided to allow Konflux components to run pipelines.
+- [26. Specifying OCP targets for File-based Catalogs](https://konflux-ci.dev/architecture/ADR/0026-specifying-ocp-targets-for-fbc/): One of the supported component types within Konflux are File-based Catalogs (FBC).
+- [27. Container Image Management Practice](https://konflux-ci.dev/architecture/ADR/0027-container-images/): The purpose of this document is to establish container image management practices for Konflux container images that are deployed in the staging and production environments.
+- [28. Handling SnapshotEnvironmentBinding Errors](https://konflux-ci.dev/architecture/ADR/0028-handling-snapshotenvironmentbinding-errors/): It is currently not possible to determine whether a SnapshotEnvironmentBinding (SEB) is stuck in an unrecoverable state.
+- [29. Component Dependencies](https://konflux-ci.dev/architecture/ADR/0029-component-dependencies/): As an Konflux user, I want to be able to build and test multiple coupled components which depend on each other by digest reference.
+- [30. Tekton Results Naming Convention](https://konflux-ci.dev/architecture/ADR/0030-tekton-results-naming-convention/): In order to Let Pipelines Proceed, the default interface of a Tekton Task's status code becomes an unsuitable API contract for communicating the successes and failures of tasks.
+- [31. Sprayproxy](https://konflux-ci.dev/architecture/ADR/0031-sprayproxy/): Konflux has multiple member (backend) clusters.
+- [32. Decoupling Deployment](https://konflux-ci.dev/architecture/ADR/0032-decoupling-deployment/): Since the beginning of our project, we've had an emphasis on providing an integrated experience for the user, automating all steps through build, test, deployment, and release to higher environments.
+- [33. Enable Native OpenTelemetry Tracing](https://konflux-ci.dev/architecture/ADR/0033-enable-native-opentelemetry-tracing/): Konflux is a tool under active development and, therefore, unforeseen issues may arise.
+- [34. Project Controller for Multi-version support](https://konflux-ci.dev/architecture/ADR/0034-project-controller-for-multiversion/): Konflux began its way as "App Studio", which was mainly designed to facilitate the development of online managed services.
+- [35. Continuous Chaos Testing of Apps in AppStudio](https://konflux-ci.dev/architecture/ADR/0035-apps-continuous-chaos-testing/): The chaos engineering strategy enables users to discover potential causes of service degradation.
+- [36. Trusted Artifacts](https://konflux-ci.dev/architecture/ADR/0036-trusted-artifacts/): One of the properties of Konflux is that users should be allowed to include their own Tekton Tasks in a build Pipeline, e.g. to execute unit tests, without jeopardizing the integrity of the build process.
+- [37. Integration service promotes components to GCL immediately after builds complete](https://konflux-ci.dev/architecture/ADR/0037-integration-service-promotes-to-GCL-immediately/): In the initial implementation of the Integration Service, when a single component image is built, the Integration Service tests the application by creating a Snapshot.
+- [38. Integration service removes composite snapshots and logic around them](https://konflux-ci.dev/architecture/ADR/0038-integration-service-composite-removal/): Composite snapshots main goal was to prevent race condition when teams merged multiple PRs to multiple components of the same application at nearly the same time.
+- [39. Workspace Deprecation](https://konflux-ci.dev/architecture/ADR/0039-workspace-deprecation/): The purpose of this ADR is to revisit the workspace concept, understand the purpose of it, and offer an alternative implementation based on native Kubernetes APIs and other successful cloud native open source projects.
+- [40. Availability Probe Framework](https://konflux-ci.dev/architecture/ADR/0040-availability-probe-framework/): As an Konflux developer building functionality for the platform, I want to be able to easily visualize and comprehend the stability and availability of deployed systems in order to inform and influence future work towards improving the overall system reliability.
+- [41. Konflux should send cloud events all system events.](https://konflux-ci.dev/architecture/ADR/0041-send-cloud-events/): Konflux had made the architectural decision to not use cloud events.
+- [42. Provisioning Clusters for Integration Tests](https://konflux-ci.dev/architecture/ADR/0042-provisioning-ephemeral-openshift-clusters/): This decision clarifies how integration test environments will be dynamically provisioned.
+- [44. SPDX SBOM support](https://konflux-ci.dev/architecture/ADR/0044-spdx-support/): SPDX SBOM format enables additional features not available in cyclondedx like multiple purl attributes per component.
+- [46. Build a common Task Runner image](https://konflux-ci.dev/architecture/ADR/0046-common-task-runner-image/): Tekton Tasks often depend on specific CLI tools.
+- [47. Caching for container base images used during builds](https://konflux-ci.dev/architecture/ADR/0047-caching-for-container-build-layers/): Konflux builds container images using tools like Buildah.
+- [48. Attestable Build-Time Tests in Integration Service](https://konflux-ci.dev/architecture/ADR/0048-movable-build-tests/): Some of the security scans run during the build pipeline take a long time to run.
+- [49. Verification Summary Attestations for Release Policies](https://konflux-ci.dev/architecture/ADR/0049-vsa-support/): We are facing several challenges with our current approach to Conforma verification and software development lifecycle (SDL) checks.
+- [50. Exclude Kubernetes Events API from User RBAC Roles](https://konflux-ci.dev/architecture/ADR/0050-exclude-events-api-from-user-rbac/): Konflux users require RBAC permissions to interact with various Kubernetes resources through our defined roles (Viewer, Contributor, Maintainer, Admin).
+- [51. KITE Architecture and Components](https://konflux-ci.dev/architecture/ADR/0051-kite-poc-architecture-and-components/): The KITE is a proof-of-concept designed to detect, create, and track issues that block application releases in Konflux.
+- [52. GitOps Onboarding Redesign](https://konflux-ci.dev/architecture/ADR/0052-gitops-onboarding-redesign/): Currently, Konflux offers two distinct onboarding paths that create friction and complexity for developers.
+- [53. Trusted Tasks model after build-definitions decentralization](https://konflux-ci.dev/architecture/ADR/0053-trusted-task-model/): Conforma has the concept of Trusted Tasks.
+- [54. Start versioning Tekton Tasks responsibly](https://konflux-ci.dev/architecture/ADR/0054-task-versioning/): The upstream Tasks that Konflux releases today typically do not follow a sensible versioning scheme.
+- [55. SLSA Source Provenance Verification](https://konflux-ci.dev/architecture/ADR/0055-slsa-source-provenance-verification/): Konflux's trust model is organized entirely around SLSA build provenance.
+- [56. Revised Component Model](https://konflux-ci.dev/architecture/ADR/0056-revised-component-model/): The existing application and component model in Konflux presents several limitations that hinder our ability to scale and support flexible workflows.
+- [57. Pipeline Caching Feature Flag Configuration](https://konflux-ci.dev/architecture/ADR/0057-pipeline-caching-feature-flag/): Following the implementation of container build layer caching via Squid HTTP proxies as described in ADR 0047, we need to provide users with flexible control over when and how the proxy caching is enabled for their pipelines.
+- [58. MintMaker log persistence](https://konflux-ci.dev/architecture/ADR/0058-mintmaker-log-persistence/): As part of the UI functionality, we want to serve MintMaker logs to the users.
+- [59. Backend Usage Telemetry Collection from Konflux Clusters](https://konflux-ci.dev/architecture/ADR/0059-backend-usage-telemetry-collection/): We are adding a functional telemetry mechanism to collect anonymized usage data.
+- [60. ComponentGroups](https://konflux-ci.dev/architecture/ADR/0060-component-groups/): The existing application/component model in Konflux limits our ability to support different types of workflows.
+- [61. VCS Info Specification for Container Images](https://konflux-ci.dev/architecture/ADR/0061-vcs-info-specification/): VCS (Version Control System) information for container images is currently handled inconsistently across Konflux, making it difficult to reliably trace images back to their source code.
+- [62. Distributed Tracing](https://konflux-ci.dev/architecture/ADR/0062-distributed-tracing/): Tekton's OpenTelemetry instrumentation supports propagating a parent span context onto PipelineRuns.
+- [63. Generalized Build and Release Pipelines](https://konflux-ci.dev/architecture/ADR/0063-generalized-build-release-pipelines/): Konflux was originally designed to produce container images.
+- [64. Package Registry Proxy Configuration for Hermeto](https://konflux-ci.dev/architecture/ADR/0064-hermeto-package-registry-proxy/): Hermeto is the content prefetching tool used in Konflux build pipelines to fetch application dependencies before the container image build step.
+- [65. Adopt KubeArchive for resource lifecycle management](https://konflux-ci.dev/architecture/ADR/0065-kubearchive/): Konflux generates a large amount of one-shot Kubernetes resources such as `PipelineRun`s, `TaskRun`s, `Snapshot`s, `Release`s...
+- [66. Ecosystem-Native Distribution for Non-OCI Artifacts](https://konflux-ci.dev/architecture/ADR/0066-ecosystem-native-distribution/): ADR-0063 established that Konflux uses OCI images as its internal representation for all software artifacts, including non-container artifacts such as RPMs, Python wheels, and Maven JARs.
+- [67. Nudging Relationship Storage via Singleton CRD](https://konflux-ci.dev/architecture/ADR/0067-nudging-relationship-singleton-crd/): Today, component nudging relationships are defined in the `Component` CR via the `build-nudges-ref` field in the spec (ADR 29).
+- [68. Standardize on konflux-ci.dev as Official API Group](https://konflux-ci.dev/architecture/ADR/0068-konflux-ci-dev-api-group/): Konflux currently uses different API Groups for its Custom Resource Definitions (CRDs).
+- [69. Reproducible Container Builds in Konflux](https://konflux-ci.dev/architecture/ADR/0069-reproducible-container-builds/): Konflux container builds currently produce different image digests from identical source commits.
+- [70. Support for zstd:chunked image compression](https://konflux-ci.dev/architecture/ADR/0070-dual-compression-for-container-builds/): Konflux compresses all container image layers with gzip.
+- [71. Replace Appstudio Labels, Annotations, and Finalizers with Konflux equivalents](https://konflux-ci.dev/architecture/ADR/0071-konflux-labels-annotations-finalizers/): Following the decision in ADR 68 to standardize on `konflux-ci.dev` as the official API group for all Konflux CRDs, a similar branding misalignment exists in Kubernetes labels, annotations, and finalizers currently used throughout the platform.

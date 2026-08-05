@@ -6,11 +6,15 @@
 # Pipeline:
 #   1. hack/llms-txt/eleventy_nav_to_sourcey.py derives the Sourcey config from
 #      the content tree (no hand-picked page selection).
-#   2. `sourcey build` (pinned via hack/llms-txt/package-lock.json, installed
+#   2. hack/llms-txt/inject_descriptions.py gives the staged copies the front
+#      matter descriptions llms.txt should quote (an ADR is summarized by its
+#      Context section, not by the date/status preamble Sourcey would pick up).
+#   3. `sourcey build` (pinned via hack/llms-txt/package-lock.json, installed
 #      with `npm ci` so the full transitive tree is reproducible) extracts
 #      per-page descriptions and emits llms.txt.
-#   3. hack/llms-txt/normalize_llms_urls.py rewrites Sourcey's .html-style URLs
-#      to this Eleventy site's live clean-URL style and absolutizes them.
+#   4. hack/llms-txt/finalize_llms_txt.py rewrites Sourcey's .html-style URLs to
+#      this Eleventy site's live clean-URL style, absolutizes them, and groups
+#      the entries into the site's sections.
 #
 # Requires: python3, node/npm.
 
@@ -30,6 +34,8 @@ cp -r "${REPO_ROOT}/architecture/." "${STAGE}/"
 cp -r "${REPO_ROOT}/ADR" "${STAGE}/ADR"
 cp "${REPO_ROOT}/hack/llms-txt/sourcey.config.ts" "${STAGE}/"
 
+python3 "${REPO_ROOT}/hack/llms-txt/inject_descriptions.py" "${STAGE}"
+
 # Pinned, reproducible Sourcey install: npm ci against the committed lockfile
 # (hack/llms-txt/package-lock.json) so transitive dependencies cannot drift.
 # stdout is quieted; stderr stays visible so install failures are diagnosable.
@@ -37,7 +43,7 @@ cp "${REPO_ROOT}/hack/llms-txt/package.json" "${REPO_ROOT}/hack/llms-txt/package
 ( cd "${STAGE}" && npm ci --no-audit --no-fund >/dev/null \
   && ./node_modules/.bin/sourcey build -c . -o ./dist )
 
-python3 "${REPO_ROOT}/hack/llms-txt/normalize_llms_urls.py" \
+python3 "${REPO_ROOT}/hack/llms-txt/finalize_llms_txt.py" \
   "${STAGE}/dist/llms.txt" "${REPO_ROOT}/llms.txt" "${REPO_ROOT}"
 
 echo "Wrote ${REPO_ROOT}/llms.txt"

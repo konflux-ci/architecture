@@ -48,9 +48,8 @@ export default defineConfig({
                   ]
             },
             {
-                  "group": "Architecture Decision Records",
+                  "group": "ADRs",
                   "pages": [
-                        "ADR/0000-adr-template",
                         "ADR/0001-pipeline-service-phase-1",
                         "ADR/0002-feature-flags",
                         "ADR/0003-interacting-with-internal-services",
