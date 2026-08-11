@@ -15,7 +15,7 @@ overview:
     - pipeline-service
     - hybrid-application-service
     - release-service
-    - enterprise-contract
+    - conforma
   related_adrs:
     - "0037"
     - "0038"
@@ -212,8 +212,8 @@ The Integration Service is dependent on the following services:
   - Validates the Application and Component CRs. Integration Service updates the pullspec reference on the Component CR when a snapshot is created for the built image.
 - [Release Service](./release-service.md)
   - Provides the ReleasePlan that will be used to determine if integration-service should create a Release
-- [Enterprise Contract Service](./enterprise-contract.md)
-  - Provides facilities to validate whether content has passed the Enterprise Contract.
+- [Conforma](./conforma.md)
+  - Provides facilities to validate whether content has passed Conforma policy checks.
 
 ## References
 

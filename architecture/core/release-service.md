@@ -14,7 +14,7 @@ overview:
   related_services:
     - pipeline-service
     - integration-service
-    - enterprise-contract
+    - conforma
   related_adrs:
     - "0024"
     - "0032"
@@ -23,7 +23,7 @@ overview:
     - Development vs Managed workspaces
     - tenant vs managed pipelines
     - auto-release flag
-    - enterprise contract gating
+    - conforma gating
 ---
 
 # Release Service
@@ -42,7 +42,7 @@ relationship between **Development** Workspaces and **Managed** Workspaces.
 **Release Strategies** are referenced in **ReleasePlanAdmissions** and are used to define which pipeline should be
 executed to deliver content.
 
-In addition, the Release service ensures that no violations in the [Enterprise Contract] exist prior to releasing content.
+In addition, the Release service ensures that no violations in [Conforma] exist prior to releasing content.
 
 ## System Context
 
@@ -136,12 +136,12 @@ The [Release Service](./release-service.md) is dependent on the following servic
         - Snapshots defining sets of Builds to release
         - Environment to deploy the Application to
         - SnapshotEnvironmentBindings to have the Snapshot of the Application deployed to a specific Environment
-- [Enterprise Contract Service](./enterprise-contract.md)
-    - Provides facilities to validate whether content has passed the Enterprise Contract.
+- [Conforma](./conforma.md)
+    - Provides facilities to validate whether content has passed Conforma policy checks.
 
 ## References
 
-[Enterprise Contract]: ./enterprise-contract.md
+[Conforma]: ./conforma.md
 [Integration Service]: ./integration-service.md
 [GitOps Service]: ./gitops-service.md
 [Pipeline Service]: ./pipeline-service.md

@@ -94,7 +94,7 @@ graph TD
         BS[Build Service]
         IS[Integration Service]
         RS[Release Service]
-        EC[Enterprise Contract]
+        EC[Conforma]
         subgraph PS[Pipeline Service]
             TP[Tekton Pipelines]
             PAC["Pipelines as Code (PaC)"]
@@ -152,15 +152,15 @@ The [Integration Service] facilitates automated testing of content produced by t
 
 ### Release Service
 
-The [Release Service] orchestrates release pipelines to deliver content. It manages the Release custom resource and coordinates the relationship between Development Workspaces and Managed Workspaces through ReleasePlan and ReleasePlanAdmission resources. The Release Service ensures no Enterprise Contract violations exist prior to releasing content.
+The [Release Service] orchestrates release pipelines to deliver content. It manages the Release custom resource and coordinates the relationship between Development Workspaces and Managed Workspaces through ReleasePlan and ReleasePlanAdmission resources. The Release Service ensures no Conforma violations exist prior to releasing content.
 
 ### Pipeline Service
 
 The [Pipeline Service] provides Tekton APIs and services to Konflux. It offers Tekton APIs through custom resource definitions, container image signing and provenance attestations through Tekton Chains, and archiving of PipelineRuns, TaskRuns, and logs through Tekton Results. Pipeline Service is a foundational service on which Build Service, Integration Service, and Release Service depend.
 
-### Enterprise Contract
+### Conforma
 
-The [Enterprise Contract] ensures container images produced by Konflux meet clearly defined requirements before they are considered releasable. It validates that images are signed with trusted keys, have attestations, and meet rule-based requirements defined using Rego policies, such as ensuring tasks were defined in known and trusted task bundles and that required tests passed during the pipeline build.
+[Conforma] ensures container images produced by Konflux meet clearly defined requirements before they are considered releasable. It validates that images are signed with trusted keys, have attestations, and meet rule-based requirements defined using Rego policies, such as ensuring tasks were defined in known and trusted task bundles and that required tests passed during the pipeline build.
 
 ### Konflux UI
 
@@ -175,6 +175,6 @@ The [Konflux Operator] is a Kubernetes operator that installs, configures, and m
 [Integration Service]: ./integration-service.md
 [Release Service]: ./release-service.md
 [Pipeline Service]: ./pipeline-service.md
-[Enterprise Contract]: ./enterprise-contract.md
+[Conforma]: ./conforma.md
 [Konflux UI]: ./konflux-ui.md
 [Konflux Operator]: ./konflux-operator.md
