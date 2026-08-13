@@ -657,13 +657,16 @@ marks the PLR with the Integration-Service processed annotation.
 (`test.appstudio.openshift.io/component-nudge-processed`)
 
 
-**Write ordering:** The NudgeConfig status update must be persisted
-before the `component-nudge-processed` annotation is written to the PLR.
-This ordering ensures that a controller crash between the two writes is
-always recoverable -- the PLR will be re-processed on restart and the
-dedup-by-`from` rule prevents duplicate entries. The reverse ordering
-(annotate first, then status) would lose the build result permanently if
-the controller crashes between the two writes.
+**Write ordering and PLR lifecycle:** Integration-service adds a
+`test.appstudio.openshift.io/nudge-pipelinerun` finalizer to the build
+PLR before capturing its result, preventing the Tekton pruner from
+deleting it before processing is complete. The NudgeConfig status update
+must be persisted before the
+`test.appstudio.openshift.io/component-nudge-processed` annotation is
+written to the PLR, and the finalizer is removed only after both writes
+succeed. This ordering ensures that a controller crash between any two
+marks them with a `test.appstudio.openshift.io/component-nudge-processed` annotation
+(IS-owned key, separate from build-service's `build.appstudio.openshift.io/component-nudge-processed`) to prevent duplicate processing (PR #1604).
 
 The build result is
 captured immediately on completion -- it is not held until the batch
