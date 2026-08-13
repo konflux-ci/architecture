@@ -644,7 +644,9 @@ intervention, just one batch cycle later.
 
 For immediate-mode nudging, integration-service processes build
 PipelineRuns on completion via its reconciliation loop and marks them
-with a `component-nudge-processed` annotation to prevent duplicate
+with a `test.appstudio.openshift.io/component-nudge-processed` annotation 
+(IS-owned key, separate from build-service's `build.appstudio.openshift.io/component-nudge-processed`) to prevent duplicate
+
 processing (PR #1604). This relies on the controller processing the PLR
 before the Tekton pruner deletes it -- the same race window that exists
 for immediate-mode nudging today.
