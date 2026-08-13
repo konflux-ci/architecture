@@ -653,7 +653,9 @@ for immediate-mode nudging today.
 
 The batched path uses the same mechanism: when a build PLR completes,
 integration-service captures the result into `activeBatches` status and
-marks the PLR with the processed annotation.
+marks the PLR with the Integration-Service processed annotation.
+(`test.appstudio.openshift.io/component-nudge-processed`)
+
 
 **Write ordering:** The NudgeConfig status update must be persisted
 before the `component-nudge-processed` annotation is written to the PLR.
