@@ -28,12 +28,8 @@ An Architecture Decision Record (ADR) is a document that captures an important a
 EOF
 
 # Process all ADR files in order
-for adr_file in "${ADR_DIR}"/*.md; do
-  # Skip the index file itself and the template
+while IFS= read -r adr_file; do
   filename=$(basename "${adr_file}")
-  if [[ "${filename}" == "index.md" ]] || [[ "${filename}" == "0000-adr-template.md" ]]; then
-    continue
-  fi
 
   # Extract the ADR number from the filename
   if [[ "${filename}" =~ ^([0-9]{4})- ]]; then
@@ -57,6 +53,6 @@ for adr_file in "${ADR_DIR}"/*.md; do
   else
     echo "- [${title}](./${link_name}/)" >> "${INDEX_FILE}"
   fi
-done
+done < <("${SCRIPT_DIR}/util/list-adr-files")
 
 echo "✅ Generated ${INDEX_FILE}"
