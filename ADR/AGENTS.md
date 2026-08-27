@@ -46,6 +46,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0034 Im 524L Project Controller for Multi-version support
 0016 Ss 107L Promotion logic in the Integration Service
 0042 Ac 259L Provisioning Clusters for Integration Tests
+0073 Pr 220L README Status Badges via Konflux Badge Service
 0000 Im 31L Record architecture decisions
 0024 Ac 97L Release Objects Attribution Tracking and Propagation
 0071 Ac 275L Replace Appstudio Labels, Annotations, and Finalizers with Konflux equivalents
