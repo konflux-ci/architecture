@@ -1,7 +1,7 @@
 # Konflux Architecture Makefile
 # Provides targets for linting, validation, and development tasks
 
-.PHONY: help build serve install lint lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers lint-frontmatter lint-agents-md install-mermaid-cli clean
+.PHONY: help build serve install lint lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers lint-frontmatter lint-agents-md lint-llms-txt llms-txt install-mermaid-cli clean
 
 help:
 	@echo "Available targets:"
@@ -16,6 +16,8 @@ help:
 	@echo "  lint-adr-numbers  - Check for duplicate ADR numeric identifiers"
 	@echo "  lint-eleventy-headers - Validate Eleventy front matter in markdown files"
 	@echo "  lint-frontmatter     - Validate frontmatter schemas and cross-references"
+	@echo "  lint-llms-txt     - Check the checked-in llms.txt is up to date"
+	@echo "  llms-txt          - Regenerate the root llms.txt"
 	@echo "  install-mermaid-cli - Install Mermaid CLI tool locally"
 	@echo "  clean             - Clean up generated files"
 
@@ -34,6 +36,10 @@ serve: install
 	npm run serve
 
 # Main lint target - runs all validation
+# lint-llms-txt is deliberately not part of this target: it installs Sourcey from
+# the npm registry, so it runs as its own CI job scoped to documentation changes
+# (.github/workflows/lint-llms-txt.yml) instead of adding a registry fetch to
+# every lint run.
 lint: lint-mermaid lint-adr-status lint-adr-numbers lint-eleventy-headers lint-frontmatter lint-agents-md
 
 # Mermaid diagram validation
@@ -59,6 +65,14 @@ lint-frontmatter:
 # AGENTS.md line count validation
 lint-agents-md:
 	@./hack/lint-agents-md
+
+# llms.txt freshness validation
+lint-llms-txt:
+	@./hack/generate-llms-txt --check
+
+# Regenerate the root llms.txt from the content tree
+llms-txt:
+	@./hack/generate-llms-txt
 
 # Install Mermaid CLI locally to user's home directory
 install-mermaid-cli:

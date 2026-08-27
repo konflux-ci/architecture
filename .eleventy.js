@@ -53,6 +53,7 @@ module.exports = function(eleventyConfig) {
   // Copy assets to output
   eleventyConfig.addPassthroughCopy("assets");
   eleventyConfig.addPassthroughCopy("diagrams");
+  eleventyConfig.addPassthroughCopy("llms.txt");
 
   // Watch for changes
   eleventyConfig.addWatchTarget("./ADR/");

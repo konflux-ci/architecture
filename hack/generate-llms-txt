@@ -1,0 +1,80 @@
+#!/bin/bash
+# Regenerate the root llms.txt (https://llmstxt.org) from the repository's own
+# content tree (architecture/ + ADR/) via Sourcey. Deterministic: the same
+# commit always reproduces the same llms.txt byte-for-byte.
+#
+# Pipeline:
+#   1. hack/llms-txt/eleventy_nav_to_sourcey.py derives the Sourcey config from
+#      the content tree (no hand-picked page selection).
+#   2. hack/llms-txt/inject_descriptions.py gives the staged copies the front
+#      matter descriptions llms.txt should quote (an ADR is summarized by its
+#      Context section, not by the date/status preamble Sourcey would pick up).
+#   3. `sourcey build` (pinned via hack/llms-txt/package-lock.json, installed
+#      with `npm ci` so the full transitive tree is reproducible) extracts
+#      per-page descriptions and emits llms.txt.
+#   4. hack/llms-txt/finalize_llms_txt.py rewrites Sourcey's .html-style URLs to
+#      this Eleventy site's live clean-URL style, absolutizes them, and groups
+#      the entries into the site's sections.
+#
+# Usage: hack/generate-llms-txt [--check]
+#   --check  regenerate into a temporary directory and diff against the checked-in
+#            llms.txt and sourcey.config.ts; exits non-zero if either has drifted.
+#
+# Requires: python3, node/npm.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+CHECK=false
+case "${1:-}" in
+  --check) CHECK=true ;;
+  "") ;;
+  *) echo "usage: $(basename "$0") [--check]" >&2; exit 2 ;;
+esac
+
+STAGE="$(mktemp -d)"
+trap 'rm -rf "${STAGE}"' EXIT
+
+CONFIG="${REPO_ROOT}/hack/llms-txt/sourcey.config.ts"
+OUTPUT="${REPO_ROOT}/llms.txt"
+if "${CHECK}"; then
+  CONFIG="${STAGE}/sourcey.config.ts.check"
+  OUTPUT="${STAGE}/llms.txt.check"
+fi
+
+python3 "${REPO_ROOT}/hack/llms-txt/eleventy_nav_to_sourcey.py" "${REPO_ROOT}" "${CONFIG}"
+
+# Stage the content exactly as the live site maps it: architecture/* -> root, ADR -> /ADR
+cp -r "${REPO_ROOT}/architecture/." "${STAGE}/"
+cp -r "${REPO_ROOT}/ADR" "${STAGE}/ADR"
+cp "${CONFIG}" "${STAGE}/sourcey.config.ts"
+
+python3 "${REPO_ROOT}/hack/llms-txt/inject_descriptions.py" "${STAGE}"
+
+# Pinned, reproducible Sourcey install: npm ci against the committed lockfile
+# (hack/llms-txt/package-lock.json) so transitive dependencies cannot drift.
+# stdout is quieted; stderr stays visible so install failures are diagnosable.
+cp "${REPO_ROOT}/hack/llms-txt/package.json" "${REPO_ROOT}/hack/llms-txt/package-lock.json" "${STAGE}/"
+( cd "${STAGE}" && npm ci --no-audit --no-fund >/dev/null \
+  && ./node_modules/.bin/sourcey build -c . -o ./dist )
+
+# -B: this one imports its sibling, and generating the site index should not
+# leave a __pycache__ directory behind in the repository.
+python3 -B "${REPO_ROOT}/hack/llms-txt/finalize_llms_txt.py" \
+  "${STAGE}/dist/llms.txt" "${OUTPUT}" "${REPO_ROOT}"
+
+if "${CHECK}"; then
+  drift=false
+  diff -u "${REPO_ROOT}/hack/llms-txt/sourcey.config.ts" "${CONFIG}" || drift=true
+  diff -u "${REPO_ROOT}/llms.txt" "${OUTPUT}" || drift=true
+  if "${drift}"; then
+    echo "ERROR: llms.txt is out of date; run 'make llms-txt' and commit the result." >&2
+    exit 1
+  fi
+  echo "llms.txt is up to date"
+  exit 0
+fi
+
+echo "Wrote ${OUTPUT}"
