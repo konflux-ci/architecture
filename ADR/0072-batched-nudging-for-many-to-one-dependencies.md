@@ -254,13 +254,13 @@ spec:
 | `spec.batchDefaults.maxWaitTime` | `duration` | Hard deadline from the first build event. Fires the batch when reached regardless of debounce resets. Only applies during `Accumulating` phase -- does not override `Block` (a blocked batch stays blocked until the failure is resolved or the user triggers `forceFire`). Default: `4h`. Must exceed `debounceTimeout`. |
 | `spec.batchDefaults.failurePolicy` | `enum` | `Block`: batch transitions to `Blocked` if any member build fails; it stays blocked indefinitely (ignoring `maxWaitTime`) until the user fixes the failure or uses `forceFire`. `ProceedWithPartial`: batch fires with whatever succeeded when the debounce or hard deadline expires; if all components failed (empty `accumulated`), the batch transitions to `Failed` instead of `Firing` -- there is nothing to nudge. Default: `Block`. |
 | `spec.targetConfig` | `[]TargetConfig` | Per-target configuration. A target with a `batchPolicy` receives batched nudges; targets not listed here (or listed without `batchPolicy`) receive immediate nudges. |
-| `spec.targetConfig[].target` | `string` | Name of the nudged (target) component. Must match the `to` value of at least one nudge edge. |
+| `spec.targetConfig[].target` | `string` | Name of the nudged (target) component. Orphaned entries (no matching nudge edge) are allowed but trigger an informational `OrphanedTargetConfig` Condition. |
 | `spec.targetConfig[].batchPolicy` | `object` | Batch policy for this target. Presence of this field opts the target into batched mode. Fields omitted from `batchPolicy` fall back to `batchDefaults`. An empty object (`{}`) means "use all defaults." |
 | `spec.targetConfig[].batchPolicy.debounceTimeout` | `duration` | Overrides `batchDefaults.debounceTimeout` for this target. |
 | `spec.targetConfig[].batchPolicy.maxWaitTime` | `duration` | Overrides `batchDefaults.maxWaitTime` for this target. |
 | `spec.targetConfig[].batchPolicy.failurePolicy` | `enum` | Overrides `batchDefaults.failurePolicy` for this target. |
 | `spec.actions.forceFire` | `object` | One-shot action field. When set, the controller force-fires the batch for the specified target regardless of debounce state. Cleared after processing. |
-| `spec.actions.forceFire.target` | `string` | Required. Name of the target component whose batch should be force-fired. Must match a target in `activeBatches`. |
+| `spec.actions.forceFire.target` | `string` | Required. Name of the target component whose batch should be force-fired. Must match a target in `activeBatches`. When two batches coexist for the same target, `forceFire` applies to the batch that can act on it: the accepting batch (`Accumulating`/`Blocked`) or a `Failed` batch. A batch in `Firing` or `Completed` ignores the action. |
 | `spec.actions.forceFire.includePartial` | `bool` | Optional. Default: `true`. When `true`, fires with whatever has accumulated (excluding failed). When `false`, fires only if no component is in `failed`; otherwise the action is rejected (see Manual Override). |
 
 **Why batching is declared on the target, not per-edge:** Batching is
@@ -396,7 +396,7 @@ when builds arrive during `Firing`/`Failed`/`Completed`.
 | State | Build OK | Build fail | Timer expires | forceFire | PLR OK | PLR fail |
 |---|---|---|---|---|---|---|
 | **Accumulating** | Append to `accumulated` (dedup by `from`), reset debounce. Stay `Accumulating`. | If `Block`: → `Blocked`. If `ProceedWithPartial`: record in `failed`, stay `Accumulating`. | → `Firing`. Create aggregated PLR. If `accumulated` is empty: → `Failed`. | → `Firing`. Create aggregated PLR. If `accumulated` is empty: → `Failed`. | n/a | n/a |
-| **Blocked** | Add to `accumulated`. If the succeeding component was in `failed`: remove it. If `failed` is now empty: → `Accumulating`, reset debounce. Otherwise stay `Blocked`. | Add to `failed`. Stay `Blocked`. | Ignored. `maxWaitTime` does not override `Block`. | → `Firing`. Create aggregated PLR. If `accumulated` is empty: → `Failed`. | n/a | n/a |
+| **Blocked** | Add to `accumulated`. If the succeeding component was in `failed`: remove it. If `failed` is now empty: → `Accumulating`, reset debounce. If `hardDeadline` has already passed, fire immediately instead of resetting the debounce. Otherwise stay `Blocked`. | Add to `failed`. Stay `Blocked`. | Ignored. `maxWaitTime` does not override `Block`. | → `Firing`. Create aggregated PLR. If `accumulated` is empty: → `Failed`. | n/a | n/a |
 | **Firing** | Recorded in **next batch** (create if needed → next `Accumulating`). This batch stays `Firing`. | Same -- recorded in **next batch**. This batch stays `Firing`. | n/a | Ignored (already firing). | → `Completed`. Next batch (if any) is promoted to current. | Retry up to 3x. After retries exhausted: → `Failed`. Next batch (if any) can now fire. |
 | **Failed** | Recorded in **next batch** (create if needed → next `Accumulating`). This batch stays `Failed`. | Same -- recorded in **next batch**. | n/a | → `Firing`. Create new PLR with same `accumulated`. | n/a | n/a |
 | **Completed** | **Next batch** created (→ next `Accumulating`). This batch cleaned up. | Same -- recorded in **next batch**. This batch cleaned up. | n/a | Ignored (nothing to fire). | n/a | n/a |
@@ -440,9 +440,9 @@ PLRs the schema is extended:
 | Annotation | Batched value |
 |---|---|
 | `build.appstudio.redhat.com/nudged-components` | Unchanged (target component name). |
-| `build.appstudio.redhat.com/nudging-components` | JSON array of source component names: `["operand-a","operand-b",...]`. Replaces the singular `nudging-component`. |
-| `build.appstudio.redhat.com/nudging-digests` | JSON object mapping component name to digest: `{"operand-a":"sha256:abc...","operand-b":"sha256:def..."}`. Replaces the singular `nudging-image`. |
-| `build.appstudio.redhat.com/batch-id` | `<target>-<createdAt-epoch>` (e.g., `bundle-1721126400`). Links the PLR to the batch for observability. |
+| `build.konflux-ci.dev/nudging-components` | JSON array of source component names: `["operand-a","operand-b",...]`. Replaces the singular `nudging-component`. |
+| `build.konflux-ci.dev/nudging-digests` | JSON object mapping component name to digest: `{"operand-a":"sha256:abc...","operand-b":"sha256:def..."}`. Replaces the singular `nudging-image`. |
+| `build.konflux-ci.dev/batch-id` | `<target>-<createdAt-epoch>` (e.g., `bundle-1721126400`). Links the PLR to the batch for observability. |
 
 The singular annotations (`nudging-component`, `nudging-pipeline`,
 `nudging-image`) are not set on batched PLRs to avoid ambiguity.
@@ -621,13 +621,16 @@ update the status.
 
 #### Aggregated nudge PipelineRun failure
 
-If the aggregated Renovate PipelineRun fails, the batch transitions to
-`Failed`. The controller retries by creating a new PipelineRun with an
-incremented attempt suffix (e.g., `nudge-batch-bundle-1721126400-retry1`)
-up to 3 times. After exhausting retries, the batch stays in `Failed`
-and the user can either investigate the failure, fix the underlying
-issue, and use `forceFire` to re-trigger, or manually clean up the
-batch.
+If the aggregated Renovate PipelineRun fails, the batch remains in
+`Firing` while the controller retries. Each retry creates a new
+PipelineRun with an incremented attempt suffix (e.g.,
+`nudge-batch-bundle-1721126400-retry1`), up to 3 times. The retry
+counter is stored in `status.activeBatches[].retryCount`. During
+retries, the batch stays in `Firing` (the next batch is still blocked
+from firing, and `forceFire` is ignored). After exhausting retries, the
+batch transitions to `Failed` and the user can either investigate the
+failure, fix the underlying issue, and use `forceFire` to re-trigger,
+or manually clean up the batch.
 
 #### Post-partial-fire convergence
 
@@ -665,13 +668,13 @@ must be persisted before the
 `test.appstudio.openshift.io/component-nudge-processed` annotation is
 written to the PLR, and the finalizer is removed only after both writes
 succeed. This ordering ensures that a controller crash between any two
-marks them with a `test.appstudio.openshift.io/component-nudge-processed` annotation
-(IS-owned key, separate from build-service's `build.appstudio.openshift.io/component-nudge-processed`) to prevent duplicate processing (PR #1604).
+writes is recoverable: on restart the controller re-reads the
+NudgeConfig status and re-processes any PLR whose finalizer is still
+present but whose result is not yet in `activeBatches`.
 
-The build result is
-captured immediately on completion -- it is not held until the batch
-fires. This keeps build PLR etcd lifetime unchanged from the
-non-batched case.
+The build result is captured immediately on completion -- it is not held
+until the batch fires. This keeps build PLR etcd lifetime unchanged from
+the non-batched case.
 
 #### NudgeConfig changes while a batch is active
 
