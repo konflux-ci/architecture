@@ -9,6 +9,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0047 Ib 70L Caching for container base images used during builds
 0007 Ac 89L Change Management Process
 0029 Ac 192L Component Dependencies
+0072 Pr 111L Component Ownership and Routing Metadata
 0060 Pr 294L ComponentGroups
 0027 Pr 109L Container Image Management Practice
 0035 Ac 59L Continuous Chaos Testing of Apps in AppStudio
