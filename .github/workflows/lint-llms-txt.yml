@@ -1,0 +1,45 @@
+name: Lint llms.txt
+
+# Kept out of the aggregate "make lint" job on purpose: this check installs
+# Sourcey from the npm registry, so it is scoped to the changes that can put
+# llms.txt out of date rather than gating every pull request on npm.
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+    - 'architecture/**'
+    - 'ADR/**'
+    - 'llms.txt'
+    - 'hack/generate-llms-txt'
+    - 'hack/llms-txt/**'
+    - '.github/workflows/lint-llms-txt.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+    - 'architecture/**'
+    - 'ADR/**'
+    - 'llms.txt'
+    - 'hack/generate-llms-txt'
+    - 'hack/llms-txt/**'
+    - '.github/workflows/lint-llms-txt.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  lint-llms-txt:
+    name: Check llms.txt is up to date
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Run make lint-llms-txt
+      run: make lint-llms-txt

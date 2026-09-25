@@ -1,0 +1,8 @@
+{
+  "name": "llms-txt-generator",
+  "private": true,
+  "description": "Pinned install context for hack/generate-llms-txt (see that script). Not part of the site build.",
+  "dependencies": {
+    "sourcey": "3.6.5"
+  }
+}
