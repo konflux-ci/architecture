@@ -1,5 +1,8 @@
 #!/bin/bash
 # Output one ADR file path per line, sorted, excluding non-ADR markdown.
+
+set -euo pipefail
+
 find ADR/ -name "*.md" -type f \
   ! -name "index.md" \
   ! -name "0000-adr-template.md" \
