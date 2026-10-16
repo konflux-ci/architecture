@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Map status to emoji
 get_status_emoji() {
 	case "$1" in
