@@ -25,6 +25,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0023 Ap 94L Git references to furnish Integration Test Scenarios
 0052 Ac 271L GitOps Onboarding Redesign
 0028 Ss 29L Handling SnapshotEnvironmentBinding Errors
+0072 Pr 160L Include Container health index check before release
 0037 Ac 74L Integration service promotes components to GCL immediately after builds complete
 0038 Ac 47L Integration service removes composite snapshots and logic around them
 0003 Im 79L Interacting with Internal Services
