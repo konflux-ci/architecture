@@ -52,6 +52,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0069 Pr 158L Reproducible Container Builds in Konflux
 0056 Ib 764L Revised Component Model
 0011 Ac 148L Roles and Permissions for Konflux
+0072 Pr 330L RPM signature policy via Conforma on the image SBOM
 0022 Ac 450L Secret Management For User Workloads
 0055 Ac 145L SLSA Source Provenance Verification
 0020 Ac 50L Source Retention
