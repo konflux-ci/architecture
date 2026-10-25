@@ -14,7 +14,7 @@ overview:
     - pipeline-service
     - image-controller
   related_adrs:
-    - "0047"
+    - "0073"
     - "0029"
     - "0046"
   key_concepts:
