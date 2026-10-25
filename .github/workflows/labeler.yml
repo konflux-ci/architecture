@@ -1,6 +1,13 @@
 name: labeler
 
-on: [pull_request]
+# pull_request from a fork receives a read-only GITHUB_TOKEN, so the size
+# label API returns 403 and the job fails. pull_request_target runs the
+# workflow from the default branch with a token that can label. This job
+# does not check out pull request code; it only calls the size-labeler
+# action, which reads the pull request diff through the GitHub API.
+on:
+  pull_request_target:
+  pull_request:
 
 permissions:
   pull-requests: write
@@ -10,7 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Label the PR size
     steps:
-      - uses: codelytv/pr-size-labeler@v1
+      - name: Label the PR size
+        if: github.event_name == 'pull_request_target' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: codelytv/pr-size-labeler@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           xs_label: 'size/XS'
@@ -24,3 +33,6 @@ jobs:
           xl_label: 'size/XL'
           fail_if_xl: 'false'
           github_api_url: 'https://api.github.com'
+      - name: Fork pull_request cannot add labels
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
+        run: echo "Fork pull_request tokens are read-only. pull_request_target applies the size label."
