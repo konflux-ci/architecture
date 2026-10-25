@@ -3,12 +3,15 @@
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PUPPETEER_CONFIG="${SCRIPT_DIR}/puppeteer-config.json"
+
 echo "🔍 Validating Mermaid diagrams in markdown files..."
 
 find . -name "*.md" -type f | while read file; do
     echo "  Validating $file"
     for diagram in $(./hack/util/extract-codefences $file mermaid); do
-	echo -n "$diagram" | base64 -d | "$HOME/.local/bin/mmdc" -i - --output /tmp/scratch.svg > /dev/null
+	echo -n "$diagram" | base64 -d | "$HOME/.local/bin/mmdc" -p "$PUPPETEER_CONFIG" -i - --output /tmp/scratch.svg > /dev/null
         if [ $? -eq 0 ]; then
             echo "    ✅ Valid"
         else
