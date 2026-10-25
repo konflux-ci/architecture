@@ -6,7 +6,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0040 Ac 142L Availability Probe Framework
 0059 Ib 66L Backend Usage Telemetry Collection from Konflux Clusters
 0046 Im 157L Build a common Task Runner image
-0047 Ib 70L Caching for container base images used during builds
+0047 Ss 71L Caching for container base images used during builds
 0007 Ac 89L Change Management Process
 0029 Ac 192L Component Dependencies
 0060 Pr 294L ComponentGroups
@@ -40,7 +40,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0004 Im 201L Out-of-the-box image repository for StoneSoup users
 0064 Ib 126L Package Registry Proxy Configuration for Hermeto
 0021 Rp 92L Partner Tasks in Build/Test Pipelines
-0057 Ib 66L Pipeline Caching Feature Flag Configuration
+0057 Ss 67L Pipeline Caching Feature Flag Configuration
 0001 Rp 58L Pipeline Service Phase 1
 0009 Im 84L Pipeline Service via Operator
 0034 Im 524L Project Controller for Multi-version support
@@ -60,6 +60,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0031 Rp 43L Sprayproxy
 0068 Ac 145L Standardize on konflux-ci.dev as Official API Group
 0054 Ac 459L Start versioning Tekton Tasks responsibly
+0072 Ac 78L Sunset Squid container-image-layer proxy
 0070 Pr 111L Support for zstd:chunked image compression
 0030 Ac 273L Tekton Results Naming Convention
 0015 Ss 121L The Two-phase Architecture of the Integration Service
