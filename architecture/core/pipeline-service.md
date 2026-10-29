@@ -15,6 +15,7 @@ overview:
   related_adrs:
     - "0009"
     - "0036"
+    - "0074"
   key_concepts:
     - OpenShift Pipelines operator
     - Tekton Chains (signing/attestations)

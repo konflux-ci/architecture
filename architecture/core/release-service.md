@@ -19,6 +19,7 @@ overview:
     - "0024"
     - "0032"
     - "0049"
+    - "0074"
   key_concepts:
     - Development vs Managed workspaces
     - tenant vs managed pipelines
