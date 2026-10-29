@@ -43,6 +43,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0057 Ib 66L Pipeline Caching Feature Flag Configuration
 0001 Rp 58L Pipeline Service Phase 1
 0009 Im 84L Pipeline Service via Operator
+0074 Pr 316L Preserving provenance across post-build artifact transformations
 0034 Im 524L Project Controller for Multi-version support
 0016 Ss 107L Promotion logic in the Integration Service
 0042 Ac 259L Provisioning Clusters for Integration Tests
