@@ -27,5 +27,5 @@ jobs:
     - name: Run make lint
       run: |
         echo "🔧 Running make lint..."
-        aa-exec --profile=chrome make lint
+        make lint
         echo "✅ make lint completed successfully"
