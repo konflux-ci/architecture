@@ -455,6 +455,14 @@ large batches and duplicate information already available via the
 plural annotations first; the singular forms indicate a non-batched
 nudge.
 
+**Target label:** The batched nudge PipelineRun sets the label
+`build.konflux-ci.dev/nudge-target` to the target component name.
+KubeArchive and Tekton Results retain PipelineRuns after they leave the
+cluster and are queried by label, so the UI can list nudge history for
+one target after the batch is no longer in `NudgeConfig` status.
+`batch-id` stays an annotation: its value includes the creation time
+and is not the query key.
+
 **Renovate configuration inheritance:** The two-tier ConfigMap lookup
 from ADR 67 (`namespace-wide-nudging-renovate-config` + per-target
 annotation override) applies unchanged to batched PLRs. The controller
