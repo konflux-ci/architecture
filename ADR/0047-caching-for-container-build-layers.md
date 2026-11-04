@@ -1,6 +1,7 @@
 ---
 title: "47. Caching for container base images used during builds"
-status: Implementable
+status: Superseded
+superseded_by: ["0072"]
 applies_to:
   - build-service
 topics:
@@ -16,7 +17,7 @@ Date: 2025-06-22
 
 ## Status
 
-Implementable
+Superseded by [ADR 72. Sunset Squid container-image-layer proxy](0072-sunset-squid-container-image-proxy.md)
 
 ## Context
 

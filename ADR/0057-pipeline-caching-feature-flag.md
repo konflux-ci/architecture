@@ -1,6 +1,7 @@
 ---
 title: "57. Pipeline Caching Feature Flag Configuration"
-status: Implementable
+status: Superseded
+superseded_by: ["0072"]
 applies_to:
   - build-service
   - pipeline-service
@@ -16,7 +17,7 @@ Date: 2025-10-23
 
 ## Status
 
-Implementable
+Superseded by [ADR 72. Sunset Squid container-image-layer proxy](0072-sunset-squid-container-image-proxy.md)
 
 ## Context
 
