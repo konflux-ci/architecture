@@ -20,6 +20,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0033 Ac 56L Enable Native OpenTelemetry Tracing
 0008 Rp 482L Environment Provisioning
 0050 Im 52L Exclude Kubernetes Events API from User RBAC Roles
+0072 Ib 132L FBC OCP Version Label and Binaryless FBC Support
 0002 Rp 157L Feature Flags
 0063 Ib 370L Generalized Build and Release Pipelines
 0023 Ap 94L Git references to furnish Integration Test Scenarios
@@ -56,7 +57,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0055 Ac 145L SLSA Source Provenance Verification
 0020 Ac 50L Source Retention
 0044 Im 308L SPDX SBOM support
-0026 Ac 88L Specifying OCP targets for File-based Catalogs
+0026 Rp 91L Specifying OCP targets for File-based Catalogs
 0031 Rp 43L Sprayproxy
 0068 Ac 145L Standardize on konflux-ci.dev as Official API Group
 0054 Ac 459L Start versioning Tekton Tasks responsibly
