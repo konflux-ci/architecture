@@ -18,6 +18,10 @@ User documentation is out of scope.
 ### Architecture Decision Records - ADRs
 [/ADR](./ADR/) folder contains the ADRs that are executed as part of the process to update these documents as explained in [contributing](#contributing) section.
 
+### llms.txt
+
+[llms.txt](./llms.txt) is a generated index of this site in the [llmstxt.org](https://llmstxt.org) format: one linked, one-line entry per published page, so that LLMs and docs tooling can find the right document without crawling the site. It is generated from the content tree and never edited by hand: run `make llms-txt` after adding or renaming a page, and commit the result. `make lint-llms-txt` fails if the checked-in file is out of date.
+
 ## Contributing
 
 All changes to the documents and diagrams require peer-reviewed pull requests. See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on:
