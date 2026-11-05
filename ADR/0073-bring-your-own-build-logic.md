@@ -12,298 +12,236 @@ topics:
   - slsa
   - provenance
   - tekton
-  - trusted-tasks
 ---
 
 # 73. Bring-Your-Own Build Logic with SLSA Build L3 / Source L4
 
 Date: 2026-10-19
 
+Updated: 2026-11-06
+
 ## Status
 
 Proposed
 
+A proof of concept is available in
+[byob-pipeline at `ef146c8`][implementation]. This ADR describes its build
+contract and distinguishes implemented controls from the platform integration
+still required for SLSA Build L3 and Source L4. The catalog alone does not
+establish either level.
+
 ## Context
 
-Design for letting Konflux users add a new build tool or artifact type
-quickly -- by supplying a build image and a script, directly or via a
-Pipeline edit -- without a platform catalog review or a new Conforma
-policy, while every resulting artifact still carries a valid SLSA Build L3
-claim. Source L4 evidence is required through the chain in
-[ADR-0055](./0055-slsa-source-provenance-verification.md): a component whose
-forge cannot mint a Source VSA cannot release on this policy.
+Adding a new build tool or artifact type to Konflux normally means adding
+Tekton Tasks and a Pipeline to the shared catalog, followed by platform
+review. A fully custom Pipeline also needs an approved Conforma policy
+before its output can release. Repeating that work for each tool makes it
+slow to introduce Python wheels, binaries, or other non-container payloads.
 
-Today, adding a new build tool or artifact type to Konflux means adding Tekton
-Tasks and a Pipeline to the shared catalog, which goes through platform
-review. That review protects the Build L3 trust boundary (provenance
-integrity, isolation) but is slow relative to "I just want to build Python
-wheels / a new binary format today."
-
-A developer could already write a fully custom Tekton Pipeline without
-going through that catalog review -- nothing technically stops it. But it
-would not pass any existing Conforma release policy, so they would also
-need to author a brand-new policy and get it approved before anything
-built this way could ever release. That second burden is as heavy as the
-first -- and it's not just a burden: a different bespoke Pipeline and
-policy per component is exactly what SLSA's own "minimize the number of
-trusted platforms" principle warns against. SLSA's example for that
-principle is this scenario by name: "instead of each team within an
-organization maintaining their own build platform, use a shared build
-platform" (see "Evidence from the SLSA spec", under Decision).
-
-Konflux already separates the platform trust boundary from the build logic
-itself ([ADR-0053](./0053-trusted-task-model.md),
-[ADR-0063](./0063-generalized-build-release-pipelines.md)) --
-Build L3 is a property of the platform, and Source L4 of two-person source
-review, neither of which requires platform review of build logic itself
-(see "Why no catalog review is required" under Decision).
+Konflux already separates platform controls from build logic
+([ADR-0053](./0053-trusted-task-model.md),
+[ADR-0063](./0063-generalized-build-release-pipelines.md)).
+Build L3 depends on isolation and unforgeable provenance; Source L4 depends
+on SCM controls and source review. Neither requires platform review of
+each build script. SLSA's "minimize the number of trusted platforms"
+principle supports a shared execution boundary and policy rather than a
+different build platform per component.
 
 ### Goals
 
-- A developer can add a new build tool or artifact type using Konflux's
-  default build image and script path convention, with no Konflux catalog
-  PR and no platform review of the build logic itself.
-- If the defaults don't fit -- a different image, a different script
-  location, more than one build step -- the developer edits their own
-  component's committed Pipeline directly to override params or add more
-  steps, still with no catalog PR.
-- Neither case requires the developer to author a Tekton Pipeline from
-  scratch, or a new Conforma policy to get it released. One shared Pipeline
-  shape and one shared Conforma policy -- both authored once by Konflux,
-  not per component -- already cover this build type.
-- Every artifact produced this way carries a Build L3 attestation.
-  Source L4 evidence is the [ADR-0055](./0055-slsa-source-provenance-verification.md)
-  chain, verifiable the same way as for a catalog-pipeline artifact. A
-  component whose forge cannot mint a Source VSA cannot release on this
-  policy.
-- The existing two-party source review (already required for Source L4) is
-  the only human review the build logic needs.
+- Let developers supply a build command and image through a committed
+  PipelineRun, without authoring a Task or requesting catalog review of
+  the build logic.
+- Provide a conventional `./build.sh` fast path, plus local, remote,
+  multi-platform, and chained builds using the same build contract.
+- Publish arbitrary build-output files inside one documented OCI format,
+  so adding a payload format does not require a new packaging Task.
+- Reuse one platform-maintained Conforma policy for this build shape.
+  The prototype policy currently permits only the default builder image
+  and OCI artifact type; broader image support remains integration work.
+- Support Build L3 when the deployment supplies the isolation, admission,
+  and signed-provenance controls below. Require Source L4 evidence through
+  [ADR-0055](./0055-slsa-source-provenance-verification.md) before release.
+  Build completion alone proves neither requirement.
 
 ### Non-Goals
 
-- **Hermetic execution.** This feature does not require or guarantee that the
-  build only used bytes from the fetched revision. The build may fetch
-  dependencies over the network, same as any other SLSA Build L3 build.
-  `resolvedDependencies` completeness is best-effort, as the SLSA spec
-  allows through Build L3. Hermetic builds are a separate, pre-existing
-  Konflux initiative and orthogonal to this one. Isolation is in scope:
-  see "Isolation" under Decision. Isolated is not hermetic.
-- **Accepting a developer-authored Task.** See "Why not a developer-authored
-  Task" under Decision. Only Pipeline edits (within fixed limits) are
-  accepted from the developer -- never a Task.
-- **Accepting arbitrary Tekton Pipelines or Tasks with inline steps.**
-  Considered and rejected; see "Alternatives Considered."
-- Redefining the must/may/must-not taxonomy of Konflux's user-facing
-  platform contract. This feature should end up as one concrete instance of
-  a "may" layer in that taxonomy, not a redefinition of it.
+- **Hermetic execution.** Builds may fetch dependencies. Completeness of
+  `resolvedDependencies` is best-effort through Build L3; hermetic builds
+  remain a separate initiative. Isolation is still required.
+- **Developer-authored build Tasks.** The editable surface is the Pipeline
+  and the permitted parameters of platform-owned Tasks, not arbitrary
+  inline steps, pod specifications, sidecars, or volume definitions.
+- **Provisioning the platform.** The catalog does not install Konflux,
+  configure production admission, provision or destroy VMs, generate a
+  Source VSA, or operate a release destination.
+- Redefining Konflux's user-facing platform contract. This is a concrete
+  candidate for its "may" layer.
 
 ## Decision
 
-Konflux will publish a single Konflux-owned Tekton Task (`run-build`, and a
-`run-build-remote` variant for multi-platform VM builds) that runs a
-developer-supplied build image and script, together with a default Pipeline
-that wires `checkout` -> `run-build` -> `pack` and is scaffolded into new
-components the same way existing build Pipelines are today. The file the
-developer edits, `.tekton/push.yaml`, is a Pipelines-as-Code PipelineRun.
-The developer edits only the fields named in "Developer-facing contract" --
-never a Task, pod spec, or ServiceAccount.
+Use platform-owned `run-build` and `pack` Tasks, with a generated
+`run-build-remote` variant. The default sequence is `checkout` ->
+`run-build` -> `pack`. Developers commit an executable `build.sh` and
+write deliverables to `$BUILD_OUTPUT`. They can edit their component's
+`.tekton/push.yaml` PipelineRun to select another executable or image,
+add build Tasks, or use a platform matrix.
 
-Two different checks enforce that, because they see different objects:
+The proof of concept provides four [Pipelines][pipelines]:
 
-- When the PipelineRun is created, the platform rejects a run that carries
-  `taskSpec`, `taskRunSpecs`, or `podTemplate` (including
-  `taskRunTemplate.podTemplate`), or a runtime override of `image`,
-  `script-path`, `PLATFORM`, or a `*_ARTIFACT` param. Those fields change
-  how a trusted Task executes, and they are not part of the Task digest.
-  Pipelines as Code may still set the repository URL and revision; those
-  must match the fetched revision.
-- At the Conforma release gate, one shared policy reads the signed Tekton
-  Chains predicate and applies a closed task allowlist. "On the trusted-task
-  list" is not the check: that list also contains privileged catalog Tasks
-  such as `buildah`.
+- `byob`: checkout, in-cluster build, and pack.
+- `byob-remote`: checkout, controller-selected build, and pack.
+- `byob-matrix`: one controller-selected build per `PLATFORM`, then one pack.
+- `byob-chained`: code generation followed by a build, with explicit
+  output-artifact inputs.
+
+Development Pipelines reference namespace-installed build and pack Tasks;
+checkout already uses an upstream bundle pinned by digest. The
+[Pipelines-as-Code example][pac] embeds the matrix Pipeline and has
+placeholders for published build and pack bundle digests. Publishing those
+bundles, approving their identities, and scaffolding this into Konflux
+components are separate integration steps.
 
 ### Trust model
 
-**Owned by Konflux, never user-supplied, never admits user override:**
+**Owned by the platform:**
 
-- Source checkout, from the revision Pipelines as Code (or equivalent)
-  resolved -- the Source L4 revision.
-- The generic Task that runs a build step (working name `run-build`, with a
-  `run-build-remote` variant for multi-platform VM builds). Konflux fixes
-  `volumes`, `sidecars`, and `stepTemplate`. The Task also fixes its runtime
-  confinement: `automountServiceAccountToken: false`, a non-root
-  `runAsUser`, capabilities dropped, and a `command`/`args` that exec the
-  script with the image entrypoint cleared. `script-path` is resolved under
-  the extracted source tree; an absolute path or a `..` component is
-  rejected by the Task.
-- Developer-editable params on that Task are `image` and `script-path`
-  only. `run-build-remote` also takes `PLATFORM`, which is the
-  multi-platform controller's contract parameter
-  ([multi-platform controller](../architecture/add-ons/multi-platform-controller.md)),
-  not a build-logic param. Platform-owned params are also present and are
-  not editable build logic: each `*_ARTIFACT` param (for example
-  `SOURCE_ARTIFACT`) is wired by the Pipeline to the previous task's
-  matching result. See "Data between tasks."
-- `run-build` declares no workspace a PipelineRun can bind a Secret to.
-  The developer image is not the step that mounts a platform secret. On
-  the remote path, the secret `multi-platform-ssh-$(context.taskRun.name)`
-  is mounted by the Konflux-owned step that opens SSH, and the developer
-  image runs only inside that step's `podman` invocation.
-- The execution environment. In-cluster builds use an ephemeral pod and
-  `run-build`. Other platforms use `run-build-remote` on a VM created for
-  that TaskRun and destroyed when it finishes. See "Isolation."
-- Output packaging: a Konflux task packs a declared output directory into the
-  OCI Component Build Artifact, pushes it, and emits its reference and
-  digest as Tekton Results (`IMAGE_URL`/`IMAGE_DIGEST`, the existing
-  Konflux/Chains convention) -- Chains reads these to know what artifact to
-  attach provenance to ([ADR-0063](./0063-generalized-build-release-pipelines.md)).
-  **Only `pack` emits these results** -- `run-build`/`run-build-remote`
-  don't produce the artifact, so they have nothing to report under those
-  names, and emitting them there too would make Chains unable to tell
-  which Task is the real subject when the escape hatch adds more than one
-  `run-build` instance to a Pipeline. Everything else Chains needs from
-  `run-build`/`run-build-remote` -- the `image`/`script-path` params, and
-  the digest of the image actually used to run the step -- is captured
-  automatically by Tekton/Chains without any Result declaration.
-- `pack` documents `artifactType` (or `config.mediaType` where that is the
-  right signal) for the Component Build Artifact, as
-  [ADR-0063](./0063-generalized-build-release-pipelines.md) requires. For a
-  format Konflux does not already document, `artifactType` is a literal in
-  the reviewed PipelineRun. When the package ecosystem has an SBOM
-  standard, `pack` emits that SBOM, so the SBOM does not add another task
-  identity to the allowlist.
-- Provenance generation and signing (Tekton Chains). The signing key and the
-  ability to write PipelineRun/TaskRun status are never reachable from the
-  environment that runs the developer's script.
+- **Checkout.** The pinned upstream `git-clone-oci-ta` Task checks out the
+  requested exact commit and reports `SOURCE_ARTIFACT`,
+  `CHAINS-GIT_URL`, and `CHAINS-GIT_COMMIT`. SCM review and a Source VSA
+  for that commit remain external requirements.
+- **Build Task definitions.** The platform fixes steps, volumes, mounts,
+  and security contexts. Trusted steps restore inputs, prepare the
+  workspace, validate outputs, and export Trusted Artifacts. The
+  developer image runs only the requested executable and arguments.
+- **Credential separation.** Registry credentials are mounted only in
+  trusted restore/export/publish steps. Controller SSH credentials are
+  mounted only in trusted controller/remote steps. The developer step
+  mounts the source, work directory, and its output volume.
+- **Execution confinement.** Developer code runs as UID 1000, with
+  privilege escalation disabled and all capabilities dropped. A fixed
+  preparation step runs as root with `CHOWN` to initialize empty volumes;
+  this exception does not run developer code. The example `byob-build`
+  ServiceAccount disables token automount. Selection of that account and
+  restrictions on run-level overrides must be enforced by the platform.
+- **Output publication.** Only `pack` emits `IMAGE_URL` and
+  `IMAGE_DIGEST`. These name the final OCI manifest for Chains and the
+  Snapshot, following
+  [ADR-0063](./0063-generalized-build-release-pipelines.md).
+  Build Tasks emit `BUILD_ARTIFACT` for intermediate outputs.
+- **Provenance and signing.** Chains runs outside the developer workload.
+  The deployment must keep signing keys and permission to change
+  TaskRun/PipelineRun status out of build workloads.
 
-**Supplied by the developer, reviewed only by the existing two-party source
-review:**
+The trusted operations use a shared Go CLI. `run-build-remote` is generated
+from the local Task and adds controller routing, remote execution, image
+recording, and platform metadata. The checked-in CLI image reference is
+`localhost/byob-cli:devel`; a production deployment must publish and pin
+that image and its Task bundles before trusting them.
 
-- A build script at a path in the component repo (Konflux default:
-  `./build.sh`; a developer-chosen path works too, by editing the Pipeline).
-  The path is relative to the source tree.
-- Optionally, by editing the committed PipelineRun directly: a different
-  `image` (pinned by digest) and/or `script-path`, additional `run-build` /
-  `run-build-remote` instances (any number) with `runAfter` ordering and
-  `*_ARTIFACT` result wiring, and `artifactType` on `pack` when the format
-  is new.
+**Supplied by the developer in the reviewed component revision:**
 
-**Why no catalog review is required:** SLSA Build L3's accuracy guarantee is
-about what the *control plane* can prove (isolation, unforgeable provenance),
-not about pre-approval of build logic -- see "Evidence from the SLSA spec"
-below. SLSA Source L4's guarantee is two-person review of the revision. The
-source repo's own required reviewers are that review for the build logic and
-for any Pipeline edit, since both live in the same revision.
+- `image`: a builder image containing the executable and its runtime.
+  Production acceptance requires an approved immutable digest.
+- `build-cmd`: an argv array, defaulting to `["./build.sh"]`.
+- `build-args`: an argv array appended to `build-cmd`, defaulting to `[]`.
+- Additional `run-build` / `run-build-remote` PipelineTasks, their
+  dependencies, and output-artifact wiring.
+- `PLATFORM` or a platform matrix when using `run-build-remote`.
 
-That coverage holds only for values that are literal strings in the
-PipelineRun committed at that revision. A runtime override -- a patched
-PipelineRun, or a param PaC did not take from that file -- is a way for an
-external party to influence the build. Build L3 requires `externalParameters`
-to be complete, so an override that Chains does not record breaks the claim,
-and an override that Chains does record is still outside the reviewed
-revision. The platform rejects those overrides when the PipelineRun is
-created. Pipelines as Code may still set the source-identity params (repository
-URL and revision). Those are recorded in the predicate and must match the
-fetched revision. There is no separate resolver call for `image` or
-`script-path`: they are literals in the reviewed PipelineRun.
+These parameters are supported by the Tasks. Acceptance by admission and
+Conforma is a separate condition; the prototype policy does not yet accept
+arbitrary builder images or every command form.
 
-**Why not a developer-authored Task.** If the developer could author the
-Task itself, they would control three fields no param-exposure discipline
-can fix after the fact:
+**Why no catalog review of build logic is required.** The platform reviews
+the fixed execution boundary once. Component reviewers review the command,
+script, and PipelineRun as source. Production admission must ensure the
+execution plan matches those reviewed literals, apart from approved
+source-identity values supplied by Pipelines as Code. A runtime change
+that Chains records is still outside that reviewed revision.
 
-- `volumes` -- what storage backs a mount; a Task author can bind
-  `hostPath`.
-- `sidecars` -- a separate Task-level field, long-running containers with
-  their own `securityContext`/`volumeMounts`.
-- `stepTemplate` -- Task-level defaults merged into every step (`env`,
-  `volumeMounts`, `securityContext`, `workingDir`).
-
-So the Task is always the one Konflux publishes, with those three fields
-fixed. The developer's editable surface is the PipelineRun in
-`.tekton/push.yaml`, and a PipelineRun is larger than a PipelineTask.
-A PipelineTask entry has `taskRef`, `params`, `workspaces`, `runAfter`,
-`matrix`, and `when`. It can also carry `taskSpec` instead of `taskRef`,
-and a `taskSpec` can set `volumes`, `sidecars`, and `stepTemplate` -- the
-same three fields. The PipelineRun can also set `spec.taskRunSpecs[]`
-(`podTemplate`, `serviceAccountName`, `stepOverrides`) and `spec.params`
-that override the literals in the Pipeline. `podTemplate` can set
-`hostNetwork`, `hostPID`, and extra volumes. None of that is part of the
-Task digest, so a Task that stays on a trusted-task list still runs under
-the override. `workspaces` is security-sensitive for the same reason: a
-PipelineRun binding can mount a Secret into a Task that declares one.
-
-`taskSpec` is not a threat under this decision because an inline Task has
-no bundle digest on the closed allowlist, and the PipelineRun is rejected
-at creation if it contains one. The release gate rejects it again when the
-predicate shows it. `taskRunSpecs` and `podTemplate` are rejected at
-creation because they are pod-level overrides outside the Task digest; the
-release gate also rejects a predicate that contains them, so a Chains
-formatter that records `externalParameters.runSpec` cannot be bypassed by
-skipping admission.
-
-**The envelope.** A run stays inside the envelope -- and its artifact
-qualifies for release -- when all of the following hold:
-
-- It runs from the Source L4 revision Konflux fetched, and Source L4
-  evidence is present through the ADR-0055 chain.
-- The attested PipelineRun has no `taskSpec`, `taskRunSpecs`, or
-  `podTemplate`.
-- Every task uses a digest-pinned `taskRef` from the closed set in
-  "Conforma verification." No other Task identity appears.
-- `script-path` is a relative path under the source tree.
-- `image` is pinned by digest, and that digest equals the step `imageID`
-  recorded for the step that ran the developer image.
-- `*_ARTIFACT` params are wired to the previous task's `*_ARTIFACT` result.
-  There is no general-purpose workspace and no shared PVC.
-- No credential capable of patching the PipelineRun/TaskRun, writing
-  attestation-relevant fields, or reading the Chains signing key is
-  available to the developer image.
-- A remote build uses `run-build-remote` on a VM created for that TaskRun
-  and destroyed afterward. Local platforms use in-cluster `run-build`.
-
-A run leaving the envelope is **not** blocked from starting when the only
-problem is one the release gate can see in the signed predicate (a
-non-pinned `image`, a Task outside the allowlist, a broken artifact chain).
-It executes, produces an artifact, and gets signed provenance like any other
-build -- and then fails the Conforma release gate, so it cannot be promoted
-or released. A PipelineRun that carries `taskSpec`, `taskRunSpecs`,
-`podTemplate`, or a runtime param override is rejected at creation, because
-those are not reliably visible as an attested influence. See "Conforma
-verification" below.
-
-Network access *during* the build (fetching dependencies) is inside the
-envelope -- see Non-Goals. What's outside the envelope is access to
-Konflux's own control plane and cross-build state, not access to the
-internet.
+**Why not a developer-authored build Task.** A Task author controls
+`volumes`, `sidecars`, and `stepTemplate`, including mounts and security
+contexts. A trusted task name does not constrain an inline `taskSpec` or
+run-level pod/step overrides. Production admission must reject inline build
+Tasks, replacement steps, extra pod templates, unauthorized accounts, and
+credential bindings outside the approved checkout path. Resource requests
+and limits in `taskRunSpecs` are permitted; the presence of
+`taskRunSpecs` alone is not a violation.
 
 ### Data between tasks
 
-`checkout`, `run-build` / `run-build-remote`, and `pack` are separate
-TaskRuns. [ADR-0036](./0036-trusted-artifacts.md) (Implemented) passes files
-between TaskRuns as OCI trusted artifacts: a producing task records the
-archive location and digest in a result whose name ends in `_ARTIFACT`, and
-the next task receives that reference as a param with the same suffix.
-[ADR-0063](./0063-generalized-build-release-pipelines.md) requires component
-build pipelines to transmit large data between tasks this way. A
-general-purpose workspace is not accepted. A shared PVC is the shared-cache
-case the envelope forbids.
+The catalog uses [Trusted Artifacts](./0036-trusted-artifacts.md) for
+cross-TaskRun file transfer, with digest-bearing OCI references in results
+and parameters. It does not share a source PVC between build Tasks.
 
-`checkout` emits `SOURCE_ARTIFACT`. Each `run-build` / `run-build-remote`
-consumes `SOURCE_ARTIFACT` and emits `SOURCE_ARTIFACT` for the tree after
-the script. `pack` consumes the last one. The Pipeline wires each param to
-the previous task's result. Those params are platform-owned: the developer
-does not put build logic in them. Conforma checks that each consumed digest
-equals the producing task's result. That chain is the critical path
-[ADR-0063](./0063-generalized-build-release-pipelines.md) requires the
-policy to verify: `checkout`, every `run-build` / `run-build-remote`, and
-`pack`.
+`checkout` emits the original `SOURCE_ARTIFACT`. Every build in the
+published Pipelines restores that same checkout at `/var/source`.
+A build does not export a modified source tree. Its optional
+`BUILD_ARTIFACTS` array restores preceding outputs separately:
+
+- `codegen=$(tasks.codegen.results.BUILD_ARTIFACT)` restores under
+  `$BUILD_INPUTS/codegen/out/`.
+- Bare references restore under numeric directories starting at
+  `$BUILD_INPUTS/0/out/`.
+- An array must use either named entries throughout or bare entries
+  throughout; duplicate names are rejected.
+
+The command runs from `/var/source`, with writable `HOME` and
+`BUILD_INPUTS` under `/var/workdir`. `BUILD_OUTPUT` is an initially empty
+directory at `/var/byob/output`, on a volume separate from the checkout.
+The developer must put at least one regular file there. A repository
+directory named `out/` is not implicitly published.
+
+After the command succeeds, a trusted step validates `BUILD_OUTPUT` and
+copies it into a separate export volume that the developer step does not
+mount. The resulting `BUILD_ARTIFACT` contains `out/` and, for the
+controller-enabled Task, trusted `.konflux-platform` metadata. Validation
+rejects special files, an output root that is a symlink, and links that
+escape the output tree. Source files and caches are not exported unless
+the build explicitly copies them into its output.
+
+A chained build receives earlier outputs through `BUILD_INPUTS` and must
+copy any files it wants to retain into its own `BUILD_OUTPUT`.
+The final `pack` Task consumes an array of `BUILD_ARTIFACTS`. It selects
+the archive layout from the references:
+
+- One bare reference: files at the archive root.
+- Several bare references: directories derived from trusted platform
+  markers, such as `linux-amd64/` and `linux-arm64/`. Result ordering is
+  not used to identify a platform.
+- Named references: one directory per supplied task label.
+
+`pack` publishes one OCI artifact per PipelineRun, with
+`artifactType: application/vnd.konflux.build-output.v1` and exactly one
+layer named `payload.tar.gz`, with media type
+`application/vnd.oci.image.layer.v1.tar+gzip`. The Snapshot identifies its
+manifest digest. A new payload format, such as wheels or binaries, can use
+this same envelope. Although the Task exposes `artifactType`, changing it
+is rejected by the current sample policy. `pack` does not generate an SBOM;
+a build may include an SBOM among its output files.
+
+### Private source checkout
+
+All four Pipelines declare an optional `git-auth` workspace and map it
+only to checkout's `basic-auth` workspace, following the Konflux build
+Pipeline pattern. A PipelineRun binds a namespace
+`kubernetes.io/basic-auth` Secret by name; it does not contain credentials.
+Build Tasks declare no workspace that can receive this binding.
+
+Trusted preparation scrubs Git authentication configuration from the
+restored source before developer code runs. Git credentials must not be
+forwarded to build Tasks, remote VMs, or output-artifact handoffs.
+Production Conforma admission must approve both the Git URL and the Secret
+reference. The repository supplies an example binding, not that admission
+integration.
 
 ### Evidence from the SLSA spec
 
-The Build L3 claims above -- in Context, and in "Why no catalog review is
-required" -- are what the spec says at the lines cited. The Source L4
-bullet is a reading of the two-party-review scope, and it is labeled as a
-reading.
+These citations explain the intended Build L3 and Source L4 boundary;
+they do not establish that the prototype or a deployment meets it. The
+Source L4 bullet is a reading of the two-party-review scope and is labeled
+as a reading.
 
 Quoted from [slsa-framework/slsa](https://github.com/slsa-framework/slsa) at
 commit [`048a3c4`](https://github.com/slsa-framework/slsa/commit/048a3c411b3a892fc41092b6688bbee345b7b386)
@@ -345,340 +283,302 @@ the spec's `predicateType` URI tracks the latest minor version and can move.
   custom Pipeline and policy, not just that it's less work.
   ([`spec/principles.md:73-83`](https://github.com/slsa-framework/slsa/blob/048a3c411b3a892fc41092b6688bbee345b7b386/spec/principles.md#L73-L83))
 
-### Isolation
+### Isolation and remote execution
 
-Build L3's isolation requirement is a stronger obligation than "not
-hermetic." The MUSTs cited above (no platform secrets, no cross-build
-influence, an ephemeral environment per build, no cache poisoning, remote
-influence recorded in `externalParameters`) are part of this decision. The
-"Isolated is not hermetic" note is the separate citation at lines 322-332.
+The generated `run-build-remote` Task consumes the controller's
+`multi-platform-ssh-$(context.taskRun.name)` Secret. If its host is
+`localhost`, a conditional `build-local` step runs the developer image
+in the Task pod. Otherwise, a trusted `build-remote` step opens SSH and
+runs the developer image inside rootless Podman on the VM. The developer
+image never runs as the step mounting the SSH Secret.
 
-Today's multi-platform host model does not meet that bar on every
-configured host, and this decision does not claim that it does:
+The remote implementation verifies controller-supplied host keys, supports
+a controller key or a TLS-protected OTP exchange, and copies source and
+build inputs into the container rather than mounting host directories.
+It disables Podman's automatic host-secret mounts with
+`--default-mounts-file=/dev/null`, drops capabilities, disables privilege
+escalation, and uses UID 1000. It returns only `BUILD_OUTPUT` to the Task
+pod for validation and export. Developer images must be pullable without
+forwarded registry credentials.
 
-- Static hosts and dynamic pools set `concurrency` greater than 1. The
-  controller tracks slots because the host does not, so overlapping builds
-  can share a machine.
-- `local-platforms` sets the secret's `host` to `localhost` and runs the
-  Task in the pod. That path uses in-cluster `run-build`, not
-  `run-build-remote`.
-- On the remote path the TaskRun pod still exists. It holds the OTP secret
-  and opens SSH. There is a Kubernetes pod, and its spec is part of the
-  threat model for that step.
+The Task also emits `BUILD_IMAGE_ARTIFACT_INPUTS`, an object containing
+the builder URI and digest. For a VM it records the digest Podman
+observed; for the local route it records the requested immutable image.
+A production Chains configuration and policy must capture and verify
+this evidence. A Task pod's own step image does not identify a developer
+image executed inside remote Podman.
 
-`run-build-remote` is allowed only on a VM created for that TaskRun and
-destroyed when the TaskRun finishes, with rootless `podman`, no
-`--privileged`, and no host mounts. The developer image runs only inside
-that `podman` invocation, never as the step that mounts
-`multi-platform-ssh-$(context.taskRun.name)`. Host configs that share a
-machine across builds are not valid hosts for this Task.
+These mechanisms do not allocate or destroy VMs. Build L3 requires the
+controller to provide a fresh, dedicated VM per TaskRun and remove it on
+success, failure, or cancellation. Shared static hosts and overlapping
+builds on pooled hosts do not meet this boundary. The CLI attempts to
+clean up its container and temporary workspace; that is not a substitute
+for controller-owned VM cleanup.
+
+For local builds, the cluster must validate equivalent isolation between
+developer and trusted steps, deny access to control-plane credentials and
+other builds, and prevent status/provenance forgery. A matrix may mix local
+and remote members only when both paths meet those requirements. The
+catalog's non-root settings alone do not prove Build L3 isolation.
 
 ### Developer-facing contract
 
-**Default: a script at the conventional path.** The developer commits
-`./build.sh` to the component repo. Konflux's default, unedited Pipeline
-runs it with a Konflux-provided default build image and no Pipeline edit
-required. This is the fast path.
+**Default.** Commit an executable `./build.sh` and write deliverables to
+`$BUILD_OUTPUT`. The default image is the digest-pinned Konflux task-runner
+image. The selected image must supply the executable and its dependencies;
+it needs no BYOB CLI or shell unless the command itself requires one.
 
-**Escape hatch: editing the PipelineRun.** When the default image or script
-path doesn't fit, or more than one build step is needed, the developer
-edits the component's `.tekton/push.yaml` directly. Any number of extra
-`run-build` / `run-build-remote` tasks is allowed. The fields they may
-change are:
+**Command execution.** `build-cmd` selects an executable and any fixed
+leading arguments; `build-args` appends arguments. Each array element is
+one argv entry, without shell parsing, on both local and remote paths.
+The Task does not require the executable to be a script from the checkout;
+it can be provided by the image. The sample policy is narrower: it
+restricts `build-cmd` entries to source-relative `./...` paths without
+`..` and requires a matching recorded step entrypoint.
 
-- `image` and `script-path` on a `run-build` / `run-build-remote`
-  PipelineTask. `script-path` is a relative path. `image` is digest-pinned.
-- `PLATFORM` on `run-build-remote`, when the step is a remote build.
-- `runAfter`, and the `*_ARTIFACT` wiring that passes the previous task's
-  result into the next task's `SOURCE_ARTIFACT` param.
-- `artifactType` on `pack`, when the format is not one the default Pipeline
-  already documents.
+**Pipeline edits.** Developers can select the Task's supported image,
+command, arguments, dependencies, extra build inputs, and platform matrix
+through their committed PipelineRun. The production policy must define
+which values are approved. The Task definitions, accounts, credential
+mounts, artifact-storage destinations, and runtime confinement remain
+platform-owned. An approved `git-auth` binding is the only source
+credential workspace in these Pipelines.
 
-They may not add a `taskSpec`, `taskRunSpecs`, `podTemplate`, workspace
-secret binding, or any other task identity. `taskRef` stays a digest-pinned
-bundle from the closed set.
-
-### Example
-
-```
-[konflux: checkout @ Source L4 revision]
-        |
-        |  SOURCE_ARTIFACT (OCI trusted artifact)
-        v
-[konflux: run-build]        <-- escape hatch: more instances possible,
-        |                        absent by default
-        |  SOURCE_ARTIFACT
-        v
-[konflux: pack -> OCI Component Build Artifact]
-        |
-[tekton chains: generate + sign provenance]
-```
-
-**Default: unedited Pipeline, script at the conventional path.**
-
-```
-my-component/
-  build.sh                  # developer-supplied
-  .tekton/
-    push.yaml               # konflux default, unedited
-```
-
-No Pipeline edit. Konflux's default `push.yaml` already has a `run-build`
-PipelineTask with its default `image` and `script-path: build.sh`.
-
-**Escape hatch: a different image, and a second build step.**
+For example, the chained Pipeline uses the following build/pack excerpt.
+The checkout task, Pipeline parameters, and results are omitted here;
+the complete manifests are in the [implementation][pipelines].
 
 ```yaml
-# .tekton/push.yaml (excerpt -- developer-edited PipelineRun)
-spec:
-  pipelineSpec:
-    tasks:
-      - name: checkout        # konflux-owned, unedited
-        taskRef:
-          resolver: bundles
-          params:
-            - name: bundle
-              value: quay.io/konflux-ci/catalog/checkout@sha256:<trusted-task-digest>
-            - name: name
-              value: checkout
-            - name: kind
-              value: task
-      - name: codegen
-        runAfter: ["checkout"]
-        taskRef:
-          resolver: bundles
-          params:
-            - name: bundle
-              value: quay.io/konflux-ci/catalog/run-build@sha256:<trusted-task-digest>
-            - name: name
-              value: run-build
-            - name: kind
-              value: task
-        params:
-          # platform-owned; wired to checkout's result, not build logic
-          - name: SOURCE_ARTIFACT
-            value: $(tasks.checkout.results.SOURCE_ARTIFACT)
-          - name: image
-            value: quay.io/my-tenant/codegen@sha256:5e6f7a8b...
-          - name: script-path
-            value: scripts/generate-bindings.sh
-      - name: build
-        runAfter: ["codegen"]
-        taskRef:
-          resolver: bundles
-          params:
-            - name: bundle
-              value: quay.io/konflux-ci/catalog/run-build@sha256:<trusted-task-digest>
-            - name: name
-              value: run-build
-            - name: kind
-              value: task
-        params:
-          - name: SOURCE_ARTIFACT
-            value: $(tasks.codegen.results.SOURCE_ARTIFACT)
-          - name: image
-            value: quay.io/my-tenant/python-builder@sha256:1a2b3c4d...
-          - name: script-path
-            value: build.sh
-      - name: pack             # konflux-owned, unedited except artifactType
-        runAfter: ["build"]
-        taskRef:
-          resolver: bundles
-          params:
-            - name: bundle
-              value: quay.io/konflux-ci/catalog/pack@sha256:<trusted-task-digest>
-            - name: name
-              value: pack
-            - name: kind
-              value: task
-        params:
-          - name: SOURCE_ARTIFACT
-            value: $(tasks.build.results.SOURCE_ARTIFACT)
+tasks:
+- name: codegen
+  taskRef:
+    name: run-build
+  params:
+  - name: build-cmd
+    value: ["./scripts/generate.sh"]
+  - name: SOURCE_ARTIFACT
+    value: $(tasks.checkout.results.SOURCE_ARTIFACT)
+  - name: ociStorage
+    value: $(params.oci-storage)
+- name: build
+  taskRef:
+    name: run-build
+  params:
+  - name: build-cmd
+    value: ["./build.sh"]
+  - name: build-args
+    value: ["--target", "release"]
+  - name: SOURCE_ARTIFACT
+    value: $(tasks.checkout.results.SOURCE_ARTIFACT)
+  - name: BUILD_ARTIFACTS
+    value:
+    - codegen=$(tasks.codegen.results.BUILD_ARTIFACT)
+  - name: ociStorage
+    value: $(params.oci-storage)
+- name: pack
+  taskRef:
+    name: pack
+  params:
+  - name: BUILD_ARTIFACTS
+    value:
+    - $(tasks.build.results.BUILD_ARTIFACT)
+  - name: IMAGE
+    value: $(params.output-image)
+  - name: artifactType
+    value: application/vnd.konflux.build-output.v1
 ```
 
-`codegen` runs after `checkout` because it reads
-`scripts/generate-bindings.sh` from that checkout. Both `codegen` and
-`build` reference the same Konflux `run-build` bundle digest; the developer
-varies `image`, `script-path`, `runAfter`, and the `SOURCE_ARTIFACT` result
-reference. The digest in each `taskRef` is the one on the closed allowlist.
-No Task, pod spec, or ServiceAccount is written by the developer.
+Result references establish task dependencies. `build` reads generated
+files at `$BUILD_INPUTS/codegen/out/` while running against the original
+checkout. To publish a generated file, it copies it to `$BUILD_OUTPUT`.
+The namespace Task references above match the development catalog;
+production references must use approved immutable bundles.
+
+### Release consumption
+
+The `unpack-build-output` StepAction consumes
+`registry/repository@sha256:<manifest-digest>` and an empty destination.
+It checks the artifact type, the single payload layer's name and media
+type, and the downloaded layer digest, then safely extracts the archive
+while preserving its layout. The consuming release Task supplies the
+destination volume and any registry-authentication or CA mounts.
+
+This StepAction restores files; signature and policy verification must
+happen before it is allowed to run. The [release demo][release-demo]
+verifies the same manifest digest with Conforma, then unpacks and consumes
+its files. It is an example Tekton release Pipeline, not a production
+ReleasePlan integration.
+
+Using a StepAction here does not open the build trust boundary to
+developer-authored Tasks. The release Pipeline owns the consuming Task;
+the alternative rejected below concerns the execution of arbitrary build
+logic.
 
 ### Conforma verification
 
-The release gate reads the signed Chains predicate. It does not see the
-cluster. The fields this policy uses are:
+The proof of concept includes [Rego rules][policy] and a Konflux
+[IntegrationTestScenario Pipeline][integration]. The integration service
+supplies a Snapshot. For each image, `ec validate image` verifies the
+Chains signature using the public key in `chains-public-key/cosign.pub`
+and binds the attestation subject to that image digest before evaluating
+the rules. The example ignores Rekor because its test cluster does not
+publish transparency entries; it does not skip signature verification.
 
-- Task identities and bundle digests, from the predicate's resolved
-  dependencies (and from `externalParameters.runSpec` when the configured
-  Chains formatter records the PipelineRun spec).
-- The parameter values that influenced the run, from `externalParameters`
-  (SLSA v1.0) or `invocation.parameters` (SLSA v0.2), including `image`,
-  `script-path`, `PLATFORM`, and `*_ARTIFACT`.
-- The step `imageID` Chains copies from the TaskRun status for the step
-  that executed the developer image.
-- `pack`'s `IMAGE_URL` and `IMAGE_DIGEST` results, which name the subject.
+The current rules consume Chains SLSA v0.2 PipelineRun statements and
+check:
 
-Pod-level overrides the configured formatter does not copy into that
-predicate are not a release-gate check. They are rejected when the
-PipelineRun is created.
+- A catalog Pipeline name: `byob`, `byob-chained`, `byob-remote`, or
+  `byob-matrix`.
+- Checkout, at least one build Task, and pack are present; other task
+  names/references are outside the closed build shape.
+- Checkout uses the pinned upstream bundle, its URL and revision match
+  Pipeline parameters and Git material, and its Git results agree.
+- `pack` records the attested manifest digest and uses the Pipeline's
+  output destination and the documented OCI artifact type.
+- Build Tasks request the pinned default task-runner image. The command
+  check looks for that image digest and an entrypoint matching the
+  source-relative `build-cmd` in recorded step data.
+- Each `SOURCE_ARTIFACT` is checkout's source or a build output in the
+  same attestation. Each additional build input and pack input is a
+  `BUILD_ARTIFACT` from a build Task in that attestation; named input
+  labels are accepted. The published Pipelines use the original checkout
+  as `SOURCE_ARTIFACT` throughout.
+- Checkout and build handoffs use the Pipeline's `oci-storage`
+  repository or its accepted tag/path forms.
 
-**New Conforma policy** (this feature's release gate), used instead of
-today's trusted-task-name policies for components that opt in. The opt-in
-hook is the component's EnterpriseContractPolicy, selected by its
-ReleasePlan. A policy that means "any trusted task" is weaker than today's
-task-name rules: a component that opts in and still runs `buildah` must
-fail.
+The Pipeline emits the standard `TEST_OUTPUT` summary with successes,
+failures, warnings, and a `SUCCESS`, `WARNING`, or `FAILURE` result,
+prints the rule report, and fails unless the result is `SUCCESS` or
+`WARNING`. System tests cover a passing resource override, a rejected
+artifact-type change, and a rejected source artifact from another run.
 
-The rules are one closed allowlist:
+**Production enforcement still required.** This sample is not the complete
+release policy described by the goals:
 
-- Provenance shows `checkout`, at least one `run-build` or
-  `run-build-remote`, and `pack` each ran, at pinned trusted digests.
-- No other Task identity appears. Catalog names such as `buildah` or
-  `prefetch-dependencies` are outside this build shape and fail this
-  policy.
-- The predicate shows no `taskSpec`, `taskRunSpecs`, or `podTemplate`.
-- For each `run-build` / `run-build-remote`, `image` in the external
-  parameters is digest-pinned and equals the recorded step `imageID`.
-  `script-path` is a relative path.
-- Each `*_ARTIFACT` param equals the producing task's `*_ARTIFACT` result.
-  The critical path is `checkout`, every `run-build` / `run-build-remote`,
-  and `pack`.
-- **Source L4 check:** the source revision meets Source L4 through the
-  [ADR-0055](./0055-slsa-source-provenance-verification.md) chain. Repository
-  owners mint a Source VSA, and an integration-test task republishes it.
-  A component whose forge cannot produce a VSA cannot release on this
-  policy.
-- A VM build used `run-build-remote` at its pinned digest, not an arbitrary
-  external endpoint. The Task's fixed script is what ran `podman`; the
-  digest pin is what confirms that script.
+- The local catalog rules recognize namespace references for build and
+  pack; only checkout has a bundle-digest identity check. They do not yet
+  enforce immutable build/pack bundles or generalize the builder-image
+  allowlist. The PaC bundle example therefore needs corresponding policy
+  integration.
+- Admission must reject inline build Tasks and execution overrides before
+  Task Pods start, while permitting resource requests/limits. It must
+  approve source identity, image, command/arguments, platform and output
+  settings, storage, accounts, and private-checkout URL/Secret bindings.
+  The sample Rego rules evaluate provenance after the build; they do not
+  implement this admission integration.
+- Chains must record the final manifest, exact source identity, approved
+  Task and image identities, and input/output-artifact chain. Remote image
+  evidence from `BUILD_IMAGE_ARTIFACT_INPUTS` and matrix child TaskRuns
+  must be captured and verified; the current recorded-step check does not
+  verify the VM-reported image digest.
+- Source L4 must be verified through the
+  [ADR-0055](./0055-slsa-source-provenance-verification.md) Source VSA
+  chain for the exact checked-out commit. SCM must preserve verifiable
+  history, protect reviewed refs, require two distinct reviewers, and
+  prevent self-approval. The build catalog and sample policy do not
+  produce or validate that evidence.
+- A production ReleasePlan must select a policy enforcing these
+  requirements, including the existing trusted-task requirements of
+  [ADR-0053](./0053-trusted-task-model.md), before release.
 
-The Task requirements in the trust model (`automountServiceAccountToken`,
-non-root `runAsUser`, dropped capabilities, entrypoint cleared, developer
-image kept off the OTP secret) are enforced by that digest pin. They are
-what Konflux puts in the Task before it is added to the allowlist, not a
-second per-field scan of Task YAML at release time.
-
-This policy is opt-in: existing catalog-pipeline components keep using
-existing policies unless their ReleasePlan selects this one.
+Checks needing the live execution plan belong at admission. Checks against
+signed provenance and source evidence belong in integration/release
+verification. A successful build, signed provenance alone, or a passing
+prototype integration test must not be presented as a Build L3 / Source L4
+claim without the remaining controls.
 
 ## Consequences
 
-- A developer can add a new build tool or artifact type with no catalog PR
-  and no platform review of the build logic itself -- just the default
-  script path, or a PipelineRun edit, under the existing two-party source
-  review.
-- No developer, and no component, needs its own Conforma policy. One
-  shared policy covers every build using this path. The policy is a closed
-  allowlist of pinned digests for `checkout`, `run-build` /
-  `run-build-remote`, and `pack`, which is stricter than "any task on the
-  trusted-task list." It does not scan Task fields, because those are fixed
-  inside the pinned digest. PipelineRun fields outside that digest are
-  rejected when the PipelineRun is created.
-- Every artifact produced this way still carries a valid Build L3
-  attestation. Source L4 evidence is required through the ADR-0055 chain,
-  the same chain a catalog-pipeline artifact uses when that policy is on.
-  A component whose forge cannot mint a Source VSA cannot release on this
-  policy.
-- `run-build` and `run-build-remote` become new entries in Konflux's
-  trusted-task catalog and must go through the normal trusted-task
-  release and signing process before they can be placed on the allowlist.
-  The default Pipeline that wires them together (`checkout` -> `run-build`
-  -> `pack`), including the trusted-artifact params, is new published
-  surface too, scaffolded into components the same way as other default
-  Pipelines today. Both are new platform surface Konflux must build and
-  maintain, even though no catalog PR is needed per build type.
-- Pipeline Service must reject, at PipelineRun creation, a run that
-  carries `taskSpec`, `taskRunSpecs`, or `podTemplate`, or a runtime
-  override of `image`, `script-path`, `PLATFORM`, or a `*_ARTIFACT` param.
-  Source-identity params that Pipelines as Code sets for the repository
-  URL and revision are the exception, and they must match the fetched
-  revision.
-- `run-build-remote` needs a host model this decision can actually claim:
-  one VM per TaskRun, destroyed afterward. Static hosts and dynamic pools
-  with `concurrency` greater than 1 are not that model. Local platforms
-  stay on in-cluster `run-build`.
-- Builds under this path are not required to be hermetic. This is a
-  compromise, not an oversight: `resolvedDependencies` completeness
-  remains best-effort, consistent with SLSA Build L3 (see "Evidence from
-  the SLSA spec"). Hermetic builds stay a separate initiative. Isolation
-  is not waived with hermeticity.
-- A run that leaves the trust envelope in a way the predicate records (a
-  non-pinned image, a Task outside the allowlist, an unsupported artifact
-  chain) is not blocked at admission -- it still executes and produces
-  signed provenance, then fails at the Conforma release gate. This matches
-  how hermetic/prefetch enforcement already works, but means an
-  out-of-envelope run consumes build resources before it's caught, rather
-  than being rejected upfront. Creation-time rejection is reserved for
-  influences the predicate cannot be relied on to show.
-- Defects or compromises in the developer's build script are caught only
-  by the standard two-party source review, the same review already
-  required for Source L4 -- there is no additional platform reviewer in
-  the loop for this build logic specifically.
+- New build logic fits inside reusable platform-owned Tasks. Changing the
+  payload does not require a new Task or OCI envelope.
+- Output-only handoffs keep checkout and caches out of intermediate build
+  exports by default. Chained builds explicitly consume and retain earlier
+  outputs; mutations to the checkout do not carry into the next build.
+- Matrix builds produce one final OCI artifact with platform directories.
+  Release Tasks consume that artifact by manifest digest using the unpack
+  StepAction.
+- The platform maintains the Tasks, CLI image, remote generator, Pipeline
+  examples, bundle publication, and shared policy. The proof of concept
+  does not yet supply automatic component scaffolding or complete
+  production enforcement.
+- Resource overrides are supported. Pod, step, account, or credential
+  overrides need restrictions beyond a trusted Task identity.
+- Private checkout needs an approved namespace Secret bound only to
+  checkout, with no Git credential propagation into builds.
+- Build L3 remains conditional on deployment isolation, admission, and
+  Chains configuration. Source L4 remains conditional on SCM controls and
+  a matching Source VSA. The ADR remains Proposed despite the prototype.
+- Non-hermetic builds are permitted. Defects in build logic still depend
+  on component review and testing; this design protects the platform and
+  provenance boundary, not the correctness of arbitrary commands.
 
 ## Alternatives Considered
 
-### Tekton `StepAction`, resolved natively via `ref:`
+### Tekton StepActions as the developer build interface
 
-Initially attractive: Tekton's admission webhook already rejects a `Step`
-that combines `ref` with inline `image`/`command`/`script`/`env`/
-`volumeMounts`, which looked like free protection. Rejected once two
-problems surfaced:
+Rejected for the build boundary. Tekton rejects a Step that combines
+`ref` with inline execution fields, but the enclosing Task still controls
+`volumes`, `sidecars`, and `stepTemplate`. That does not safely admit a
+developer-authored Task. Native StepAction resolution also does not
+describe the separate Podman invocation on a VM.
 
-- That protection is scoped to the `Step` object, not the `Task` object the
-  Step lives in -- see "Why not a developer-authored Task" under Decision
-  for the fields (`volumes`, `sidecars`, `stepTemplate`) it leaves open.
-  The same reasoning is why a developer-authored Task whose Steps are all
-  `ref`-only doesn't work either: it's still a developer-authored Task.
-- On a multi-platform VM build the TaskRun pod still exists: it mounts the
-  OTP secret and opens SSH. The developer's build runs via `podman` on the
-  VM, not as a step in that pod. Tekton's native `ref:` resolution only
-  resolves content for a step the reconciler is about to create, and it
-  does not pin that `podman` invocation. Making it work would have meant a
-  second, different pinning mechanism (reading a StepAction-shaped file out
-  of the workspace and parsing it by hand) for the VM path, while the
-  on-cluster path kept using the resolver. A plain param-based Task needs
-  no resolver on either path, since Pipeline param values are literal
-  strings in the already-reviewed PipelineRun.
+The implementation uses a StepAction for the narrower release operation
+of restoring a verified build-output artifact into a platform-owned
+consuming Task.
 
-### Custom YAML manifest (commands/sidecars/output-dir), not Tekton-native
+### Custom YAML manifest for commands, sidecars, and output directories
 
-An earlier draft of this design invented a bespoke manifest format compiled
-by Konflux into Tekton Tasks. Rejected as unnecessary complexity once it
-was clear that a Konflux-owned Task with a couple of Pipeline-level params
-(`image`, `script-path`) gives the same capability without a new schema to
-design, document, or version.
+Rejected as an unnecessary schema and compiler. Task parameters already
+express the executable, argv, image, and output-artifact inputs, while
+fixed `BUILD_OUTPUT` defines what is exported.
 
-### Accept arbitrary Tekton Pipelines or Tasks with inline steps, filtered at admission
+### Arbitrary developer-authored build Pipelines or Tasks with inline steps
 
-Rejected: the envelope becomes a denylist over Tekton's entire API surface
-(workspaces, `stepTemplate`, `sidecars`, resolver params, podTemplate
-overrides, inline `volumeMounts`, ...) -- every missed field is a
-trust-boundary hole.
+Rejected because safe execution would depend on a denylist over the
+entire Tekton API: mounts, sidecars, templates, resolver parameters, and
+runtime overrides. This design instead fixes the build Task definitions
+and exposes a bounded parameter contract.
 
 ## Open Questions
 
-- Exact name and ownership of `run-build` / `run-build-remote`, and the
-  default Pipeline that wires them into `checkout` -> `run-build` -> `pack`
-  -- all need a home in the build-definitions/build-templates catalog,
-  presumably, alongside existing Tasks and Pipelines. `run-build`/
-  `run-build-remote` additionally need to go through the normal
-  trusted-task release and signing process so the Conforma check in
-  "Conforma verification" has something to check against.
-- What the Konflux default build image should be for the "no Pipeline edit"
-  fast path -- likely a minimal generic image (e.g. UBI-minimal), given
-  this feature's whole premise is supporting build tools Konflux doesn't
-  already have a catalog image for.
-- Relationship to Konflux's user-facing platform contract work: this
-  feature's contract should be proposed as a concrete "may" entry in that
-  contract's taxonomy, not decided independently of it.
+- Which Konflux catalogs will own and publish the Tasks, CLI image,
+  Pipelines, and release StepAction, and how will components receive the
+  default PaC PipelineRun?
+- How will production admission bind permitted literals and private-source
+  Secret references to the reviewed PipelineRun, while allowing resource
+  overrides?
+- How will the shared policy support approved builder images and argv
+  forms beyond the prototype's fixed task-runner image and source-relative
+  command checks?
+- Which Chains configuration and policy will verify immutable build/pack
+  bundles, VM-recorded image identities, matrix child TaskRuns, and the
+  complete artifact chain?
+- How will controller deployments guarantee fresh VM allocation and cleanup
+  on every completion path, and what evidence establishes equivalent
+  isolation for the local route?
+- How will the Source VSA chain and production ReleasePlan policy be wired
+  for components opting into this build shape?
+- How should this contract fit Konflux's user-facing platform contract
+  taxonomy?
 
 ## References
 
+- [Proof-of-concept implementation][implementation] -- snapshot used for this update
+- [Pipeline manifests][pipelines] and [PaC bundle example][pac]
+- [Conforma rules][policy] and [integration Pipeline][integration]
+- [Release verification and unpack example][release-demo]
 - [ADR-0036](./0036-trusted-artifacts.md) -- Trusted Artifacts
 - [ADR-0053](./0053-trusted-task-model.md) -- Trusted Task model
 - [ADR-0055](./0055-slsa-source-provenance-verification.md) -- SLSA Source Provenance Verification
 - [ADR-0063](./0063-generalized-build-release-pipelines.md) -- Generalized Build and Release Pipelines
-- [Enterprise Contract](../architecture/core/enterprise-contract.md) -- a specific result from a specific trusted task
-- [Multi-platform controller](../architecture/add-ons/multi-platform-controller.md) -- `PLATFORM`, OTP secret, host concurrency
-- [Tekton StepActions docs](https://tekton.dev/docs/pipelines/stepactions/) -- considered and rejected, see "Alternatives Considered"
-- [slsa-framework/slsa](https://github.com/slsa-framework/slsa) -- SLSA spec, quoted at commit [`048a3c4`](https://github.com/slsa-framework/slsa/commit/048a3c411b3a892fc41092b6688bbee345b7b386)
+- [Enterprise Contract](../architecture/core/enterprise-contract.md)
+- [Multi-platform controller](../architecture/add-ons/multi-platform-controller.md)
+- [Tekton StepActions docs](https://tekton.dev/docs/pipelines/stepactions/)
+- [slsa-framework/slsa](https://github.com/slsa-framework/slsa) -- spec quoted at commit [`048a3c4`](https://github.com/slsa-framework/slsa/commit/048a3c411b3a892fc41092b6688bbee345b7b386)
+
+[implementation]: https://github.com/gbenhaim/byob-pipeline/tree/ef146c8ae3b907d9bfb2b842dc98f7e8023a4f7d
+[pipelines]: https://github.com/gbenhaim/byob-pipeline/tree/ef146c8ae3b907d9bfb2b842dc98f7e8023a4f7d/pipelines
+[pac]: https://github.com/gbenhaim/byob-pipeline/blob/ef146c8ae3b907d9bfb2b842dc98f7e8023a4f7d/examples/pac/push.yaml
+[policy]: https://github.com/gbenhaim/byob-pipeline/blob/ef146c8ae3b907d9bfb2b842dc98f7e8023a4f7d/policy/rules/pipeline.rego
+[integration]: https://github.com/gbenhaim/byob-pipeline/blob/ef146c8ae3b907d9bfb2b842dc98f7e8023a4f7d/examples/integration/byob-pipeline-policy.yaml
+[release-demo]: https://github.com/gbenhaim/byob-pipeline/blob/ef146c8ae3b907d9bfb2b842dc98f7e8023a4f7d/examples/demo/release.yaml
