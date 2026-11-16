@@ -29,6 +29,7 @@ Status: Ac=Accepted Im=Implemented Ib=Implementable Pr=Proposed Ap=Approved Rp=R
 0038 Ac 47L Integration service removes composite snapshots and logic around them
 0003 Im 79L Interacting with Internal Services
 0051 Ib 491L KITE Architecture and Components
+0072 Pr 155L Konflux Overview Page as an Information Hub
 0041 Ac 58L Konflux should send cloud events all system events.
 0013 Dp 292L Konflux Test Stream - API contracts
 0014 Ac 68L Let Pipelines Proceed
