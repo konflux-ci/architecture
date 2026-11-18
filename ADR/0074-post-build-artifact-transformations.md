@@ -60,7 +60,7 @@ The original build provenance and the mutation attestations must authenticate a 
 
 One attestation may cover multiple transformation outputs, provided the relationships between inputs, outputs and operations remain unambiguous. For example, a batch-signing attestation may cover `U1 → S1` and `U2 → S2` if it identifies those input/output pairings and records that signing was performed for each pair. Where those relationships cannot be recorded unambiguously, the implementation must use separate attestations. Grouping must not imply that an operation applied to an artifact when it did not.
 
-An OCI reference representing a collection is a distinct artifact in its own right; the individual artifacts it references are not interchangeable with it. For example, an OCI artifact may anchor metadata listing several RPM digests stored in Pulp; the anchor digest is distinct from each RPM’s digest. Where individual artifacts are mutated, the evidence must identify their digests and authenticate their relationship to the collection.
+An OCI reference representing a collection is a distinct artifact in its own right; the individual artifacts it references are not interchangeable with it. For example, an OCI artifact may anchor metadata listing several RPM checksums stored in Pulp; the anchor digest is distinct from each RPM’s digest. Storage metadata records these values as checksums; an authenticated checksum serves as the corresponding artifact’s digest. Where individual artifacts are mutated, the evidence must identify their digests and authenticate their relationship to the collection.
 
 ### 2. Input integrity during mutation
 
@@ -183,33 +183,33 @@ A signed VSA covering `C` can let customers who trust its verifier and accept it
 
 The same principle applies when an OCI metadata artifact represents several RPMs stored elsewhere. Additional evidence must authenticate which RPM digests that metadata represents.
 
-In this hypothetical example, a build produces several unsigned RPMs stored in Pulp. An OCI artifact contains metadata listing their locations and digests. This example calls it the OCI metadata artifact. Signing embeds a signature in each RPM, changing its bytes and digest, so signing is a mutation.
+In this hypothetical example, a build produces several unsigned RPMs stored in Pulp. An OCI artifact contains metadata listing their locations and checksums. This example calls it the OCI metadata artifact. Signing embeds a signature in each RPM, changing its bytes and digest, so signing is a mutation.
 
 OCI-backed Trusted Artifacts carry the metadata between approved Tasks, while the RPM bytes remain in Pulp. Trusted evidence must authenticate the RPM digests listed in that metadata.
 
-Before signing, the signing Task checks the retrieved RPM bytes against those digests. Mutation attestations then record the relationship between each unsigned RPM and its signed output.
+Before signing, the signing Task checks the retrieved RPM bytes against those checksums. Mutation attestations then record the relationship between each unsigned RPM and its signed output.
 
 ```mermaid
 flowchart TB
     subgraph Tasks["Pipeline Tasks"]
         Build["Build Task"]
-        Sign["Signing Task: check input bytes against expected digests, then embed signatures"]
+        Sign["Signing Task: check input bytes against expected checksums, then embed signatures"]
     end
     subgraph Pulp["Pulp"]
         Unsigned["Unsigned RPMs: U1, U2, …, Un"]
         Signed["Signed RPMs: S1, S2, …, Sn"]
     end
     subgraph Registry["OCI registry"]
-        C0["C0: unsigned RPM locations and digests"]
-        C1["C1: signed RPM locations and digests"]
+        C0["C0: unsigned RPM locations and checksums"]
+        C1["C1: signed RPM locations and checksums"]
     end
 
     Build -->|Stores RPMs| Unsigned
-    Build -->|Records locations and digests| C0
+    Build -->|Records locations and checksums| C0
     Unsigned -->|Retrieved by| Sign
     C0 -->|Passed via Trusted Artifacts| Sign
     Sign -->|Stores signed RPMs| Signed
-    Sign -->|Records locations and digests| C1
+    Sign -->|Records locations and checksums| C1
 ```
 
 The evidence must establish the following relationships:
@@ -220,7 +220,7 @@ The evidence must establish the following relationships:
 
 For example, a mutation attestation may identify `S1` as its subject, `U1` as an input and RPM signing as the operation. The same principle applies to every RPM transformed in the collection.
 
-Links between the OCI metadata artifact and RPMs in Pulp help locate the files, but do not prove that those files are the build or signing outputs. Trusted evidence must authenticate the recorded digests, and the retrieved RPM bytes must match them.
+Links between the OCI metadata artifact and RPMs in Pulp help locate the files, but do not prove that those files are the build or signing outputs. Trusted evidence must authenticate the recorded checksums, and the retrieved RPM bytes must match them.
 
 After verifying these relationships and the applicable policy, Konflux can produce a VSA for each final signed RPM, or one VSA explicitly covering several final signed RPM digests. Where §4 requires customer-verifiable VSAs, these provide the required coverage.
 
