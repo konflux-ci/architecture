@@ -35,9 +35,9 @@ Two distinct verification needs follow:
 
 A Verification Summary Attestation (VSA) supports the second need by recording a trusted verifier’s result against an identified policy. It does not, by itself, describe a transformation between artifacts. Separate VSAs for two artifacts do not establish that one was produced from the other.
 
-[ADR-0049](https://github.com/konflux-ci/architecture/blob/main/ADR/0049-vsa-support.md) adopts VSAs as inputs to release-policy checks. This decision complements that approach by defining the evidence needed across transformations and the relationship between that evidence and final-artifact VSAs.
+[ADR-0049](./0049-vsa-support.md) adopts VSAs as inputs to release-policy checks. This decision complements that approach by defining the evidence needed across transformations and the relationship between that evidence and final-artifact VSAs.
 
-[ADR-0066](https://github.com/konflux-ci/architecture/blob/main/ADR/0066-ecosystem-native-distribution.md) defines ecosystem-native distribution of non-OCI artifacts and their supply chain metadata. This decision defines the evidence that must survive transformations; it does not replace those distribution requirements.
+[ADR-0066](./0066-ecosystem-native-distribution.md) defines ecosystem-native distribution of non-OCI artifacts and their supply chain metadata. This decision defines the evidence that must survive transformations; it does not replace those distribution requirements.
 
 ## Decision
 
@@ -74,7 +74,7 @@ The pipeline must not execute the mutation if an input digest or byte-binding ch
 
 The implementation must preserve the input-digest relationship through execution. The mutation attestation must identify the resulting output bytes, rather than merely an intended destination or a workload-reported checksum.
 
-Inter-Task file transfer must use OCI-backed Trusted Artifacts as defined by [ADR-0036](https://github.com/konflux-ci/architecture/blob/main/ADR/0036-trusted-artifacts.md), rather than general-purpose shared workspaces. Conforma's release-gate verification must cover the mutation attestations and the input/output wiring of approved mutation Tasks. Where a transformation’s input/output relationship is not established through Trusted Artifacts and the approved Task path, the implementation must explain how it authenticates that relationship.
+Inter-Task file transfer must use OCI-backed Trusted Artifacts as defined by [ADR-0036](./0036-trusted-artifacts.md), rather than general-purpose shared workspaces. Conforma's release-gate verification must cover the mutation attestations and the input/output wiring of approved mutation Tasks. Where a transformation’s input/output relationship is not established through Trusted Artifacts and the approved Task path, the implementation must explain how it authenticates that relationship.
 
 ### 3. Attesting identities and trust
 
@@ -89,7 +89,7 @@ The mutation-attestor and verifier roles do not require separate keys or service
 
 The mutation workload must not be able to make its output trusted merely by declaring success or supplying an attestation to a signing interface that will sign whatever it is given. The attestation mechanism must obtain trustworthy evidence of the execution and its input/output relationship.
 
-Mutation evidence must build on the existing Trusted Artifacts and approved Task-path controls, using authenticated execution records and input/output digest bindings. Task approval uses the existing Trusted Tasks model described in [ADR-0053](https://github.com/konflux-ci/architecture/blob/main/ADR/0053-trusted-task-model.md); it does not by itself establish that a particular execution performed the recorded transformation.
+Mutation evidence must build on the existing Trusted Artifacts and approved Task-path controls, using authenticated execution records and input/output digest bindings. Task approval uses the existing Trusted Tasks model described in [ADR-0053](./0053-trusted-task-model.md); it does not by itself establish that a particular execution performed the recorded transformation.
 
 Trusted Artifacts protect inter-Task transfer integrity; they do not by themselves constitute signed mutation evidence. The attestor design must explain how these controls establish the recorded transformation, and identify the controls covering any relationship not established through Trusted Artifacts and the approved Task path. Where the existing controls provide the necessary evidence, no separate execution observer or parallel trust or release-policy model is required.
 
