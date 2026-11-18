@@ -4,7 +4,7 @@ core/build-service.md 285L — Build pipelines, Tekton PipelineRun definitions, 
 core/enterprise-contract.md 198L — Policy enforcement, attestation validation, release gating
 core/hybrid-application-service.md 371L — Validation webhooks for Application and Component CRs
 core/index.md 180L — Core Services
-core/integration-service.md 225L — Test orchestration, snapshot creation/validation, promotion logic
+core/integration-service.md 226L — Test orchestration, snapshot creation/validation, promotion logic
 core/konflux-operator.md 41L — Platform installation and lifecycle management via Konflux CR
 core/konflux-ui.md 20L — Web UI for Konflux platform (minimal architecture docs in this repo)
 core/pipeline-service.md 134L — Foundational Tekton APIs, Pipelines as Code, Chains (signing), Results (archival)

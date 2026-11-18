@@ -20,6 +20,7 @@ overview:
     - "0037"
     - "0038"
     - "0048"
+    - "0075"
   key_concepts:
     - Global Candidate List (GCL)
     - snapshot immutability
