@@ -72,7 +72,7 @@ Before executing a mutation, the pipeline must:
 
 The pipeline must not execute the mutation if an input digest or byte-binding check fails. These checks establish input integrity; they do not require the mutation Task to verify the full provenance chain or decide whether the artifact satisfies release policy.
 
-The implementation must preserve the input-digest relationship through execution. The mutation attestation must identify the resulting output bytes, rather than merely an intended destination or a workload-reported checksum.
+The implementation must preserve the input-digest relationship through execution. The mutation attestation must identify the digests computed from the actual output bytes by the trusted mutation Task, rather than merely an intended destination. Those digests must be bound to the authenticated execution of that Task.
 
 Inter-Task file transfer must use OCI-backed Trusted Artifacts as defined by [ADR-0036](./0036-trusted-artifacts.md), rather than general-purpose shared workspaces. Conforma's release-gate verification must cover the mutation attestations and the input/output wiring of approved mutation Tasks. Where a transformation’s input/output relationship is not established through Trusted Artifacts and the approved Task path, the implementation must explain how it authenticates that relationship.
 
@@ -87,13 +87,15 @@ Trust policy must authorise identities for their respective roles. A valid signa
 
 The mutation-attestor and verifier roles do not require separate keys or services, but their authority and enforcement boundaries must be explicit.
 
-The mutation workload must not be able to make its output trusted merely by declaring success or supplying an attestation to a signing interface that will sign whatever it is given. The attestation mechanism must obtain trustworthy evidence of the execution and its input/output relationship.
+The mutation Task's approved implementation and its execution environment are trusted to check the input bytes, perform the recorded operation and compute cryptographic digests of the actual output bytes. The attestor authenticates that execution and binds its input/output records to the executed Task and configuration; it need not independently repeat the transformation or establish its semantics.
+
+An arbitrary workload must not be able to obtain trusted mutation evidence merely by declaring success or submitting content to a signing interface. The attestor must bind the evidence to an authenticated execution of an approved mutation Task, including the configuration relevant to its trusted behaviour.
 
 Mutation evidence must build on the existing Trusted Artifacts and approved Task-path controls, using authenticated execution records and input/output digest bindings. Task approval uses the existing Trusted Tasks model described in [ADR-0053](./0053-trusted-task-model.md); it does not by itself establish that a particular execution performed the recorded transformation.
 
 Trusted Artifacts protect inter-Task transfer integrity; they do not by themselves constitute signed mutation evidence. The attestor design must explain how these controls establish the recorded transformation, and identify the controls covering any relationship not established through Trusted Artifacts and the approved Task path. Where the existing controls provide the necessary evidence, no separate execution observer or parallel trust or release-policy model is required.
 
-Tekton Chains deep inspection of type-hinted TaskRun results is one candidate for discovering mutation inputs and outputs and producing attestations. This decision does not mandate Chains, and any implementation using it must still show how the attestation is bound to the actual input and output bytes and to authorised execution; discovering TaskRun results alone does not establish those facts.
+Tekton Chains deep inspection of type-hinted TaskRun results is one candidate for discovering mutation inputs and outputs and producing attestations. This decision does not mandate Chains, and any implementation using it must still show how the attestation is bound to the actual input and output bytes and to authorised execution. Discovering TaskRun results alone is insufficient: the design must establish that those results came from the approved Task executing in its trusted environment, with controls preventing untrusted code or configuration from falsifying the recorded relationship.
 
 The concrete mutation-attesting identity and its execution-authentication mechanism remain implementation decisions that must be resolved before implementation can proceed.
 
