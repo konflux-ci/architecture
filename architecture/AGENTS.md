@@ -1,14 +1,14 @@
 index.md 426L — Full system overview (read when 3+ services involved)
 
 core/build-service.md 285L — Build pipelines, Tekton PipelineRun definitions, Component builds
-core/enterprise-contract.md 198L — Policy enforcement, attestation validation, release gating
+core/enterprise-contract.md 199L — Policy enforcement, attestation validation, release gating
 core/hybrid-application-service.md 371L — Validation webhooks for Application and Component CRs
 core/index.md 180L — Core Services
 core/integration-service.md 225L — Test orchestration, snapshot creation/validation, promotion logic
 core/konflux-operator.md 41L — Platform installation and lifecycle management via Konflux CR
 core/konflux-ui.md 20L — Web UI for Konflux platform (minimal architecture docs in this repo)
-core/pipeline-service.md 134L — Foundational Tekton APIs, Pipelines as Code, Chains (signing), Results (archival)
-core/release-service.md 136L — Release orchestration, privileged pipelines, cross-namespace releases
+core/pipeline-service.md 135L — Foundational Tekton APIs, Pipelines as Code, Chains (signing), Results (archival)
+core/release-service.md 137L — Release orchestration, privileged pipelines, cross-namespace releases
 add-ons/image-controller.md 216L — Image repository setup, robot account management, secret linking to ServiceAccounts
 add-ons/index.md 239L — Add-ons
 add-ons/internal-services.md 141L — Remote cluster polling for executing internal jobs across network boundaries
