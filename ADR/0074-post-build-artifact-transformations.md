@@ -107,7 +107,7 @@ Mutation evidence establishes artifact lineage, not that a mutation preserves ev
 
 Before authorising release, Conforma must establish that the candidate artifacts satisfy the applicable provenance-chain requirements and release policy. These requirements cover each candidate artifact's digest, its chain of mutation attestations back to trusted build provenance, attestation signatures, authorisation of attesting identities, input/output digest links and the recorded operations. Conforma may establish satisfaction of these requirements by verifying the underlying evidence directly or by accepting signed VSAs where the applicable policy permits reliance on their verifier, scope and verification results. Reliance on a VSA does not remove the requirement to retain the underlying evidence.
 
-A release-policy decision may cover one artifact or several explicitly identified artifacts. It must cover the final transformed digests being released, not merely their pre-transformation predecessors. This decision does not require a separate release-policy check between mutations. Mutation Tasks perform the input-integrity checks described in §2, rather than full-chain or release-policy verification.
+A release-policy decision may cover one artifact or several explicitly identified artifacts. It must cover the digests of the final transformed distributable artifacts being released, not merely their pre-transformation predecessors or OCI artifacts containing or referencing them. This decision does not require a separate release-policy check between mutations. Mutation Tasks perform the input-integrity checks described under [Input integrity during mutation](#2-input-integrity-during-mutation), rather than full-chain or release-policy verification.
 
 Where establishing the final artifact’s provenance would otherwise require interpreting storage-specific metadata, Konflux must produce and retain a signed VSA that:
 
@@ -224,13 +224,13 @@ For example, a mutation attestation may identify `S1` as its subject, `U1` as an
 
 Links between the OCI metadata artifact and RPMs in Pulp help locate the files, but do not prove that those files are the build or signing outputs. Trusted evidence must authenticate the recorded checksums, and the retrieved RPM bytes must match them.
 
-After verifying these relationships and the applicable policy, Konflux can produce a VSA for each final signed RPM, or one VSA explicitly covering several final signed RPM digests. Where §4 requires customer-verifiable VSAs, these provide the required coverage.
+After verifying these relationships and the applicable policy, Konflux can produce a VSA for each final signed RPM, or one VSA explicitly covering several final signed RPM digests. Where [Verification summaries](#4-verification-summaries) requires customer-verifiable VSAs, these provide the required coverage.
 
 Konflux may also produce a VSA covering the OCI metadata artifact itself.
 
-The diagram below shows the evidence and verification flow after the signed build attestation has been created. It illustrates signing and release in separate PipelineRuns, with a shared trusted attesting mechanism. Tekton Chains is a candidate for this mechanism if it can meet the execution-authentication and digest-binding requirements in §3. The dashed arrows represent observation or authentication of execution.
+The diagram below shows the evidence and verification flow after the signed build attestation has been created. It illustrates signing and release in separate PipelineRuns, with a shared trusted attesting mechanism. Tekton Chains is a candidate for this mechanism if it can meet the execution-authentication and digest-binding requirements under [Attesting identities and trust](#3-attesting-identities-and-trust). The dashed arrows represent observation or authentication of execution.
 
-Conforma's verification includes the authenticated OCI-to-RPM bindings described above and may rely on acceptable VSAs as described in §4; these inputs are omitted from the diagram for clarity.
+Conforma's verification includes the authenticated OCI-to-RPM bindings described above and may rely on acceptable VSAs as described under [Verification summaries](#4-verification-summaries); these inputs are omitted from the diagram for clarity.
 
 ```mermaid
 flowchart TB
@@ -262,7 +262,7 @@ flowchart TB
 
 A customer holding RPM `S1` can hash it and verify an acceptable VSA covering that digest. The customer need not interpret the storage-specific metadata, retrieve `U1`, or walk the internal evidence chain.
 
-### Alternatives considered
+### Alternatives Considered
 
 #### Treat the original build provenance as covering the transformed artifact
 
@@ -274,7 +274,7 @@ Rejected. VSAs can support delegated verification, but separate verification res
 
 #### Require a newly generated VSA before every mutation
 
-Rejected as a universal requirement. Mutation Tasks must perform the input-integrity checks described in §2, but need not perform full release-policy verification or obtain a fresh VSA before each mutation.
+Rejected as a universal requirement. Mutation Tasks must perform the input-integrity checks described under [Input integrity during mutation](#2-input-integrity-during-mutation), but need not perform full release-policy verification or obtain a fresh VSA before each mutation.
 
 #### Rely on storage history and checksum pointers
 
