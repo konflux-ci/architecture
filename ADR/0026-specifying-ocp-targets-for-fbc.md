@@ -1,6 +1,7 @@
 ---
 title: "26. Specifying OCP targets for File-based Catalogs"
-status: Accepted
+status: Replaced
+superseded_by: ["0072"]
 applies_to:
   - build-service
   - integration-service
@@ -16,7 +17,9 @@ topics:
 
 ## Status
 
-Accepted
+Replaced
+
+* [ADR 72. FBC OCP Version Label and Binaryless FBC Support](0072-fbc-ocp-version-label-and-binaryless-support.html)
 
 ## Context
 
